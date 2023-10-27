@@ -1,0 +1,24 @@
+{
+  "name": "3d-inventory-mongo-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Karol Preiskorn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/karol-preiskorn/3d-inventory-mongo-api.git"
+  },
+  "keywords": [
+    "3d-inventory",
+    "mongo",
+    "api"
+  ],
+  "bugs": {
+    "url": "https://github.com/karol-preiskorn/3d-inventory-mongo-api/issues"
+  },
+  "homepage": "https://github.com/karol-preiskorn/3d-inventory-mongo-api#readme",
+  "description": ""
+}
