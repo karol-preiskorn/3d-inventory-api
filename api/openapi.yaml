@@ -1,0 +1,320 @@
+openapi: 3.0.3
+info:
+  title: API for project 3d-inventory
+  description: Run CRUD od 3d-inventory data model.
+  version: 1.0.5
+servers:
+  # Added by API Auto Mocking Plugin
+  - url: 'http://localhost:8080'
+    description: 3d-inventory-oracle-api
+  - url: https://virtserver.swaggerhub.com/karol-preiskorn/ultima-rest/1.0.3
+    description: SwaggerHub API Auto Mocking
+
+paths:
+  /device:
+    get:
+      summary:
+        Get devices
+      description:
+        Get list devices.
+      operationId: deviceGET
+      responses:
+        '200':
+          description: List of devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '404':
+          description: Devices not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+
+    put:
+      summary:
+        "Update device"
+      description:
+        Update existing device.
+      operationId: devicePUT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '404':
+          description: Update not found device
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create new device
+      description: Insert new device.
+      operationId: devicePOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+            example:
+              $ref: '#/components/schemas/Device/example'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+              example:
+                $ref: '#/components/schemas/Device/example'
+        '500':
+          description: Error device not created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+              example:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete device
+      description: Delete device.
+      operationId: deviceDELETE
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found device to delete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /log:
+    get:
+      summary:
+        Get log from database
+      description:
+        Get all log.
+      operationId: logGET
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+              examples:
+                id:
+                  value: '222'
+                date:
+                  value: '2023-03-12'
+                message:
+                  value: 'Message in log'
+        '404':
+          description: No found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/404'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/5XX'
+
+    put:
+      summary:
+        Update new log
+      description:
+        Update log record.
+      operationId: logPUT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+
+    post:
+      summary:
+        Insert new log
+      description:
+        Create log.
+      operationId: logPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Log'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+              example:
+                $ref: '#/components/schemas/Log/example'
+        '500':
+          description: Error log not created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+              example:
+                $ref: '#/components/responses/5XX'
+        '404':
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+
+    delete:
+      summary: Delete log
+      description: Delete all or specific id log.
+      operationId: logDELETE
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+
+  /connections:
+    get:
+      summary: >-
+        Server heartbeat operation. Get information about connection between Devices.
+      description: Connection between devices
+      operationId: connectionsGET
+      responses:
+        '200':
+          description: OK
+
+  /attributes:
+    get:
+      description: Devices attributes
+      responses:
+        '200':
+          description: OK
+
+  /attribute-dictionary:
+    get:
+      summary: >-
+        Server heartbeat operation. Get information about devices attributes types.
+      description: Dictionary attributes types of specific type of device.
+      operationId: attributes_typesGET
+      responses:
+        '200':
+          description: OK
+
+components:
+
+  schemas:
+
+    Device:
+      type: object
+      required:
+        - device_id
+        - device_name
+      properties:
+        device_id:
+          type: string
+          description: 'Device id uuid'
+        device_name:
+          type: string
+          description: 'Device name'
+        device_category:
+          type: string
+          description: 'Device category'
+        device_type:
+          type: string
+          description: 'Device type'
+      example:
+        device_id: '91601de6-6e93-11ed-a1eb-0242ac120002'
+        device_name: 'device-A1'
+        device_category: 'Network'
+        device_type: 'Server'
+      description: 'Device'
+
+    Error:
+      type: object
+      properties:
+        errNum:
+          type: string
+        message:
+          type: string
+        offset:
+          type: string
+      example:
+        errNum: '404'
+        message: 'Error example app not work...'
+        offset: 'line 10022'
+      description: 'Universal Oracle error logs from database'
+
+    Log:
+      type: object
+      required:
+        - id
+        - date
+        - message
+      properties:
+        id:
+          type: string
+          description: 'Incremental log Id'
+        date:
+          type: string
+          description: 'Date as string'
+        message:
+          type: string
+          description: 'Log message'
+      example:
+        id: '102'
+        date: '2023-03-12 14:00'
+        message: 'Message in log'
+      description: 'Save information about application upstage'
+
+  responses:
+    '200':
+      description: OK
+    '400':
+      description: Bad request. User ID must be an integer and larger than 0.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Authorization information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    5XX:
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

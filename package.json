@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "edit-swagger": "podman run -d -p 80:8080 docker://swaggerapi/swagger-editor",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Karol Preiskorn",
@@ -20,5 +21,13 @@
     "url": "https://github.com/karol-preiskorn/3d-inventory-mongo-api/issues"
   },
   "homepage": "https://github.com/karol-preiskorn/3d-inventory-mongo-api#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-session": "^2.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.6.3"
+  }
 }
