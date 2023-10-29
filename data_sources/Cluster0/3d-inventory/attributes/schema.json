@@ -1,0 +1,23 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "attributeDictionaryId": {
+            "bsonType": "objectId"
+        },
+        "connectionId": {
+            "bsonType": "objectId"
+        },
+        "deviceId": {
+            "bsonType": "objectId"
+        },
+        "modelId": {
+            "bsonType": "objectId"
+        },
+        "value": {
+            "bsonType": "string"
+        }
+    },
+    "title": "attribute"
+}

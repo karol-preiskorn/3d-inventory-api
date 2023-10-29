@@ -1,0 +1,20 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "deviceIdFrom": {
+            "bsonType": "objectId"
+        },
+        "deviceIdTo": {
+            "bsonType": "objectId"
+        },
+        "name": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_id"
+    ],
+    "title": "connection"
+}

@@ -1,0 +1,26 @@
+{
+    "attributeDictionaryId": {
+        "ref": "#/relationship/Cluster0/3d-inventory/attributes",
+        "source_key": "attributeDictionaryId",
+        "foreign_key": "_id",
+        "is_list": false
+    },
+    "connectionId": {
+        "ref": "#/relationship/Cluster0/3d-inventory/connections",
+        "source_key": "connectionId",
+        "foreign_key": "_id",
+        "is_list": false
+    },
+    "deviceId": {
+        "ref": "#/relationship/Cluster0/3d-inventory/devices",
+        "source_key": "deviceId",
+        "foreign_key": "_id",
+        "is_list": false
+    },
+    "modelId": {
+        "ref": "#/relationship/Cluster0/3d-inventory/models",
+        "source_key": "modelId",
+        "foreign_key": "_id",
+        "is_list": false
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "modelId": {
+        "ref": "#/relationship/Cluster0/3d-inventory/models",
+        "source_key": "modelId",
+        "foreign_key": "_id",
+        "is_list": false
+    }
+}
