@@ -1,6 +1,7 @@
 [
     {
         "name": "resetFunc",
-        "private": false
+        "private": false,
+        "can_evaluate": {}
     }
 ]

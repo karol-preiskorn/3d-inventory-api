@@ -7,6 +7,7 @@
       1. [Nodejs](#nodejs)
       2. [Project API by Swagger 3+](#project-api-by-swagger-3)
       3. [MongoDB](#mongodb)
+         1. [Example of using a Mongoose cursor async with promises](#example-of-using-a-mongoose-cursor-async-with-promises)
    3. [Install node stack](#install-node-stack)
 
 ## Purposse
@@ -14,6 +15,7 @@
 Create API for 3d-inventory application.
 
 ### Architecture
+
 ![Architecture](assets/architecture.drawio.png)
 
 
@@ -39,7 +41,7 @@ sudo podman run -d -p 80:8080 docker://swaggerapi/swagger-editor
 
 ### MongoDB
 
-We can use ModgoDB or programming Mongo Atlas API.
+We can use MongoDB or programming Mongo Atlas API.
 
 <https://www.mongodb.com/developer/languages/typescript/>
 
@@ -50,6 +52,28 @@ docker run --name mongodb -d mongodb/mongodb-community-server:$MONGODB_VERSION
 podman run -d -it -p 27017:27017
 docker run --name mongodb -d -p 27017:27017 -v $(pwd)/data:/data/db mongodb/mongodb-community-server:$MONGODB_VERSION
 ```
+
+
+#### Example of using a Mongoose cursor async with promises
+
+```javascript
+new Promise(function (resolve, reject) {
+  collection.find(query).cursor()
+    .on('data', function(doc) {
+      // ...
+    })
+    .on('error', reject)
+    .on('end', resolve);
+})
+.then(function () {
+  // ...
+});
+```
+
+Reference:
+
+- [Mongoose cursors](http://mongoosejs.com/docs/api.html#query_Query-cursor)
+- [Streams and promises](https://github.com/petkaantonov/bluebird/issues/332#issuecomment-58326173)
 
 ## Install node stack
 

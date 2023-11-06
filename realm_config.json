@@ -1,7 +1,7 @@
 {
-    "app_id": "data-rkfdh",
+    "app_id": "3d-inventory-teuoj",
     "config_version": 20210101,
-    "name": "data",
+    "name": "3d-inventory",
     "location": "DE-FF",
     "provider_region": "aws-eu-central-1",
     "deployment_model": "LOCAL",
