@@ -9,6 +9,8 @@
       3. [MongoDB](#mongodb)
          1. [Example of using a Mongoose cursor async with promises](#example-of-using-a-mongoose-cursor-async-with-promises)
    3. [Install node stack](#install-node-stack)
+      1. [Use typescript](#use-typescript)
+   4. [Playgrounds](#playgrounds)
 
 ## Purposse
 
@@ -53,7 +55,6 @@ podman run -d -it -p 27017:27017
 docker run --name mongodb -d -p 27017:27017 -v $(pwd)/data:/data/db mongodb/mongodb-community-server:$MONGODB_VERSION
 ```
 
-
 #### Example of using a Mongoose cursor async with promises
 
 ```javascript
@@ -70,14 +71,67 @@ new Promise(function (resolve, reject) {
 });
 ```
 
+It is generic code that can be tucked away in a utility function so it doesn't clutter application code and obstruct actual application logic.
+
+In your example simplest utility function would be like
+
+```
+function streamToPromise(stream) {
+    return new Promise(function(resolve, reject) {
+        stream.on("end", resolve);
+        stream.on("error", reject);
+    });
+}
+```
+
+And then the application code is simply
+
+```
+Promise.map(files, function(file) {
+    var stream = API.getStream(file);
+    stream.pipe(endPoint);
+    return streamToPromise(stream);
+});
+```
+
 Reference:
 
 - [Mongoose cursors](http://mongoosejs.com/docs/api.html#query_Query-cursor)
 - [Streams and promises](https://github.com/petkaantonov/bluebird/issues/332#issuecomment-58326173)
+- [promise-streams](https://github.com/spion/promise-streams)
+
 
 ## Install node stack
 
 ```bash
-npm install --save-exact express cors express-bearer-token @okta/jwt-verifier mongoose
+npm install
 ```
 
+### Use typescript
+
+https://github.com/Microsoft/TypeScript-Node-Starter#typescript--node
+
+## Playgrounds
+
+```javascript
+use('3d-inventory');
+
+// Create a new document in the collection.
+db.getCollection('models').insertOne({
+  name: 'Model 10',
+  dimension: {
+    width: '1',
+    height: '2',
+    depth: '2'
+  },
+  texture: {
+    front: '/assets/r710-2.5-nobezel__29341.png',
+    back: '/assets/r710-2.5-nobezel__29341.png',
+    side: '/assets/r710-2.5-nobezel__29341.png',
+    top: '/assets/r710-2.5-nobezel__29341.png',
+    botom: '/assets/r710-2.5-nobezel__29341.png'
+  },
+  type: 'CoolAir',
+  category: 'Facility'
+});
+```
