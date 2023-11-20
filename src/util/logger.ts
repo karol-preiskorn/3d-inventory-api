@@ -1,16 +1,25 @@
-import winston from "winston"
+import { createLogger, format, transports } from 'winston'
 
-const logger = winston.createLogger({
-    transports: [
-      new winston.transports.Console({
-        level: process.env.NODE_ENV === "production" ? "error" : "debug"
-      }),
-      new winston.transports.File({ filename: "debug.log", level: "debug" })
-    ]
-  })
+const { combine, timestamp, label, printf, colorize } = format
 
-if (process.env.NODE_ENV !== "production") {
-  logger.debug("Logging initialized at debug level")
-}
+const myFormat = printf(({ level, message, label, timestamp }) => {
+  return `${timestamp} [${label}] ${level}: ${message}`
+})
 
+const logger = createLogger({
+  format: combine(
+    colorize({ all: true }),
+    label({ label: __filename.slice(__dirname.length + 1) }),
+    format.errors({ stack: true }),
+    format.splat(),
+    timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss'
+    }),
+    myFormat
+  ),
+  transports: [
+    new transports.Console(),
+    new transports.File({ filename: 'error.log' })
+  ]
+})
 export default logger

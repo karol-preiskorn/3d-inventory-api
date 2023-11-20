@@ -79,10 +79,10 @@ passport.use(new FacebookStrategy({
                     user.profile.name = user.profile.name || `${profile.name.givenName} ${profile.name.familyName}`;
                     user.profile.gender = user.profile.gender || profile._json.gender;
                     user.profile.picture = user.profile.picture || `https://graph.facebook.com/${profile.id}/picture?type=large`;
-                    user.save((err: Error) => {
-                        req.flash("info", { msg: "Facebook account has been linked." });
-                        done(err, user);
-                    });
+                    // user.save((err: Error) => {
+                    //     req.flash("info", { msg: "Facebook account has been linked." });
+                    //     done(err, user);
+                    // });
                 });
             }
         });

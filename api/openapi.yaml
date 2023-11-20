@@ -16,7 +16,7 @@ paths:
       summary:
         Get devices
       description:
-        Get list devices.
+        Get list all devices.
       operationId: deviceGET
       responses:
         '200':

@@ -20,7 +20,6 @@ Create API for 3d-inventory application.
 
 ![Architecture](assets/architecture.drawio.png)
 
-
 ## Stack
 
 MEANS stack

@@ -2,34 +2,34 @@ import express from "express"
 import compression from "compression"  // compresses requests
 import session from "express-session"
 import bodyParser from "body-parser"
-import lusca from "lusca"
 import MongoStore from "connect-mongo"
 import flash from "express-flash"
 import path from "path"
 import "dotenv/config"
 import { MongoClient, ServerApiVersion } from "mongodb"
+import logger from "./util/logger"
+
+logger.info('Start app')
 
 const username = encodeURIComponent(process.env.username)
 const password = encodeURIComponent(process.env.password)
 const clusterUri = encodeURIComponent(process.env.clusterUri)
 
-// let uri =`mongodb+srv://${username}:${password}@${clusterUri}/?authSource=${authSource}&authMechanism=${authMechanism}`;
 const uri = `mongodb+srv://${username}:${password}@${clusterUri}/?retryWrites=true&w=majority`
 
-console.log(uri)
+logger.info(uri)
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
-    deprecationErrors: true,
-    retryWrites: true
+    deprecationErrors: true
   }
 })
 
 import { MONGODB_URI, SESSION_SECRET } from "./util/secrets"
-import logger from "./util/logger"
+// import logger from "./util/logger"
 
 // Controllers (route handlers)
 import * as homeController from "./controllers/home"
@@ -37,14 +37,13 @@ import * as userController from "./controllers/user"
 import * as apiController from "./controllers/api"
 import * as contactController from "./controllers/contact"
 
-
 // Create Express server
 const app = express()
 
 // Connect to MongoDB
 const mongoUrl = MONGODB_URI
 
-logger.debug('MongoDB connect string:' + mongoUrl)
+logger.info('MongoDB connect string:' + mongoUrl)
 
 var db
 

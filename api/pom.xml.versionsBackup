@@ -5,14 +5,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.ultimasolution.app</groupId>
   <artifactId>3d-inventory</artifactId>
-  <version>1.0.4</version>
+  <version>1</version>
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
 
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.6.1</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <id>copy</id>
@@ -28,7 +28,7 @@
               <groupId>
                 io.swagger.codegen.v3</groupId>
               <artifactId>swagger-codegen-cli</artifactId>
-              <version>LATEST</version>
+              <version>3.0.41</version>
               <type>jar</type>
               <overWrite>
                 false</overWrite>
@@ -41,7 +41,7 @@
                 io.swagger.codegen.v3</groupId>
               <artifactId>
                 swagger-codegen-generators</artifactId>
-              <version>LATEST</version>
+              <version>1.0.38</version>
               <type>jar</type>
               <overWrite>false</overWrite>
               <outputDirectory>
@@ -68,7 +68,7 @@
             <configuration>
               <rules>
                 <requireMavenVersion>
-                  <version>3.6.3</version>
+                  <version>3.0</version>
                 </requireMavenVersion>
               </rules>
             </configuration>
@@ -83,13 +83,13 @@
       <dependency>
         <groupId>io.swagger.codegen.v3</groupId>
         <artifactId>swagger-codegen-generators</artifactId>
-        <version>1.0.44</version>
+        <version>1.0.38</version>
       </dependency>
       <!-- https://mvnrepository.com/artifact/io.swagger.codegen.v3/swagger-codegen-cli -->
       <dependency>
         <groupId>io.swagger.codegen.v3</groupId>
         <artifactId>swagger-codegen-cli</artifactId>
-        <version>3.0.50</version>
+        <version>3.0.41</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

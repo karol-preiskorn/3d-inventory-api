@@ -55,7 +55,7 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
  * @route GET /logout
  */
 export const logout = (req: Request, res: Response): void => {
-  req.logout()
+  // req.logout('1')
   res.redirect("/")
 }
 
@@ -100,15 +100,15 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
       req.flash().errors
       return res.redirect("/signup")
     }
-    user.save((err) => {
-      if (err) { return next(err) }
-      req.logIn(user, (err) => {
-        if (err) {
-          return next(err)
-        }
-        res.redirect("/")
-      })
-    })
+    // user.save((err) => {
+    //   if (err) { return next(err) }
+    //   req.logIn(user, (err) => {
+    //     if (err) {
+    //       return next(err)
+    //     }
+    //     res.redirect("/")
+    //   })
+    // })
   })
 }
 
@@ -145,17 +145,17 @@ export const postUpdateProfile = async (req: Request, res: Response, next: NextF
     user.profile.gender = req.body.gender || ""
     user.profile.location = req.body.location || ""
     user.profile.website = req.body.website || ""
-    user.save((err: WriteError & CallbackError) => {
-      if (err) {
-        if (err.code === 11000) {
-          req.flash("errors", { msg: "The email address you have entered is already associated with an account." })
-          return res.redirect("/account")
-        }
-        return next(err)
-      }
-      req.flash("success", { msg: "Profile information has been updated." })
-      res.redirect("/account")
-    })
+    // user.save((err: WriteError & CallbackError) => {
+    //   if (err) {
+    //     if (err.code === 11000) {
+    //       req.flash("errors", { msg: "The email address you have entered is already associated with an account." })
+    //       return res.redirect("/account")
+    //     }
+    //     return next(err)
+    //   }
+    //   req.flash("success", { msg: "Profile information has been updated." })
+    //   res.redirect("/account")
+    // })
   })
 }
 
@@ -178,11 +178,11 @@ export const postUpdatePassword = async (req: Request, res: Response, next: Next
   User.findById(user.id, (err: NativeError, user: UserDocument) => {
     if (err) { return next(err) }
     user.password = req.body.password
-    user.save((err: WriteError & CallbackError) => {
-      if (err) { return next(err) }
-      req.flash("success", { msg: "Password has been changed." })
-      res.redirect("/account")
-    })
+    // user.save((err: WriteError & CallbackError) => {
+    //   if (err) { return next(err) }
+    //   req.flash("success", { msg: "Password has been changed." })
+    //   res.redirect("/account")
+    // })
   })
 }
 
@@ -192,12 +192,12 @@ export const postUpdatePassword = async (req: Request, res: Response, next: Next
  */
 export const postDeleteAccount = (req: Request, res: Response, next: NextFunction): void => {
   const user = req.user as UserDocument
-  User.remove({ _id: user.id }, (err) => {
-    if (err) { return next(err) }
-    req.logout()
-    // req.flash().err
-    res.redirect("/")
-  })
+  // User.remove({ _id: user.id }, (err) => {
+  //   if (err) { return next(err) }
+  //   //req.logout()
+  //   // req.flash().err
+  //   res.redirect("/")
+  // })
 }
 
 /**
@@ -230,16 +230,16 @@ export const getReset = (req: Request, res: Response, next: NextFunction): void 
   User
     .findOne({ passwordResetToken: req.params.token })
     .where("passwordResetExpires").gt(Date.now())
-    .exec((err, user) => {
-      if (err) { return next(err) }
-      if (!user) {
-        req.flash().errors
-        return res.redirect("/forgot")
-      }
-      res.render("account/reset", {
-        title: "Password Reset"
-      })
-    })
+    // .exec((err, user) => {
+    //   if (err) { return next(err) }
+    //   if (!user) {
+    //     req.flash().errors
+    //     return res.redirect("/forgot")
+    //   }
+    //   res.render("account/reset", {
+    //     title: "Password Reset"
+    //   })
+    // })
 }
 
 /**
@@ -262,22 +262,22 @@ export const postReset = async (req: Request, res: Response, next: NextFunction)
       User
         .findOne({ passwordResetToken: req.params.token })
         .where("passwordResetExpires").gt(Date.now())
-        .exec((err, user: any) => {
-          if (err) { return next(err) }
-          if (!user) {
-            req.flash().errors
-            return res.redirect("back")
-          }
-          user.password = req.body.password
-          user.passwordResetToken = undefined
-          user.passwordResetExpires = undefined
-          user.save((err: WriteError) => {
-            if (err) { return next(err) }
-            req.logIn(user, (err) => {
-              done(err, user)
-            })
-          })
-        })
+        // .exec((err, user: any) => {
+        //   if (err) { return next(err) }
+        //   if (!user) {
+        //     req.flash().errors
+        //     return res.redirect("back")
+        //   }
+        //   user.password = req.body.password
+        //   user.passwordResetToken = undefined
+        //   user.passwordResetExpires = undefined
+        //   user.save((err: WriteError) => {
+        //     if (err) { return next(err) }
+        //     req.logIn(user, (err) => {
+        //       done(err, user)
+        //     })
+        //   })
+        // })
     },
     function sendResetPasswordEmail(user: UserDocument, done: (err: Error) => void) {
       const transporter = nodemailer.createTransport({
