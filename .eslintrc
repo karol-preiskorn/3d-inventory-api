@@ -1,16 +1,22 @@
 {
   "parser": "@typescript-eslint/parser",
   "extends": [
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "standard",
+    "plugin:jest/recommended",
+    "plugin:jest/all",
+    "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": 2020,
+    "ecmaVersion": 2022,
     "sourceType": "module"
   },
   "rules": {
     "semi": [
       "error",
-      ""
+      "never"
     ],
     "quotes": [
       "error",
@@ -29,7 +35,27 @@
   "env": {
     "commonjs": true,
     "es6": true,
-    "mongo": true
+    "mongo": true,
+    "jest/globals": true,
+    "jest": true
   },
-  "plugins": []
+  "overrides": [
+    {
+      "files": [
+        "tests/**"
+      ],
+      "plugins": [
+        "jest"
+      ],
+      "extends": [
+        "plugin:jest/recommended"
+      ],
+      "rules": {
+        "jest/prefer-expect-assertions": "off"
+      }
+    }
+  ],
+  "plugins": [
+    "jest"
+  ]
 }

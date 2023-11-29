@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
+    "module": "es2020",
+    "esModuleInterop": true, /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
+    //"allowJs": true, /* Allow javascript files to be compiled. */
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
+    // "allowImportingTsExtensions": true,
+    // "emitDeclarationOnly": true,
+    "target": "es2020",
     "noImplicitAny": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
@@ -17,6 +20,11 @@
     }
   },
   "include": [
-    "src/**/*"
-, "test/mongo.ts"  ]
+    "src/**/*",
+    "tests/mongo.test.ts",
+    "tests/log.test.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
 }

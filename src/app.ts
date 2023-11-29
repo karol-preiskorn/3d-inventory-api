@@ -17,8 +17,6 @@ const clusterUri = encodeURIComponent(process.env.clusterUri)
 
 const uri = `mongodb+srv://${username}:${password}@${clusterUri}/?retryWrites=true&w=majority`
 
-logger.info(uri)
-
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -29,24 +27,18 @@ const client = new MongoClient(uri, {
 })
 
 import { MONGODB_URI, SESSION_SECRET } from "./util/secrets"
-// import logger from "./util/logger"
 
 // Controllers (route handlers)
 import * as homeController from "./controllers/home"
 import * as userController from "./controllers/user"
 import * as apiController from "./controllers/api"
 import * as contactController from "./controllers/contact"
+import * as deviceController from "./controllers/device"
 
 // Create Express server
 const app = express()
 
-// Connect to MongoDB
-const mongoUrl = MONGODB_URI
-
-logger.info('MongoDB connect string:' + mongoUrl)
-
 var db
-
 client.connect()
 const dbName = process.env.dbName
 const collectionName = "devices"
@@ -54,7 +46,7 @@ const database = client.db(dbName)
 const collection = database.collection(collectionName)
 
 database.command({ ping: 1 })
-logger.info("Pinged your deployment. You successfully connected to MongoDB!")
+logger.info("You successfully connected to MongoDB!")
 
 // Express configuration
 app.set("port", process.env.PORT || 3000)
@@ -68,7 +60,7 @@ app.use(session({
   saveUninitialized: true,
   secret: SESSION_SECRET,
   store: MongoStore.create({
-    mongoUrl: mongoUrl,
+    mongoUrl: MONGODB_URI,
     mongoOptions: { retryWrites: true }
   })
 }))
@@ -100,6 +92,7 @@ app.use(
  * Primary app routes.
  */
 app.get("/", homeController.index)
+app.get("/devices", deviceController.getDevices)
 app.get("/login", userController.getLogin)
 app.post("/login", userController.postLogin)
 app.get("/logout", userController.logout)

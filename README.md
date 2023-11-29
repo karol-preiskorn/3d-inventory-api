@@ -18,11 +18,13 @@ Create API for 3d-inventory application.
 
 ### Architecture
 
-![Architecture](assets/architecture.drawio.png)
+![Architecture 3d-inventory Mongo API](assets/architecture.png)
 
 ## Stack
 
 MEANS stack
+
+![MEAN Stack (from: https://www.mongodb.com/blog)](assets/MEAN_Stack-phueurihe2.png)
 
 ### Nodejs
 

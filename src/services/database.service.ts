@@ -1,18 +1,18 @@
 ﻿/*
- * File:        index.js
- * Description: Connect to MongoDB 3d-inventory claster
- * Used by:     testing connect to Mongo Atlas
- * Dependency:  .env (not push to git)
+ * File:        /src/services/database.dervice.ts
+ * Description: Connect and execute query to Mongo Atlas
+ * Used by:
+ * Dependency:
  *
- * Date        By     Comments
- * ----------  -----  ------------------------------
- * 2023-11-20  C2RLO  Add logger
- * 2023-10-29  C2RLO  Init
+ * Date        By       Comments
+ * ----------  -------  ------------------------------
+ * 2023-11-21  C2RLO    Initial
  */
 
+
 import "dotenv/config"
-import logger from "../src/util/logger"
-import { MongoClient, ServerApiVersion } from "mongodb"
+import logger from "../util/logger"
+import { Filter, MongoClient, ServerApiVersion } from "mongodb"
 
 const username = encodeURIComponent(process.env.username)
 const password = encodeURIComponent(process.env.password)
@@ -29,30 +29,27 @@ const client = new MongoClient(uri, {
   }
 })
 
-async function run() {
+export async function runQuery(p_collection: string, p_query: Filter<Document>) {
   try {
     await client.connect()
     const dbName = process.env.dbName
-    const collectionName = "devices"
+    const collectionName = p_collection
     const database = client.db(dbName)
     const collection = database.collection(collectionName)
 
     await database.command({ ping: 1 })
-    logger.info("Pinged your deployment. You successfully connected to MongoDB!")
+    //logger.info("Pinged your deployment. You successfully connected to MongoDB!")
 
-    const findQuery = {}
 
     try {
-      const cursor = await collection.find(findQuery).sort({ name: 1 }).forEach(device => {
+      const cursor = await collection.find(p_query).sort({}).forEach(device => {
         logger.info(`${device.name} has model ${device.modelId}, position: [${device.position.x}, ${device.position.y}, ${device.position.h}].`)
       })
     } catch (err) {
-      console.error(`Something went wrong trying to find the documents: ${err}\n`)
+      logger.error(`Something went wrong trying to find the documents: ${err}\n`)
     }
   } finally {
-    logger.info("Close connection")
+    //logger.info("Close connection")
     await client.close()
   }
 }
-
-run().catch(console.dir)

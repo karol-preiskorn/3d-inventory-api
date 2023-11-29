@@ -2,11 +2,11 @@ import logger from "./logger"
 import dotenv from "dotenv"
 import fs from "fs"
 
-if (fs.existsSync(".env")) {
+if (fs.existsSync(".env_")) {
   logger.info("Using .env file to supply config environment variables")
   dotenv.config({ path: ".env" })
 } else {
-  logger.info("Using .env.example file to supply config environment variables")
+  logger.error("Use .env.example file to setup config environment variables")
   dotenv.config({ path: ".env.example" })  // you can delete this after you create your own .env file!
 }
 export const ENVIRONMENT = process.env.MONGO_ENV
@@ -16,15 +16,15 @@ export const SESSION_SECRET = process.env["SESSION_SECRET"]
 export const MONGODB_URI = prod ? process.env["MONGODB_URI"] : process.env["MONGODB_URI_LOCAL"]
 
 if (!SESSION_SECRET) {
-  logger.info("No client secret. Set SESSION_SECRET environment variable.")
+  logger.error("No client secret. Set SESSION_SECRET environment variable.")
   process.exit(1)
 }
 
 if (!MONGODB_URI) {
   if (prod) {
-    logger.info("No mongo connection string. Set MONGODB_URI environment variable.")
+    logger.error("No mongo connection string. Set MONGODB_URI environment variable.")
   } else {
-    logger.info("No mongo connection string. Set MONGODB_URI_LOCAL environment variable.")
+    logger.error("No mongo connection string. Set MONGODB_URI_LOCAL environment variable.")
   }
   process.exit(1)
 }

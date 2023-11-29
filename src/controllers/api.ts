@@ -9,6 +9,6 @@ export const getApi = (req: Request, res: Response) => {
   res.render("api/index", {
     title: "API Examples"
   })
-};
+}
 
 
