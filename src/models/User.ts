@@ -1,8 +1,5 @@
 import bcrypt from "bcrypt-nodejs"
 import crypto from "crypto"
-import mongoose from "mongoose"
-
-mongoose.set("strictQuery", true)
 
 
 export type UserDocument = mongoose.Document & {
@@ -11,7 +8,6 @@ export type UserDocument = mongoose.Document & {
   passwordResetToken: string
   passwordResetExpires: Date
 
-  facebook: string
   tokens: AuthToken[]
 
   profile: {
