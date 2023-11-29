@@ -1,0 +1,31 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "modelId": {
+            "bsonType": "objectId"
+        },
+        "name": {
+            "bsonType": "string"
+        },
+        "position": {
+            "bsonType": "object",
+            "properties": {
+                "h": {
+                    "bsonType": "string"
+                },
+                "x": {
+                    "bsonType": "string"
+                },
+                "y": {
+                    "bsonType": "string"
+                }
+            }
+        }
+    },
+    "required": [
+        "_id"
+    ],
+    "title": "device"
+}

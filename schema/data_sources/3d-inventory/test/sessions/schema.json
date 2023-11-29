@@ -1,0 +1,17 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "string"
+        },
+        "expires": {
+            "bsonType": "date"
+        },
+        "session": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_id"
+    ],
+    "title": "session"
+}

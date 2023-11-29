@@ -1,0 +1,60 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "adress": {
+            "bsonType": "object",
+            "properties": {
+                "city": {
+                    "bsonType": "string"
+                },
+                "country": {
+                    "bsonType": "string"
+                },
+                "postcode": {
+                    "bsonType": "string"
+                },
+                "street": {
+                    "bsonType": "string"
+                }
+            }
+        },
+        "dimension": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "object",
+                "properties": {
+                    "description": {
+                        "bsonType": "string"
+                    },
+                    "h": {
+                        "bsonType": "string"
+                    },
+                    "h_pos": {
+                        "bsonType": "string"
+                    },
+                    "x": {
+                        "bsonType": "string"
+                    },
+                    "x_pos": {
+                        "bsonType": "string"
+                    },
+                    "y": {
+                        "bsonType": "string"
+                    },
+                    "y_pos": {
+                        "bsonType": "string"
+                    }
+                }
+            }
+        },
+        "name": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_id"
+    ],
+    "title": "floor"
+}
