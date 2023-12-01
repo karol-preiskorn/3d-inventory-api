@@ -23,7 +23,9 @@
         }
     },
     "required": [
-        "_id"
+        "_id",
+        "email",
+        "name"
     ],
     "title": "user"
 }
