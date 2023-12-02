@@ -1,0 +1,23 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "account_id": {
+            "bsonType": "int"
+        },
+        "limit": {
+            "bsonType": "int"
+        },
+        "products": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        }
+    },
+    "required": [
+        "_id"
+    ],
+    "title": "account"
+}

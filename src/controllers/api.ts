@@ -1,5 +1,4 @@
 import { Response, Request, NextFunction } from "express"
-import { UserDocument } from "../models/User"
 
 /**
  * List of API examples.

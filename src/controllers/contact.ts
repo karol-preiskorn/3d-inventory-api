@@ -32,7 +32,6 @@ export const postContact = async (req: Request, res: Response) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    req.flash().errors
     return res.redirect("/contact")
   }
 
@@ -48,7 +47,6 @@ export const postContact = async (req: Request, res: Response) => {
       req.flash("errors", { msg: err.message })
       return res.redirect("/contact")
     }
-    req.flash().errors
     res.redirect("/contact")
   })
 }

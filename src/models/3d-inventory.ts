@@ -8,12 +8,11 @@
  * ----------  -------  ------------------------------
  * 2023-11-22  C2RLO    Initial
  */
-
-
 import Realm from "realm"
+import { ObjectId } from "mongodb"
 
 export type attributeDictionary = {
-  _id: Realm.BSON.ObjectId
+  _id: ObjectId
   category: string
   component: string
   name?: string
@@ -33,8 +32,8 @@ export const attributeDictionarySchema = {
 }
 
 export type device = {
-  _id?: Realm.BSON.ObjectId
-  modelId?: Realm.BSON.ObjectId
+  _id?: ObjectId
+  modelId?: ObjectId
   name?: string
   position?: device_position
 }
@@ -67,7 +66,7 @@ export const device_positionSchema = {
 }
 
 export type floor = {
-  _id: Realm.BSON.ObjectId
+  _id: ObjectId
   adress?: floor_adress
   dimension: Realm.List<floor_dimension>
   name: string
@@ -127,7 +126,7 @@ export const floor_dimensionSchema = {
 }
 
 export type log = {
-  _id: Realm.BSON.ObjectId
+  _id: ObjectId
   component?: string
   date: string
   message?: string
@@ -148,3 +147,26 @@ export const logSchema = {
   primaryKey: "_id",
 }
 
+
+export type user = {
+  _id: ObjectId
+  email?: string
+  name?: string
+  password?: string
+  rights: Realm.List<string>
+  token?: string
+}
+export const userSchema = {
+  name: 'user',
+  properties: {
+    _id: 'objectId',
+    email: 'string?',
+    name: 'string?',
+    password: 'string?',
+    rights: 'string[]',
+    token: 'string?',
+  },
+  primaryKey: '_id',
+}
+
+export default { userSchema }

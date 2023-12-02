@@ -12,11 +12,12 @@
 
 import "dotenv/config"
 import logger from "../util/logger"
-import { Filter, MongoClient, ServerApiVersion } from "mongodb"
+import { Document, Filter, MongoClient, ServerApiVersion } from "mongodb"
+//import environment from "src/environment"
 
-const username = encodeURIComponent(process.env.username)
-const password = encodeURIComponent(process.env.password)
-const clusterUri = encodeURIComponent(process.env.clusterUri)
+const username = encodeURIComponent(process.env.USERNAME)
+const password = encodeURIComponent(process.env.PASSWORD)
+const clusterUri = encodeURIComponent(process.env.CLUSTERURI)
 
 const uri = `mongodb+srv://${username}:${password}@${clusterUri}/?retryWrites=true&w=majority`
 

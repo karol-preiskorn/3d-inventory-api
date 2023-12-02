@@ -1,0 +1,29 @@
+{
+    "title": "user",
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "email": {
+            "bsonType": "string"
+        },
+        "name": {
+            "bsonType": "string"
+        },
+        "password": {
+            "bsonType": "string"
+        },
+        "rights": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "token": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_id"
+    ]
+}

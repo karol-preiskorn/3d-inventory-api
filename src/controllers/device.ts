@@ -35,7 +35,6 @@ export const postContact = async (req: Request, res: Response) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    req.flash().errors
     return res.redirect("/contact")
   }
 
