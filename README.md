@@ -1,6 +1,6 @@
-﻿# 3d-inventory-mogo-api
+﻿# 3d-inventory-mongo-api
 
-1. [3d-inventory-mogo-api](#3d-inventory-mogo-api)
+1. [3d-inventory-mongo-api](#3d-inventory-mongo-api)
    1. [Purposse](#purposse)
       1. [Architecture](#architecture)
    2. [Stack](#stack)
@@ -41,11 +41,11 @@ MEANS stack
 ### Nodejs
 
 ```bash
-    "bcryptjs": "^2.4.3",
-    "cookie-session": "^2.0.0",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
+"bcryptjs": "^2.4.3",
+"cookie-session": "^2.0.0",
+"cors": "^2.8.5",
+"express": "^4.18.2",
+"jsonwebtoken": "^9.0.2",
 ```
 
 ### Project API by Swagger 3+
