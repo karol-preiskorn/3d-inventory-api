@@ -9,7 +9,7 @@ import { MongoClient, ServerApiVersion } from "mongodb"
 import path from "path"
 import logger from "./util/logger"
 
-import { MONGODB_URI, SESSION_SECRET } from "./util/secrets"
+import { MONGODB_URI } from "./util/secrets"
 
 // Controllers (route handlers)
 import * as apiController from "./controllers/api"
@@ -33,14 +33,15 @@ const client = new MongoClient(uri, {
   }
 })
 
+const sessionSecret = encodeURIComponent(process.env.SESSION_SECRET)
+
 // Create Express server
 const app = express()
 
-var db
 client.connect()
-const collectionName = "devices"
 const database = client.db(process.env.DBNAME)
-const collection = database.collection(collectionName)
+// const collectionName = "devices"
+// const collection = database.collection(collectionName)
 
 database.command({ ping: 1 })
 logger.info("You successfully connected to MongoDB!")
@@ -52,7 +53,6 @@ app.set("view engine", "pug")
 app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-var sessionSecret = encodeURIComponent(process.env.SESSION_SECRET)
 app.use(session({
   resave: true,
   saveUninitialized: true,
@@ -72,12 +72,8 @@ app.use((req, res, next) => {
   if (!req.user &&
     req.path !== "/login" &&
     req.path !== "/signup" &&
-    !req.path.match(/^\/auth/) &&
-    !req.path.match(/\./)) {
-  } else if (req.user &&
-    req.path == "/account") {
-  }
-  next()
+    !req.path.match(/^\/auth/))
+    next()
 })
 
 app.use(

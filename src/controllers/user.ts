@@ -1,11 +1,7 @@
-import async from "async"
-import crypto from "crypto"
-import nodemailer from "nodemailer"
 import passport from "passport"
 import { user } from "../models/3d-inventory"
 import { Request, Response, NextFunction } from "express"
 import { IVerifyOptions } from "passport-local"
-import { WriteError } from "mongodb"
 import { body, check, validationResult } from "express-validator"
 
 /**
@@ -71,4 +67,3 @@ export const getSignup = (req: Request, res: Response): void => {
     title: "Create Account"
   })
 }
-

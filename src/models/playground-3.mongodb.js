@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /*
  * File:        /src/models/playground-3.mongodb.js
  * Description:

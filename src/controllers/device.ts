@@ -11,9 +11,7 @@
 
 import { Request, Response } from "express"
 import { check, validationResult } from "express-validator"
-import { ObjectId } from "mongodb"
 import * as db from "../services/database.service"
-import { device } from "../models/3d-inventory"
 
 /**
  * Contact form page.

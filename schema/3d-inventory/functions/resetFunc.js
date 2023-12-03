@@ -1,3 +1,4 @@
+/* eslint-disable n/no-exports-assign */
 
   /*
     This function will be run when the client SDK 'callResetPasswordFunction' and is called with an object parameter

@@ -9,11 +9,10 @@
  * 2023-11-18  C2RLO
  */
 
-const moment = require("moment")
-const fs = require("fs-extra")
-const chalk = require("chalk")
+import moment from "moment"
+import { existsSync, mkdirSync, copySync } from "fs-extra"
 
-const { createLogger, format, transports } = require("winston")
+import { createLogger, format, transports } from "winston"
 const { combine, timestamp, label, printf, colorize } = format
 
 const myFormat = printf(({ level, message, label, timestamp }) => {
@@ -33,16 +32,16 @@ const logger = createLogger({
   ]
 })
 
-var backup_dir = moment().format("yyyy-MM-DD_HHmm")
-var dir = "./backup/" + backup_dir
+const backupDir = moment().format("yyyy-MM-DD_HHmm")
+const dir = "./backup/" + backupDir
 
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir)
+if (!existsSync(dir)) {
+  mkdirSync(dir)
 }
 
 logger.info("Create " + dir)
 
-fs.copySync("./src", dir, {
+copySync("./src", dir, {
   filter: path => {
     console.log("path ===", path)
     return !(path.indexOf("node_modules") > -1)

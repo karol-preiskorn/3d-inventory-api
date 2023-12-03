@@ -13,7 +13,6 @@
 
 // import { expect } from "chai"
 import * as db from "../src/services/database.service"
-import * as inventory from "../src/models/3d-inventory"
 import logger from "../src/util/logger"
 
 test("Call runQuery", () => {
@@ -21,8 +20,4 @@ test("Call runQuery", () => {
   logger.info("runQuery: " + data)
   expect(data).not.toBeNull()
   logger.info("runQuery: " + data)
-})
-
-test("two plus two is four", () => {
-  expect(2 + 2).toBe(4)
 })

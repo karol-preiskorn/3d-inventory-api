@@ -9,7 +9,6 @@
  * 2023-11-22  C2RLO    Initial
  */
 import { ObjectId } from "mongodb"
-import { BSON, EJSON } from "bson"
 import Realm from "realm"
 
 export type attributeDictionary = {
@@ -32,6 +31,24 @@ export const attributeDictionarySchema = {
   primaryKey: "_id",
 }
 
+
+
+export type device_position = {
+  h?: string
+  x?: string
+  y?: string
+}
+
+export const devicePositionSchema = {
+  name: "device_position",
+  embedded: true,
+  properties: {
+    h: "string?",
+    x: "string?",
+    y: "string?",
+  },
+}
+
 export type device = {
   _id?: ObjectId
   modelId?: ObjectId
@@ -50,39 +67,7 @@ export const deviceSchema = {
   primaryKey: "_id",
 }
 
-export type device_position = {
-  h?: string
-  x?: string
-  y?: string
-}
 
-export const device_positionSchema = {
-  name: "device_position",
-  embedded: true,
-  properties: {
-    h: "string?",
-    x: "string?",
-    y: "string?",
-  },
-}
-
-export type floor = {
-  _id: ObjectId
-  adress?: floor_adress
-  dimension: Realm.List<floor_dimension>
-  name: string
-}
-
-export const floorSchema = {
-  name: "floor",
-  properties: {
-    _id: "objectId",
-    adress: "floor_adress",
-    dimension: "floor_dimension[]",
-    name: "string",
-  },
-  primaryKey: "_id",
-}
 
 export type floor_adress = {
   city?: string
@@ -91,7 +76,7 @@ export type floor_adress = {
   street?: string
 }
 
-export const floor_adressSchema = {
+export const floorAdressSchema = {
   name: "floor_adress",
   embedded: true,
   properties: {
@@ -102,7 +87,10 @@ export const floor_adressSchema = {
   },
 }
 
-export type floor_dimension = {
+
+
+
+export type floorDimension = {
   description?: string
   h?: string
   h_pos?: string
@@ -112,8 +100,8 @@ export type floor_dimension = {
   y_pos?: string
 }
 
-export const floor_dimensionSchema = {
-  name: "floor_dimension",
+export const floorDimensionSchema = {
+  name: "floorDimension",
   embedded: true,
   properties: {
     description: "string?",
@@ -125,6 +113,25 @@ export const floor_dimensionSchema = {
     y_pos: "string?",
   },
 }
+
+export type floor = {
+  _id: ObjectId
+  adress?: floor_adress
+  dimension: Realm.List<floorDimension>
+  name: string
+}
+
+export const floorSchema = {
+  name: "floor",
+  properties: {
+    _id: "objectId",
+    adress: "floor_adress",
+    dimension: "floorDimension[]",
+    name: "string",
+  },
+  primaryKey: "_id",
+}
+
 
 export type log = {
   _id: ObjectId

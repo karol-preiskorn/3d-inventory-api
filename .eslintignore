@@ -7,5 +7,7 @@ coverage/*
 # 3rd party libs
 /src/public/
 # custom definition files
-/src/types/
+/src/types/*
 doc/*
+node_modules/**/*
+schema/**/*

@@ -10,7 +10,6 @@
  */
 
 import * as db from "../src/services/database.service"
-import * as inventory from "../src/models/3d-inventory"
 import logger from "../src/util/logger"
 
 test("Call runQuery", () => {

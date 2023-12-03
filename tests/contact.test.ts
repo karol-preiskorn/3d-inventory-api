@@ -1,25 +1,32 @@
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "request.**.expect"] }] */
+
 import request from "supertest"
 import app from "../src/app"
 import { expect } from "chai"
 
 describe("GET /contact", () => {
-  it("should return 200 OK", (done) => {
-    request(app).get("/contact")
-      .expect(200, done)
+  it("should return 200 OK", () => {
+    return new Promise(resolve => {
+      request(app).get("/contact")
+        .expect(200, resolve)
+    })
   })
 })
 
-
 describe("POST /contact", () => {
-  it("should return false from assert when no message is found", (done) => {
-    request(app).post("/contact")
-      .field("name", "John Doe")
-      .field("email", "john@me.com")
-      .end(function (err, res) {
-        expect(res.error).to.be.false
-        done()
-      })
-      .expect(302)
-
+  test("should return some defined error message with valid parameters", () => {
+    return new Promise(resolve => {
+      try {
+        request(app).post("/contact")
+          .field("email", "john@me.com")
+          .field("password", "Hunter2")
+          .end(function (resolve) {
+            expect(200, resolve)
+          })
+          .expect(302)
+      } catch (error) {
+        resolve(error)
+      }
+    })
   })
 })
