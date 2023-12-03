@@ -34,18 +34,12 @@ Create API for 3d-inventory application.
 
 ## Stack
 
-MEANS stack
-
 ![MEAN Stack (from: https://www.mongodb.com/blog)](assets/MEAN_Stack-phueurihe2.png)
 
 ### Nodejs
 
 ```bash
-"bcryptjs": "^2.4.3",
-"cookie-session": "^2.0.0",
-"cors": "^2.8.5",
-"express": "^4.18.2",
-"jsonwebtoken": "^9.0.2",
+
 ```
 
 ### Project API by Swagger 3+
