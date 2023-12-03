@@ -1,4 +1,4 @@
-﻿/*
+/*
  * File:        /src/util/log.test.ts
  * Description:
  * Used by:

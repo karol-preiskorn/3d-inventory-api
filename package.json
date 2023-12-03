@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Mongo API for 3d-inventory project",
   "keywords": [
     "3d-inventory",
@@ -26,7 +26,7 @@
     "debug": "npm run build && npm run watch-debug",
     "edit-swagger": "podman run -d -p 80:8080 docker://swaggerapi/swagger-editor",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
-    "lint:docs": "documentation build src/index.js src/service/** src/controllers/** src/api/** --github -o docs/index.html",
+    "lint:docs": "typedoc --out doc --tsconfig tsconfig.json src/** test/**",
     "lint:fix": "eslint --fix src/**/*.ts",
     "lint:prettier": "prettier --write --ignore-unknown --ignore-path .prettierignore",
     "lint:ts": "eslint --ignore-path .gitignore --config .eslintrc src/**/*.{js,ts}",
@@ -69,6 +69,7 @@
     "bluebird": "3.7.2",
     "body-parser": "1.20.2",
     "bootstrap": "^5.3.2",
+    "bson": "^6.2.0",
     "compression": "1.7.4",
     "connect-mongo": "^5.1.0",
     "cookie-session": "^2.0.0",
@@ -93,6 +94,7 @@
     "mongodb": "^6.3.0",
     "nodemailer": "6.9.7",
     "npm-check-updates": "^16.14.11",
+    "parent-module": "^3.1.0",
     "passport": "0.7.0",
     "passport-facebook": "3.0.0",
     "passport-local": "1.0.0",
@@ -135,7 +137,7 @@
     "chai": "^4.3.10",
     "concurrently": "8.2.2",
     "eslint": "^8.55.0",
-    "eslint-config-prettier": "9.0.0",
+    "eslint-config-prettier": "9.1.0",
     "eslint-config-standard": "17.1.0",
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-node": "11.1.0",
@@ -146,6 +148,7 @@
     "supertest": "6.3.3",
     "ts-jest": "^29.0.0",
     "ts-node": "10.9.1",
+    "typedoc": "^0.25.4",
     "typescript": "^4.8.0"
   },
   "engines": {

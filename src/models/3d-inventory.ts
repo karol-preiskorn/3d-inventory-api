@@ -1,4 +1,4 @@
-﻿/*
+/*
  * File:        /src/models/3d-inventory.ts
  * Description: data models
  * Used by:
@@ -8,8 +8,9 @@
  * ----------  -------  ------------------------------
  * 2023-11-22  C2RLO    Initial
  */
-import Realm from "realm"
 import { ObjectId } from "mongodb"
+import { BSON, EJSON } from "bson"
+import Realm from "realm"
 
 export type attributeDictionary = {
   _id: ObjectId
@@ -157,16 +158,16 @@ export type user = {
   token?: string
 }
 export const userSchema = {
-  name: 'user',
+  name: "user",
   properties: {
-    _id: 'objectId',
-    email: 'string?',
-    name: 'string?',
-    password: 'string?',
-    rights: 'string[]',
-    token: 'string?',
+    _id: "objectId",
+    email: "string?",
+    name: "string?",
+    password: "string?",
+    rights: "string[]",
+    token: "string?",
   },
-  primaryKey: '_id',
+  primaryKey: "_id",
 }
 
 export default { userSchema }

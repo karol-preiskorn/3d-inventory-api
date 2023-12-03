@@ -1,4 +1,4 @@
-﻿/*
+/*
  * File:        /src/services/database.dervice.ts
  * Description: Connect and execute query to Mongo Atlas
  * Used by:
@@ -13,7 +13,7 @@
 import "dotenv/config"
 import logger from "../util/logger"
 import { Document, Filter, MongoClient, ServerApiVersion } from "mongodb"
-//import environment from "src/environment"
+// import environment from "src/environment"
 
 const username = encodeURIComponent(process.env.USERNAME)
 const password = encodeURIComponent(process.env.PASSWORD)
@@ -30,27 +30,27 @@ const client = new MongoClient(uri, {
   }
 })
 
-export async function runQuery(p_collection: string, p_query: Filter<Document>) {
+export async function runQuery(pCollection: string, pQuery: Filter<Document>) {
   try {
     await client.connect()
     const dbName = process.env.dbName
-    const collectionName = p_collection
+    const collectionName = pCollection
     const database = client.db(dbName)
     const collection = database.collection(collectionName)
 
     await database.command({ ping: 1 })
-    //logger.info("Pinged your deployment. You successfully connected to MongoDB!")
+    // logger.info("Pinged your deployment. You successfully connected to MongoDB!")
 
 
     try {
-      const cursor = await collection.find(p_query).sort({}).forEach(device => {
+      await collection.find(pQuery).sort({}).forEach(device => {
         logger.info(`${device.name} has model ${device.modelId}, position: [${device.position.x}, ${device.position.y}, ${device.position.h}].`)
       })
     } catch (err) {
       logger.error(`Something went wrong trying to find the documents: ${err}\n`)
     }
   } finally {
-    //logger.info("Close connection")
+    // logger.info("Close connection")
     await client.close()
   }
 }

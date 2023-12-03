@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === "development") {
  * Start Express server.
  */
 const server = app.listen(app.get("port"), () => {
-  logger.info('-------------------------------------------------------------------------------------------------------------------------')
+  logger.info("-------------------------------------------------------------------------------------------------------------------------")
   logger.info(
     "\n"+figlet.textSync("3d-inventory-mongo-api", {
       font: "Graffiti",
@@ -24,13 +24,13 @@ const server = app.listen(app.get("port"), () => {
       width: 255,
       whitespaceBreak: true,
     })
-  );
+  )
   logger.info(
     "  Server 3d-inventory-mongo-api is running at http://localhost:%d in %s mode",
     app.get("port"),
     app.get("env")
   )
-  logger.info('-------------------------------------------------------------------------------------------------------------------------')
+  logger.info("-------------------------------------------------------------------------------------------------------------------------")
 })
 
 export default server

@@ -1,15 +1,15 @@
-﻿/* global use, db */
+/* global use, db */
 // MongoDB Playground
 // Use Ctrl+Space inside a snippet or a string literal to trigger completions.
 
-const database = '3d-inventory';
-const collection = 'NEW_COLLECTION_NAME';
+const database = "3d-inventory"
+const collection = "NEW_COLLECTION_NAME"
 
 // The current database to use.
-use(database);
+use(database)
 
 // Create a new collection.
-db.createCollection(collection);
+db.createCollection(collection)
 
 // The prototype form to create a collection:
 /* db.createCollection( <name>,
@@ -37,7 +37,7 @@ db.createCollection(collection);
     expireAfterSeconds: <number>,
     clusteredIndex: <document>, // Added in MongoDB 5.3
   }
-)*/
+) */
 
 // More information on the `createCollection` command can be found at:
 // https://www.mongodb.com/docs/manual/reference/method/db.createCollection/

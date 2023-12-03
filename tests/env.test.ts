@@ -1,4 +1,4 @@
-﻿/*
+/*
  * File:        /tests/mongo.test copy.ts
  * Description: test set/use and config .env
  * Used by:
@@ -20,6 +20,6 @@ test("Call runQuery", () => {
   logger.info("runQuery: " + data)
 })
 
-test('two plus two is four', () => {
+test("two plus two is four", () => {
   expect(2 + 2).toBe(4)
 })

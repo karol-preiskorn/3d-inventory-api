@@ -44,7 +44,7 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
     }
     req.logIn(user, (err) => {
       if (err) { return next(err) }
-      //req.flash().success
+      // req.flash().success
       res.redirect("/")
     })
   })(req, res, next)

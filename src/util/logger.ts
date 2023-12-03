@@ -1,9 +1,18 @@
+/*
+ * File:        /src/util/logger.ts
+ * Description:
+ * Used by:
+ * Dependency:
+ *
+ * Date        By       Comments
+ * ----------  -------  ------------------------------
+ * 2023-12-02  C2RLO    Initial add parent-module
+ */
+
+
 import { createLogger, format, transports, addColors } from "winston"
 import path from "path"
-import { fileURLToPath } from "url"
-
-//const url = dirname(fileURLToPath(import.meta.url))
-//const url = new URL(import.meta.url)
+import parentModule from "parent-module"
 
 const { combine, timestamp, label, printf, colorize } = format
 
@@ -25,14 +34,18 @@ const myCustomLevels = {
 const myFormat = printf(({ level, message, label, timestamp }) => {
   return `${timestamp} [${label}] ${level}: ${message}`
 })
-console.log(path.basename(require.main.id))
+
+/** require.main.id - get filename */
+
+console.log(path.basename(parentModule()))
+
 
 const logger = createLogger({
   levels: myCustomLevels.levels,
   format: combine(
     colorize({ all: true }),
-    //label({ label: __filename.slice(__dirname.length + 1) }),
-    label({ label: path.basename(require.main.id) }),
+    // label({ label: __filename.slice(__dirname.length + 1) }),
+    label({ label: path.basename(parentModule()) }),
     format.errors({ stack: true }),
     format.splat(),
     timestamp({

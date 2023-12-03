@@ -1,4 +1,4 @@
-﻿/*
+/*
  * File:        /src/environment.ts
  * Description:
  * Used by:
@@ -13,21 +13,22 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
+      API_KEY: string
+      API_KEY_NAME: string
+      CLUSTERURI: string
+      COLLECTIONNAME: string
+      CONNECT_STRING: string
+      DBNAME: string
       GITHUB_AUTH_TOKEN: string
-      NODE_ENV: 'development' | 'production'
+      NODE_ENV: "development" | "production"
+      PASSWORD: string
       PORT?: string
       PWD: string
-      REALM_CLI_PUBLIC_KEY: string
       REALM_CLI_PRIVATE_KEY: string
-      API_KEY_NAME: string
-      API_KEY: string
+      REALM_CLI_PUBLIC_KEY: string
       SECRET_KEY: string
-      CONNECT_STRING: string
+      SESSION_SECRET: string
       USERNAME: string
-      PASSWORD: string
-      CLUSTERURI: string
-      DBNAME: string
-      COLLECTIONNAME: string
     }
   }
 }

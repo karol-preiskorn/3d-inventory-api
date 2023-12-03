@@ -1,4 +1,4 @@
-﻿/*
+/*
  * File:        /src/models/playground-2.mongodb.js
  * Description:
  * Used by:
@@ -15,14 +15,14 @@
 // MongoDB Playground
 // Use Ctrl+Space inside a snippet or a string literal to trigger completions.
 
-const database = '3d-inventory';
-const collection = 'users';
+const database = "3d-inventory"
+const collection = "users"
 
 // The current database to use.
-use(database);
+use(database)
 
 // Create a new collection.
-db.createCollection(collection);
+db.createCollection(collection)
 
 
 // More information on the `createCollection` command can be found at:

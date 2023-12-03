@@ -6,11 +6,10 @@
     "plugin:import/typescript",
     "standard",
     "plugin:jest/recommended",
-    "plugin:jest/all",
     "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": 2022,
+    "ecmaVersion": 2020,
     "sourceType": "module"
   },
   "rules": {
@@ -33,11 +32,10 @@
     "@typescript-eslint/no-unused-vars": "warn"
   },
   "env": {
-    "commonjs": true,
-    "es6": true,
-    "mongo": true,
+    "jest": true,
     "jest/globals": true,
-    "jest": true
+    "mongo": true,
+    "es2020": true
   },
   "overrides": [
     {
@@ -49,10 +47,10 @@
       ],
       "extends": [
         "plugin:jest/recommended"
-      ],
-      "rules": {
-        "jest/prefer-expect-assertions": "off"
-      }
+      ]
+      // "rules": {
+      //   "jest/prefer-expect-assertions": "off"
+      // }
     }
   ],
   "plugins": [

@@ -44,7 +44,7 @@ export const postContact = async (req: Request, res: Response) => {
 
   transporter.sendMail(mailOptions, (err) => {
     if (err) {
-      req.flash("errors", { msg: err.message })
+      req.flash(err.message)
       return res.redirect("/contact")
     }
     res.redirect("/contact")
