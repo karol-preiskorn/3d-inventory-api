@@ -3,41 +3,34 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "lib": [
       "es2022"
     ],
     "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "nodenext",
     "noImplicitAny": true,
     "outDir": "dist",
     "paths": {
       "*": [
         "node_modules/*",
-        "src/types/*"
+        "src/*",
+        "test/*"
       ]
     },
     "preserveConstEnums": true,
     "project": "./tsconfig.json",
     "sourceMap": true,
-    //"strict": true,
-    "target": "ESNext",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    // "strict": true,
+    "target": "es2022",
     "types": [
       "node",
       "jest"
     ]
   },
-  "exclude": [
-    "node_modules",
-    "dist/tests/**",
-    "doc/**/*"
-  ],
   "include": [
     "src/**/*",
     "tests/*.test.ts",
-    "typings.d.ts"
   ],
   "overrides": [
     {

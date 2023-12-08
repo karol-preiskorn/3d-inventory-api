@@ -9,9 +9,8 @@
  * 2023-11-21  C2RLO    Initial
  */
 
-
 import "dotenv/config"
-import logger from "../util/logger"
+import logger from "../utils/logger"
 import { Document, Filter, MongoClient, ServerApiVersion } from "mongodb"
 // import environment from "src/environment"
 
@@ -40,8 +39,6 @@ export async function runQuery(pCollection: string, pQuery: Filter<Document>) {
 
     await database.command({ ping: 1 })
     // logger.info("Pinged your deployment. You successfully connected to MongoDB!")
-
-
     try {
       await collection.find(pQuery).sort({}).forEach(device => {
         logger.info(`${device.name} has model ${device.modelId}, position: [${device.position.x}, ${device.position.y}, ${device.position.h}].`)

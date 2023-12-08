@@ -1,20 +1,14 @@
 import bodyParser from "body-parser"
-import compression from "compression" // compresses requests
-import MongoStore from "connect-mongo"
 import "dotenv/config"
 import express from "express"
 import flash from "express-flash"
-import session from "express-session"
 import { MongoClient, ServerApiVersion } from "mongodb"
 import path from "path"
-import logger from "./util/logger"
-
-import { MONGODB_URI } from "./util/secrets"
+import logger from "./utils/logger"
 
 // Controllers (route handlers)
 import * as apiController from "./controllers/api"
 import * as deviceController from "./controllers/device"
-import * as homeController from "./controllers/home"
 
 logger.info("Start app")
 
@@ -42,55 +36,32 @@ client.connect()
 const database = client.db(process.env.DBNAME)
 // const collectionName = "devices"
 // const collection = database.collection(collectionName)
-
 database.command({ ping: 1 })
-logger.info("You successfully connected to MongoDB!")
+//   logger.info("✅ You successfully connected to MongoDB!")
+// } else {
+//   logger.info("🐛 You do not connected to MongoDB!")
+// }z
 
 // Express configuration
 app.set("port", process.env.PORT || 3000)
-app.set("views", path.join(__dirname, "../views"))
-app.set("view engine", "pug")
-app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(session({
-  resave: true,
-  saveUninitialized: true,
-  secret: sessionSecret,
-  store: MongoStore.create({
-    mongoUrl: MONGODB_URI,
-    mongoOptions: { retryWrites: true }
-  })
-}))
+// app.use(session({
+//   resave: true,
+//   saveUninitialized: true,
+//   secret: sessionSecret,
+//   store: MongoStore.create({
+//     mongoUrl: MONGODB_URI,
+//     mongoOptions: { retryWrites: true }
+//   })
+// }))
 app.use(flash())
-app.use((req, res, next) => {
-  res.locals.user = req.user
-  next()
-})
-app.use((req, res, next) => {
-  // After successful login, redirect back to the intended page
-  if (!req.user &&
-    req.path !== "/login" &&
-    req.path !== "/signup" &&
-    !req.path.match(/^\/auth/))
-    next()
-})
-
-app.use(
-  express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
-)
+app.use(express.static(path.join(__dirname, "public"), { maxAge: 31557600000 }))
 
 /**
- * Primary app routes.
+ *  app routes.
  */
-app.get("/", homeController.index)
-app.get("/devices", deviceController.getDevices)
-
-/**
- *
- * API examples routes.
- *
- */
+app.get("/api/devices", deviceController.getDevices)
 app.get("/api", apiController.getApi)
 
 export default app

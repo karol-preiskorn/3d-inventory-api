@@ -11,14 +11,16 @@
 
 import { Request, Response } from "express"
 import { check, validationResult } from "express-validator"
-import * as db from "../services/database.service"
+import { runQuery } from "./../services/mongoService"
+import type { device } from "../models/3d-inventory"
+import { deviceSchema } from "../models/3d-inventory"
 
 /**
  * Contact form page.
  * @route GET /devices
  */
 export const getDevices = (req: Request, res: Response) => {
-  db.runQuery("devices", {})
+  runQuery("devices", {})
 }
 
 /**
@@ -33,7 +35,7 @@ export const postContact = async (req: Request, res: Response) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.redirect("/contact")
+    return res.redirect("/api")
   }
 
 }

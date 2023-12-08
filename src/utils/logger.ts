@@ -9,10 +9,9 @@
  * 2023-12-02  C2RLO    Initial add parent-module
  */
 
-
 import { createLogger, format, transports, addColors } from "winston"
 import path from "path"
-import parentModule from "parent-module"
+// import parentModule from "parent-module"
 
 const { combine, timestamp, label, printf, colorize } = format
 
@@ -36,17 +35,14 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
 })
 
 /** require.main.id - get filename */
-
-console.log(path.basename(parentModule()))
-
+console.log(path.basename(module.parent.filename))
 
 const logger = createLogger({
   levels: myCustomLevels.levels,
   format: combine(
     colorize({ all: true }),
     // label({ label: __filename.slice(__dirname.length + 1) }),
-    label({ label: path.basename(parentModule()) }),
-    format.errors({ stack: true }),
+    label({ label:  path.basename(module.parent.filename)}),
     format.splat(),
     timestamp({
       format: "YYYY-MM-DD HH:mm:ss"
