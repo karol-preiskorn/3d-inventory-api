@@ -30,7 +30,7 @@ Create API for 3d-inventory application.
 
 ### Architecture
 
-![Architecture 3d-inventory Mongo API](assets/architecture.png)
+![Architecture 3d-inventory Mongo API](https://github.com/karol-preiskorn/3d-inventory-mongo-api/raw/main/assets/architecture.png)
 
 ## Stack
 
