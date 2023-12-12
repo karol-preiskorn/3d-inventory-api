@@ -45,8 +45,8 @@
     "swagger:get-jars": "mvn package -f api/pom.xml",
     "swagger:install-dependencies": "cd src && npm i oracledb eslint nodemon unique-names-generator dotenv",
     "swagger:nodemon": "cat package.json | jq '.scripts += {\"nodemon\": \"nodemon --ext yaml,js,mjs,json --experimental-specifier-resolution=node src/index.js\"}' > package.tmp && mv -f package.tmp package.json",
-    "swagger:v3-docker-generate": "docker run --rm -v ${PWD}:/local swaggerapi/swagger-codegen-cli-v3 generate -i /local/api/openapi.yaml -l nodejs-server -o /local/src",
-    "swagger:v3-editor": "docker run -d -p 80:8080 -v ${PWD}:/tmp -e SWAGGER_FILE=/tmp/api/openapi.yaml swaggerapi/swagger-editor",
+    "swagger:v3-podman-generate": "podman run --rm -v ${PWD}:/local swaggerapi/swagger-codegen-cli-v3 generate -i /local/api/openapi.yaml -l nodejs-server -o /local/src",
+    "swagger:v3-editor": "podman run -d -p 80:8080 -v ${PWD}:/tmp -e SWAGGER_FILE=/tmp/api/openapi.yaml swaggerapi/swagger-editor",
     "swagger:v3-editor-open": "open http://locahost:8080",
     "swagger:v3-generate": "pwd && java -jar api/target/jars/swagger-codegen-cli.jar generate -i api/openapi.yaml -l nodejs-server -o src",
     "test": "jest --forceExit --coverage --verbose",
@@ -101,7 +101,8 @@
     "realm": "^12.3.1",
     "remove": "^0.1.5",
     "semver": "^7.5.4",
-    "winston": "3.11.0"
+    "winston": "3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^4.2.0",
@@ -113,6 +114,7 @@
     "@types/body-parser": "1.19.5",
     "@types/chai": "4.3.11",
     "@types/compression": "1.7.5",
+    "@types/cors": "^2.8.17",
     "@types/errorhandler": "1.5.3",
     "@types/eslint": "8.44.8",
     "@types/express": "^4.17.21",
