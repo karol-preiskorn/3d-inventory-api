@@ -1,66 +1,20 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "lib": [
-      "es2022"
-    ],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "noImplicitAny": true,
-    "outDir": "dist",
-    "paths": {
-      "*": [
-        "node_modules/*",
-        "src/types/*"
-      ]
-    },
-    "preserveConstEnums": true,
-    "project": "./tsconfig.json",
-    "sourceMap": true,
-    //"strict": true,
-    "target": "ESNext",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "types": [
-      "node",
-      "jest"
-    ]
-  },
-  "exclude": [
-    "node_modules",
-    "dist/tests/**",
-    "doc/**/*"
-  ],
-  "include": [
-    "src/**/*",
-    "tests/*.test.ts",
-    "typings.d.ts"
-  ],
-  "overrides": [
-    {
-      "files": [
-        "test/**"
-      ],
-      "plugins": [
-        "jest"
-      ],
-      "rules": {
-        // you should turn the original rule off *only* for test files
-        //"@typescript-eslint/unbound-method": "off",
-        //"jest/unbound-method": "error",
-      }
-    }
-  ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": "2022",
-    "project": "tsconfig.json",
-    "sourceType": "module"
-  },
-  "rules": {
-    "@typescript-eslint/unbound-method": "error"
+    /* Language and Environment */
+    "target": "es2016", /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+    "experimentalDecorators": true, /* Enable experimental support for legacy experimental decorators. */
+    "emitDecoratorMetadata": true, /* Emit design-type metadata for decorated declarations in source files. */
+    /* Modules */
+    "module": "commonjs", /* Specify what module code is generated. */
+    "resolveJsonModule": true, /* Enable importing .json files. */
+    /* Emit */
+    "outDir": "./build", /* Specify an output folder for all emitted files. */
+    /* Interop Constraints */
+    "esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+    "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
+    /* Type Checking */
+    "strict": true, /* Enable all strict type-checking options. */
+    /* Completeness */
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */
   }
 }

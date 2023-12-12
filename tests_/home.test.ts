@@ -1,13 +1,12 @@
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "request.**.expect"] }] */
 
 import request from "supertest"
-import { expect, jest, test } from '@jest/globals'
-import app from "../src/app"
+import app from "../src/server"
 
-describe("GET /api/device", () => {
+describe("GET /", () => {
   it("should return 200 OK", () => {
     return new Promise(resolve => {
-      request(app).get("/api/devices").expect("Content-Type", /json/).expect(200, resolve)
+      request(app).get("/").expect("Content-Type", /json/).expect(200, resolve)
     })
   })
 })
