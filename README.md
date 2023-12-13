@@ -4,13 +4,12 @@
    1. [Purposse](#purposse)
       1. [Architecture](#architecture)
    2. [Stack](#stack)
-      1. [Nodejs](#nodejs)
-      2. [Project API by Swagger 3+](#project-api-by-swagger-3)
-      3. [MongoDB](#mongodb)
+      1. [Project API by Swagger 3+](#project-api-by-swagger-3)
+      2. [MongoDB](#mongodb)
          1. [Example of using a Mongoose cursor async with promises](#example-of-using-a-mongoose-cursor-async-with-promises)
    3. [Install node stack](#install-node-stack)
       1. [Use typescript](#use-typescript)
-   4. [Playgrounds](#playgrounds)
+   4. [Mongo Playgrounds](#mongo-playgrounds)
 
 [![wakatime](https://wakatime.com/badge/user/3bbeedbe-0c6a-4a01-b3cd-a85d319a03bf/project/018c29b5-69aa-44a9-823a-51170ee4eafb.svg)](https://wakatime.com/badge/user/3bbeedbe-0c6a-4a01-b3cd-a85d319a03bf/project/018c29b5-69aa-44a9-823a-51170ee4eafb)
 [![GitHub latest commit](https://badgen.net/github/last-commit/karol-preiskorn/3d-inventory-mongo-api)](https://GitHub.com/karol-preiskorn/3d-inventory-mongo-api/commit/)
@@ -32,12 +31,6 @@ Create mongo API for [3d-inventory](https://github.com/users/karol-preiskorn/pro
 ## Stack
 
 ![MEAN Stack (from: https://www.mongodb.com/blog)](assets/MEAN_Stack-phueurihe2.png)
-
-### Nodejs
-
-```bash
-
-```
 
 ### Project API by Swagger 3+
 
@@ -100,7 +93,7 @@ Promise.map(files, function(file) {
 });
 ```
 
-Reference:
+##### Reference
 
 - [Streams and promises](https://github.com/petkaantonov/bluebird/issues/332#issuecomment-58326173)
 - [promise-streams](https://github.com/spion/promise-streams)
@@ -109,13 +102,14 @@ Reference:
 
 ```bash
 npm install
+npm start
 ```
 
 ### Use typescript
 
 <https://github.com/Microsoft/TypeScript-Node-Starter#typescript--node>
 
-## Playgrounds
+## Mongo Playgrounds
 
 ```javascript
 use('3d-inventory');
