@@ -23,7 +23,7 @@
 
 ## Purposse
 
-Create mongo API for (3d-inventory)[https://github.com/users/karol-preiskorn/projects/2] project.
+Create mongo API for [3d-inventory](https://github.com/users/karol-preiskorn/projects/2) project.
 
 ### Architecture
 
