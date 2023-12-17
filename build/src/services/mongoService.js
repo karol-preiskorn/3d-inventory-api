@@ -24,7 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.runQuery = void 0;
 require("dotenv/config");
-const logger_1 = __importDefault(require("../util/logger"));
+const logger_1 = __importDefault(require("../utils/logger"));
 const mongodb_1 = require("mongodb");
 // import environment from "src/environment"
 const username = encodeURIComponent(process.env.USERNAME);

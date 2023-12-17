@@ -35,14 +35,14 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
 })
 
 /** require.main.id - get filename */
-console.log(path.basename(module.parent.filename))
+// console.log(path.basename(module.parent.filename))
 
 const logger = createLogger({
   levels: myCustomLevels.levels,
   format: combine(
     colorize({ all: true }),
-    // label({ label: __filename.slice(__dirname.length + 1) }),
-    label({ label:  path.basename(module.parent.filename)}),
+    label({ label: __filename.slice(__dirname.length + 1) }),
+    // label({ label:  path.basename(module.parent.filename)}),
     format.splat(),
     timestamp({
       format: "YYYY-MM-DD HH:mm:ss"

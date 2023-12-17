@@ -9,8 +9,8 @@
  * 2023-11-29  C2RLO    Initial
  */
 
-import * as db from "../src/services/database.service"
-import logger from "../src/util/logger"
+import * as db from "../src/services/mongoService"
+import logger from "../src/utils/logger"
 
 test("Call runQuery", () => {
   const data = db.runQuery("devices", {})

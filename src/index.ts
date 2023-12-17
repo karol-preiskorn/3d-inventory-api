@@ -1,9 +1,10 @@
 import express, { Application } from "express"
 import Server from "./server"
-import logger from "./util/logger"
+import logger from "./utils/logger"
 import figlet from "figlet"
 
 const app: Application = express()
+const server: Server = new Server(app)
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080
 
 app
