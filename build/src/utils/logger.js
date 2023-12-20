@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 /*
  * File:        /src/util/logger.ts
  * Description:
@@ -9,10 +9,10 @@
  * ----------  -------  ------------------------------
  * 2023-12-02  C2RLO    Initial add parent-module
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-const winston_1 = require("winston");
+Object.defineProperty(exports, "__esModule", { value: true })
+const winston_1 = require("winston")
 // import parentModule from "parent-module"
-const { combine, timestamp, label, printf, colorize } = winston_1.format;
+const { combine, timestamp, label, printf, colorize } = winston_1.format
 const myCustomLevels = {
     levels: {
         info: 0,
@@ -26,10 +26,10 @@ const myCustomLevels = {
         error: "red",
         debug: "pink"
     }
-};
+}
 const myFormat = printf(({ level, message, label, timestamp }) => {
-    return `${timestamp} [${label}] ${level}: ${message}`;
-});
+    return `${timestamp} [${label}] ${level}: ${message}`
+})
 /** require.main.id - get filename */
 // console.log(path.basename(module.parent.filename))
 const logger = (0, winston_1.createLogger)({
@@ -44,5 +44,5 @@ const logger = (0, winston_1.createLogger)({
         new winston_1.transports.File({ filename: "error.log", handleExceptions: true })
     ]
 });
-(0, winston_1.addColors)(myCustomLevels.colors);
-exports.default = logger;
+(0, winston_1.addColors)(myCustomLevels.colors)
+exports.default = logger

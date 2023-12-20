@@ -1,6 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getApi = void 0;
+"use strict"
+Object.defineProperty(exports, "__esModule", { value: true })
+exports.getApi = void 0
 /**
  * List of API examples.
  * @route GET /api
@@ -8,6 +8,6 @@ exports.getApi = void 0;
 const getApi = (_req, res) => {
     res.render("api/index", {
         title: "API Examples"
-    });
-};
-exports.getApi = getApi;
+    })
+}
+exports.getApi = getApi
