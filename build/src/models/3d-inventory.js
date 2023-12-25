@@ -1,6 +1,6 @@
-"use strict"
-Object.defineProperty(exports, "__esModule", { value: true })
-exports.userSchema = exports.logSchema = exports.floorSchema = exports.floorDimensionSchema = exports.floorAdressSchema = exports.deviceSchema = exports.devicePositionSchema = exports.attributeDictionarySchema = void 0
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.userSchema = exports.logSchema = exports.floorSchema = exports.floorDimensionSchema = exports.floorAdressSchema = exports.deviceSchema = exports.devicePositionSchema = exports.attributeDictionarySchema = void 0;
 exports.attributeDictionarySchema = {
     name: "attribute-dictionary",
     properties: {
@@ -11,7 +11,7 @@ exports.attributeDictionarySchema = {
         type: "string?",
     },
     primaryKey: "_id",
-}
+};
 exports.devicePositionSchema = {
     name: "device_position",
     embedded: true,
@@ -20,7 +20,7 @@ exports.devicePositionSchema = {
         x: "string?",
         y: "string?",
     },
-}
+};
 exports.deviceSchema = {
     name: "device",
     properties: {
@@ -30,7 +30,7 @@ exports.deviceSchema = {
         position: "device_position",
     },
     primaryKey: "_id",
-}
+};
 exports.floorAdressSchema = {
     name: "floor_adress",
     embedded: true,
@@ -40,7 +40,7 @@ exports.floorAdressSchema = {
         postcode: "string?",
         street: "string?",
     },
-}
+};
 exports.floorDimensionSchema = {
     name: "floorDimension",
     embedded: true,
@@ -53,7 +53,7 @@ exports.floorDimensionSchema = {
         y: "string?",
         y_pos: "string?",
     },
-}
+};
 exports.floorSchema = {
     name: "floor",
     properties: {
@@ -63,7 +63,7 @@ exports.floorSchema = {
         name: "string",
     },
     primaryKey: "_id",
-}
+};
 exports.logSchema = {
     name: "log",
     properties: {
@@ -75,7 +75,7 @@ exports.logSchema = {
         operation: "string?",
     },
     primaryKey: "_id",
-}
+};
 exports.userSchema = {
     name: "user",
     properties: {
@@ -87,5 +87,5 @@ exports.userSchema = {
         token: "string?",
     },
     primaryKey: "_id",
-}
-exports.default = { userSchema: exports.userSchema }
+};
+exports.default = { userSchema: exports.userSchema };

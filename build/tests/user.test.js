@@ -1,12 +1,12 @@
-"use strict"
+"use strict";
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "request.**.expect"] }] */
 var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod }
-}
-Object.defineProperty(exports, "__esModule", { value: true })
-const supertest_1 = __importDefault(require("supertest"))
-const server_1 = __importDefault(require("../src/server"))
-const chai_1 = require("chai")
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const supertest_1 = __importDefault(require("supertest"));
+const server_1 = __importDefault(require("../src/server"));
+const chai_1 = require("chai");
 describe("POST /login", () => {
     test("should return some defined error message with valid parameters", () => {
         return new Promise(resolve => {
@@ -15,13 +15,13 @@ describe("POST /login", () => {
                     .field("email", "john@me.com")
                     .field("password", "Hunter2")
                     .end(function (resolve) {
-                    (0, chai_1.expect)(200, resolve)
+                    (0, chai_1.expect)(200, resolve);
                 })
-                    .expect(302)
+                    .expect(302);
             }
             catch (error) {
-                resolve(error)
+                resolve(error);
             }
-        })
-    })
-})
+        });
+    });
+});

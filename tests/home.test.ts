@@ -1,7 +1,7 @@
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "request.**.expect"] }] */
 
 import request from "supertest"
-import app from "../src/index"
+import * as app from "../src/index"
 
 describe("GET /", () => {
   it("should return 200 OK", () => {

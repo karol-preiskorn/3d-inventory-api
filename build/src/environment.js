@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 /*
  * File:        /src/environment.ts
  * Description:
@@ -9,4 +9,4 @@
  * ----------  -------  ------------------------------
  * 2023-12-02  C2RLO    Initial
  */
-Object.defineProperty(exports, "__esModule", { value: true })
+Object.defineProperty(exports, "__esModule", { value: true });
