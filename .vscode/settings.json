@@ -29,5 +29,10 @@
   ],
   "appService.deploySubpath": "",
   "jest.jestCommandLine": "jest test",
-  "jest.rootPath": "."
+  "jest.rootPath": ".",
+  "cSpell.words": [
+    "mvn",
+    "oracledb",
+    "tsc"
+  ]
 }

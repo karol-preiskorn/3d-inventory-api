@@ -4,11 +4,19 @@
     "**/*.spec.ts",
     ".git",
     "node_modules",
-    "doc/**/*"
+    "doc/**/*",
+    "coverage/**/*"
   ],
   "watch": [
-    "src"
+    "api/openapi.yaml",
+    "index.js",
+    "assets/*",
+    "controllers/*",
+    "schema/*",
+    "service/*",
+    "tests/*",
+    "utils"
   ],
   "exec": "npm start",
-  "ext": "ts"
+  "ext": "js"
 }

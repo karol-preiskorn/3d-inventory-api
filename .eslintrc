@@ -1,9 +1,7 @@
 {
-  "parser": "@typescript-eslint/parser",
+  "parser": "esprima",
   "extends": [
-    "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
-    "plugin:import/typescript",
     "standard",
     "plugin:jest/recommended",
     "prettier"
@@ -20,22 +18,14 @@
     "quotes": [
       "error",
       "double"
-    ],
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": 1,
-    "@typescript-eslint/no-inferrable-types": [
-      "warn",
-      {
-        "ignoreParameters": true
-      }
-    ],
-    "@typescript-eslint/no-unused-vars": "warn"
+    ]
   },
   "env": {
+    "es2020": true,
     "jest": true,
     "jest/globals": true,
     "mongo": true,
-    "es2020": true
+    "mocha": true
   },
   "overrides": [
     {
@@ -51,6 +41,11 @@
       // "rules": {
       //   "jest/prefer-expect-assertions": "off"
       // }
+      ,
+      "env": {
+        "mocha": true,
+        "node": true
+      }
     }
   ],
   "plugins": [
