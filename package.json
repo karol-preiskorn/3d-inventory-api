@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Mongo API for 3d-inventory project",
   "keywords": [
     "3d-inventory",
@@ -23,16 +23,17 @@
     "cleanup": "rm package-lock.json && rm -rf ./build/* && rm -rf ./node_modules",
     "cp": "cp -f README.md src/assets",
     "debug": "npm run build && npm run watch-debug",
-    "openapi:format": "npx openapi-format api/openapi.yaml --output api/openapi-new.yaml",
-    "kill-port-upsage": "kill -9 `lsof -nP -iTCP:3000 -sTCP:LISTEN | sed -n 2p | awk '{print $2}'`",
+    "format": "prettier --single-quote --check .",
+    "kill-port-upsage": "kill -9 `lsof -nP -iTCP:8080 -sTCP:LISTEN | sed -n 2p | awk '{print $2}'`",
     "lint": "echo EsLint - `date +%R` | /usr/bin/figlet && eslint \"*.{js}\" --quiet --fix",
     "lint:docs": "typedoc --out doc --tsconfig tsconfig.json src/** test/**",
     "lint:js": "eslint --ignore-path .gitignore --config .eslintrc src/**/*.js",
     "maven:latest": "cd api && mvn versions:use-latest-versions",
     "maven:updates": "cd api && mvn versions:display-plugin-updates",
-    "preliminary": "npm install && husky install",
-    "start": "node --trace-warnings index.js",
-    "start:debug": "nodemon --inspect index.js",
+    "openapi:format": "npx openapi-format api/openapi.yaml --output api/openapi-new.yaml",
+    "prepare": "cd ../ && husky install server/.husky",
+    "start": "node --trace-warnings index.mjs",
+    "start:debug": "nodemon --inspect --experimental-modules index.mjs",
     "start:install": "npm install",
     "swagger:backup": "cp -v ./src/* ./backup/",
     "swagger:clean": "[ -d src ] && rm -r src",
@@ -47,16 +48,24 @@
     "test:watch": "npm run test -- --watchAll ",
     "update": "ncu -u && npm update && npm upgrade"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --single-quote --write",
+      "eslint --fix"
+    ]
+  },
   "dependencies": {
     "@apollo/client": "^3.8.8",
-    "@types/semver": "^7.5.6",
     "async": "3.2.5",
     "bcryptjs": "^2.4.3",
     "body-parser": "1.20.2",
-    "bootstrap": "^5.3.2",
     "bson": "^6.2.0",
     "chai-http": "^4.4.0",
-    "common-es": "^1.0.1",
     "compression": "1.7.4",
     "connect": "^3.7.0",
     "connect-mongo": "^5.1.0",
@@ -66,6 +75,7 @@
     "errorhandler": "1.5.1",
     "eslint-plugin-jest": "^27.6.0",
     "express": "4.18.2",
+    "express-async-errors": "^3.1.1",
     "express-flash": "0.0.2",
     "express-openapi-validator": "^5.1.2",
     "express-session": "1.17.3",
@@ -96,6 +106,7 @@
     "realm": "^12.5.0",
     "remove": "^0.1.5",
     "semver": "^7.5.4",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "winston": "3.11.0",
     "winston-daily-rotate-file": "^4.7.1",

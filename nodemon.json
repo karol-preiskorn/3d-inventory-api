@@ -9,14 +9,14 @@
   ],
   "watch": [
     "api/openapi.yaml",
-    "index.js",
+    "index.mjs",
     "assets/*",
-    "controllers/*",
+    "routers/*",
     "schema/*",
-    "service/*",
     "tests/*",
+    "db/*",
     "utils"
   ],
   "exec": "npm start",
-  "ext": "js"
+  "ext": "mjs"
 }

@@ -11,5 +11,7 @@ coverage/*
 doc/*
 node_modules/*
 schema/*
+swagger/*
+typescript/*
 .git/*
 .vscode/*
