@@ -11,31 +11,13 @@
  * 2023-10-29  C2RLO  Init
  */
 
-const logger = require("../utils/logger.js")
-const runQuery = require("../service/MongoService")
-const { MongoClient } = require("mongodb")
-const { faker } = require("@faker-js/faker")
-
+import { faker } from "@faker-js/faker"
+import "../loadEnvironment.mjs"
+import db from "../db/conn.mjs"
 
 describe("Test Mongo Atlas DB connection and schema", () => {
-  let connection
-  let db
-
-  beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    db = await connection.db(globalThis.process.env.DBNAME)
-  })
-
-  afterAll(async () => {
-    await connection.close()
-  })
-
   it("should insert a User doc into collection", async () => {
     const users = db.collection("users")
-
     const mockUser = {
       "name": faker.person.fullName(),
       "email": faker.internet.email(),
@@ -44,7 +26,6 @@ describe("Test Mongo Atlas DB connection and schema", () => {
       "token": faker.internet.password({ length: 50 })
     }
     await users.insertOne(mockUser)
-
     const insertedUser = await users.findOne(mockUser)
     expect(insertedUser).toEqual(mockUser)
   })

@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Mongo API for 3d-inventory project",
   "keywords": [
     "3d-inventory",
@@ -43,9 +43,9 @@
     "swagger:install": "cd src && npm i oracledb eslint nodemon unique-names-generator dotenv",
     "swagger:nodemon": "cat package.json | jq '.scripts += {\"nodemon\": \"nodemon --ext yaml,js,mjs,json --experimental-specifier-resolution=node src/index.js\"}' > package.tmp && mv -f package.tmp package.json",
     "swagger:podman-generate": "podman run --rm -v ${PWD}:/local swaggerapi/swagger-codegen-cli-v3 generate -i /local/api/openapi.yaml -l nodejs-server -o /local/src",
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ",
     "test:detectOpenHandles": "jest --detectOpenHandles",
-    "test:watch": "npm run test -- --watchAll ",
+    "test:watch": "npm run test --watchAll",
     "update": "ncu -u && npm update && npm upgrade"
   },
   "husky": {
@@ -103,6 +103,7 @@
     "prettier": "^3.1.1",
     "pretty-format": "^29.7.0",
     "pug": "3.0.2",
+    "punycode": "^2.3.1",
     "realm": "^12.5.0",
     "remove": "^0.1.5",
     "semver": "^7.5.4",

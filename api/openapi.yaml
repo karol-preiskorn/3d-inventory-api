@@ -2,15 +2,19 @@ openapi: 3.0.3
 info:
   title: API for project 3d-inventory
   description:
-    "API **3d-inventory**. Project is a simple solution that allows you to build a spatial and database
-    representation of all types of warehouses and server rooms. \n ### Modules\n - Devices\n - Logs\n - ###
-    Responses\n - 1xx Informational – Communicates transfer protocol-level information.\n- 2xx Success – Indicates
-    that the client’s request was accepted successfully. \n- 3xx Redirection – Indicates that the client must take
-    some additional action in order to complete their request. \n- 4xx Client Error – This category of error status
-    codes points the finger at clients. \n- 5xx Server Error – The server takes responsibility for these error
-    status codes."
+    "REST API for **3d-inventory**. Project is a simple solution that allows you to build a spatial and database
+    representation of all types of warehouses and server rooms. \n ### Modules\n -
+    [Devices](http://localhost:8080/api/#/devices)\n - [Logs](http://localhost:8080/api/#/logs)\n -
+    [Models](http://localhost:8080/api/#/models)\n - [Connection](http://localhost:8080/api/#/connection)\n -
+    [Attributes](http://localhost:8080/api/#/attributes)\n -
+    [AttributesDictionary](http://localhost:8080/api/#/attributesdictionary)\n -
+    [Floors](http://localhost:8080/api/#/floors) \n ### Responses\n - 1xx Informational – Communicates transfer
+    protocol-level information.\n- 2xx Success – Indicates that the client’s request was accepted successfully. \n-
+    3xx Redirection – Indicates that the client must take some additional action in order to complete their
+    request. \n- 4xx Client Error – This category of error status codes points the finger at clients. \n- 5xx
+    Server Error – The server takes responsibility for these error status codes."
   contact:
-    name: discussions
+    name: 3d-inventory
     url: "https://github.com/karol-preiskorn/3d-inventory-mongo-api/discussions"
     email: h5xwmtlfp@mozmail.com
   license:
@@ -22,24 +26,24 @@ externalDocs:
   url: "https://ultimasolution.pl/3d-inventory-mongo-api"
 servers:
   - url: "http://localhost:8080"
-    description: localhost api 3d-inventory-oracle-api
+    description: localhost
   - url: "https://virtserver.swaggerhub.com/karol-preiskorn/3d-inventory-rest-api/0.0.6"
-    description: SwaggerHub API Auto Mocking
+    description: SwaggerHub
 tags:
   - name: logs
-    description: Group Logs API
+    description: Operation on Logs
   - name: devices
-    description: Group Devices API
+    description: Basic object _3d-inventory_ Device and operation on devices API
   - name: models
-    description: Group Models API
+    description: Models of devices API
   - name: connections
-    description: Group Connections API
+    description: Connections between devices API
   - name: attributes
-    description: Group Attributes API
+    description: Device's Attributes API
   - name: attributeDictionary
-    description: Group Attributes Dictionary API
+    description: Attributes Dictionary API
   - name: floors
-    description: Group Floors API
+    description: Floors manipulation API
 paths:
   /devices:
     get:
@@ -57,6 +61,8 @@ paths:
                 $ref: "#/components/schemas/Devices"
         "404":
           description: Devices not found
+        "500":
+          description: Unexpected server error
       x-swagger-router-controller: Devices
     put:
       tags:
@@ -82,6 +88,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+        "500":
+          description: Unexpected error
       x-swagger-router-controller: Devices
     post:
       tags:
@@ -98,11 +106,7 @@ paths:
               $ref: "#/components/schemas/Device/example"
       responses:
         "200":
-          description: A devices id
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_200"
+          description: Oki device added
         "500":
           description: Error device not created
           content:
@@ -186,6 +190,64 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Devices
+  "/devices/model/{id}":
+    get:
+      tags:
+        - devices
+      summary: Get all devices with model :id
+      description: Get devices with specific model.
+      operationId: deviceGetModel
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: uuid
+            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
+            minLength: 36
+            maxLength: 36
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: List of devices with model
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Devices"
+        "404":
+          description: Devices not found with this model :id
+      x-swagger-router-controller: Devices
+    delete:
+      tags:
+        - devices
+      summary: Delete selected devices by model :id
+      description: Delete selected devices by model :id
+      operationId: deviceDeleteModel
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: uuid
+            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
+            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
+            minLength: 36
+            maxLength: 36
+            x-42c-format: o:uuid
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found device to delete
       x-swagger-router-controller: Devices
   /logs:
     get:
@@ -1248,10 +1310,6 @@ paths:
           description: OK. Indicates that the request has succeeded.
         "400":
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
             Unexpected server error. The server encountered an unexpected condition that prevented it from
@@ -1272,10 +1330,6 @@ paths:
           description: OK. Indicates that the request has succeeded.
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
             Unexpected server error. The server encountered an unexpected condition that prevented it from
@@ -1289,9 +1343,9 @@ paths:
     get:
       tags:
         - models
-      summary: Get model
-      description: Dictionary models of device.
-      operationId: modelGet
+      summary: Get selected model :id
+      description: Get one model of device.
+      operationId: modelIdGet
       parameters:
         - name: id
           in: path
@@ -1312,18 +1366,52 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Floors"
+                $ref: "#/components/schemas/Model"
+        "404":
+          description: Not found
+        "500":
+          description: Unexpected server error.
+      x-swagger-router-controller: Models
+    delete:
+      tags:
+        - models
+      summary: Delete selected model :id
+      description: Delete one model of device.
+      operationId: modelIdDelete
+      parameters:
+        - name: id
+          in: path
+          description: :Id of device
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: uuid
+            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
+            minLength: 36
+            maxLength: 36
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found
+        "500":
+          description: Unexpected server error.
       x-swagger-router-controller: Models
   /floors:
     get:
       tags:
         - floors
-      summary: "Floors "
-      description: Floors data and attributes
+      summary: "Get all floors data"
+      description: Get all floors data
       operationId: floorsGet
       responses:
         "200":
           description: OK
+        "404":
+          description: Not Found
       x-swagger-router-controller: Floors
     put:
       tags:
@@ -1453,9 +1541,9 @@ components:
         name:
           type: string
         adress:
-          $ref: "#/components/schemas/Floor_adress"
+          $ref: "#/components/schemas/FloorAdress"
         array:
-          $ref: "#/components/schemas/Floor_array"
+          $ref: "#/components/schemas/FloorArray"
       description: Floor object
       example:
         _id: 653e120577c067b6abbe5d26
@@ -1724,14 +1812,14 @@ components:
     Position:
       required:
         - x
-        - "y"
+        - y
         - h
       type: object
       properties:
         x:
           type: number
           description: Width
-        "y":
+        y:
           type: number
           description: Depth
         h:
@@ -1770,13 +1858,13 @@ components:
           $ref: "#/components/schemas/Position"
       description: Device it is basic structure 3d-inventory
       example:
-        _id: 653d6b95a75c2fa12566815c
-        name: Device 2 (new2)
+        _id: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
+        name: Device 2
+        modelId: a83a29f5-0d63-46f2-8f2e-44c2f1d2e072
         position:
-          x: "4"
-          "y": "3"
-          h: "0"
-        modelId: 653e1059d6025afb66017c63
+          x: 4
+          y: 3
+          h: 0
     Devices:
       type: array
       description: Array of Devices
@@ -1819,7 +1907,7 @@ components:
           minLength: 36
           maxLength: 36
           x-42c-format: "o:uuid"
-      description: Single Connection betweend two devices deviceIdFrom to deviceIdTo
+      description: Single Connection between two devices deviceIdFrom to deviceIdTo
       example:
         _id: 91601de6-6e93-11ed-a1eb-0242ac120002
         name: device-A1
@@ -1839,7 +1927,7 @@ components:
           type: string
         offset:
           type: string
-      description: Universal Oracle error logs from database
+      description: Universal error message from database
       example:
         errNum: "404"
         message: Error example app not work...
@@ -1916,21 +2004,7 @@ components:
           message: Message in log
       items:
         $ref: "#/components/schemas/Log"
-    inline_response_200:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The device ID.
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
-          x-42c-format: "o:uuid"
-      example:
-        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-    Floor_adress:
+    FloorAdress:
       type: object
       properties:
         street:
@@ -1941,14 +2015,14 @@ components:
           type: string
         postcode:
           type: string
-    Floor_array:
+    FloorArray:
       type: object
       properties:
         description:
           type: string
         x:
           type: number
-        "y":
+        y:
           type: number
         h:
           type: number

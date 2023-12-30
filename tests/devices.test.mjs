@@ -9,18 +9,17 @@
  * 2023-12-26  C2RLO  Initial
  **/
 
-const express = require("express")
-const request = require("supertest")
-const assert = require("assert")
-const logger = require("../utils/logger.js")
+import express from "express"
+import request from "supertest"
+import assert from "assert"
+import { faker } from "@faker-js/faker"
+import "../loadEnvironment.mjs"
+import db from "../db/conn.mjs"
 
 const app = express()
 
-logger.info("1")
 describe("GET /devices", () => {
-  logger.info("2")
   it("Should create Device by API", async () => {
-    logger.info("3")
     return new Promise((resolve, reject) => {
       try {
         request(app)
@@ -33,16 +32,28 @@ describe("GET /devices", () => {
           .toBeGreaterThan(0)
 
         expect.assertions(1)
-        logger.info(JSON.stringify(resolve.body))
-          .end(function (resolve) {
-            assert(resolve.body.email).toBeGreaterThan(0)
-            logger.info(JSON.stringify(resolve.body))
-          })
       } catch (error) {
-        logger.error(JSON.stringify(error))
-        logger.error(JSON.stringify(resolve.body))
         resolve(error).expect(error.statusCode).not.toBe(200)
       }
     })
   }, 10000)
+})
+
+describe("Create Device", () => {
+  it("should insert a Device doc into collection devices", async () => {
+    const device = db.collection("devices")
+    const mockDevice = {
+      "name": faker.commerce.product() + " " + faker.color.human() + "-" + faker.animal.type(),
+      "modelId": faker.string.uuid(),
+      "position": {
+        x: faker.number.int(100),
+        y: faker.number.int(100),
+        h: faker.number.int(100),
+      },
+    }
+
+    await device.insertOne(mockDevice)
+    const insertedDevice = await device.findOne(mockDevice)
+    expect(insertedDevice).toEqual(mockDevice)
+  })
 })
