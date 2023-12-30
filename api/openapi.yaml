@@ -1,30 +1,29 @@
 openapi: 3.0.3
 info:
   title: API for project 3d-inventory
-  description: "API **3d-inventory**. Project is a simple solution that allows you\
-    \ to build a spatial and database representation of all types of warehouses and\
-    \ server rooms. \n ### Modules\n - Devices\n - Logs\n - ### Responses\n - 1xx Informational – Communicates
-    transfer protocol-level information.\n- 2xx\
-    \ Success – Indicates that the client’s request was accepted successfully. \n\
-    - 3xx Redirection – Indicates that the client must take some additional action\
-    \ in order to complete their request. \n- 4xx Client Error – This category of\
-    \ error status codes points the finger at clients. \n- 5xx Server Error – The\
-    \ server takes responsibility for these error status codes."
+  description:
+    "API **3d-inventory**. Project is a simple solution that allows you to build a spatial and database
+    representation of all types of warehouses and server rooms. \n ### Modules\n - Devices\n - Logs\n - ###
+    Responses\n - 1xx Informational – Communicates transfer protocol-level information.\n- 2xx Success – Indicates
+    that the client’s request was accepted successfully. \n- 3xx Redirection – Indicates that the client must take
+    some additional action in order to complete their request. \n- 4xx Client Error – This category of error status
+    codes points the finger at clients. \n- 5xx Server Error – The server takes responsibility for these error
+    status codes."
   contact:
     name: discussions
-    url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/discussions
+    url: "https://github.com/karol-preiskorn/3d-inventory-mongo-api/discussions"
     email: h5xwmtlfp@mozmail.com
   license:
     name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
   version: 0.0.6
 externalDocs:
-  description: https://ultimasolution.pl/3d-inventory-mongo-api
-  url: https://ultimasolution.pl/3d-inventory-mongo-api
+  description: "https://ultimasolution.pl/3d-inventory-mongo-api"
+  url: "https://ultimasolution.pl/3d-inventory-mongo-api"
 servers:
-  - url: http://localhost:8080
+  - url: "http://localhost:8080"
     description: localhost api 3d-inventory-oracle-api
-  - url: https://virtserver.swaggerhub.com/karol-preiskorn/3d-inventory-rest-api/0.0.6
+  - url: "https://virtserver.swaggerhub.com/karol-preiskorn/3d-inventory-rest-api/0.0.6"
     description: SwaggerHub API Auto Mocking
 tags:
   - name: logs
@@ -127,7 +126,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
-  /devices/{id}:
+  "/devices/{id}":
     get:
       tags:
         - devices
@@ -145,10 +144,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: List of devices
@@ -284,7 +282,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Log"
       x-swagger-router-controller: Logs
-  /logs/{id}:
+  "/logs/{id}":
     get:
       tags:
         - logs
@@ -328,10 +326,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -342,7 +339,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Log"
       x-swagger-router-controller: Logs
-  /logs/device/{id}:
+  "/logs/device/{id}":
     get:
       tags:
         - logs
@@ -360,10 +357,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -391,10 +387,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -405,7 +400,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Log"
       x-swagger-router-controller: Logs
-  /logs/connection/{id}:
+  "/logs/connection/{id}":
     get:
       tags:
         - logs
@@ -423,10 +418,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -454,10 +448,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -468,7 +461,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Log"
       x-swagger-router-controller: Logs
-  /logs/attributes/{id}:
+  "/logs/attributes/{id}":
     get:
       tags:
         - logs
@@ -486,10 +479,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -511,10 +503,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -525,7 +516,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Log"
       x-swagger-router-controller: Logs
-  /logs/attribute-dictionary/{id}:
+  "/logs/attribute-dictionary/{id}":
     get:
       tags:
         - logs
@@ -543,10 +534,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -574,10 +564,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -699,7 +688,7 @@ paths:
               example:
                 $ref: "#/components/responses/500"
       x-swagger-router-controller: Connections
-  /connections/{id}:
+  "/connections/{id}":
     get:
       tags:
         - connections
@@ -717,10 +706,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: Success get connection between devices
@@ -746,10 +734,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -760,7 +747,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Connections"
       x-swagger-router-controller: Connections
-  /connections/device/{id}:
+  "/connections/device/{id}":
     get:
       tags:
         - connections
@@ -778,10 +765,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: Success get connection between devices
@@ -905,7 +891,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Attributes
-  /attributes/device/{id}:
+  "/attributes/device/{id}":
     get:
       tags:
         - attributes
@@ -923,10 +909,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -945,7 +930,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Attributes
-  /attributes/model/{id}:
+  "/attributes/model/{id}":
     get:
       tags:
         - attributes
@@ -963,10 +948,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1301,7 +1285,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Models
-  /model/{id}:
+  "/model/{id}":
     get:
       tags:
         - models
@@ -1319,10 +1303,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -1426,7 +1409,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Floors
-  /floors/{id}:
+  "/floors/{id}":
     get:
       tags:
         - floors
@@ -1444,10 +1427,9 @@ paths:
             type: string
             format: uuid
             example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
             minLength: 36
             maxLength: 36
-            x-42c-format: o:uuid
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -1465,10 +1447,9 @@ components:
           type: string
           format: uuid
           example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         name:
           type: string
         adress:
@@ -1485,8 +1466,7 @@ components:
           country: Papua New Guinea
           postcode: 05649-8267
         dimension:
-          description: "Koss, Powlowski and Sipes - leverage out-of-the-box schemas\
-            \ dasd"
+          description: "Koss, Powlowski and Sipes - leverage out-of-the-box schemas dasd"
           x: "54"
           "y": "58"
           h: "6"
@@ -1520,48 +1500,42 @@ components:
         back:
           type: string
           format: uri
-          example: mailto:john@swagger.com
-          pattern: >-
-            ^(?:(?:[A-Za-z][A-Za-z0-9\-+.]*):(?:(?://(?:(?:(?:(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?))*\.[A-Za-z]{2,})|(?:(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3}|\[(?:(?:(?:[0-9A-Fa-f]{1,4}):){6}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|::(?:(?:[0-9A-Fa-f]{1,4}):){5}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:[0-9A-Fa-f]{1,4})?::(?:(?:[0-9A-Fa-f]{1,4}):){4}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,1}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){3}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,2}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){2}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,3}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4}):(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,4}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,5}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,6}(?:[0-9A-Fa-f]{1,4}))?::)\]))(?:\:(?:[1-5][0-9]{0,4}|6(?:|[0-4][0-9]{0,3}|5(?:|[0-4][0-9]{0,2}|5(?:|[0-2][0-9]?|3[0-5]?|[4-9])|[6789][0-9]?)|[6789][0-9]{0,2})|[789][0-9]{0,3}))?)(?:/(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*)?)?|(?:/(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*)?)|(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*))?(?:\?[\w\-.~!$&'()*+,;=%@:/\?]*)?(?:#[\w\-.~!$&'()*+,;=%@:/\?]*)?)?)$
+          example: "/"
+          pattern: ^(.+)\/([^/]+)\.(png|jpg)$
           minLength: 2
           maxLength: 2000
-          x-42c-format: o:uri
         botom:
           type: string
           format: uri
-          example: mailto:john@swagger.com
-          pattern: >-
-            ^(?:(?:[A-Za-z][A-Za-z0-9\-+.]*):(?:(?://(?:(?:(?:(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?))*\.[A-Za-z]{2,})|(?:(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3}|\[(?:(?:(?:[0-9A-Fa-f]{1,4}):){6}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|::(?:(?:[0-9A-Fa-f]{1,4}):){5}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:[0-9A-Fa-f]{1,4})?::(?:(?:[0-9A-Fa-f]{1,4}):){4}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,1}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){3}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,2}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){2}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,3}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4}):(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,4}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,5}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,6}(?:[0-9A-Fa-f]{1,4}))?::)\]))(?:\:(?:[1-5][0-9]{0,4}|6(?:|[0-4][0-9]{0,3}|5(?:|[0-4][0-9]{0,2}|5(?:|[0-2][0-9]?|3[0-5]?|[4-9])|[6789][0-9]?)|[6789][0-9]{0,2})|[789][0-9]{0,3}))?)(?:/(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*)?)?|(?:/(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*)?)|(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*))?(?:\?[\w\-.~!$&'()*+,;=%@:/\?]*)?(?:#[\w\-.~!$&'()*+,;=%@:/\?]*)?)?)$
+          example: "/"
+          pattern: ^(.+)\/([^/]+)\.(png|jpg)$
           minLength: 2
           maxLength: 2000
-          x-42c-format: o:uri
+          x-42c-format: "o:uri"
         front:
           type: string
           format: uri
-          example: mailto:john@swagger.com
-          pattern: >-
-            ^(?:(?:[A-Za-z][A-Za-z0-9\-+.]*):(?:(?://(?:(?:(?:(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?))*\.[A-Za-z]{2,})|(?:(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3}|\[(?:(?:(?:[0-9A-Fa-f]{1,4}):){6}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|::(?:(?:[0-9A-Fa-f]{1,4}):){5}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:[0-9A-Fa-f]{1,4})?::(?:(?:[0-9A-Fa-f]{1,4}):){4}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,1}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){3}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,2}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){2}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,3}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4}):(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,4}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,5}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,6}(?:[0-9A-Fa-f]{1,4}))?::)\]))(?:\:(?:[1-5][0-9]{0,4}|6(?:|[0-4][0-9]{0,3}|5(?:|[0-4][0-9]{0,2}|5(?:|[0-2][0-9]?|3[0-5]?|[4-9])|[6789][0-9]?)|[6789][0-9]{0,2})|[789][0-9]{0,3}))?)(?:/(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*)?)?|(?:/(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*)?)|(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*))?(?:\?[\w\-.~!$&'()*+,;=%@:/\?]*)?(?:#[\w\-.~!$&'()*+,;=%@:/\?]*)?)?)$
+          example: "/"
+          pattern: ^(.+)\/([^/]+)\.(png|jpg)$
           minLength: 2
           maxLength: 2000
-          x-42c-format: o:uri
+          x-42c-format: "o:uri"
         side:
           type: string
           format: uri
-          example: mailto:john@swagger.com
-          pattern: >-
-            ^(?:(?:[A-Za-z][A-Za-z0-9\-+.]*):(?:(?://(?:(?:(?:(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?))*\.[A-Za-z]{2,})|(?:(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3}|\[(?:(?:(?:[0-9A-Fa-f]{1,4}):){6}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|::(?:(?:[0-9A-Fa-f]{1,4}):){5}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:[0-9A-Fa-f]{1,4})?::(?:(?:[0-9A-Fa-f]{1,4}):){4}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,1}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){3}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,2}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){2}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,3}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4}):(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,4}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,5}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,6}(?:[0-9A-Fa-f]{1,4}))?::)\]))(?:\:(?:[1-5][0-9]{0,4}|6(?:|[0-4][0-9]{0,3}|5(?:|[0-4][0-9]{0,2}|5(?:|[0-2][0-9]?|3[0-5]?|[4-9])|[6789][0-9]?)|[6789][0-9]{0,2})|[789][0-9]{0,3}))?)(?:/(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*)?)?|(?:/(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*)?)|(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*))?(?:\?[\w\-.~!$&'()*+,;=%@:/\?]*)?(?:#[\w\-.~!$&'()*+,;=%@:/\?]*)?)?)$
+          example: "/"
+          pattern: ^(.+)\/([^/]+)\.(png|jpg)$
           minLength: 2
           maxLength: 2000
-          x-42c-format: o:uri
+          x-42c-format: "o:uri"
         top:
           type: string
           format: uri
-          example: mailto:john@swagger.com
-          pattern: >-
-            ^(?:(?:[A-Za-z][A-Za-z0-9\-+.]*):(?:(?://(?:(?:(?:(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?))*\.[A-Za-z]{2,})|(?:(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3}|\[(?:(?:(?:[0-9A-Fa-f]{1,4}):){6}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|::(?:(?:[0-9A-Fa-f]{1,4}):){5}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:[0-9A-Fa-f]{1,4})?::(?:(?:[0-9A-Fa-f]{1,4}):){4}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,1}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){3}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,2}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){2}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,3}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4}):(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,4}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,5}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,6}(?:[0-9A-Fa-f]{1,4}))?::)\]))(?:\:(?:[1-5][0-9]{0,4}|6(?:|[0-4][0-9]{0,3}|5(?:|[0-4][0-9]{0,2}|5(?:|[0-2][0-9]?|3[0-5]?|[4-9])|[6789][0-9]?)|[6789][0-9]{0,2})|[789][0-9]{0,3}))?)(?:/(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*)?)?|(?:/(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*)?)|(?:[\w\-.~!$&'()*+,;=%@:]+(?:/[\w\-.~!$&'()*+,;=%@:]*)*))?(?:\?[\w\-.~!$&'()*+,;=%@:/\?]*)?(?:#[\w\-.~!$&'()*+,;=%@:/\?]*)?)?)$
+          example: "/"
+          pattern: ^(.+)\/([^/]+)\.(png|jpg)$
           minLength: 2
           maxLength: 2000
-          x-42c-format: o:uri
+          x-42c-format: "o:uri"
       example:
         front: /assets/r710-2.5-nobezel__29341.png
         back: /assets/r710-2.5-nobezel__29341.png
@@ -1583,7 +1557,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         category?:
           type: string
         dimension:
@@ -1635,7 +1609,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         name:
           type: string
         type:
@@ -1687,7 +1661,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         deviceId:
           type: string
           format: uuid
@@ -1695,7 +1669,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         modelId:
           type: string
           format: uuid
@@ -1703,7 +1677,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         connectionId:
           type: string
           format: uuid
@@ -1711,7 +1685,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         attributeDictionaryId:
           type: string
           format: uuid
@@ -1719,7 +1693,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         value:
           type: string
       example:
@@ -1727,45 +1701,43 @@ components:
         deviceId: be5bb617-a614-435f-bf66-8768d0aba0c8
         modelId: ""
         connectionId: ""
-        attributeDictionaryId: "b324c94f-58a7-4e2e-a566-207024cb3485"
+        attributeDictionaryId: b324c94f-58a7-4e2e-a566-207024cb3485
         value: "2"
     Attributes:
       type: array
       description: List of attributes
       example:
-        - _id: "653e10ecd6025afb66017c65"
-          deviceId: "be5bb617-a614-435f-bf66-8768d0aba0c8"
+        - _id: 653e10ecd6025afb66017c65
+          deviceId: be5bb617-a614-435f-bf66-8768d0aba0c8
           modelId: ""
           connectionId: ""
-          attributeDictionaryId: "b324c94f-58a7-4e2e-a566-207024cb3485"
+          attributeDictionaryId: b324c94f-58a7-4e2e-a566-207024cb3485
           value: "2"
-        - _id: "1234erdsfdasdasdasd17c65"
-          deviceId: "be5basd7-a614-435f-bf66-8768d0aba0c8"
-          modelId: "be5basd7-a614-435f-bfas-8768d0asdasd"
+        - _id: 1234erdsfdasdasdasd17c65
+          deviceId: be5basd7-a614-435f-bf66-8768d0aba0c8
+          modelId: be5basd7-a614-435f-bfas-8768d0asdasd
           connectionId: ""
           attributeDictionaryId: ""
           value: "2"
       items:
         $ref: "#/components/schemas/Attribute"
-
     Position:
       required:
         - x
-        - y
+        - "y"
         - h
       type: object
       properties:
         x:
           type: number
           description: Width
-        y:
+        "y":
           type: number
           description: Depth
         h:
           type: number
           description: Height
       description: Position device on the floor
-
     Device:
       required:
         - _id
@@ -1781,7 +1753,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         name:
           type: string
           description: Device name
@@ -1793,7 +1765,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         position:
           $ref: "#/components/schemas/Position"
       description: Device it is basic structure 3d-inventory
@@ -1802,7 +1774,7 @@ components:
         name: Device 2 (new2)
         position:
           x: "4"
-          y: "3"
+          "y": "3"
           h: "0"
         modelId: 653e1059d6025afb66017c63
     Devices:
@@ -1837,7 +1809,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         deviceIdFrom:
           type: string
           description: Connection from
@@ -1846,7 +1818,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
       description: Single Connection betweend two devices deviceIdFrom to deviceIdTo
       example:
         _id: 91601de6-6e93-11ed-a1eb-0242ac120002
@@ -1890,7 +1862,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         date:
           type: string
           description: Date as string
@@ -1902,7 +1874,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
         operation:
           type: string
           description: CRUD CREATE/UPDATE/DELETE
@@ -1915,7 +1887,7 @@ components:
       description: Save information about all application upstage
       example:
         _id: "102"
-        date: 2023/06/17 15:37:58.44
+        date: "2023/06/17 15:37:58.44"
         object: dfc93d99-72ca-411e-a4e5-b38d5034b1c5
         operation: Update
         component: Device
@@ -1925,19 +1897,19 @@ components:
       description: Array of Logs
       example:
         - _id: "102"
-          date: 2023/06/17 15:37:58.44
+          date: "2023/06/17 15:37:58.44"
           object: dfc93d99-72ca-411e-a4e5-b38d5034b1c5
           operation: Update
           component: Device
           message: Message in log
         - _id: "103"
-          date: 2023/02/27 10:37:58.44
+          date: "2023/02/27 10:37:58.44"
           object: dfc93d99-72ca-411e-a4e5-b38d5034b1c6
           operation: Update
           component: Device
           message: Message in log
         - _id: "104"
-          date: 2022/01/17 11:37:58.44
+          date: "2022/01/17 11:37:58.44"
           object: dfc93d99-72ca-411e-a4e5-b38d5034b1c8
           operation: Update
           component: Device
@@ -1955,7 +1927,7 @@ components:
           pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
           minLength: 36
           maxLength: 36
-          x-42c-format: o:uuid
+          x-42c-format: "o:uuid"
       example:
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
     Floor_adress:

@@ -18,5 +18,5 @@
     "utils"
   ],
   "exec": "npm start",
-  "ext": "mjs"
+  "ext": "mjs,json,yaml"
 }

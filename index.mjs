@@ -1,8 +1,7 @@
 /**
  * File:        /index.mjs
- * Description:
- * Used by:
- * Dependency:
+ * Description: API 3d-inventory. Project is a simple solution that allows you to build a spatial and database representation of all types
+ *              of warehouses and server rooms.
  *
  * Date        By     Comments
  * ----------  -----  ------------------------------
@@ -16,8 +15,11 @@ import figlet from "figlet"
 import "./loadEnvironment.mjs"
 import devices from "./routers/devices.mjs"
 import logger from "./utils/logger.mjs"
-import swaggerJsDoc from "swagger-jsdoc"
 import swaggerUi from "swagger-ui-express"
+import * as OpenApiValidator from "express-openapi-validator"
+import fs from "fs"
+import path from "path"
+import YAML from "yaml"
 
 logger.info(
   "\n" +
@@ -36,96 +38,77 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-const swaggerOptions = {
-  failOnErrors: true,
-  definition: {
-    openapi: "3.0.3",
-    info: {
-      title: "3d-inventory-mongo-api",
-      description: "A REST API built with Express and MongoDB. This API provides movie catchphrases and the context of the 3d-inventory project. Project is a simple solution that allows you\
-    \ to build a spatial and database representation of all types of warehouses and\
-    \ server rooms. \n ### Modules\n - Devices\n - Logs\n - Models\n - Connections\n - attributes\n - attributeDictionary\n - floors",
-      version: "0.0.8",
-      license: {
-        name: "Apache 2.0",
-        url: "https://www.apache.org/licenses/LICENSE-2.0.html",
-      },
-      contact: {
-        name: "C2RLO",
-        url: "https://github.com/karol-preiskorn/3d-inventory-mongo-api/discussions",
-        email: "h5xwmtlfp@mozmail.com"
-      },
-    },
-    servers: [
-      {
-        url: "http://localhost:8080",
-        description: "Development server",
-      },
-      {
-        url: "https://virtserver.swaggerhub.com/karol-preiskorn/3d-inventory-rest-api/0.0.6",
-        description: "SwaggerHub API Auto Mocking"
-      }
-    ],
-    tags: [
-      {
-        name: "logs",
-        description: "Group Logs API",
-      },
-      {
-        name: "devices",
-        description: "Group Devices API",
-      },
-      {
-        name: "models",
-        description: "Group Models API",
-      },
-      {
-        name: "connections",
-        description: "Group Connections API",
-      },
-      {
-        name: "attributes",
-        description: "Group Attributes API",
-      },
-      {
-        name: "attributeDictionary",
-        description: "Group Attributes Dictionary API",
-      },
-      {
-        name: "floors",
-        description: "Group Floors API",
-      },
-    ],
-  },
-  apis: ["./routers/devices.mjs"]
-}
-
 // Load the /posts routes
 app.use("/devices", devices)
 
 // Global error handling
 app.use((err, _req, res, next) => {
+  logger.error(`Uh oh! An unexpected error occurred. ${err}`)
   res.status(500).send(`Uh oh! An unexpected error occurred. ${err}`)
 })
 
-// Render Swagger JSdocs
+app.use(express.json())
+const yamlFilename = "./api/openapi.yaml"
+
+fs.open(yamlFilename, "r", (err, fd) => {
+  if (err) {
+    if (err.code === "ENOENT") {
+      logger.error("File Doesn't Exist")
+      return
+    }
+    if (err.code === "EACCES") {
+      logger.error("No Permission")
+      return
+    }
+    logger.error("Unknown Error")
+  }
+})
+
+// Server static OpenAPI
 try {
-  const swaggerDocs = swaggerJsDoc(swaggerOptions)
-  app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+  app.use("/yaml", express.static(yamlFilename))
+  logger.info(`Openapi definition: http://localhost:${PORT}/yaml`)
+} catch (e) {
+  if (typeof e === "string") {
+    e.toUpperCase()
+  } else if (e instanceof Error) {
+    logger.error("[Openapi definition] Exception " + e.message + ", open: " + encodeURI("https://stackoverflow.com/search?q=[js]" + e.message))
+  }
+}
+
+try {
+  const file = fs.readFileSync(yamlFilename, "utf8")
+  const swaggerDocument = YAML.parse(file)
+  app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+  logger.info(`Open SwaggerUI in http://localhost:${PORT}/api`)
+} catch (e) {
+  if (typeof e === "string") {
+    logger.warn(e.toUpperCase())
+  } else if (e instanceof Error) {
+    logger.error("[Open SwaggerUI] Exception " + e.message + ", open: " + encodeURI("https://stackoverflow.com/search?q=[js]" + e.message))
+  }
+}
+
+// OpenApi validation
+try {
+  app.use(OpenApiValidator.middleware({
+    apiSpec: yamlFilename,
+    validateRequests: true,
+    validateResponses: false
+  }))
 } catch (error) {
-  logger.error(error)
+  logger.error(`[openApiValidator] ${error}`)
 }
 
 // Start the Express server
 app
   .listen(PORT, () => {
-    logger.info("Your server is listening on http://localhost:%d/devices", PORT)
-    logger.info("Swagger UI is available on http://localhost:%d/", PORT)
+    logger.info("Your server API is listening on http://localhost:%d/devices", PORT)
   })
   .on("error", (err) => {
     if (err.code === "EADDRINUSE") {
       logger.info("Error: address already in use")
     } else {
-      logger.error(err)
+      logger.error(`[listen] ${err}`)
     }
   })
