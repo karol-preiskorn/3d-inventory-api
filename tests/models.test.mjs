@@ -14,6 +14,7 @@
 import { faker } from "@faker-js/faker"
 import "../loadEnvironment.mjs"
 import db from "../db/conn.mjs"
+import { ObjectId } from "mongodb"
 
 describe("Test Mongo Atlas DB connection and schema", () => {
   it("should insert a User doc into collection", async () => {

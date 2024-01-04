@@ -18,7 +18,6 @@ import logger from "./utils/logger.mjs"
 import swaggerUi from "swagger-ui-express"
 import * as OpenApiValidator from "express-openapi-validator"
 import fs from "fs"
-import path from "path"
 import YAML from "yaml"
 
 logger.info(
@@ -94,7 +93,7 @@ try {
   app.use(OpenApiValidator.middleware({
     apiSpec: yamlFilename,
     validateRequests: true,
-    validateResponses: false
+    validateResponses: true
   }))
 } catch (error) {
   logger.error(`[openApiValidator] ${error}`)

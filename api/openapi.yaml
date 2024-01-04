@@ -146,10 +146,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: "6566ed4ace63d42b25fbba19"
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -179,8 +179,12 @@ paths:
           style: simple
           explode: false
           schema:
-            type: integer
-            format: int64
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -207,10 +211,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -237,12 +241,11 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-            minLength: 36
-            maxLength: 36
-            x-42c-format: o:uuid
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
@@ -386,10 +389,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -417,10 +420,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -447,10 +450,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -478,10 +481,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -508,10 +511,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -539,10 +542,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -563,10 +566,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -594,10 +597,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -624,10 +627,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -766,10 +769,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -794,10 +797,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -825,10 +828,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -969,10 +972,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -1008,10 +1011,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -1065,7 +1068,7 @@ paths:
     put:
       tags:
         - attributeDictionary
-      summary: Update new atributte-dictionary
+      summary: Update new attributeDictionary
       description: Create attribute-dictionary beetween two devices. Two id and attributes from attributes.
       operationId: attributeDictionaryPut
       requestBody:
@@ -1250,7 +1253,7 @@ paths:
     get:
       tags:
         - models
-      summary: Devices models
+      summary: Get list all devices models
       description: Dictionary models of device.
       operationId: modelsGet
       responses:
@@ -1262,6 +1265,20 @@ paths:
                 $ref: "#/components/schemas/Models"
               example:
                 $ref: "#/components/schemas/Models/example"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Models
     put:
       tags:
@@ -1296,8 +1313,8 @@ paths:
     post:
       tags:
         - models
-      summary: Create devices attributes types.
-      description: Create dictionary models of device.
+      summary: Create model.
+      description: Create model of device.
       operationId: modelsPost
       requestBody:
         content:
@@ -1339,7 +1356,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Models
-  "/model/{id}":
+  "/models/{id}":
     get:
       tags:
         - models
@@ -1355,10 +1372,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -1387,10 +1404,10 @@ paths:
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -1416,8 +1433,8 @@ paths:
     put:
       tags:
         - floors
-      summary: Update new atributte-dictionary
-      description: Create attribute-dictionary beetween two devices. Two id and attributes from attributes.
+      summary: Update floor
+      description: Create floor
       operationId: floorPut
       requestBody:
         content:
@@ -1446,8 +1463,8 @@ paths:
     post:
       tags:
         - floors
-      summary: Create devices attributes types.
-      description: 3d-inventory attributes from dictionary attributes
+      summary: Create new floor.
+      description: Create new object floor
       operationId: floorPost
       requestBody:
         content:
@@ -1477,7 +1494,7 @@ paths:
       tags:
         - floors
       summary: Delete all attribute-dictionary
-      description: Create Attributes beetween two devices. Two id and attributes from attributes.
+      description: Create floor
       operationId: floorDelete
       responses:
         "200":
@@ -1501,22 +1518,22 @@ paths:
     get:
       tags:
         - floors
-      summary: "Get the single floor "
-      description: Get single foor
+      summary: "Get the single floor :id"
+      description: Get single floor
       operationId: floorIdGet
       parameters:
         - name: id
           in: path
-          description: ID of foor to fetch
+          description: ID of floor to fetch
           required: true
           style: simple
           explode: false
           schema:
             type: string
-            format: uuid
-            example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-            minLength: 36
-            maxLength: 36
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
             x-42c-format: "o:uuid"
       responses:
         "200":
@@ -1526,21 +1543,224 @@ paths:
               schema:
                 $ref: "#/components/schemas/Floor"
       x-swagger-router-controller: Floors
+
+  /users:
+    get:
+      tags:
+        - users
+      summary: "Get all user data"
+      description: Get all user data
+      operationId: userGet
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      x-swagger-router-controller: Users
+    put:
+      tags:
+        - users
+      summary: Update user
+      description: Create user
+      operationId: userPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Users
+    post:
+      tags:
+        - users
+      summary: Create new user
+      description: Create new user
+      operationId: userPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Users
+    delete:
+      tags:
+        - floors
+      summary: Delete all users
+      description: Delate all users
+      operationId: usersDelete
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Users
+  "/users/{id}":
+    get:
+      tags:
+        - users
+      summary: "Get the single user :id"
+      description: Get single user
+      operationId: userIdGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            minLength: 24
+            maxLength: 24
+            x-42c-format: o:uuid
+            pattern: ^[0-9A-Fa-f]{24}$
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Not found
+      x-swagger-router-controller: Users
+    post:
+      tags:
+        - users
+      summary: "Get the single user :id"
+      description: Get single user
+      operationId: userIdGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            minLength: 24
+            maxLength: 24
+            x-42c-format: o:uuid
+            pattern: ^[0-9A-Fa-f]{24}$
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      x-swagger-router-controller: Users
 components:
   schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: o:uuid
+          example: 6566ed4ace63d42b25fbba19
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+          pattern: ^[0-9A-Fa-f]{24}$
+        name:
+          type: string
+          minLength: 2
+          maxLength: 256
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+          maxLength: 256
+        rights:
+          type: array
+          properties:
+            rights:
+              type: string
+          example:
+            - ["admin", "users", "models", "connections", "attributes"]
+        token:
+          type: string
+          minLength: 20
+          example: "hGlyJ6KGJtKrMvNcpMwY1lRs6Cys3yCHQ0ZxMT7mCKFUOdrIOd"
+
+    Users:
+      type: array
+      description: Array of User
+      items:
+        $ref: "#/components/schemas/User"
     Floor:
       type: object
       properties:
         _id:
           type: string
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          minLength: 36
-          maxLength: 36
-          x-42c-format: "o:uuid"
+          format: o:uuid
+          example: 6566ed4ace63d42b25fbba19
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+          pattern: ^[0-9A-Fa-f]{24}$
         name:
           type: string
-        adress:
+        address:
           $ref: "#/components/schemas/FloorAdress"
         array:
           $ref: "#/components/schemas/FloorArray"
@@ -1548,19 +1768,19 @@ components:
       example:
         _id: 653e120577c067b6abbe5d26
         name: Konopelski - Walter - incentivize global 2222
-        adress:
+        address:
           street: Zion Valleys 86789
           city: Paradise
           country: Papua New Guinea
           postcode: 05649-8267
         dimension:
           description: "Koss, Powlowski and Sipes - leverage out-of-the-box schemas dasd"
-          x: "54"
-          "y": "58"
-          h: "6"
-          x_pos: "76"
-          y_pos: "70"
-          h_pos: "23"
+          x: 54
+          y: 58
+          h: 6
+          x_pos: 76
+          y_pos: 70
+          h_pos: 23
     Floors:
       type: array
       description: Array of Floor
@@ -1571,59 +1791,57 @@ components:
       properties:
         depth:
           type: number
-          minimum: 0
+          minimum: 1
+          maximum: 100
         height:
           type: number
-          minimum: 0
+          minimum: 1
+          maximum: 100
         width:
           type: number
-          minimum: 0
+          minimum: 1
+          maximum: 100
       example:
-        width: "1"
-        height: "2"
-        depth: "2"
+        width: 1
+        height: 2
+        depth: 2
     Texture:
       type: object
       properties:
         back:
           type: string
-          format: uri
-          example: "/"
+          example: "/assets/r710-2.5-nobezel__29341.png"
           pattern: ^(.+)\/([^/]+)\.(png|jpg)$
-          minLength: 2
-          maxLength: 2000
+          minLength: 6
+          maxLength: 256
         botom:
           type: string
-          format: uri
           example: "/"
           pattern: ^(.+)\/([^/]+)\.(png|jpg)$
-          minLength: 2
-          maxLength: 2000
+          minLength: 6
+          maxLength: 256
           x-42c-format: "o:uri"
         front:
           type: string
-          format: uri
           example: "/"
           pattern: ^(.+)\/([^/]+)\.(png|jpg)$
-          minLength: 2
-          maxLength: 2000
+          minLength: 6
+          maxLength: 256
           x-42c-format: "o:uri"
         side:
           type: string
-          format: uri
-          example: "/"
+          example: /
           pattern: ^(.+)\/([^/]+)\.(png|jpg)$
           minLength: 2
-          maxLength: 2000
-          x-42c-format: "o:uri"
+          maxLength: 256
+          x-42c-format: o:uri
         top:
           type: string
-          format: uri
-          example: "/"
+          example: /
           pattern: ^(.+)\/([^/]+)\.(png|jpg)$
           minLength: 2
-          maxLength: 2000
-          x-42c-format: "o:uri"
+          maxLength: 256
+          x-42c-format: o:uri
       example:
         front: /assets/r710-2.5-nobezel__29341.png
         back: /assets/r710-2.5-nobezel__29341.png
@@ -1640,11 +1858,10 @@ components:
       properties:
         _id:
           type: string
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         category?:
           type: string
@@ -1661,9 +1878,9 @@ components:
         _id: 653e1059d6025afb66017c63
         name: Model 1
         dimension:
-          width: "1"
-          height: "2"
-          depth: "2"
+          width: 1
+          height: 2
+          depth: 2
         texture:
           front: /assets/r710-2.5-nobezel__29341.png
           back: /assets/r710-2.5-nobezel__29341.png
@@ -1692,11 +1909,10 @@ components:
       properties:
         _id:
           type: string
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         name:
           type: string
@@ -1709,7 +1925,7 @@ components:
           enum:
             - Devices
             - Models
-            - Attrtibutes
+            - Attributes
             - AttributesDictionary
             - Connections
             - Floors
@@ -1743,67 +1959,57 @@ components:
       type: object
       properties:
         _id:
-          type: string
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         deviceId:
-          type: string
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         modelId:
-          type: string
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         connectionId:
-          type: string
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         attributeDictionaryId:
-          type: string
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         value:
           type: string
       example:
         _id: 653e10ecd6025afb66017c65
-        deviceId: be5bb617-a614-435f-bf66-8768d0aba0c8
+        deviceId: 6566ed4ace63d42b25fbba19
         modelId: ""
         connectionId: ""
-        attributeDictionaryId: b324c94f-58a7-4e2e-a566-207024cb3485
+        attributeDictionaryId: 6566ed4ace63d42b25fbba19
         value: "2"
     Attributes:
       type: array
       description: List of attributes
       example:
         - _id: 653e10ecd6025afb66017c65
-          deviceId: be5bb617-a614-435f-bf66-8768d0aba0c8
+          deviceId: 6566ed4ace63d42b25fbba19
           modelId: ""
           connectionId: ""
-          attributeDictionaryId: b324c94f-58a7-4e2e-a566-207024cb3485
+          attributeDictionaryId: 6566ed4ace63d42b25fbba19
           value: "2"
         - _id: 1234erdsfdasdasdasd17c65
-          deviceId: be5basd7-a614-435f-bf66-8768d0aba0c8
-          modelId: be5basd7-a614-435f-bfas-8768d0asdasd
+          deviceId: "6566ed4ace63d42b25fbba19"
+          modelId: "6566ed4ace63d42b25fbba19"
           connectionId: ""
           attributeDictionaryId: ""
           value: "2"
@@ -1834,33 +2040,27 @@ components:
       type: object
       properties:
         _id:
-          type: string
-          format: uuid
-          description: Device ObjectId
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         name:
           type: string
           description: Device name
         modelId:
-          type: string
-          format: uuid
-          description: Device model ObjectId
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         position:
           $ref: "#/components/schemas/Position"
       description: Device it is basic structure 3d-inventory
       example:
-        _id: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
+        _id: 6566ed4ace63d42b25fbba19
         name: Device 2
-        modelId: a83a29f5-0d63-46f2-8f2e-44c2f1d2e072
+        modelId: 6566ed4ace63d42b25fbba19
         position:
           x: 4
           y: 3
@@ -1886,33 +2086,36 @@ components:
         _id:
           type: string
           description: Connection id uuid
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
         name:
           type: string
           description: Connection name
         deviceIdTo:
           type: string
           description: Connection to
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         deviceIdFrom:
           type: string
           description: Connection from
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
       description: Single Connection between two devices deviceIdFrom to deviceIdTo
       example:
-        _id: 91601de6-6e93-11ed-a1eb-0242ac120002
+        _id: 6566ed4ace63d42b25fbba19
         name: device-A1
-        deviceIdFrom: 5f8abd81-0d35-47c4-8277-3d6bbbe185f0
-        deviceIdTo: be5bb617-a614-435f-bf66-8768d0aba0c8
+        deviceIdFrom: 6566ed4ace63d42b25fbba19
+        deviceIdTo: 6566ed4ace63d42b25fbba19
     Connections:
       type: array
       description: Array of Connections
@@ -1943,13 +2146,12 @@ components:
       type: object
       properties:
         _id:
-          type: string
           description: UUID of log
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         date:
           type: string
@@ -1957,11 +2159,10 @@ components:
         object:
           type: string
           description: UUID logged object
-          format: uuid
-          example: a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e
-          pattern: ^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$
-          minLength: 36
-          maxLength: 36
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
           x-42c-format: "o:uuid"
         operation:
           type: string
@@ -1976,7 +2177,7 @@ components:
       example:
         _id: "102"
         date: "2023/06/17 15:37:58.44"
-        object: dfc93d99-72ca-411e-a4e5-b38d5034b1c5
+        object: "6566ed4ace63d42b25fbba19"
         operation: Update
         component: Device
         message: Message in log
@@ -1986,19 +2187,19 @@ components:
       example:
         - _id: "102"
           date: "2023/06/17 15:37:58.44"
-          object: dfc93d99-72ca-411e-a4e5-b38d5034b1c5
+          object: 6566ed4ace63d42b25fbba19
           operation: Update
           component: Device
           message: Message in log
         - _id: "103"
           date: "2023/02/27 10:37:58.44"
-          object: dfc93d99-72ca-411e-a4e5-b38d5034b1c6
+          object: 6566ed4ace63d42b25fbba19
           operation: Update
           component: Device
           message: Message in log
         - _id: "104"
           date: "2022/01/17 11:37:58.44"
-          object: dfc93d99-72ca-411e-a4e5-b38d5034b1c8
+          object: 6566ed4ace63d42b25fbba19
           operation: Update
           component: Device
           message: Message in log

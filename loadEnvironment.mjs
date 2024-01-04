@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File:        /loadEnviroment.mjs
  * Description:
  * Used by:
