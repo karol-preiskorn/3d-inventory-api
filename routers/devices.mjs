@@ -10,14 +10,17 @@
 import express from "express"
 import db from "../db/conn.mjs"
 import { ObjectId } from "mongodb"
+// import { logger, stream } from "../utils/logger.mjs"
 
 const router = express.Router()
 
 // Get all
 router.get("/", async (req, res) => {
-  const collection = await db.collection("devices")
-  const results = await collection.find({}).limit(50).toArray()
-  res.send(results).status(200)
+  const collection = db.collection("devices")
+  const results = await collection.find({}).limit(10).toArray()
+  // logger.debug(JSON.stringify(results))
+  res.send(results)
+    // .status(200)
 })
 
 // Get a single post
@@ -37,7 +40,6 @@ router.get("/model/:id", async (req, res) => {
   if (!result) res.send("Not found").status(404)
   else res.send(result).status(200)
 })
-
 
 // Create
 router.post("/", async (req, res) => {
@@ -69,7 +71,7 @@ router.delete("/:id", async (req, res) => {
 
 // delete all devices
 router.delete("/", async (req, res) => {
-  const query = { }
+  const query = {}
   const collection = db.collection("devices")
   const result = await collection.deleteMany(query)
   res.send(result).status(200)
@@ -82,6 +84,5 @@ router.delete("/model/:id", async (req, res) => {
   const result = await collection.deleteMany(query)
   res.send(result).status(200)
 })
-
 
 export default router

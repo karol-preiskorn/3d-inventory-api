@@ -18,6 +18,8 @@
 [![GitHub license](https://badgen.net/github/license/karol-preiskorn/3d-inventory-mongo-api)](https://github.com/karol-preiskorn/3d-inventory-mongo-api/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/karol-preiskorn/3d-inventory-mongo-api.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/karol-preiskorn/3d-inventory-mongo-api/stargazers/)
 
+![3d-inventory](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
+
 ## Purposes
 
 Create REST mongo API for [3d-inventory](https://github.com/users/karol-preiskorn/projects/2) application in Angular.

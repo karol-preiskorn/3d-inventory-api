@@ -23,7 +23,7 @@ describe("Test Mongo Atlas DB connection and schema", () => {
       "name": faker.person.fullName(),
       "email": faker.internet.email(),
       "password": faker.internet.password({ length: 20 }),
-      "rights": faker.helpers.arrayElements(["admin", "users", "models", "connections", "attributes"],1,3),
+      "rights": faker.helpers.arrayElements(["admin", "users", "models", "connections", "attributes"], 1, 3),
       "token": faker.internet.password({ length: 50 })
     }
     await users.insertOne(mockUser)

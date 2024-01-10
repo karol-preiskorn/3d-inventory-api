@@ -1713,7 +1713,6 @@ components:
       properties:
         _id:
           type: string
-          format: o:uuid
           example: 6566ed4ace63d42b25fbba19
           minLength: 24
           maxLength: 24
@@ -1752,7 +1751,6 @@ components:
       properties:
         _id:
           type: string
-          format: o:uuid
           example: 6566ed4ace63d42b25fbba19
           minLength: 24
           maxLength: 24

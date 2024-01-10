@@ -19,24 +19,51 @@ const myFormat = printf(({ level, message, timestamp }) => {
   return `${timestamp} ${level}: ${message}`
 })
 
-const logger = createLogger({
-  level: "info",
-  defaultMeta: { service: "user-service" },
-  // levels: myCustomLevels.levels,
-  format: combine(
-    colorize({ all: true }),
-    // label({ label: __filename.slice(__dirname.length + 1) }),
-    // label({ label:  path.basename(module.parent.filename)}),
-    format.splat(),
-    timestamp({
-      format: "YYYY-MM-DD HH:mm:ss"
-    }),
-    myFormat
-  ),
+createLogger.emitErrs = true
+
+export const logger = createLogger({
+  // format: combine(
+  // //   // label({ label: __filename.slice(__dirname.length + 1) }),
+  // //   // label({ label:  path.basename(module.parent.filename)}),
+  // format.splat(),
+  // //   colorize(),
+  //   timestamp({
+  //     format: "YYYY-MM-DD HH:mm:ss"
+  //   }),
+  //    myFormat
+  // ),
   transports: [
-    new transports.Console(),
-    new transports.File({ filename: "logs/error.log", handleExceptions: true })
+    new transports.Console({
+      level: "debug",
+      handleExceptions: true,
+      json: false,
+      colorize: true,
+      format: combine(
+        //   // label({ label: __filename.slice(__dirname.length + 1) }),
+        //   // label({ label:  path.basename(module.parent.filename)}),
+        format.splat(),
+        colorize(),
+        timestamp({
+          format: "YYYY-MM-DD HH:mm:ss"
+        }),
+        myFormat
+      )
+    }),
+    new transports.File({
+      level: "info",
+      filename: "./logs/api.log",
+      handleExceptions: true,
+      json: true,
+      maxsize: 1024000, // 1MB
+      maxFiles: 3,
+      colorize: false
+    })
   ]
 })
 
-export default logger
+export const stream = {
+  write: function (message, encoding) {
+    logger.info(message)
+  }
+}
+export default { logger, stream }
