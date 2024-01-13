@@ -19,10 +19,10 @@ router.get("/", async (req, res) => {
   const md = Markdown()
   fs.readFile(path, "utf8", function (err, data) {
     if (err) {
-      logger.error(`read ${path} file: ${err}`)
+      logger.error(`Error read ${path} file: ${err}`)
     }
     if (!data) res.send(`File ${path} not found, error: ${err}`).status(404)
-    res.send(md.render(data.toString())).status(200)
+    res.send(md.render(data)).status(200)
   })
 })
 

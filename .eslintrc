@@ -8,7 +8,11 @@
   ],
   "parserOptions": {
     "ecmaVersion": 2020,
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "arrowFunctions": true,
+      "modules": true
+    }
   },
   "rules": {
     "semi": [
@@ -22,12 +26,14 @@
   },
   "env": {
     "es2020": true,
+    "es6": true,
     "jest": true,
     "jest/globals": true,
     "mocha": true,
     "mongo": true,
-    "es6": true,
-    "node": true
+    "node": true,
+    "commonjs": true,
+    "jasmine": true
   },
   "overrides": [
     {

@@ -22,16 +22,6 @@ const myFormat = printf(({ level, message, timestamp }) => {
 createLogger.emitErrs = true
 
 export const logger = createLogger({
-  // format: combine(
-  // //   // label({ label: __filename.slice(__dirname.length + 1) }),
-  // //   // label({ label:  path.basename(module.parent.filename)}),
-  // format.splat(),
-  // //   colorize(),
-  //   timestamp({
-  //     format: "YYYY-MM-DD HH:mm:ss"
-  //   }),
-  //    myFormat
-  // ),
   transports: [
     new transports.Console({
       level: "debug",
@@ -66,4 +56,5 @@ export const stream = {
     logger.info(message)
   }
 }
+
 export default { logger, stream }

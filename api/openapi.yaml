@@ -20,15 +20,17 @@ info:
   license:
     name: Apache 2.0
     url: "https://www.apache.org/licenses/LICENSE-2.0.html"
-  version: 0.0.6
+  version: 0.0.7
 externalDocs:
   description: "https://ultimasolution.pl/3d-inventory-mongo-api"
   url: "https://ultimasolution.pl/3d-inventory-mongo-api"
 servers:
   - url: "http://localhost:8080"
     description: localhost
-  - url: "https://virtserver.swaggerhub.com/karol-preiskorn/3d-inventory-rest-api/0.0.6"
-    description: SwaggerHub
+  - url: "https://virtserver.swaggerhub.com/karol-preiskorn/3d-inventory-rest-api/0.0.7"
+    description: Google Cloud
+  - url: "https://d-inventory-406007.lm.r.appspot.com/0.0.7"
+    description: Google Cloud API
 tags:
   - name: logs
     description: Operation on Logs
@@ -660,8 +662,8 @@ paths:
     put:
       tags:
         - connections
-      summary: Update new connection beetween two devices
-      description: Create connection beetween two devices. Two id and attributes from attributes.
+      summary: Update new connection between two devices
+      description: Create connection between two devices. Two id and attributes from attributes.
       operationId: connectionPUT
       requestBody:
         content:
@@ -696,8 +698,8 @@ paths:
     post:
       tags:
         - connections
-      summary: Create new connection beetween two devices
-      description: Create connection beetween two devices. Two id and attributes from attributes.
+      summary: Create new connection between two devices
+      description: Create connection between two devices. Two id and attributes from attributes.
       operationId: connectionPOST
       requestBody:
         content:
@@ -733,13 +735,13 @@ paths:
       tags:
         - connections
       summary: Delete connection
-      description: Delete connection beetween two devices. Two id and attributes from attributes.
+      description: Delete connection between two devices. Two id and attributes from attributes.
       operationId: connectionDELETE
       responses:
         "200":
           description: Ok
         "404":
-          description: Not found connection to detete
+          description: Not found connection to delete
           content:
             application/json:
               schema:
@@ -875,8 +877,8 @@ paths:
     put:
       tags:
         - attributes
-      summary: Update new Attributes beetween two devices
-      description: Create Attributes beetween two devices. Two id and attributes from attributes.
+      summary: Update new Attributes between two devices
+      description: Create Attributes between two devices. Two id and attributes from attributes.
       operationId: attributesPut
       requestBody:
         content:
@@ -935,8 +937,8 @@ paths:
     delete:
       tags:
         - attributes
-      summary: Update new Attributes beetween two devices
-      description: Create Attributes beetween two devices. Two id and attributes from attributes.
+      summary: Update new Attributes between two devices
+      description: Create Attributes between two devices. Two id and attributes from attributes.
       operationId: attributesDelete
       responses:
         "200":
@@ -1039,7 +1041,7 @@ paths:
       tags:
         - attributeDictionary
       summary: Get information about devices attributes types.
-      description: Dictionary attributes types for device and models. Store information about extra parmaeters.
+      description: Dictionary attributes types for device and models. Store information about extra parameters.
       operationId: attributeDictionaryGet
       responses:
         "200":
@@ -1069,7 +1071,7 @@ paths:
       tags:
         - attributeDictionary
       summary: Update new attributeDictionary
-      description: Create attribute-dictionary beetween two devices. Two id and attributes from attributes.
+      description: Create attribute-dictionary between two devices. Two id and attributes from attributes.
       operationId: attributeDictionaryPut
       requestBody:
         content:
@@ -1129,7 +1131,7 @@ paths:
       tags:
         - attributeDictionary
       summary: Delete all attributeDictionary
-      description: Create Attributes beetween two devices. Two id and attributes from attributes.
+      description: Create Attributes between two devices. Two id and attributes from attributes.
       operationId: attributeDictionaryDelete
       responses:
         "200":
@@ -1725,6 +1727,12 @@ components:
         email:
           type: string
           format: email
+          example: support@company.co.uk
+          pattern: >-
+            ^(?:[\w\-+!#$%&'*/=?^`|{}~]+(?:\.[\w\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?))*\.[A-Za-z]{2,})$
+          minLength: 6
+          maxLength: 320
+          x-42c-format: o:email
         password:
           type: string
           minLength: 8
@@ -1759,7 +1767,7 @@ components:
         name:
           type: string
         address:
-          $ref: "#/components/schemas/FloorAdress"
+          $ref: "#/components/schemas/FloorAddress"
         array:
           $ref: "#/components/schemas/FloorArray"
       description: Floor object
@@ -1772,7 +1780,7 @@ components:
           country: Papua New Guinea
           postcode: 05649-8267
         dimension:
-          description: "Koss, Powlowski and Sipes - leverage out-of-the-box schemas dasd"
+          description: "Koss, Powlowski and Sipes - leverage out-of-the-box schemas"
           x: 54
           y: 58
           h: 6
@@ -1999,13 +2007,13 @@ components:
       type: array
       description: List of attributes
       example:
-        - _id: 653e10ecd6025afb66017c65
-          deviceId: 6566ed4ace63d42b25fbba19
+        - _id: "653e10ecd6025afb66017c65"
+          deviceId: "6566ed4ace63d42b25fbba19"
           modelId: ""
           connectionId: ""
-          attributeDictionaryId: 6566ed4ace63d42b25fbba19
+          attributeDictionaryId: "6566ed4ace63d42b25fbba19"
           value: "2"
-        - _id: 1234erdsfdasdasdasd17c65
+        - _id: "1234erdsfdasdasdasd17c65"
           deviceId: "6566ed4ace63d42b25fbba19"
           modelId: "6566ed4ace63d42b25fbba19"
           connectionId: ""
@@ -2203,7 +2211,7 @@ components:
           message: Message in log
       items:
         $ref: "#/components/schemas/Log"
-    FloorAdress:
+    FloorAddress:
       type: object
       properties:
         street:
@@ -2276,7 +2284,7 @@ components:
             $ref: "#/components/schemas/Error"
     "502":
       description:
-        Bad getway. The server got an invalid response while working as a gateway to get the response needed to
+        Bad getaway. The server got an invalid response while working as a gateway to get the response needed to
         handle the request.
       content:
         application/json:
