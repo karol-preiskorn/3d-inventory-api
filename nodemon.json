@@ -1,14 +1,22 @@
 ﻿{
   "ignore": [
-    "**/*.test.ts",
-    "**/*.spec.ts",
+    "**/*.test.js",
+    "**/*.spec.js",
     ".git",
     "node_modules",
-    "doc/**/*"
+    "doc/**/*",
+    "coverage/**/*"
   ],
   "watch": [
-    "src"
+    "api/openapi.yaml",
+    "index.js",
+    "assets/*",
+    "routers/*",
+    "schema/*",
+    "tests/*",
+    "db/*",
+    "utils"
   ],
   "exec": "npm start",
-  "ext": "ts"
+  "ext": "js,json,yaml"
 }

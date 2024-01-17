@@ -1,63 +1,101 @@
 openapi: 3.0.3
 info:
   title: API for project 3d-inventory
-  description: Run CRUD od 3d-inventory data model.
-  version: 1.0.5
+  description:
+    "REST API for **3d-inventory**. Project is a simple solution that allows you to build a spatial and database
+    representation of all types of warehouses and server rooms. \n ### Modules\n -
+    [Devices](http://localhost:8080/api/#/devices)\n - [Logs](http://localhost:8080/api/#/logs)\n -
+    [Models](http://localhost:8080/api/#/models)\n - [Connection](http://localhost:8080/api/#/connection)\n -
+    [Attributes](http://localhost:8080/api/#/attributes)\n -
+    [AttributesDictionary](http://localhost:8080/api/#/attributesdictionary)\n -
+    [Floors](http://localhost:8080/api/#/floors) \n ### Responses\n - 1xx Informational – Communicates transfer
+    protocol-level information.\n- 2xx Success – Indicates that the client’s request was accepted successfully. \n-
+    3xx Redirection – Indicates that the client must take some additional action in order to complete their
+    request. \n- 4xx Client Error – This category of error status codes points the finger at clients. \n- 5xx
+    Server Error – The server takes responsibility for these error status codes."
+  contact:
+    name: 3d-inventory
+    url: "https://github.com/karol-preiskorn/3d-inventory-mongo-api/discussions"
+    email: h5xwmtlfp@mozmail.com
+  license:
+    name: Apache 2.0
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+  version: 0.0.7
+externalDocs:
+  description: "https://ultimasolution.pl/3d-inventory-mongo-api"
+  url: "https://ultimasolution.pl/3d-inventory-mongo-api"
 servers:
-  # Added by API Auto Mocking Plugin
-  - url: 'http://localhost:8080'
-    description: 3d-inventory-oracle-api
-  - url: https://virtserver.swaggerhub.com/karol-preiskorn/ultima-rest/1.0.3
-    description: SwaggerHub API Auto Mocking
-
+  - url: "http://localhost:8080"
+    description: localhost
+  - url: "https://virtserver.swaggerhub.com/karol-preiskorn/3d-inventory-rest-api/0.0.7"
+    description: Google Cloud
+  - url: "https://d-inventory-406007.lm.r.appspot.com/0.0.7"
+    description: Google Cloud API
+tags:
+  - name: logs
+    description: Operation on Logs
+  - name: devices
+    description: Basic object _3d-inventory_ Device and operation on devices API
+  - name: models
+    description: Models of devices API
+  - name: connections
+    description: Connections between devices API
+  - name: attributes
+    description: Device's Attributes API
+  - name: attributeDictionary
+    description: Attributes Dictionary API
+  - name: floors
+    description: Floors manipulation API
 paths:
-  /device:
+  /devices:
     get:
-      summary:
-        Get devices
-      description:
-        Get list all devices.
+      tags:
+        - devices
+      summary: Get all devices
+      description: List all devices.
       operationId: deviceGET
       responses:
-        '200':
+        "200":
           description: List of devices
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Device'
-        '404':
+                $ref: "#/components/schemas/Devices"
+        "404":
           description: Devices not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Device'
-
+        "500":
+          description: Unexpected server error
+      x-swagger-router-controller: Devices
     put:
-      summary:
-        "Update device"
-      description:
-        Update existing device.
+      tags:
+        - devices
+      summary: Update device
+      description: Update existing device.
       operationId: devicePUT
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Device'
+              $ref: "#/components/schemas/Device"
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Device'
-        '404':
+                $ref: "#/components/schemas/Device"
+        "404":
           description: Update not found device
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Unexpected error
+      x-swagger-router-controller: Devices
     post:
+      tags:
+        - devices
       summary: Create new device
       description: Insert new device.
       operationId: devicePOST
@@ -65,256 +103,2203 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Device'
+              $ref: "#/components/schemas/Device"
             example:
-              $ref: '#/components/schemas/Device/example'
+              $ref: "#/components/schemas/Device/example"
       responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Device'
-              example:
-                $ref: '#/components/schemas/Device/example'
-        '500':
+        "200":
+          description: Oki device added
+        "500":
           description: Error device not created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Device'
-              example:
-                $ref: '#/components/schemas/Error'
-
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Devices
     delete:
-      summary: Delete device
+      tags:
+        - devices
+      summary: Delete all devices
       description: Delete device.
       operationId: deviceDELETE
       responses:
-        '200':
+        "200":
           description: OK
-        '404':
+        "404":
           description: Not found device to delete
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-
-  /log:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Devices
+  "/devices/{id}":
     get:
-      summary:
-        Get log from database
-      description:
-        Get all log.
-      operationId: logGET
+      tags:
+        - devices
+      summary: Get devices
+      description: Get one devices.
+      operationId: deviceGetOne
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: "6566ed4ace63d42b25fbba19"
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
       responses:
-        '200':
+        "200":
+          description: List of devices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        "404":
+          description: Devices not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+      x-swagger-router-controller: Devices
+    delete:
+      tags:
+        - devices
+      summary: Delete selected devices
+      description: Delete one device.
+      operationId: deviceDeleteOne
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found device to delete
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Devices
+  "/devices/model/{id}":
+    get:
+      tags:
+        - devices
+      summary: Get all devices with model :id
+      description: Get devices with specific model.
+      operationId: deviceGetModel
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: List of devices with model
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Devices"
+        "404":
+          description: Devices not found with this model :id
+      x-swagger-router-controller: Devices
+    delete:
+      tags:
+        - devices
+      summary: Delete selected devices by model :id
+      description: Delete selected devices by model :id
+      operationId: deviceDeleteModel
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found device to delete
+      x-swagger-router-controller: Devices
+  /logs:
+    get:
+      tags:
+        - logs
+      summary: Get logs from database
+      description: Get all logs.
+      operationId: logsGET
+      responses:
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Log'
-              examples:
-                id:
-                  value: '222'
-                date:
-                  value: '2023-03-12'
-                message:
-                  value: 'Message in log'
-        '404':
+                $ref: "#/components/schemas/Logs"
+              example:
+                $ref: "#/components/schemas/Logs/example"
+        "404":
           description: No found
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/404'
-        '500':
+                $ref: "#/components/responses/404"
+        "500":
           description: Error
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/5XX'
-
+                $ref: "#/components/responses/500"
+      x-swagger-router-controller: Logs
     put:
-      summary:
-        Update new log
-      description:
-        Update log record.
+      tags:
+        - logs
+      summary: Update new log
+      description: Update log record.
       operationId: logPUT
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Log'
-
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
     post:
-      summary:
-        Insert new log
-      description:
-        Create log.
+      tags:
+        - logs
+      summary: Insert new log
+      description: Create log.
       operationId: logPOST
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Log'
+              $ref: "#/components/schemas/Log"
         required: true
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Log'
+                $ref: "#/components/schemas/Log"
               example:
-                $ref: '#/components/schemas/Log/example'
-        '500':
+                $ref: "#/components/schemas/Log/example"
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+        "500":
           description: Error log not created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Log'
+                $ref: "#/components/schemas/Log"
               example:
-                $ref: '#/components/responses/5XX'
-        '404':
-          description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Log'
-
+                $ref: "#/components/responses/500"
+      x-swagger-router-controller: Logs
     delete:
+      tags:
+        - logs
       summary: Delete log
       description: Delete all or specific id log.
-      operationId: logDELETE
+      operationId: logAllDelete
       responses:
-        '200':
+        "200":
           description: OK
-        '404':
+        "404":
           description: Error log not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Log'
-
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
+  "/logs/{id}":
+    get:
+      tags:
+        - logs
+      summary: Get single log id
+      description: Get specific id log.
+      operationId: logSingleGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
+    delete:
+      tags:
+        - logs
+      summary: Delete single log
+      description: Delete specific id log.
+      operationId: logSingleDelete
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
+  "/logs/device/{id}":
+    get:
+      tags:
+        - logs
+      summary: Get device log
+      description: Get specific device log.
+      operationId: logDeviceGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
+    delete:
+      tags:
+        - logs
+      summary: Delete devices log
+      description: Delete specific device log.
+      operationId: logDeviceDelete
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
+  "/logs/connection/{id}":
+    get:
+      tags:
+        - logs
+      summary: Get connection logs
+      description: Get specific connection logs.
+      operationId: logConnectionGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of connection to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error logs not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
+    delete:
+      tags:
+        - logs
+      summary: Delete devices logs
+      description: Delete specific device logs.
+      operationId: logConnectionDelete
+      parameters:
+        - name: id
+          in: path
+          description: ID of logs to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
+  "/logs/attributes/{id}":
+    get:
+      tags:
+        - logs
+      summary: Get attributes logs
+      description: Get specific attribute logs.
+      operationId: logAttributesGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of attribute to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+      x-swagger-router-controller: Logs
+    delete:
+      tags:
+        - logs
+      summary: Delete attributes logs
+      description: Delete specific device logs.
+      operationId: logAttributesDelete
+      parameters:
+        - name: id
+          in: path
+          description: ID of logs to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
+  "/logs/attribute-dictionary/{id}":
+    get:
+      tags:
+        - logs
+      summary: Get attribute-dictionary logs
+      description: Get specific attribute-dictionary logs.
+      operationId: logAttributeDictionaryGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of attribute-dictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error logs not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
+    delete:
+      tags:
+        - logs
+      summary: Delete attribute-dictionary logs
+      description: Delete specific attribute-dictionary logs.
+      operationId: logAttributeDictionaryDelete
+      parameters:
+        - name: id
+          in: path
+          description: ID of logs to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+      x-swagger-router-controller: Logs
   /connections:
     get:
-      summary: >-
-        Server heartbeat operation. Get information about connection between Devices.
-      description: Connection between devices
-      operationId: connectionsGET
+      tags:
+        - connections
+      summary: Server heartbeat operation. Get information about connection between Devices.
+      description: Get all connections between devices
+      operationId: connectionsGet
       responses:
-        '200':
+        "200":
+          description: Success get connection between devices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connections"
+      x-swagger-router-controller: Connections
+    put:
+      tags:
+        - connections
+      summary: Update new connection between two devices
+      description: Create connection between two devices. Two id and attributes from attributes.
+      operationId: connectionPUT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Connections"
+        required: true
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connections"
+              example:
+                $ref: "#/components/schemas/Connection/example"
+        "404":
+          description: Not found connection data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/404"
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/500"
+              example:
+                $ref: "#/components/responses/500"
+      x-swagger-router-controller: Connections
+    post:
+      tags:
+        - connections
+      summary: Create new connection between two devices
+      description: Create connection between two devices. Two id and attributes from attributes.
+      operationId: connectionPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Connections"
+        required: true
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connection"
+              example:
+                $ref: "#/components/schemas/Connection/example"
+        "404":
+          description: Not found connection data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/404"
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/500"
+              example:
+                $ref: "#/components/responses/500"
+      x-swagger-router-controller: Connections
+    delete:
+      tags:
+        - connections
+      summary: Delete connection
+      description: Delete connection between two devices. Two id and attributes from attributes.
+      operationId: connectionDELETE
+      responses:
+        "200":
+          description: Ok
+        "404":
+          description: Not found connection to delete
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/404"
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/500"
+              example:
+                $ref: "#/components/responses/500"
+      x-swagger-router-controller: Connections
+  "/connections/{id}":
+    get:
+      tags:
+        - connections
+      summary: Get information about one Connection.
+      description: Connection between devices
+      operationId: connectionGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of attribute-dictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: Success get connection between devices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connections"
+      x-swagger-router-controller: Connections
+    delete:
+      tags:
+        - connections
+      summary: Delete connections logs
+      description: Delete specific connections logs.
+      operationId: connectionDelete
+      parameters:
+        - name: id
+          in: path
+          description: ID of connection to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
           description: OK
-
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connections"
+      x-swagger-router-controller: Connections
+  "/connections/device/{id}":
+    get:
+      tags:
+        - connections
+      summary: Get information about Connections between Devices.
+      description: Get connection for device
+      operationId: connectionsDeviceGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of attribute-dictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: Success get connection between devices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connections"
+      x-swagger-router-controller: Connections
   /attributes:
     get:
-      description: Devices attributes
+      tags:
+        - attributes
+      summary: Get all attributes
+      description: 3d-inventory attributes from dictionary attributes
+      operationId: attributesGET
       responses:
-        '200':
+        "200":
           description: OK
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attributes"
+              example:
+                $ref: "#/components/schemas/Attributes/example"
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Attributes
+    put:
+      tags:
+        - attributes
+      summary: Update new Attributes between two devices
+      description: Create Attributes between two devices. Two id and attributes from attributes.
+      operationId: attributesPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Attribute"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Attributes
+    post:
+      tags:
+        - attributes
+      summary: Create new Attributes
+      description: 3d-inventory attributes from dictionary attributes
+      operationId: attributesPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Attribute"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Attributes
+    delete:
+      tags:
+        - attributes
+      summary: Update new Attributes between two devices
+      description: Create Attributes between two devices. Two id and attributes from attributes.
+      operationId: attributesDelete
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Attributes
+  "/attributes/device/{id}":
+    get:
+      tags:
+        - attributes
+      summary: Get all Attributes for device
+      description: 3d-inventory attributes from dictionary attributes
+      operationId: attributesDeviceGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of attribute-dictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Attributes
+  "/attributes/model/{id}":
+    get:
+      tags:
+        - attributes
+      summary: Get all Attributes for model id
+      description: 3d-inventory attributes from dictionary attributes
+      operationId: attributesModelGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of attribute-dictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Attributes
   /attribute-dictionary:
     get:
-      summary: >-
-        Server heartbeat operation. Get information about devices attributes types.
-      description: Dictionary attributes types of specific type of device.
-      operationId: attributes_typesGET
+      tags:
+        - attributeDictionary
+      summary: Get information about devices attributes types.
+      description: Dictionary attributes types for device and models. Store information about extra parameters.
+      operationId: attributeDictionaryGet
       responses:
-        '200':
+        "200":
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttributeDictionaries"
+              example:
+                $ref: "#/components/schemas/AttributeDictionaries/example"
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: AttributeDictionary
+    put:
+      tags:
+        - attributeDictionary
+      summary: Update new attributeDictionary
+      description: Create attribute-dictionary between two devices. Two id and attributes from attributes.
+      operationId: attributeDictionaryPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttributeDictionary"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: AttributeDictionary
+    post:
+      tags:
+        - attributeDictionary
+      summary: Create devices attributes types.
+      description: 3d-inventory attributes from dictionary attributes
+      operationId: attributeDictionaryPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttributeDictionary"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: AttributeDictionary
+    delete:
+      tags:
+        - attributeDictionary
+      summary: Delete all attributeDictionary
+      description: Create Attributes between two devices. Two id and attributes from attributes.
+      operationId: attributeDictionaryDelete
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: AttributeDictionary
+  /attribute-dictionary/connection:
+    get:
+      tags:
+        - attributeDictionary
+      summary: Get information about devices attributes for connection.
+      description: Dictionary attributes dictionary for connection.
+      operationId: attributeDictionaryConnectionGet
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: AttributeDictionary
+  /attribute-dictionary/models:
+    get:
+      tags:
+        - attributeDictionary
+      summary: Get information about devices attributes for models.
+      description: Dictionary attributes dictionary for models.
+      operationId: attributeDictionaryModelsGet
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: AttributeDictionary
+  /attribute-dictionary/devices:
+    get:
+      tags:
+        - attributeDictionary
+      summary: Get information about devices attributes for models.
+      description: Dictionary attributes dictionary for models.
+      operationId: attributeDictionaryDevicesGet
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: AttributeDictionary
+  /attribute-dictionary/connections:
+    get:
+      tags:
+        - attributeDictionary
+      summary: Get information about devices attributes for connections.
+      description: Dictionary attributes dictionary for connections.
+      operationId: attributeDictionaryConnectionsGet
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: AttributeDictionary
+  /models:
+    get:
+      tags:
+        - models
+      summary: Get list all devices models
+      description: Dictionary models of device.
+      operationId: modelsGet
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Models"
+              example:
+                $ref: "#/components/schemas/Models/example"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Models
+    put:
+      tags:
+        - models
+      summary: Update model
+      description: Update single model
+      operationId: modelsPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Model"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Models
+    post:
+      tags:
+        - models
+      summary: Create model.
+      description: Create model of device.
+      operationId: modelsPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Model"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Models
+    delete:
+      tags:
+        - models
+      summary: Delete all models
+      description: Delete all models
+      operationId: modelsDelete
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Models
+  "/models/{id}":
+    get:
+      tags:
+        - models
+      summary: Get selected model :id
+      description: Get one model of device.
+      operationId: modelIdGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of attribute-dictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Model"
+        "404":
+          description: Not found
+        "500":
+          description: Unexpected server error.
+      x-swagger-router-controller: Models
+    delete:
+      tags:
+        - models
+      summary: Delete selected model :id
+      description: Delete one model of device.
+      operationId: modelIdDelete
+      parameters:
+        - name: id
+          in: path
+          description: :Id of device
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found
+        "500":
+          description: Unexpected server error.
+      x-swagger-router-controller: Models
+  /floors:
+    get:
+      tags:
+        - floors
+      summary: "Get all floors data"
+      description: Get all floors data
+      operationId: floorsGet
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      x-swagger-router-controller: Floors
+    put:
+      tags:
+        - floors
+      summary: Update floor
+      description: Create floor
+      operationId: floorPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Floor"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Floors
+    post:
+      tags:
+        - floors
+      summary: Create new floor.
+      description: Create new object floor
+      operationId: floorPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Floor"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Floors
+    delete:
+      tags:
+        - floors
+      summary: Delete all attribute-dictionary
+      description: Create floor
+      operationId: floorDelete
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Floors
+  "/floors/{id}":
+    get:
+      tags:
+        - floors
+      summary: "Get the single floor :id"
+      description: Get single floor
+      operationId: floorIdGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of floor to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Floor"
+      x-swagger-router-controller: Floors
 
+  /users:
+    get:
+      tags:
+        - users
+      summary: "Get all user data"
+      description: Get all user data
+      operationId: userGet
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      x-swagger-router-controller: Users
+    put:
+      tags:
+        - users
+      summary: Update user
+      description: Create user
+      operationId: userPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Users
+    post:
+      tags:
+        - users
+      summary: Create new user
+      description: Create new user
+      operationId: userPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Users
+    delete:
+      tags:
+        - floors
+      summary: Delete all users
+      description: Delate all users
+      operationId: usersDelete
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Users
+  "/users/{id}":
+    get:
+      tags:
+        - users
+      summary: "Get the single user :id"
+      description: Get single user
+      operationId: userIdGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            minLength: 24
+            maxLength: 24
+            x-42c-format: o:uuid
+            pattern: ^[0-9A-Fa-f]{24}$
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Not found
+      x-swagger-router-controller: Users
+    post:
+      tags:
+        - users
+      summary: "Get the single user :id"
+      description: Get single user
+      operationId: userIdGet
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            minLength: 24
+            maxLength: 24
+            x-42c-format: o:uuid
+            pattern: ^[0-9A-Fa-f]{24}$
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      x-swagger-router-controller: Users
 components:
-
   schemas:
-
-    Device:
+    User:
       type: object
-      required:
-        - device_id
-        - device_name
       properties:
-        device_id:
+        _id:
           type: string
-          description: 'Device id uuid'
-        device_name:
+          example: 6566ed4ace63d42b25fbba19
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+          pattern: ^[0-9A-Fa-f]{24}$
+        name:
           type: string
-          description: 'Device name'
-        device_category:
+          minLength: 2
+          maxLength: 256
+        email:
           type: string
-          description: 'Device category'
-        device_type:
+          format: email
+          example: support@company.co.uk
+          pattern: >-
+            ^(?:[\w\-+!#$%&'*/=?^`|{}~]+(?:\.[\w\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[\w\-]{0,61}[A-Za-z0-9])?))*\.[A-Za-z]{2,})$
+          minLength: 6
+          maxLength: 320
+          x-42c-format: o:email
+        password:
           type: string
-          description: 'Device type'
-      example:
-        device_id: '91601de6-6e93-11ed-a1eb-0242ac120002'
-        device_name: 'device-A1'
-        device_category: 'Network'
-        device_type: 'Server'
-      description: 'Device'
+          minLength: 8
+          maxLength: 256
+        rights:
+          type: array
+          properties:
+            rights:
+              type: string
+          example:
+            - ["admin", "users", "models", "connections", "attributes"]
+        token:
+          type: string
+          minLength: 20
+          example: "hGlyJ6KGJtKrMvNcpMwY1lRs6Cys3yCHQ0ZxMT7mCKFUOdrIOd"
 
+    Users:
+      type: array
+      description: Array of User
+      items:
+        $ref: "#/components/schemas/User"
+    Floor:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+          pattern: ^[0-9A-Fa-f]{24}$
+        name:
+          type: string
+        address:
+          $ref: "#/components/schemas/FloorAddress"
+        array:
+          $ref: "#/components/schemas/FloorArray"
+      description: Floor object
+      example:
+        _id: 653e120577c067b6abbe5d26
+        name: Konopelski - Walter - incentivize global 2222
+        address:
+          street: Zion Valleys 86789
+          city: Paradise
+          country: Papua New Guinea
+          postcode: 05649-8267
+        dimension:
+          description: "Koss, Powlowski and Sipes - leverage out-of-the-box schemas"
+          x: 54
+          y: 58
+          h: 6
+          x_pos: 76
+          y_pos: 70
+          h_pos: 23
+    Floors:
+      type: array
+      description: Array of Floor
+      items:
+        $ref: "#/components/schemas/Floor"
+    Dimension:
+      type: object
+      properties:
+        depth:
+          type: number
+          minimum: 1
+          maximum: 100
+        height:
+          type: number
+          minimum: 1
+          maximum: 100
+        width:
+          type: number
+          minimum: 1
+          maximum: 100
+      example:
+        width: 1
+        height: 2
+        depth: 2
+    Texture:
+      type: object
+      properties:
+        back:
+          type: string
+          example: "/assets/r710-2.5-nobezel__29341.png"
+          pattern: ^(.+)\/([^/]+)\.(png|jpg)$
+          minLength: 6
+          maxLength: 256
+        botom:
+          type: string
+          example: "/"
+          pattern: ^(.+)\/([^/]+)\.(png|jpg)$
+          minLength: 6
+          maxLength: 256
+          x-42c-format: "o:uri"
+        front:
+          type: string
+          example: "/"
+          pattern: ^(.+)\/([^/]+)\.(png|jpg)$
+          minLength: 6
+          maxLength: 256
+          x-42c-format: "o:uri"
+        side:
+          type: string
+          example: /
+          pattern: ^(.+)\/([^/]+)\.(png|jpg)$
+          minLength: 2
+          maxLength: 256
+          x-42c-format: o:uri
+        top:
+          type: string
+          example: /
+          pattern: ^(.+)\/([^/]+)\.(png|jpg)$
+          minLength: 2
+          maxLength: 256
+          x-42c-format: o:uri
+      example:
+        front: /assets/r710-2.5-nobezel__29341.png
+        back: /assets/r710-2.5-nobezel__29341.png
+        side: /assets/r710-2.5-nobezel__29341.png
+        top: /assets/r710-2.5-nobezel__29341.png
+        botom: /assets/r710-2.5-nobezel__29341.png
+    Model:
+      required:
+        - _id
+        - category
+        - name
+        - type
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        category?:
+          type: string
+        dimension:
+          $ref: "#/components/schemas/Dimension"
+        name:
+          type: string
+        texture:
+          $ref: "#/components/schemas/Texture"
+        type:
+          type: string
+      description: Object of Models
+      example:
+        _id: 653e1059d6025afb66017c63
+        name: Model 1
+        dimension:
+          width: 1
+          height: 2
+          depth: 2
+        texture:
+          front: /assets/r710-2.5-nobezel__29341.png
+          back: /assets/r710-2.5-nobezel__29341.png
+          side: /assets/r710-2.5-nobezel__29341.png
+          top: /assets/r710-2.5-nobezel__29341.png
+          botom: /assets/r710-2.5-nobezel__29341.png
+        type: CoolAir
+        category: Facility
+    Models:
+      type: array
+      description: Array of Models
+      example:
+        type: array
+        items:
+          $ref: "#/components/schemas/Model/example"
+      items:
+        $ref: "#/components/schemas/Model"
+    AttributeDictionary:
+      required:
+        - _id
+        - category
+        - component
+        - name
+        - type
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        name:
+          type: string
+        type:
+          type: string
+        category:
+          type: string
+        component:
+          type: string
+          enum:
+            - Devices
+            - Models
+            - Attributes
+            - AttributesDictionary
+            - Connections
+            - Floors
+      example:
+        _id: 653e10ecd6025afb66017c65
+        name: MaxAmount
+        type: ""
+        category: ""
+        component: b324c94f-58a7-4e2e-a566-207024cb3485
+    AttributeDictionaries:
+      type: array
+      description: List of Attribute Dictionary
+      example:
+        - _id: 653e10ecd6025afb66017c65
+          name: MaxAmount
+          type: ""
+          category: ""
+          component: b324c94f-58a7-4e2e-a566-207024cb3485
+        - _id: 653e10ecd6025afb66017c65
+          name: MaxAmount
+          type: ""
+          category: ""
+          component: b324c94f-58a7-4e2e-a566-207024cb3485
+      items:
+        $ref: "#/components/schemas/AttributeDictionary"
+    Attribute:
+      required:
+        - _id
+        - attributeDictionaryId
+        - value
+      type: object
+      properties:
+        _id:
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        deviceId:
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        modelId:
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        connectionId:
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        attributeDictionaryId:
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        value:
+          type: string
+      example:
+        _id: 653e10ecd6025afb66017c65
+        deviceId: 6566ed4ace63d42b25fbba19
+        modelId: ""
+        connectionId: ""
+        attributeDictionaryId: 6566ed4ace63d42b25fbba19
+        value: "2"
+    Attributes:
+      type: array
+      description: List of attributes
+      example:
+        - _id: "653e10ecd6025afb66017c65"
+          deviceId: "6566ed4ace63d42b25fbba19"
+          modelId: ""
+          connectionId: ""
+          attributeDictionaryId: "6566ed4ace63d42b25fbba19"
+          value: "2"
+        - _id: "1234erdsfdasdasdasd17c65"
+          deviceId: "6566ed4ace63d42b25fbba19"
+          modelId: "6566ed4ace63d42b25fbba19"
+          connectionId: ""
+          attributeDictionaryId: ""
+          value: "2"
+      items:
+        $ref: "#/components/schemas/Attribute"
+    Position:
+      required:
+        - x
+        - y
+        - h
+      type: object
+      properties:
+        x:
+          type: number
+          description: Width
+        y:
+          type: number
+          description: Depth
+        h:
+          type: number
+          description: Height
+      description: Position device on the floor
+    Device:
+      required:
+        - _id
+        - modelId
+        - name
+      type: object
+      properties:
+        _id:
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        name:
+          type: string
+          description: Device name
+        modelId:
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        position:
+          $ref: "#/components/schemas/Position"
+      description: Device it is basic structure 3d-inventory
+      example:
+        _id: 6566ed4ace63d42b25fbba19
+        name: Device 2
+        modelId: 6566ed4ace63d42b25fbba19
+        position:
+          x: 4
+          y: 3
+          h: 0
+    Devices:
+      type: array
+      description: Array of Devices
+      items:
+        $ref: "#/components/schemas/Device"
+      oneOf:
+        - minItems: 0
+          maxItems: 0
+        - minItems: 1
+          maxItems: 10
+    Connection:
+      required:
+        - _id
+        - deviceIdFrom
+        - deviceIdTo
+        - name
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Connection id uuid
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        name:
+          type: string
+          description: Connection name
+        deviceIdTo:
+          type: string
+          description: Connection to
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        deviceIdFrom:
+          type: string
+          description: Connection from
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+      description: Single Connection between two devices deviceIdFrom to deviceIdTo
+      example:
+        _id: 6566ed4ace63d42b25fbba19
+        name: device-A1
+        deviceIdFrom: 6566ed4ace63d42b25fbba19
+        deviceIdTo: 6566ed4ace63d42b25fbba19
+    Connections:
+      type: array
+      description: Array of Connections
+      items:
+        $ref: "#/components/schemas/Connection"
     Error:
       type: object
       properties:
         errNum:
-          type: string
+          type: number
         message:
           type: string
         offset:
           type: string
+      description: Universal error message from database
       example:
-        errNum: '404'
-        message: 'Error example app not work...'
-        offset: 'line 10022'
-      description: 'Universal Oracle error logs from database'
-
+        errNum: "404"
+        message: Error example app not work...
+        offset: line 10022
     Log:
-      type: object
       required:
-        - id
+        - _id
+        - component
         - date
         - message
+        - object
+        - operation
+      type: object
       properties:
-        id:
+        _id:
+          description: UUID of log
           type: string
-          description: 'Incremental log Id'
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
         date:
           type: string
-          description: 'Date as string'
+          description: Date as string
+        object:
+          type: string
+          description: UUID logged object
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        operation:
+          type: string
+          description: CRUD CREATE/UPDATE/DELETE
+        component:
+          type: string
+          description: "Device, Connection, Model, Floor"
         message:
           type: string
-          description: 'Log message'
+          description: Log message
+      description: Save information about all application upstage
       example:
-        id: '102'
-        date: '2023-03-12 14:00'
-        message: 'Message in log'
-      description: 'Save information about application upstage'
-
+        _id: "102"
+        date: "2023/06/17 15:37:58.44"
+        object: "6566ed4ace63d42b25fbba19"
+        operation: Update
+        component: Device
+        message: Message in log
+    Logs:
+      type: array
+      description: Array of Logs
+      example:
+        - _id: "102"
+          date: "2023/06/17 15:37:58.44"
+          object: 6566ed4ace63d42b25fbba19
+          operation: Update
+          component: Device
+          message: Message in log
+        - _id: "103"
+          date: "2023/02/27 10:37:58.44"
+          object: 6566ed4ace63d42b25fbba19
+          operation: Update
+          component: Device
+          message: Message in log
+        - _id: "104"
+          date: "2022/01/17 11:37:58.44"
+          object: 6566ed4ace63d42b25fbba19
+          operation: Update
+          component: Device
+          message: Message in log
+      items:
+        $ref: "#/components/schemas/Log"
+    FloorAddress:
+      type: object
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+    FloorArray:
+      type: object
+      properties:
+        description:
+          type: string
+        x:
+          type: number
+        y:
+          type: number
+        h:
+          type: number
+        xPos:
+          type: number
+        yPos:
+          type: number
+        hPos:
+          type: number
   responses:
-    '200':
-      description: OK
-    '400':
-      description: Bad request. User ID must be an integer and larger than 0.
+    "200":
+      description: OK. Indicates that the request has succeeded.
+    "400":
+      description: Bad request.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-    '401':
+            $ref: "#/components/schemas/Error"
+    "401":
       description: Authorization information is missing or invalid.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-    '404':
+            $ref: "#/components/schemas/Error"
+    "404":
       description: Not found
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-    5XX:
-      description: Unexpected error
+            $ref: "#/components/schemas/Error"
+    "405":
+      description:
+        Method Not Allowed. The request HTTP method is known by the server but has been disabled and cannot be used
+        for that resource.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
+    "500":
+      description:
+        Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+        the request.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    "501":
+      description: Not Implemented. The HTTP method is not supported by the server and cannot be handled.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    "502":
+      description:
+        Bad getaway. The server got an invalid response while working as a gateway to get the response needed to
+        handle the request.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    "503":
+      description: Service Unavailable. The server is not ready to handle the request.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    "504":
+      description:
+        Gateway Timeout. The server is acting as a gateway and cannot get a response in time for a request.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

@@ -1,0 +1,19 @@
+name: "Configure GitHub Pages"
+
+on: [push] # This workflow will run whenever code is pushed to the repository
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run your action
+        id: my_step # Give the step an id
+        uses: ./
+        with:
+          static_site_generator: "nuxt"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          enablement: "false"
+      - name: Use outputs
+        run: echo "The base URL is ${{ steps.my_step.outputs.base_url }}"
