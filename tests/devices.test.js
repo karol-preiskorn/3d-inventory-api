@@ -1,5 +1,5 @@
 /**
- * File:        /tests/devices.mjs
+ * File:        /tests/devices.js
  * Description: Test devices api operation
  *
  * Date        By     Comments
@@ -10,17 +10,17 @@
  */
 
 // import faker from "@faker-js/faker"
-import request from "supertest"
-import assert from "assert"
-import app from "../index.mjs"
+import request from 'supertest'
+// import assert from "assert"
+import app from '../index.js'
 
-let respond
+// let respond
 
-describe("GET /devices", () => {
-  it("GET /devices => array of items", () => request(app)
-    .get("/devices")
-    .set("Accept", "application/json")
-    .expect("Content-Type", /json/)
+describe('GET /devices', () => {
+  it('GET /devices => array of items', () => request(app)
+    .get('/devices')
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
     .expect(200)
     .then((response) => {
       expect(response.body).toEqual(
@@ -41,8 +41,8 @@ describe("GET /devices", () => {
     }).then((response) => {
       console.log(response.body)
       request(app)
-        .get("/devices/" + response.body[0]._id)
-        .expect("Content-Type", /json/)
+        .get('/devices/' + response.body[0]._id)
+        .expect('Content-Type', /json/)
         .expect(200)
         .then((responseGetId) => {
           expect(responseGetId.body).toEqual(

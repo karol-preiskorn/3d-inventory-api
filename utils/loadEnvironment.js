@@ -1,8 +1,6 @@
 /**
- * File:        /loadEnviroment.mjs
- * Description:
- * Used by:
- * Dependency:
+ * File:        /loadEnvironment.js
+ * Description: Environment variables
  *
  * Date        By     Comments
  * ----------  -----  ------------------------------
@@ -10,6 +8,6 @@
 **/
 
 
-import dotenv from "dotenv"
+import dotenv from 'dotenv'
 
 dotenv.config()

@@ -1,5 +1,5 @@
 ﻿/**
- * File:        /routers/readme.mjs
+ * File:        /routers/readme.js
  * Description: Render README.md in express
  *
  * Date        By     Comments
@@ -10,7 +10,7 @@
 import express from "express"
 import fs from "fs"
 import Markdown from "markdown-it"
-import { logger } from "../utils/logger.mjs"
+import { logger } from "../utils/logger.js"
 
 const router = express.Router()
 

@@ -1,5 +1,5 @@
 ﻿/**
- * File:        /utils/banner.mjs
+ * File:        /utils/banner.js
  * Description: Print banner log
  *
  * Date        By     Comments
@@ -9,7 +9,7 @@
 
 import figlet from "figlet"
 import fs from "fs"
-import { logger } from "./logger.mjs"
+import { logger } from "./logger.js"
 
 
 export function banner() {

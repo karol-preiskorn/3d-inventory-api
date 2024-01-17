@@ -1,5 +1,5 @@
 ﻿/**
- * File:        /routers/models.mjs
+ * File:        /routers/models.js
  * Description:
  *
  * Date        By     Comments
@@ -8,7 +8,7 @@
  **/
 
 import express from "express"
-import db from "../db/conn.mjs"
+import db from "../db/conn.js"
 import { ObjectId } from "mongodb"
 
 const router = express.Router()

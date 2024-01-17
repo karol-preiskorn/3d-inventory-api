@@ -1,7 +1,7 @@
 ﻿{
   "ignore": [
-    "**/*.test.ts",
-    "**/*.spec.ts",
+    "**/*.test.js",
+    "**/*.spec.js",
     ".git",
     "node_modules",
     "doc/**/*",
@@ -9,7 +9,7 @@
   ],
   "watch": [
     "api/openapi.yaml",
-    "index.mjs",
+    "index.js",
     "assets/*",
     "routers/*",
     "schema/*",
@@ -18,5 +18,5 @@
     "utils"
   ],
   "exec": "npm start",
-  "ext": "mjs,json,yaml"
+  "ext": "js,json,yaml"
 }

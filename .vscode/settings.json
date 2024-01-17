@@ -34,5 +34,6 @@
     "mvn",
     "oracledb",
     "tsc"
-  ]
+  ],
+  "mocha.enabled": true
 }
