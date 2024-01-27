@@ -13,11 +13,13 @@
 
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
-import db from '../db/conn.js'
+import { connectToCluster, connectToDb } from '../db/conn.js'
 // import { ObjectId } from "mongodb"
 
 describe('Test Mongo Atlas DB connection and schema', () => {
   it('should insert a User doc into collection', async () => {
+    const client = await connectToCluster()
+    const db = await connectToDb(client)
     const users = db.collection('users')
     const mockUser = {
       'name': faker.person.fullName(),

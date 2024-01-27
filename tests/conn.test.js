@@ -1,14 +1,10 @@
 /**
- * File:        /db/conn.test.js
- * Description: Test connection do DB
- *
- * Date        By     Comments
- * ----------  -----  ------------------------------
- * 2024-01-14  C2RLO  Initial
+ * @file: /tests/conn.test.js
+ * @module: /tests
+ * @description:
+ * @version 2024-01-14 C2RLO - Initial
 **/
 
-
-// import { database } from '../db/conn.js'
 import '../utils/loadEnvironment'
 const { MongoClient } = require('mongodb')
 
@@ -17,10 +13,7 @@ describe('ConnectToDatabase Mongo Atlas', () => {
   let db
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    connection = await MongoClient.connect(process.env.ATLAS_URI, {})
     db = await connection.db(process.env.DBNAME)
   })
 
@@ -36,6 +29,12 @@ describe('ConnectToDatabase Mongo Atlas', () => {
 
     const insertedUser = await users.findOne({ _id: 'some-user-id' })
     expect(insertedUser).toEqual(mockUser)
+
+    const deleteUser = await users.deleteOne({ _id: 'some-user-id' })
+    expect(deleteUser).toEqual({
+      'acknowledged': true,
+      'deletedCount': 1,
+    })
   })
 
   it(`connect to ${process.env.DBNAME}`, async () => {

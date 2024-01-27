@@ -7,17 +7,17 @@
  * 2024-01-07  C2RLO  Initial
 **/
 
-import express from "express"
-import fs from "fs"
-import Markdown from "markdown-it"
-import { logger } from "../utils/logger.js"
+import express from 'express'
+import fs from 'fs'
+import Markdown from 'markdown-it'
+import { logger } from '../utils/logger.js'
 
 const router = express.Router()
 
-router.get("/", async (req, res) => {
-  const path = "../README.md"
+router.get('/', async (req, res) => {
+  const path = '../README.md'
   const md = Markdown()
-  fs.readFile(path, "utf8", function (err, data) {
+  fs.readFile(path, 'utf8', function (err, data) {
     if (err) {
       logger.error(`Error read ${path} file: ${err}`)
     }
