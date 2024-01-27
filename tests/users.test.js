@@ -1,3 +1,12 @@
+/**
+ * @file: /tests/models.test copy.js
+ * @module: /tests
+ * @description:
+ * @version 2024-01-19 C2RLO - Initial
+**/
+
+
+
 /*
  * File:        index.js
  * Description: Connect to MongoDB 3d-inventory claster
@@ -13,13 +22,11 @@
 
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
-import { connectToCluster, connectToDb } from '../db/conn.js'
+import { db } from '../db/conn.js'
 // import { ObjectId } from "mongodb"
 
 describe('Test Mongo Atlas DB connection and schema', () => {
   it('should insert a User doc into collection', async () => {
-    const client = await connectToCluster()
-    const db = await connectToDb(client)
     const users = db.collection('users')
     const mockUser = {
       'name': faker.person.fullName(),
@@ -31,5 +38,8 @@ describe('Test Mongo Atlas DB connection and schema', () => {
     await users.insertOne(mockUser)
     const insertedUser = await users.findOne(mockUser)
     expect(insertedUser).toEqual(mockUser)
+
+    const deletedUser = await users.deleteOne(mockUser)
+    expect(deletedUser).toEqual(mockUser)
   })
 })

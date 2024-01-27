@@ -35,9 +35,13 @@ tags:
   - name: logs
     description: Operation on Logs
   - name: devices
-    description: Basic object _3d-inventory_ Device and operation on devices API
+    description:
+      Basic object _3d-inventory_ device and operation on devices API. Represent by position blok x, y, z with
+      devices parameters.
   - name: models
-    description: Models of devices API
+    description:
+      Models of devices API. Represent by blok dimension x, y, h with block images on every side and model types
+      and parameters.
   - name: connections
     description: Connections between devices API
   - name: attributes
@@ -296,6 +300,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Log"
+        "404":
+          description: Id Not found
       x-swagger-router-controller: Logs
     post:
       tags:
@@ -355,26 +361,26 @@ paths:
         - logs
       summary: Get single log id
       description: Get specific id log.
-      operationId: logSingleGet
+      operationId: logGetId
       parameters:
         - name: id
           in: path
-          description: ID of pet to fetch
+          description: ID of log to fetch
           required: true
           style: simple
           explode: false
           schema:
-            type: integer
-            format: int64
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
       responses:
         "200":
           description: OK
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Log"
       x-swagger-router-controller: Logs
     delete:
       tags:
@@ -552,6 +558,39 @@ paths:
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
+      x-swagger-router-controller: Logs
+  "/logs/model/{id}":
+    get:
+      tags:
+        - logs
+      summary: Get attributes logs for model
+      description: Get specific attribute logs for model
+      operationId: logModelGetId
+      parameters:
+        - name: id
+          in: path
+          description: Model ID of attribute to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Logs"
+        "404":
+          description: Not found. Indicates that the request has no logs.
+        "500":
+          description: Server side error.
       x-swagger-router-controller: Logs
     delete:
       tags:

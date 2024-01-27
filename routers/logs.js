@@ -1,22 +1,23 @@
-/**
- * @file /routers/devices.js
+﻿/**
+ * @file /routers/logs.js
  * @module /routers
  * @description
- * @version 2024-01-25 C2RLO - add new way to connect to DB
- */
+ * @version 2024-01-27 C2RLO - Initial
+**/
 
 import express from 'express'
 import { ObjectId } from 'mongodb'
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
+const collectionName = 'logs'
 const router = express.Router()
 
 // Get all
 router.get('/', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
-  const collection = db.collection('devices')
+  const collection = db.collection(collectionName)
   const results = await collection.find({}).limit(10).toArray()
   if (!results) res.send('Not found').status(404)
   else res.send(results).status(200)
@@ -27,7 +28,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
-  const collection = db.collection('devices')
+  const collection = db.collection(collectionName)
   const query = { _id: ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.send('Not found').status(404)
@@ -39,7 +40,7 @@ router.get('/:id', async (req, res) => {
 router.get('/model/:id', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
-  const collection = db.collection('devices')
+  const collection = db.collection(collectionName)
   const query = { modelId: ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.send('Not found').status(404)
@@ -51,7 +52,7 @@ router.get('/model/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
-  const collection = db.collection('devices')
+  const collection = db.collection(collectionName)
   const newDocument = req.body
   newDocument.date = new Date()
   const results = await collection.insertOne(newDocument)
@@ -67,7 +68,7 @@ router.patch('/position/:id', async (req, res) => {
   }
   const client = await connectToCluster()
   const db = await connectToDb(client)
-  const collection = db.collection('devices')
+  const collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
   res.send(result).status(200)
   connectionClose(client)
@@ -78,7 +79,7 @@ router.delete('/:id', async (req, res) => {
   const query = { _id: ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)
-  const collection = db.collection('devices')
+  const collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
   res.send(result).status(200)
   connectionClose(client)
@@ -89,7 +90,7 @@ router.delete('/', async (req, res) => {
   const query = {}
   const client = await connectToCluster()
   const db = await connectToDb(client)
-  const collection = db.collection('devices')
+  const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.send(result).status(200)
   connectionClose(client)
@@ -100,7 +101,7 @@ router.delete('/model/:id', async (req, res) => {
   const query = { modelId: ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)
-  const collection = db.collection('devices')
+  const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.send(result).status(200)
   connectionClose(client)
