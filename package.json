@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Mongo API for 3d-inventory project",
   "keywords": [
     "3d-inventory",

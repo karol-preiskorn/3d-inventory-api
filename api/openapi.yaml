@@ -2216,7 +2216,7 @@ components:
           type: string
           description: "Device, Connection, Model, Floor"
         message:
-          type: string
+          type: object
           description: Log message
       description: Save information about all application upstage
       example:
@@ -2225,7 +2225,13 @@ components:
         object: "6566ed4ace63d42b25fbba19"
         operation: Update
         component: Device
-        message: Message in log
+        message:
+          {
+            "name": "Mouse pink-rabbit",
+            "modelId": { "$oid": "65b5fef688299af6cbc6ccf4" },
+            "position": { "x": 59, "y": 4, "h": 9 },
+            "_id": { "$oid": "65b5fef788299af6cbc6ccfa" },
+          }
     Logs:
       type: array
       description: Array of Logs

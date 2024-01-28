@@ -20,6 +20,7 @@ import helmet from 'helmet'
 import './utils/loadEnvironment.js'
 import devices from './routers/devices.js'
 import models from './routers/models.js'
+import logs from './routers/logs.js'
 import readme from './routers/readme.js'
 import { logger, stream } from './utils/logger.js'
 import { banner } from './utils/banner.js'
@@ -45,7 +46,7 @@ try {
       tokens.status(req, res),
       tokens.res(req, res, 'content-length'), '-',
       tokens['response-time'](req, res), 'ms'
-    ].join(' ')
+    ].join('')
   }, { stream } ))
 } catch (error) {
   logger.error(`[morgan] ${error}`)
@@ -66,6 +67,7 @@ morganBody(app,{
 app.use(express.urlencoded({ extended: false }))
 
 // Load the api routes
+app.use('/logs', logs)
 app.use('/devices', devices)
 app.use('/models', models)
 app.use('/readme', readme)

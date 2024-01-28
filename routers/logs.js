@@ -19,8 +19,8 @@ router.get('/', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const results = await collection.find({}).limit(10).toArray()
-  if (!results) res.send('Not found').status(404)
-  else res.send(results).status(200)
+  if (!results) res.status(404).send('Not found')
+  else { res.status(200).send(results) }
   connectionClose(client)
 })
 
@@ -29,10 +29,11 @@ router.get('/:id', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
-  const query = { _id: ObjectId(req.params.id) }
+  // console.log('req.params.id: ' + req.params.id)
+  const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.send('Not found').status(404)
-  else res.send(result).status(200)
+  if (!result) res.status(404).send('Not found')
+  else res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -41,7 +42,7 @@ router.get('/model/:id', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
-  const query = { modelId: ObjectId(req.params.id) }
+  const query = { modelId: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.send('Not found').status(404)
   else res.send(result).status(200)
@@ -62,7 +63,7 @@ router.post('/', async (req, res) => {
 
 // Update the device's :id position
 router.patch('/position/:id', async (req, res) => {
-  const query = { _id: ObjectId(req.params.id) }
+  const query = { _id: new ObjectId(req.params.id) }
   const updates = {
     $push: { position: req.body }
   }
@@ -76,7 +77,7 @@ router.patch('/position/:id', async (req, res) => {
 
 // Delete an entry
 router.delete('/:id', async (req, res) => {
-  const query = { _id: ObjectId(req.params.id) }
+  const query = { _id: new ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
@@ -98,7 +99,7 @@ router.delete('/', async (req, res) => {
 
 // delete all devices with specific :id model
 router.delete('/model/:id', async (req, res) => {
-  const query = { modelId: ObjectId(req.params.id) }
+  const query = { modelId: new ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
