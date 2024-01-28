@@ -13,7 +13,8 @@
             "bsonType": "string"
         },
         "object": {
-            "bsonType": "string"
+            "bsonType": "object",
+            "properties": {}
         },
         "operation": {
             "bsonType": "string"
