@@ -10,11 +10,11 @@
             "bsonType": "string"
         },
         "message": {
-            "bsonType": "string"
-        },
-        "object": {
             "bsonType": "object",
             "properties": {}
+        },
+        "object": {
+            "bsonType": "string"
         },
         "operation": {
             "bsonType": "string"
