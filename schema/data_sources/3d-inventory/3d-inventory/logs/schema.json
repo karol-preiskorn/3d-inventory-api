@@ -21,7 +21,10 @@
         }
     },
     "required": [
-        "_id"
+        "_id",
+        "date",
+        "objectId",
+        "operation"
     ],
     "title": "log"
 }
