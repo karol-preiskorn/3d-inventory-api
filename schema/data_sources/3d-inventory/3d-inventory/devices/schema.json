@@ -13,13 +13,13 @@
             "bsonType": "object",
             "properties": {
                 "h": {
-                    "bsonType": "string"
+                    "bsonType": "int"
                 },
                 "x": {
-                    "bsonType": "string"
+                    "bsonType": "int"
                 },
                 "y": {
-                    "bsonType": "string"
+                    "bsonType": "int"
                 }
             }
         }
