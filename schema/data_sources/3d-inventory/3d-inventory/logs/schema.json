@@ -11,7 +11,71 @@
         },
         "message": {
             "bsonType": "object",
-            "properties": {}
+            "properties": {
+                "_id": {
+                    "bsonType": "objectId"
+                },
+                "category": {
+                    "bsonType": "string"
+                },
+                "dimension": {
+                    "bsonType": "object",
+                    "properties": {
+                        "depth": {
+                            "bsonType": "int"
+                        },
+                        "height": {
+                            "bsonType": "int"
+                        },
+                        "width": {
+                            "bsonType": "int"
+                        }
+                    }
+                },
+                "modelId": {
+                    "bsonType": "objectId"
+                },
+                "name": {
+                    "bsonType": "string"
+                },
+                "position": {
+                    "bsonType": "object",
+                    "properties": {
+                        "h": {
+                            "bsonType": "int"
+                        },
+                        "x": {
+                            "bsonType": "int"
+                        },
+                        "y": {
+                            "bsonType": "int"
+                        }
+                    }
+                },
+                "texture": {
+                    "bsonType": "object",
+                    "properties": {
+                        "back": {
+                            "bsonType": "string"
+                        },
+                        "botom": {
+                            "bsonType": "string"
+                        },
+                        "front": {
+                            "bsonType": "string"
+                        },
+                        "side": {
+                            "bsonType": "string"
+                        },
+                        "top": {
+                            "bsonType": "string"
+                        }
+                    }
+                },
+                "type": {
+                    "bsonType": "string"
+                }
+            }
         },
         "objectId": {
             "bsonType": "objectId"
@@ -21,10 +85,7 @@
         }
     },
     "required": [
-        "_id",
-        "date",
-        "objectId",
-        "operation"
+        "_id"
     ],
     "title": "log"
 }
