@@ -10,13 +10,13 @@
             "bsonType": "object",
             "properties": {
                 "depth": {
-                    "bsonType": "string"
+                    "bsonType": "int"
                 },
                 "height": {
-                    "bsonType": "string"
+                    "bsonType": "int"
                 },
                 "width": {
-                    "bsonType": "string"
+                    "bsonType": "int"
                 }
             }
         },
