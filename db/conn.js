@@ -2,6 +2,7 @@
  * @file conn.js Connect to Mongo Atlas DB
  * @module db/conn
  * @description This module exports a MongoDB client and a database connection.
+ * @version 2024-01-27 C2RLO - add exit(1) on error
  * @version 2024-01-25 C2RLO - Add connectionClose()
  * @version 2024-01-13 C2RLO - Fix async error
  * @version 2023-12-29 C2RLO - Initial
@@ -23,7 +24,7 @@ export async function connectToCluster() {
     return connect
   } catch (error) {
     logger.error('Connection to MongoDB Atlas failed!', error)
-    process.exit()
+    process.exit(1)
   }
 }
 
@@ -36,7 +37,7 @@ export async function connectToDb(client) {
     return db
   } catch (error) {
     logger.error('Connection to MongoDB DB failed!', error)
-    process.exit()
+    process.exit(1)
   }
 }
 

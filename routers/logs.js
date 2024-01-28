@@ -36,7 +36,7 @@ router.get('/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// Get a single post
+// Get a log for specific model
 router.get('/model/:id', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
