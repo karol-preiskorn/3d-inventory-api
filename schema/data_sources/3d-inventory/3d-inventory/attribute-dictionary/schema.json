@@ -19,5 +19,5 @@
     "required": [
         "_id"
     ],
-    "title": "attributeDictionary"
+    "title": "attribute-dictionary"
 }
