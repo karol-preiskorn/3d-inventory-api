@@ -1,11 +1,8 @@
 /**
- * File:        /index.js
- * Description: API 3d-inventory. Project is a simple solution that allows you to build a spatial and database representation of all types
+ * @file        /index.js
+ * @description API 3d-inventory. Project is a simple solution that allows you to build a spatial and database representation of all types
  *              of warehouses and server rooms.
- *
- * Date        By     Comments
- * ----------  -----  ------------------------------
- * 2023-12-29  C2RLO  Initial
+ * @version 2023-12-29  C2RLO - Initial
  **/
 
 import express from 'express'
@@ -22,20 +19,14 @@ import devices from './routers/devices.js'
 import models from './routers/models.js'
 import logs from './routers/logs.js'
 import readme from './routers/readme.js'
+import attributes from './routers/attributes.js'
+import attributesDictionary from './routers/attributesDictionary.js'
 import { logger, stream } from './utils/logger.js'
 import { banner } from './utils/banner.js'
 
 
 const PORT = process.env.PORT || 8080
 const app = express()
-
-
-// logger.accessLogStream = rfs.createStream("logs/access.log", {
-//   size: "10M",        // rotate every 10 MegaBytes written
-//   interval: "1d",     // rotate daily
-//   compress: "gzip",   // compress rotated files
-//   // path: path.join(__dirname, "logs")
-// })
 
 try {
   // const accessLogStream = fs.createWriteStream("./logs/access.log", { flags: "a" })
@@ -46,8 +37,8 @@ try {
       tokens.status(req, res),
       tokens.res(req, res, 'content-length'), '-',
       tokens['response-time'](req, res), 'ms'
-    ].join('')
-  }, { stream } ))
+    ].join(' ')
+  }, { stream }))
 } catch (error) {
   logger.error(`[morgan] ${error}`)
 }
@@ -60,17 +51,19 @@ app.use(function (req, res, next) {
 
 app.use(express.json())
 app.use(bodyParser.json())
-morganBody(app,{
+morganBody(app, {
   noColors: true,
   stream
 })
 app.use(express.urlencoded({ extended: false }))
 
 // Load the api routes
+app.use('/readme', readme)
 app.use('/logs', logs)
 app.use('/devices', devices)
 app.use('/models', models)
-app.use('/readme', readme)
+app.use('/attributes', attributes)
+app.use('/attributesDictionary', attributesDictionary)
 
 banner()
 

@@ -24,7 +24,6 @@ const config = {
       testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(mjs?|js?|tsx?|ts?)$',
       transform: {
         '^.+\\.js$': 'babel-jest',
-        '^.+\\.jsx?$': 'babel-jest'
       },
     },
     {
@@ -92,7 +91,6 @@ const config = {
       testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(mjs?|js?|tsx?|ts?)$',
       transform: {
         '^.+\\.js$': 'babel-jest',
-        '^.+\\.jsx?$': 'babel-jest'
       },
     },
   ]

@@ -1,4 +1,13 @@
 /**
+ * @file /tests/devices.test copy.js
+ * @module /tests
+ * @description
+ * @version 2024-01-30 C2RLO - Initial
+**/
+
+
+
+/**
  * File:        /tests/devices.js
  * Description: Test devices api operation
  *

@@ -18,12 +18,12 @@ export async function connectToCluster() {
   let connect
   try {
     client = new MongoClient(uri)
-    logger.info('Connecting to MongoDB Atlas cluster...')
+    // logger.info('Connecting to MongoDB Atlas cluster...')
     connect = await client.connect()
-    logger.info('Successfully connected to MongoDB Atlas!')
+    logger.info(`Successfully connected to Atlas cluster: ${connect}`)
     return connect
   } catch (error) {
-    logger.error('Connection to MongoDB Atlas failed!', error)
+    logger.error(`Connection to Atlas cluster failed ${connect}: ${error}`)
     process.exit(1)
   }
 }
@@ -31,12 +31,12 @@ export async function connectToCluster() {
 export async function connectToDb(client) {
   let db
   try {
-    logger.info('Connecting to MongoDB Atlas db...')
+    // logger.info('Connecting to MongoDB Atlas db...')
     db = await client.db(process.env.DBNAME)
-    logger.info('Successfully to MongoDB Atlas db...')
+    logger.info(`Successfully to Atlas DB ${process.env.DBNAME}: ${db}`)
     return db
   } catch (error) {
-    logger.error('Connection to MongoDB DB failed!', error)
+    logger.error(`Connection to Atlas DB failed ${process.env.DBNAME}: ${db} ${error}`)
     process.exit(1)
   }
 }

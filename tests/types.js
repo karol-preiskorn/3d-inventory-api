@@ -1,4 +1,12 @@
-﻿export const deviceType = [
+﻿/**
+ * @file /tests/types.js
+ * @module /tests
+ * @description
+ * @version 2024-01-30 C2RLO - Initial
+**/
+
+
+export const deviceType = [
   { name: 'Bridge', description: '' },
   { name: 'CoolAir', description: '' },
   { name: 'Copier', description: '' },
@@ -39,3 +47,6 @@ export const deviceCategory = [
     description: 'A data center requires a site with connections to grids, networks and physical <a href="https://simplicable.com/new/infrastructure">infrastructure</a>  such as roads. Proximity to markets, customers, employees and services also play a role in selecting an appropriate site. Locating data centers in cold climates can reduce cooling costs.',
   },
 ]
+
+// ada structure application
+export const components = [{ 'component': 'Logs', 'collection': 'logs' }, { 'component': 'Devices', 'collection': 'device' }, { 'component': 'Models', 'collection': 'models' }, { 'component': 'Attributes', 'collection': 'attributes' }, { 'component': 'AttributesDictionary', 'collection': 'attributes-dictionary' }, { 'component': 'Connections', 'collection': 'connections' }, { 'component': 'Users', 'collection': 'users' }, { 'component': 'Roles', 'collection': 'roles' }, { 'component': 'Permissions', 'collection': 'permissions' }]

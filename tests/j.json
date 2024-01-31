@@ -1,0 +1,56 @@
+[
+  {
+    "_id": "65b67f8bf42bf190aca7029b",
+    "category": "Site",
+    "dimension": {
+      "depth": 6,
+      "height": 5,
+      "width": 6
+    },
+    "name": "Fish black insect",
+    "texture": {
+      "back": "/assets/r710-2.5-nobezel__29341.png",
+      "botom": "/assets/r710-2.5-nobezel__29341.png",
+      "front": "/assets/r710-2.5-nobezel__29341.png",
+      "side": "/assets/r710-2.5-nobezel__29341.png",
+      "top": "/assets/r710-2.5-nobezel__29341.png"
+    },
+    "type": "Router"
+  },
+  {
+    "_id": "65b67f8cf42bf190aca702a7",
+    "category": "Site",
+    "dimension": {
+      "depth": 2,
+      "height": 6,
+      "width": 5
+    },
+    "name": "Chips ivory insect",
+    "texture": {
+      "back": "/assets/r710-2.5-nobezel__29341.png",
+      "botom": "/assets/r710-2.5-nobezel__29341.png",
+      "front": "/assets/r710-2.5-nobezel__29341.png",
+      "side": "/assets/r710-2.5-nobezel__29341.png",
+      "top": "/assets/r710-2.5-nobezel__29341.png"
+    },
+    "type": "Router"
+  },
+  {
+    "_id": "65b67f8ef42bf190aca702b3",
+    "category": "Facility",
+    "dimension": {
+      "depth": 1,
+      "height": 1,
+      "width": 9
+    },
+    "name": "Table maroon bear",
+    "texture": {
+      "back": "/assets/r710-2.5-nobezel__29341.png",
+      "botom": "/assets/r710-2.5-nobezel__29341.png",
+      "front": "/assets/r710-2.5-nobezel__29341.png",
+      "side": "/assets/r710-2.5-nobezel__29341.png",
+      "top": "/assets/r710-2.5-nobezel__29341.png"
+    },
+    "type": "Probe"
+  }
+]

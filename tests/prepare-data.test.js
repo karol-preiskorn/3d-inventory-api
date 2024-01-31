@@ -10,6 +10,7 @@ import '../utils/loadEnvironment.js'
 import { MongoClient } from 'mongodb'
 import { deviceType, deviceCategory } from './deviceType.js'
 
+
 describe('prepare test data', () => {
   let connection
   let db
