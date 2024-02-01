@@ -1,8 +1,8 @@
 /**
- * @file /tests/log.test copy.js
+ * @file /tests/attributes.gen.test copy.js
  * @module /tests
  * @description
- * @version 2024-01-30 C2RLO - Initial
+ * @version 2024-01-31 C2RLO - Initial
 **/
 
 
@@ -35,7 +35,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
     await connection.close()
   })
 
-  describe('create 3 attributes dictonary', () => {
+  describe('create 3 attributes dictionary', () => {
     it('should insert a 3 attributes', async () => {
       logs = db.collection('logs')
       attributeDictionary = db.collection('attribute-dictionary')
@@ -45,10 +45,11 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
         const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
 
         const mockAttributesDictionary = {
-          category: deviceCategory[Math.floor(Math.random() * deviceCategory.length)].name,
-          type: deviceType[Math.floor(Math.random() * deviceType.length)].name,
-          component: components[Math.floor(Math.random() * components.length)].component,
-          name: faker.commerce.product() + ' ' + faker.color.human(),
+          category: ,
+          type: valueAttributeType[index].type,
+          length: valueAttributeType[index].length,
+          component: valueAttributeType[index].component,
+          name: valueAttributeType[index].name,
         }
         await attributeDictionary.insertOne(mockAttributesDictionary)
         const insertedAttributesDictionary = await attributeDictionary.findOne(mockAttributesDictionary)
