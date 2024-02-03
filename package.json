@@ -86,7 +86,7 @@
     "graphql": "^16.8.1",
     "helmet": "^7.1.0",
     "http-errors": "^2.0.0",
-    "husky": "^9.0.7",
+    "husky": "^9.0.9",
     "jest-changed-files": "^29.7.0",
     "jest-environment-node": "^29.7.0",
     "jest-extended": "^4.0.2",
