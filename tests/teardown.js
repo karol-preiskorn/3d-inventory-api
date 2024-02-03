@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file: /tests/teardown.js
  * @module: /tests
  * @description:

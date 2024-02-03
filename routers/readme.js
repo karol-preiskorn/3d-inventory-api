@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File:        /routers/readme.js
  * Description: Render README.md in express
  *

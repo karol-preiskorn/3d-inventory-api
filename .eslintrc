@@ -6,7 +6,8 @@
     "standard",
     "plugin:jest/recommended",
     "prettier",
-    "plugin:jest/style"
+    "plugin:jest/style",
+    "plugin:jsdoc/recommended"
   ],
   "parserOptions": {
     "ecmaVersion": 2020,
@@ -17,6 +18,7 @@
     }
   },
   "rules": {
+    "jsdoc/check-values": 0, // Recommended
     "quotes": [
       "error",
       "single"
@@ -65,6 +67,7 @@
     }
   ],
   "plugins": [
-    "jest"
+    "jest",
+    "jsdoc"
   ]
 }

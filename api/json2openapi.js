@@ -1,34 +1,35 @@
-﻿/**
+/**
  * File:        /api/json2openapi.js
  * Description: Convert MongoDB JSON schema definition to YAML OpenAPI definition
  *
  * Date        By     Comments
  * ----------  -----  ------------------------------
  * 2023-12-26  C2RLO  Initial
- **/
+ */
 
-import OASNormalize from "oas-normalize"
-import toOpenApi from "json-schema-to-openapi-schema"
+// eslint-disable-next-line import/namespace
+import { OASNormalize }  from 'oas-normalize'
+import toOpenApi from 'json-schema-to-openapi-schema'
 
 const attributeSchema = {
   properties: {
     _id: {
-      bsonType: "objectId",
+      bsonType: 'objectId',
     },
     attributeDictionaryId: {
-      bsonType: "string",
+      bsonType: 'string',
     },
     connectionId: {
-      bsonType: "string",
+      bsonType: 'string',
     },
     deviceId: {
-      bsonType: "string",
+      bsonType: 'string',
     },
     modelId: {
-      bsonType: "string",
+      bsonType: 'string',
     },
     value: {
-      bsonType: "string",
+      bsonType: 'string',
     },
   }
 }

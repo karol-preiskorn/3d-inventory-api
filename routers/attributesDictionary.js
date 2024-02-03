@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file /routers/attributesDictionary.js
  * @module /routers
  * @description

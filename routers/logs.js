@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file /routers/logs.js
  * @module /routers
  * @description

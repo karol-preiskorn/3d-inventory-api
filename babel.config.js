@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File:        /babel.config.js
  * Description:
  *

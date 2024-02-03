@@ -3,13 +3,14 @@
  * @module /tests
  * @description
  * @version 2024-01-30 C2RLO - Initial
-**/
+ */
 
 
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
 import { MongoClient, ObjectId } from 'mongodb'
-import { deviceType, deviceCategory, components } from '../utils/types.js'
+import { valueAttributeType, valueAttributeCategory, components } from '../utils/types.js'
+import { capitalizeFirstLetter } from '../utils/strings.js'
 
 
 describe('prepare AttributeDictionary and Attribute test data', () => {
@@ -43,13 +44,14 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
       for (let index = 0; index < 3; index++) {
         const currentDateLogs = new Date()
         const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
-
+        const randomComponent = components[Math.floor(Math.random() * components.length)].component
         const mockAttributesDictionary = {
-          category: deviceCategory[Math.floor(Math.random() * deviceCategory.length)].name,
-          type: deviceType[Math.floor(Math.random() * deviceType.length)].name,
-          component: components[Math.floor(Math.random() * components.length)].component,
-          name: faker.commerce.product() + ' ' + faker.color.human(),
+          name: capitalizeFirstLetter(faker.hacker.noun()) + ' ' + capitalizeFirstLetter(faker.color.human()) + ' ' + capitalizeFirstLetter(faker.commerce.product()),
+          component: randomComponent,
+          type: valueAttributeType[Math.floor(Math.random() * valueAttributeType.length)].type,
+          category: valueAttributeCategory[Math.floor(Math.random() * valueAttributeCategory.length)].name,
         }
+
         await attributeDictionary.insertOne(mockAttributesDictionary)
         const insertedAttributesDictionary = await attributeDictionary.findOne(mockAttributesDictionary)
         expect(insertedAttributesDictionary).toEqual(mockAttributesDictionary)
@@ -65,6 +67,36 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
         const insertedLog = await logs.findOne(mockLog)
         expect(insertedLog).toEqual(mockLog)
 
+        if (['Device','Connection','Model'].indexOf(randomComponent) > -1) {
+          for (let j = 0; j < 3; j++) {
+            const mockAttributes = {
+              attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+              connectionId: new ObjectId(),
+              deviceId: new ObjectId(),
+              modelId: new ObjectId(),
+              name: faker.commerce.product() + ' ' + faker.color.human(),
+              value: faker.commerce.productAdjective(),
+            }
+            await attributes.insertOne(mockAttributes)
+            const insertedAttributes = await attributes.findOne(mockAttributes)
+
+            it('should insertedAttributes be correct', () => {
+              const isEqual = insertedAttributes === mockAttributes
+              expect(isEqual).toBe(true)
+            })
+
+            mockLog = {
+              'date': formattedDate,
+              'objectId': new ObjectId(insertedAttributes._id),
+              'operation': 'Create',
+              'component': 'Attributes',
+              'message': mockAttributes
+            }
+            await logs.insertOne(mockLog)
+            const insertedLog = await logs.findOne(mockLog)
+            expect(insertedLog).toEqual(mockLog)
+          }
+        }
         for (let j = 0; j < 3; j++) {
           const mockAttributes = {
             attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),

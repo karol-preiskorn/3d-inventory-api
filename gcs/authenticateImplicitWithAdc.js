@@ -28,7 +28,7 @@ function main(projectId) {
    */
   // const projectId = 'YOUR_PROJECT_ID';
 
-  const {Storage} = require('@google-cloud/storage');
+  const {Storage} = require('@google-cloud/storage')
 
   async function authenticateImplicitWithAdc() {
     // This snippet demonstrates how to list buckets.
@@ -37,24 +37,24 @@ function main(projectId) {
     // The client library finds your credentials using ADC.
     const storage = new Storage({
       projectId,
-    });
-    const [buckets] = await storage.getBuckets();
-    console.log('Buckets:');
+    })
+    const [buckets] = await storage.getBuckets()
+    console.log('Buckets:')
 
     for (const bucket of buckets) {
-      console.log(`- ${bucket.name}`);
+      console.log(`- ${bucket.name}`)
     }
 
-    console.log('Listed all storage buckets.');
+    console.log('Listed all storage buckets.')
   }
 
-  authenticateImplicitWithAdc();
+  authenticateImplicitWithAdc()
   // [END auth_cloud_implicit_adc]
 }
 
 process.on('unhandledRejection', err => {
-  console.error(err.message);
-  process.exitCode = 1;
-});
+  console.error(err.message)
+  process.exitCode = 1
+})
 
-main(...process.argv.slice(2));
+main(...process.argv.slice(2))

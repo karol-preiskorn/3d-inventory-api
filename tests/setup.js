@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file: /tests/setup.js
  * @module: /tests
  * @description:

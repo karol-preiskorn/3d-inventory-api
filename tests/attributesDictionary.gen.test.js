@@ -3,39 +3,13 @@
  * @module /tests
  * @description
  * @version 2024-01-30 C2RLO - Initial
-**/
+ */
 
-
-
-/**
- * @file /tests/log.test copy.js
- * @module /tests
- * @description
- * @version 2024-01-30 C2RLO - Initial
-**/
-
-
-
-/**
- * @file /tests/prepare-data.test copy.js
- * @module /tests
- * @description
- * @version 2024-01-27 C2RLO - Initial
-**/
-
-
-
-/**
- * @file        /tests/device.test.ts
- * @description create device in mongo DB /api/devices
- *              https://jestjs.io/docs/bypassing-module-mocks
- * @version     2023-12-26 C2RLO - Initial
- **/
 
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
 import { MongoClient , ObjectId } from 'mongodb'
-import { deviceType, deviceCategory } from './types.js'
+import { valueAttributeCategory } from '../utils/types.js'
 
 describe('prepare test data', () => {
   let connection
@@ -74,8 +48,7 @@ describe('prepare test data', () => {
             top: '/assets/r710-2.5-nobezel__29341.png',
             botom: '/assets/r710-2.5-nobezel__29341.png',
           },
-          type: faker.helpers.arrayElement(deviceType).name,
-          category: faker.helpers.arrayElement(deviceCategory).name,
+          category: valueAttributeCategory[Math.floor(Math.random() * valueAttributeCategory.length)].name,
         }
         mockLog = {
           'date': formattedDate,
