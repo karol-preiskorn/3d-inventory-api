@@ -82,6 +82,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
         if (['Devices', 'Connections', 'Models'].indexOf(randomComponent) > -1) {
           for (let j = 0; j < 3; j++) {
             let mockAttributes
+            let insertedAttributes
             if (randomComponent === 'Devices') {
               mockAttributes = {
                 attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
@@ -92,7 +93,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
                 value: faker.commerce.productAdjective(),
               }
               await attributes.insertOne(mockAttributes)
-              const insertedAttributes = await attributes.findOne(mockAttributes)
+              insertedAttributes = await attributes.findOne(mockAttributes)
 
               expect(insertedAttributes).toBe(insertedAttributes)
             }
@@ -106,7 +107,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
                 value: faker.commerce.productAdjective(),
               }
               await attributes.insertOne(mockAttributes)
-              const insertedAttributes = await attributes.findOne(mockAttributes)
+              insertedAttributes = await attributes.findOne(mockAttributes)
 
               expect(insertedAttributes).toBe(insertedAttributes)
             }
@@ -120,7 +121,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
                 value: faker.commerce.productAdjective(),
               }
               await attributes.insertOne(mockAttributes)
-              const insertedAttributes = await attributes.findOne(mockAttributes)
+              insertedAttributes = await attributes.findOne(mockAttributes)
 
               expect(insertedAttributes).toBe(insertedAttributes)
             }

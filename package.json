@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Mongo API for 3d-inventory project",
   "keywords": [
     "3d-inventory",
@@ -19,6 +19,7 @@
   "author": "Karol Preiskorn",
   "main": "index.js",
   "scripts": {
+    "install": "npm install",
     "clean:cache": "npm cache clean --force",
     "clean:cleanup": "rm package-lock.json && rm -rf ./node_modules",
     "format": "prettier --single-quote --check .",
@@ -135,7 +136,6 @@
     "mocha": "^10.2.0",
     "nodemon": "^3.0.3",
     "prettier": "^3.2.5",
-    "realm": "^12.6.0",
     "supertest": "^6.3.4",
     "typedoc": "^0.25.7",
     "wait-port": "1.1.0"
