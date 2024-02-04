@@ -81,19 +81,49 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
 
         if (['Devices', 'Connections', 'Models'].indexOf(randomComponent) > -1) {
           for (let j = 0; j < 3; j++) {
-            const mockAttributes = {
-              attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
-              connectionId: new ObjectId(),
-              deviceId: new ObjectId(),
-              modelId: new ObjectId(),
-              name: faker.commerce.product() + ' ' + faker.color.human(),
-              value: faker.commerce.productAdjective(),
-            }
-            await attributes.insertOne(mockAttributes)
-            const insertedAttributes = await attributes.findOne(mockAttributes)
+            let mockAttributes
+            if (randomComponent === 'Devices') {
+              mockAttributes = {
+                attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+                connectionId: null,
+                deviceId: new ObjectId(),
+                modelId: null,
+                name: faker.color.human() + ' ' + faker.commerce.product() + ' ' + faker.color.human(),
+                value: faker.commerce.productAdjective(),
+              }
+              await attributes.insertOne(mockAttributes)
+              const insertedAttributes = await attributes.findOne(mockAttributes)
 
-            const isEqual = insertedAttributes === mockAttributes
-            expect(isEqual).toBe(true)
+              expect(insertedAttributes).toBe(insertedAttributes)
+            }
+            if (randomComponent === 'Models') {
+              mockAttributes = {
+                attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+                connectionId: null,
+                deviceId: null,
+                modelId: new ObjectId(),
+                name: faker.color.human() + ' ' + faker.commerce.product() + ' ' + faker.color.human(),
+                value: faker.commerce.productAdjective(),
+              }
+              await attributes.insertOne(mockAttributes)
+              const insertedAttributes = await attributes.findOne(mockAttributes)
+
+              expect(insertedAttributes).toBe(insertedAttributes)
+            }
+            if (randomComponent === 'Connections') {
+              mockAttributes = {
+                attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+                connectionId: new ObjectId(),
+                deviceId: null,
+                modelId: null,
+                name: faker.color.human() + ' ' + faker.commerce.product() + ' ' + faker.color.human(),
+                value: faker.commerce.productAdjective(),
+              }
+              await attributes.insertOne(mockAttributes)
+              const insertedAttributes = await attributes.findOne(mockAttributes)
+
+              expect(insertedAttributes).toBe(insertedAttributes)
+            }
 
             mockLog = {
               'date': formattedDate,
