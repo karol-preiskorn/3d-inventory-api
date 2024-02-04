@@ -13,6 +13,11 @@ import { logger } from '../utils/logger.js'
 import '../utils/loadEnvironment'
 
 const uri = process.env.ATLAS_URI || ''
+
+/**
+ * Connects to the MongoDB Atlas cluster.
+ * @returns {Promise<MongoClient>} The connected MongoDB client.
+ */
 export async function connectToCluster() {
   let client
   let connect
@@ -28,12 +33,17 @@ export async function connectToCluster() {
   }
 }
 
+/**
+ * Connects to the MongoDB Atlas database.
+ * @param {MongoClient} client - The MongoDB client.
+ * @returns {Db} The connected database.
+ */
 export async function connectToDb(client) {
   let db
   try {
     // logger.info('Connecting to MongoDB Atlas db...')
     db = await client.db(process.env.DBNAME)
-    logger.info(`Successfully to Atlas DB ${process.env.DBNAME}: ${db}`)
+    logger.info(`Successfully connected to Atlas DB ${process.env.DBNAME}: ${db}`)
     return db
   } catch (error) {
     logger.error(`Connection to Atlas DB failed ${process.env.DBNAME}: ${db} ${error}`)
@@ -41,6 +51,11 @@ export async function connectToDb(client) {
   }
 }
 
+/**
+ * Closes the MongoDB connection.
+ * @param {MongoClient} connection - The MongoDB connection.
+ * @returns {void}
+ */
 export async function connectionClose(connection) {
   try {
     await connection.close()

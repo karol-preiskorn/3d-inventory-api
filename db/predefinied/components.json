@@ -1,0 +1,47 @@
+[
+  {
+    "component": "Logs",
+    "collection": "logs",
+    "attributes": false
+  },
+  {
+    "component": "Devices",
+    "collection": "devices",
+    "attributes": true
+  },
+  {
+    "component": "Models",
+    "collection": "models",
+    "attributes": true
+  },
+  {
+    "component": "Attributes",
+    "collection": "attributes",
+    "attributes": false
+  },
+  {
+    "component": "AttributesDictionary",
+    "collection": "attributes-dictionary",
+    "attributes": false
+  },
+  {
+    "component": "Connections",
+    "collection": "connections",
+    "attributes": true
+  },
+  {
+    "component": "Users",
+    "collection": "users",
+    "attributes": false
+  },
+  {
+    "component": "Roles",
+    "collection": "roles",
+    "attributes": false
+  },
+  {
+    "component": "Permissions",
+    "collection": "permissions",
+    "attributes": false
+  }
+]

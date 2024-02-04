@@ -1,10 +1,10 @@
+/* eslint-disable jest/no-conditional-expect */
 /**
  * @file /tests/log.test copy.js
  * @module /tests
  * @description
  * @version 2024-01-30 C2RLO - Initial
  */
-
 
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
@@ -28,7 +28,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
     attributes = db.collection('attributes')
     await attributes.deleteMany({})
 
-    attributeDictionary = db.collection('attribute-dictionary')
+    attributeDictionary = db.collection('attributesDictionary')
     await attributeDictionary.deleteMany({})
   })
 
@@ -36,20 +36,27 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
     await connection.close()
   })
 
-  describe('create 3 attributes dictonary', () => {
+  describe('create 3 attributes dictionary', () => {
     it('should insert a 3 attributes', async () => {
       logs = db.collection('logs')
-      attributeDictionary = db.collection('attribute-dictionary')
+      attributeDictionary = db.collection('attributesDictionary')
       attributes = db.collection('attributes')
-      for (let index = 0; index < 3; index++) {
+
+      const allowed = [true]
+      const filteredComponents = components.filter((item) => allowed.includes(item.attributes))
+
+      for (let i = 0; i < filteredComponents.length; i++) {
         const currentDateLogs = new Date()
         const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
-        const randomComponent = components[Math.floor(Math.random() * components.length)].component
+        const randomComponent = filteredComponents[Math.floor(Math.random() * filteredComponents.length)].component
+        const allowedAttributeCategory = [filteredComponents[i].component]
+        const filteredAttributeCategory = valueAttributeCategory.filter((item) => allowedAttributeCategory.includes(item.component))
+
         const mockAttributesDictionary = {
           name: capitalizeFirstLetter(faker.hacker.noun()) + ' ' + capitalizeFirstLetter(faker.color.human()) + ' ' + capitalizeFirstLetter(faker.commerce.product()),
-          component: randomComponent,
+          component: filteredComponents[i].component,
           type: valueAttributeType[Math.floor(Math.random() * valueAttributeType.length)].type,
-          category: valueAttributeCategory[Math.floor(Math.random() * valueAttributeCategory.length)].name,
+          category: filteredAttributeCategory[Math.floor(Math.random() * filteredAttributeCategory.length)].name,
         }
 
         await attributeDictionary.insertOne(mockAttributesDictionary)
@@ -63,11 +70,16 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
           'component': 'AttributeDictionary',
           'message': mockAttributesDictionary
         }
+
         await logs.insertOne(mockLog)
+        // const error = await getError(async () => logs.findOne(mockLog))
         const insertedLog = await logs.findOne(mockLog)
+        // check that the returned error wasn't that no error was thrown
+        // expect(error).not.toBeInstanceOf(NoErrorThrownError)
+        // expect(error).toBe(mockLog)
         expect(insertedLog).toEqual(mockLog)
 
-        if (['Device','Connection','Model'].indexOf(randomComponent) > -1) {
+        if (['Devices', 'Connections', 'Models'].indexOf(randomComponent) > -1) {
           for (let j = 0; j < 3; j++) {
             const mockAttributes = {
               attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
@@ -80,10 +92,8 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
             await attributes.insertOne(mockAttributes)
             const insertedAttributes = await attributes.findOne(mockAttributes)
 
-            it('should insertedAttributes be correct', () => {
-              const isEqual = insertedAttributes === mockAttributes
-              expect(isEqual).toBe(true)
-            })
+            const isEqual = insertedAttributes === mockAttributes
+            expect(isEqual).toBe(true)
 
             mockLog = {
               'date': formattedDate,
@@ -96,30 +106,6 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
             const insertedLog = await logs.findOne(mockLog)
             expect(insertedLog).toEqual(mockLog)
           }
-        }
-        for (let j = 0; j < 3; j++) {
-          const mockAttributes = {
-            attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
-            connectionId: new ObjectId(),
-            deviceId: new ObjectId(),
-            modelId: new ObjectId(),
-            name: faker.commerce.product() + ' ' + faker.color.human(),
-            value: faker.animal.type(),
-          }
-          await attributes.insertOne(mockAttributes)
-          const insertedAttributes = await attributes.findOne(mockAttributes)
-          expect(insertedAttributes).toEqual(mockAttributes)
-
-          mockLog = {
-            'date': formattedDate,
-            'objectId': new ObjectId(insertedAttributes._id),
-            'operation': 'Create',
-            'component': 'Attributes',
-            'message': mockAttributes
-          }
-          await logs.insertOne(mockLog)
-          const insertedLog = await logs.findOne(mockLog)
-          expect(insertedLog).toEqual(mockLog)
         }
       }
     })

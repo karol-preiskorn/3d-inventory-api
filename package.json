@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Mongo API for 3d-inventory project",
   "keywords": [
     "3d-inventory",
@@ -19,13 +19,14 @@
   "author": "Karol Preiskorn",
   "main": "index.js",
   "scripts": {
-    "browse": "gcloud app browse",
-    "clean": "gts clean",
-    "cleanup": "rm package-lock.json && rm -rf ./node_modules",
-    "deploy": "gcloud app deploy",
-    "fix": "gts fix",
+    "clean:cache": "npm cache clean --force",
+    "clean:cleanup": "rm package-lock.json && rm -rf ./node_modules",
     "format": "prettier --single-quote --check .",
-    "gcp-build": "",
+    "gts:browse": "gcloud app browse",
+    "gts:clean": "gts clean",
+    "gts:deploy": "gcloud app deploy",
+    "gts:fix": "gts fix",
+    "gts:gcp-build": "",
     "kill-port-usage": "kill -9 `lsof -nP -iTCP:8080 -sTCP:LISTEN | sed -n 2p | awk '{print $2}'`",
     "lint": "gts lint",
     "lint:docs": "jsdoc --destination doc *",
@@ -47,8 +48,8 @@
     "test:jest": "node --trace-deprecation node_modules/jest/bin/jest.js ",
     "test:watch": "npm run test --watchAll",
     "unused": "./unused.sh",
-    "update": "ncu -u && npm install",
-    "upgrade": "npm update && npm upgrade"
+    "update:update": "ncu -u && npm install",
+    "update:upgrade": "npm update && npm upgrade"
   },
   "husky": {
     "hooks": {
@@ -83,7 +84,7 @@
     "express-session": "1.18.0",
     "figlet": "^1.7.0",
     "fs": "^0.0.2",
-    "google-auth-library": "^9.6.1",
+    "google-auth-library": "^9.6.2",
     "graphql": "^16.8.1",
     "helmet": "^7.1.0",
     "http-errors": "^2.0.0",
@@ -133,7 +134,7 @@
     "jsdoc": "^4.0.2",
     "mocha": "^10.2.0",
     "nodemon": "^3.0.3",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "realm": "^12.6.0",
     "supertest": "^6.3.4",
     "typedoc": "^0.25.7",
