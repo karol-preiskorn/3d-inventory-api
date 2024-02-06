@@ -1,0 +1,366 @@
+[{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1424"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Bridge",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1425"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "CoolAir",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1426"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Desktop",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1427"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Firewall",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1428"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Getaway",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1429"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Hubs",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda142a"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Load Balancer",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda142b"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Modem",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda142c"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Multiplexer",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda142d"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "PDU System",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda142e"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Power",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda142f"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Printer",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1430"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Repeaters",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1431"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Router",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1432"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Server",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1433"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Switch",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1434"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Terminal",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1435"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "Transceiver",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1436"
+  },
+  "component": "Devices",
+  "name": "Type",
+  "type": "String",
+  "value": "UPS System",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1437"
+  },
+  "component": "Connections",
+  "name": "LAN",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1438"
+  },
+  "component": "Connections",
+  "name": "WAN",
+  "description": ""
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1439"
+  },
+  "component": "Models",
+  "name": "Model Name/Number",
+  "description": "The specific identifier for the device."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda143a"
+  },
+  "component": "Models",
+  "name": "Manufacturer",
+  "description": "The company that produced the device."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda143b"
+  },
+  "component": "Models",
+  "name": "Form Factor",
+  "description": "The physical size and shape of the device, e.g., rack - mounted, blade server, tower, etc."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda143c"
+  },
+  "component": "Models",
+  "name": "Processor(CPU)",
+  "description": "Information about the central processing unit, including the number of cores, clock speed, and architecture."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda143d"
+  },
+  "component": "Models",
+  "name": "Memory(RAM)",
+  "description": "The amount and type of random access memory."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda143e"
+  },
+  "component": "Models",
+  "name": "Storage",
+  "description": "Details about storage capacity, type(HDD, SSD), and RAID configuration."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda143f"
+  },
+  "component": "Models",
+  "name": "Network Interfaces",
+  "description": "The number and type of network interfaces(Ethernet, Fiber Channel, etc.)."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1440"
+  },
+  "component": "Models",
+  "name": "Power Supply",
+  "description": "The power requirements and configuration for the device."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1441"
+  },
+  "component": "Models",
+  "name": "Cooling System",
+  "description": "Information about the cooling mechanism in place, whether its air- cooled or liquid - cooled."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1442"
+  },
+  "component": "Models",
+  "name": "Operating System",
+  "description": "The software environment that the device runs on."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1443"
+  },
+  "component": "Models",
+  "name": "Management Interface",
+  "description": "How the device is managed and configured, whether through a web interface, command line, or a dedicated management tool."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1444"
+  },
+  "component": "Models",
+  "name": "Redundancy Features",
+  "description": "Any built -in redundancy for critical components like power supplies or cooling systems."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1445"
+  },
+  "component": "Models",
+  "name": "Physical Dimensions and Weight",
+  "description": "The size and weight of the device."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1446"
+  },
+  "component": "Models",
+  "name": "Environmental Considerations",
+  "description": "Operating temperature range, humidity levels, and other environmental factors."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1447"
+  },
+  "component": "Models",
+  "name": "Compliance and Certification",
+  "description": "Any industry or regulatory certifications the device complies with."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1448"
+  },
+  "component": "Models",
+  "name": "Warranty and Support",
+  "description": "Information about the warranty period and available support options."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda1449"
+  },
+  "component": "Models",
+  "name": "Security Features",
+  "description": "Any security measures in place, such as hardware - based encryption or secure boot."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda144a"
+  },
+  "component": "Models",
+  "name": "Scalability",
+  "description": "The ability to scale resources, such as adding more CPUs, memory, or storage."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda144b"
+  },
+  "component": "Models",
+  "name": "Interoperability",
+  "description": "Compatibility with other devices and systems in the data center."
+},
+{
+  "_id": {
+    "$oid": "65bf6a7b33f11260ffda144c"
+  },
+  "component": "Models",
+  "name": "Remote Management",
+  "description": "Capabilities for remote monitoring and administration."
+}]

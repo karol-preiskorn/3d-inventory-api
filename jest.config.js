@@ -9,6 +9,7 @@ const config = {
   coverageProvider: 'v8',
   collectCoverage: true,
   coverageDirectory: 'coverage',
+  testEnvironment: 'node',
   projects: [
     {
       displayName: 'EsLint',

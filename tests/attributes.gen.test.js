@@ -13,15 +13,14 @@
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
 import { MongoClient, ObjectId } from 'mongodb'
-import { valueAttributeType } from '../utils/types.js'
 import { capitalizeFirstLetter } from '../utils/strings.js'
 
 
 describe('prepare attributesDictionary and Attribute test data', () => {
   let connection
-  let connections
-  let models
-  let devices
+  // let connections
+  // let models
+  // let devices
   let db
   let mockLog
   let attributes
@@ -34,7 +33,7 @@ describe('prepare attributesDictionary and Attribute test data', () => {
 
   beforeAll(async () => {
     connection = await MongoClient.connect(process.env.ATLAS_URI, {})
-    db = await connection.db(process.env.DBNAME)
+    db = connection.db(process.env.DBNAME)
 
     attributes = db.collection('attributes')
     await attributes.deleteMany({})
@@ -52,35 +51,38 @@ describe('prepare attributesDictionary and Attribute test data', () => {
       logs = db.collection('logs')
       attributesDictionary = db.collection('attributesDictionary')
       attributes = db.collection('attributes')
-      connections = db.collection('connections')
-      models = db.collection('models')
-      devices = db.collection('devices')
       components = db.collection('components')
       attributesCategory = db.collection('attributesCategory')
       attributesTypes = db.collection('attributesTypes')
+      // connections = db.collection('connections')
+      // models = db.collection('models')
+      // devices = db.collection('devices')
 
-      const attributesCategoryData = await attributesCategory.findMany({})
-      const componentsData = await components.findMany({})
+      const attributesCategoryCursor = await attributesCategory.find({})
+      expect(await components.countDocuments({})).not.toBe(0)
+      const attributesCategoryData = await attributesCategoryCursor.toArray()
 
-      const allowed = [true]
-      const filteredComponents = componentsData.filter((item) => allowed.includes(item.attributes))
+      const componentsCursor = await components.find({ attributes: true })
+      expect(await components.countDocuments({ attributes: true })).not.toBe(0)
+      const componentsData = await componentsCursor.toArray()
 
-      for (let i = 0; i < filteredComponents.length; i++) {
+      const attributesTypesCursor = await attributesTypes.find({  })
+      expect(await attributesTypes.countDocuments({ })).not.toBe(0)
+      const attributesTypesData = await attributesTypesCursor.toArray()
+
+      for (let i = 0; i < componentsData.length; i++) {
         const currentDateLogs = new Date()
         const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
-        const iRandom = Math.floor(Math.random() * filteredComponents.length)
-        const randomComponent = filteredComponents[iRandom].component
-        const allowedAttributeCategory = [filteredComponents[iRandom].component]
-        const filteredAttributeCategory = attributesCategoryData.filter((item) => allowedAttributeCategory.includes(item.component))
+        const iRandom = Math.floor(Math.random() * componentsData.length)
+        const randomComponent = componentsData[iRandom].component
 
         const mockAttributesDictionary = {
           name: capitalizeFirstLetter(faker.hacker.noun()) + ' ' + capitalizeFirstLetter(faker.color.human()) + ' ' + capitalizeFirstLetter(faker.commerce.product()),
-          component: filteredComponents[i].component,
-          type: attributesTypes[Math.floor(Math.random() * attributesTypes.length)].type,
-          category: filteredAttributeCategory[Math.floor(Math.random() * filteredAttributeCategory.length)].name,
+          component: componentsData[i].component,
+          type: attributesTypesData[Math.floor(Math.random() * attributesTypesData.length)].type,
+          category: attributesCategoryData[Math.floor(Math.random() * attributesCategoryData.length)].name,
         }
-
-        await attributesDictionary.insertOne(mockAttributesDictionary)
+        mockAttributesDictionary._id = (await attributesDictionary.insertOne(mockAttributesDictionary)).insertedId
         const insertedAttributesDictionary = await attributesDictionary.findOne(mockAttributesDictionary)
         expect(insertedAttributesDictionary).toEqual(mockAttributesDictionary)
 
