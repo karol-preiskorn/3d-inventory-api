@@ -1,18 +1,10 @@
 /**
- * @file /tests/logs.test copy.js
+ * @file /tests/attributesDictionary.test.js
  * @module /tests
- * @description
+ * @description This file contains tests for the '/logs' endpoint of the API. It includes tests for retrieving an array of logs and retrieving a specific log by ID.
  * @version 2024-01-30 C2RLO - Initial
 **/
 
-
-
-/**
- * @file /tests/logs.test.js
- * @module /tests
- * @description
- * @version 2024-01-28 C2RLO - Initial
-**/
 
 // import faker from "@faker-js/faker"
 // import assert from "assert"

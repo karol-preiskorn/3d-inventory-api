@@ -3,7 +3,7 @@
         "_id": {
             "bsonType": "objectId"
         },
-        "attributeDictionaryId": {
+        "attributesDictionaryId": {
             "bsonType": "string"
         },
         "connectionId": {

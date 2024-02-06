@@ -1,7 +1,7 @@
 /**
  * @file /tests/attributes.gen.test copy.js
  * @module /tests
- * @description
+ * @description test create attributesDictionary
  * @version 2024-01-30 C2RLO - Initial
  */
 
@@ -11,15 +11,17 @@ import '../utils/loadEnvironment.js'
 import { MongoClient , ObjectId } from 'mongodb'
 import { valueAttributeCategory } from '../utils/types.js'
 
-describe('prepare test data', () => {
+describe('test create attributesDictionary', () => {
   let connection
   let db
   let mockModel
   let mockLog
+  let logs
 
   beforeAll(async () => {
     connection = await MongoClient.connect(process.env.ATLAS_URI, {})
-    db = await connection.db(process.env.DBNAME)
+    db = connection.db(process.env.DBNAME)
+    logs = db.collection('logs')
   })
 
   afterAll(async () => {
@@ -27,11 +29,10 @@ describe('prepare test data', () => {
   })
 
   // Create test models by mongo driver
-  describe('create 3 logs', () => {
-    it('should insert a log doc into collection logs', async () => {
-      for (let index = 0; index < 3; index++) {
+  describe('create attributesDictionary documents', () => {
+    it('should insert a attributesDictionary x10', async () => {
+      for (let index = 0; index < 10; index++) {
 
-        const logs = db.collection('logs')
         const currentDateLogs = new Date()
         const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
         mockModel = {

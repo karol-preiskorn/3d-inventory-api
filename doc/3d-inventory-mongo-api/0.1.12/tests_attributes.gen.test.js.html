@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: tests/attributes.gen.test.js</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
+<head>
+  <meta charset="utf-8">
+  <title>JSDoc: Source: tests/attributes.gen.test.js</title>
+
+  <script src="scripts/prettify/prettify.js"> </script>
+  <script src="scripts/prettify/lang-css.js"> </script>
+  <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
 
 <body>
 
-<div id="main">
+  <div id="main">
 
     <h1 class="page-title">Source: tests/attributes.gen.test.js</h1>
 
-    
 
 
 
-    
+
+
     <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
+      <article>
+        <pre class="prettyprint source linenums"><code>/**
  * @file /tests/log.test copy.js
  * @module /tests
  * @description
@@ -41,12 +42,12 @@ import { valueAttributeType, valueAttributeCategory, components } from '../utils
 import { capitalizeFirstLetter } from '../utils/strings.js'
 
 
-describe('prepare AttributeDictionary and Attribute test data', () => {
+describe('prepare attributesDictionary and Attribute test data', () => {
   let connection
   let db
   let mockLog
   let attributes
-  let attributeDictionary
+  let attributesDictionary
   let logs
 
   beforeAll(async () => {
@@ -56,8 +57,8 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
     attributes = db.collection('attributes')
     await attributes.deleteMany({})
 
-    attributeDictionary = db.collection('attribute-dictionary')
-    await attributeDictionary.deleteMany({})
+    attributesDictionary = db.collection('attributesDictionary')
+    await attributesDictionary.deleteMany({})
   })
 
   afterAll(async () => {
@@ -67,7 +68,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
   describe('create 3 attributes dictonary', () => {
     it('should insert a 3 attributes', async () => {
       logs = db.collection('logs')
-      attributeDictionary = db.collection('attribute-dictionary')
+      attributesDictionary = db.collection('attributesDictionary')
       attributes = db.collection('attributes')
       for (let index = 0; index &lt; 3; index++) {
         const currentDateLogs = new Date()
@@ -80,15 +81,15 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
           category: valueAttributeCategory[Math.floor(Math.random() * valueAttributeCategory.length)].name,
         }
 
-        await attributeDictionary.insertOne(mockAttributesDictionary)
-        const insertedAttributesDictionary = await attributeDictionary.findOne(mockAttributesDictionary)
+        await attributesDictionary.insertOne(mockAttributesDictionary)
+        const insertedAttributesDictionary = await attributesDictionary.findOne(mockAttributesDictionary)
         expect(insertedAttributesDictionary).toEqual(mockAttributesDictionary)
 
         mockLog = {
           'date': formattedDate,
           'objectId': new ObjectId(insertedAttributesDictionary._id),
           'operation': 'Create',
-          'component': 'AttributeDictionary',
+          'component': 'attributesDictionary',
           'message': mockAttributesDictionary
         }
         await logs.insertOne(mockLog)
@@ -98,7 +99,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
         if (['Device','Connection','Model'].indexOf(randomComponent) > -1) {
           for (let j = 0; j &lt; 3; j++) {
             const mockAttributes = {
-              attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+              attributesDictionaryId: new ObjectId(insertedAttributesDictionary._id),
               connectionId: new ObjectId(),
               deviceId: new ObjectId(),
               modelId: new ObjectId(),
@@ -127,7 +128,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
         }
         for (let j = 0; j &lt; 3; j++) {
           const mockAttributes = {
-            attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+            attributesDictionaryId: new ObjectId(insertedAttributesDictionary._id),
             connectionId: new ObjectId(),
             deviceId: new ObjectId(),
             modelId: new ObjectId(),
@@ -154,25 +155,40 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
   })
 })
 </code></pre>
-        </article>
+      </article>
     </section>
 
 
 
 
-</div>
+  </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-_db.html">/db</a></li><li><a href="module-_routers.html">/routers</a></li><li><a href="module-_tests.html">/tests</a></li><li><a href="module-_utils.html">/utils</a></li><li><a href="module-db_conn.html">db/conn</a></li></ul><h3>Global</h3><ul><li><a href="global.html#config">config</a></li><li><a href="global.html#main">main</a></li></ul>
-</nav>
+  <nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+      <li><a href="module-_db.html">/db</a></li>
+      <li><a href="module-_routers.html">/routers</a></li>
+      <li><a href="module-_tests.html">/tests</a></li>
+      <li><a href="module-_utils.html">/utils</a></li>
+      <li><a href="module-db_conn.html">db/conn</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+      <li><a href="global.html#config">config</a></li>
+      <li><a href="global.html#main">main</a></li>
+    </ul>
+  </nav>
 
-<br class="clear">
+  <br class="clear">
 
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Feb 03 2024 09:03:49 GMT+0100 (Central European Standard Time)
-</footer>
+  <footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Feb 03 2024 09:03:49
+    GMT+0100 (Central European Standard Time)
+  </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+  <script> prettyPrint(); </script>
+  <script src="scripts/linenumber.js"> </script>
 </body>
+
 </html>

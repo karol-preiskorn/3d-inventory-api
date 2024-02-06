@@ -1,7 +1,7 @@
 /**
  * @file /db/realm.js
  * @module /db
- * @description
+ * @description Realm database
  * @version 2024-01-30 C2RLO - Initial
 **/
 
@@ -15,7 +15,7 @@ export const attributeSchema = {
   name: 'attribute',
   properties: {
     _id: 'objectId',
-    attributeDictionaryId: 'string?',
+    attributesDictionaryId: 'string?',
     connectionId: 'string?',
     deviceId: 'string?',
     modelId: 'string?',
@@ -23,8 +23,8 @@ export const attributeSchema = {
   },
   primaryKey: '_id',
 }
-export const attributeDictionarySchema = {
-  name: 'attributeDictionary',
+export const attributesDictionarySchema = {
+  name: 'attributesDictionary',
   properties: {
     _id: 'objectId',
     category: 'string?',

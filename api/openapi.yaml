@@ -46,7 +46,7 @@ tags:
     description: Connections between devices API
   - name: attributes
     description: Device's Attributes API
-  - name: attributeDictionary
+  - name: attributesDictionary
     description: Attributes Dictionary API
   - name: floors
     description: Floors manipulation API
@@ -622,17 +622,17 @@ paths:
               schema:
                 $ref: "#/components/schemas/Log"
       x-swagger-router-controller: Logs
-  "/logs/attribute-dictionary/{id}":
+  "/logs/attributesDictionary/{id}":
     get:
       tags:
         - logs
-      summary: Get attribute-dictionary logs
-      description: Get specific attribute-dictionary logs.
-      operationId: logAttributeDictionaryGet
+      summary: Get attributesDictionary logs
+      description: Get specific attributesDictionary logs.
+      operationId: logattributesDictionaryGet
       parameters:
         - name: id
           in: path
-          description: ID of attribute-dictionary to fetch logs
+          description: ID of attributesDictionary to fetch logs
           required: true
           style: simple
           explode: false
@@ -656,9 +656,9 @@ paths:
     delete:
       tags:
         - logs
-      summary: Delete attribute-dictionary logs
-      description: Delete specific attribute-dictionary logs.
-      operationId: logAttributeDictionaryDelete
+      summary: Delete attributesDictionary logs
+      description: Delete specific attributesDictionary logs.
+      operationId: logattributesDictionaryDelete
       parameters:
         - name: id
           in: path
@@ -804,7 +804,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of attribute-dictionary to fetch logs
+          description: ID of attributesDictionary to fetch logs
           required: true
           style: simple
           explode: false
@@ -863,7 +863,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of attribute-dictionary to fetch logs
+          description: ID of attributesDictionary to fetch logs
           required: true
           style: simple
           explode: false
@@ -1007,7 +1007,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of attribute-dictionary to fetch logs
+          description: ID of attributesDictionary to fetch logs
           required: true
           style: simple
           explode: false
@@ -1046,7 +1046,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of attribute-dictionary to fetch logs
+          description: ID of attributesDictionary to fetch logs
           required: true
           style: simple
           explode: false
@@ -1075,13 +1075,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Attributes
-  /attribute-dictionary:
+  /attributesDictionary:
     get:
       tags:
-        - attributeDictionary
+        - attributesDictionary
       summary: Get information about devices attributes types.
       description: Dictionary attributes types for device and models. Store information about extra parameters.
-      operationId: attributeDictionaryGet
+      operationId: attributesDictionaryGet
       responses:
         "200":
           description: OK
@@ -1105,18 +1105,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-      x-swagger-router-controller: AttributeDictionary
+      x-swagger-router-controller: attributesDictionary
     put:
       tags:
-        - attributeDictionary
-      summary: Update new attributeDictionary
-      description: Create attribute-dictionary between two devices. Two id and attributes from attributes.
-      operationId: attributeDictionaryPut
+        - attributesDictionary
+      summary: Update new attributesDictionary
+      description: Create attributesDictionary between two devices. Two id and attributes from attributes.
+      operationId: attributesDictionaryPut
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AttributeDictionary"
+              $ref: "#/components/schemas/attributesDictionary"
         required: true
       responses:
         "200":
@@ -1135,18 +1135,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-      x-swagger-router-controller: AttributeDictionary
+      x-swagger-router-controller: attributesDictionary
     post:
       tags:
-        - attributeDictionary
+        - attributesDictionary
       summary: Create devices attributes types.
       description: 3d-inventory attributes from dictionary attributes
-      operationId: attributeDictionaryPost
+      operationId: attributesDictionaryPost
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AttributeDictionary"
+              $ref: "#/components/schemas/attributesDictionary"
         required: true
       responses:
         "200":
@@ -1165,13 +1165,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-      x-swagger-router-controller: AttributeDictionary
+      x-swagger-router-controller: attributesDictionary
     delete:
       tags:
-        - attributeDictionary
-      summary: Delete all attributeDictionary
+        - attributesDictionary
+      summary: Delete all attributesDictionary
       description: Create Attributes between two devices. Two id and attributes from attributes.
-      operationId: attributeDictionaryDelete
+      operationId: attributesDictionaryDelete
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1189,14 +1189,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-      x-swagger-router-controller: AttributeDictionary
-  /attribute-dictionary/connection:
+      x-swagger-router-controller: attributesDictionary
+  /attributesDictionary/connection:
     get:
       tags:
-        - attributeDictionary
+        - attributesDictionary
       summary: Get information about devices attributes for connection.
       description: Dictionary attributes dictionary for connection.
-      operationId: attributeDictionaryConnectionGet
+      operationId: attributesDictionaryConnectionGet
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1214,14 +1214,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-      x-swagger-router-controller: AttributeDictionary
-  /attribute-dictionary/models:
+      x-swagger-router-controller: attributesDictionary
+  /attributesDictionary/models:
     get:
       tags:
-        - attributeDictionary
+        - attributesDictionary
       summary: Get information about devices attributes for models.
       description: Dictionary attributes dictionary for models.
-      operationId: attributeDictionaryModelsGet
+      operationId: attributesDictionaryModelsGet
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1239,14 +1239,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-      x-swagger-router-controller: AttributeDictionary
-  /attribute-dictionary/devices:
+      x-swagger-router-controller: attributesDictionary
+  /attributesDictionary/devices:
     get:
       tags:
-        - attributeDictionary
+        - attributesDictionary
       summary: Get information about devices attributes for models.
       description: Dictionary attributes dictionary for models.
-      operationId: attributeDictionaryDevicesGet
+      operationId: attributesDictionaryDevicesGet
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1264,14 +1264,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-      x-swagger-router-controller: AttributeDictionary
-  /attribute-dictionary/connections:
+      x-swagger-router-controller: attributesDictionary
+  /attributesDictionary/connections:
     get:
       tags:
-        - attributeDictionary
+        - attributesDictionary
       summary: Get information about devices attributes for connections.
       description: Dictionary attributes dictionary for connections.
-      operationId: attributeDictionaryConnectionsGet
+      operationId: attributesDictionaryConnectionsGet
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1289,7 +1289,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-      x-swagger-router-controller: AttributeDictionary
+      x-swagger-router-controller: attributesDictionary
   /models:
     get:
       tags:
@@ -1407,7 +1407,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of attribute-dictionary to fetch logs
+          description: ID of attributesDictionary to fetch logs
           required: true
           style: simple
           explode: false
@@ -1534,7 +1534,7 @@ paths:
     delete:
       tags:
         - floors
-      summary: Delete all attribute-dictionary
+      summary: Delete all attributesDictionary
       description: Create floor
       operationId: floorDelete
       responses:
@@ -1943,7 +1943,7 @@ components:
           $ref: "#/components/schemas/Model/example"
       items:
         $ref: "#/components/schemas/Model"
-    AttributeDictionary:
+    attributesDictionary:
       required:
         - _id
         - category
@@ -1995,11 +1995,11 @@ components:
           category: ""
           component: b324c94f-58a7-4e2e-a566-207024cb3485
       items:
-        $ref: "#/components/schemas/AttributeDictionary"
+        $ref: "#/components/schemas/attributesDictionary"
     Attribute:
       required:
         - _id
-        - attributeDictionaryId
+        - attributesDictionaryId
         - value
       type: object
       properties:
@@ -2027,7 +2027,7 @@ components:
           minLength: 24
           maxLength: 24
           x-42c-format: "o:uuid"
-        attributeDictionaryId:
+        attributesDictionaryId:
           example: 6566ed4ace63d42b25fbba19
           pattern: ^[0-9A-Fa-f]{24}$
           minLength: 24
@@ -2040,7 +2040,7 @@ components:
         deviceId: 6566ed4ace63d42b25fbba19
         modelId: ""
         connectionId: ""
-        attributeDictionaryId: 6566ed4ace63d42b25fbba19
+        attributesDictionaryId: 6566ed4ace63d42b25fbba19
         value: "2"
     Attributes:
       type: array
@@ -2050,13 +2050,13 @@ components:
           deviceId: "6566ed4ace63d42b25fbba19"
           modelId: ""
           connectionId: ""
-          attributeDictionaryId: "6566ed4ace63d42b25fbba19"
+          attributesDictionaryId: "6566ed4ace63d42b25fbba19"
           value: "2"
         - _id: "1234erdsfdasdasdasd17c65"
           deviceId: "6566ed4ace63d42b25fbba19"
           modelId: "6566ed4ace63d42b25fbba19"
           connectionId: ""
-          attributeDictionaryId: ""
+          attributesDictionaryId: ""
           value: "2"
       items:
         $ref: "#/components/schemas/Attribute"

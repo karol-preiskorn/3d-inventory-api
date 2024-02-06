@@ -1,18 +1,9 @@
 /**
  * @file /tests/prepare-data.test copy.js
  * @module /tests
- * @description
+ * @description This file contains the test suite for preparing test data. It imports necessary modules, connects to the database, and performs various tests to insert logs and models.
  * @version 2024-01-27 C2RLO - Initial
-**/
-
-
-
-/**
- * @file        /tests/device.test.ts
- * @description create device in mongo DB /api/devices
- *              https://jestjs.io/docs/bypassing-module-mocks
- * @version     2023-12-26 C2RLO - Initial
- **/
+ */
 
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'

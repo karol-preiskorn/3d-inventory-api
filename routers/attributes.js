@@ -1,9 +1,9 @@
 /**
  * @file /routers/logs copy.js
  * @module /routers
- * @description
+ * @description logs router
  * @version 2024-01-30 C2RLO - Initial
-**/
+ */
 
 import express from 'express'
 import { ObjectId } from 'mongodb'

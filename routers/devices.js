@@ -1,7 +1,7 @@
 /**
  * @file /routers/devices.js
  * @module /routers
- * @description
+ * @description devices router
  * @version 2024-01-25 C2RLO - add new way to connect to DB
  */
 

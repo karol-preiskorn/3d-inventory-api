@@ -1,9 +1,9 @@
 /**
  * @file /tests/attributes.gen.test copy.js
  * @module /tests
- * @description
+ * @description This file contains the test suite for preparing attributesDictionary and Attribute test data.
  * @version 2024-01-31 C2RLO - Initial
-**/
+ */
 
 
 import { faker } from '@faker-js/faker'
@@ -12,7 +12,7 @@ import { MongoClient, ObjectId } from 'mongodb'
 import { deviceType, deviceCategory, components } from '../utils/types.js'
 
 
-describe('prepare AttributeDictionary and Attribute test data', () => {
+describe('prepare Devices and Attribute test data', () => {
   let connection
   let db
   let mockLog
@@ -27,7 +27,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
     attributes = db.collection('attributes')
     await attributes.deleteMany({})
 
-    attributeDictionary = db.collection('attribute-dictionary')
+    attributeDictionary = db.collection('attributeDictionary')
     await attributeDictionary.deleteMany({})
   })
 
@@ -38,14 +38,14 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
   describe('create 3 attributes dictionary', () => {
     it('should insert a 3 attributes', async () => {
       logs = db.collection('logs')
-      attributeDictionary = db.collection('attribute-dictionary')
+      attributeDictionary = db.collection('attributeDictionary')
       attributes = db.collection('attributes')
       for (let index = 0; index < 3; index++) {
         const currentDateLogs = new Date()
         const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
 
         const mockAttributesDictionary = {
-          category: ,
+          category: valueAttributeType[index].category,
           type: valueAttributeType[index].type,
           length: valueAttributeType[index].length,
           component: valueAttributeType[index].component,

@@ -30,7 +30,7 @@
     "gts:gcp-build": "",
     "kill-port-usage": "kill -9 `lsof -nP -iTCP:8080 -sTCP:LISTEN | sed -n 2p | awk '{print $2}'`",
     "lint": "gts lint",
-    "lint:docs": "jsdoc --destination doc *",
+    "lint:docs": "jsdoc --readme README.md --destination doc *",
     "lint:eslint": "clear && echo esLint  `date +%R` | /usr/bin/figlet -f ./assets/font.flf && eslint \"**/*.js\" --fix",
     "lint:js": "eslint --ignore-path .gitignore --config .eslintrc  \"**/*.js\"",
     "maven:latest": "cd api && mvn versions:use-latest-versions",
@@ -50,7 +50,8 @@
     "test:watch": "npm run test --watchAll",
     "unused": "./unused.sh",
     "update:update": "ncu -u && npm install",
-    "update:upgrade": "npm update && npm upgrade"
+    "update:upgrade": "npm update && npm upgrade",
+    "prepare": "node .husky/install.mjs"
   },
   "husky": {
     "hooks": {
@@ -59,6 +60,7 @@
   },
   "lint-staged": {
     "*.[m]js": [
+      "npm --no-git-tag-version version patch",
       "prettier --double-quote --write",
       "eslint --fix"
     ]

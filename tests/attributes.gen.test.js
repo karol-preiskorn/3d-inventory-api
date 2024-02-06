@@ -1,10 +1,14 @@
-/* eslint-disable jest/no-conditional-expect */
 /**
- * @file /tests/log.test copy.js
+ * @file /home/karol/GitHub/3d-inventory-mongo-api/tests/attributes.gen.test.js
  * @module /tests
- * @description
+ * @description This file contains the test suite for preparing attributesDictionary and Attribute test data.
+ * It imports necessary modules, connects to the database, and performs various tests to insert attributes and logs.
+ * The tests include creating attributes dictionary, inserting attributes, and logging the operations.
+ * This file is part of the 3D Inventory Mongo API project.
  * @version 2024-01-30 C2RLO - Initial
  */
+/* eslint-disable jest/no-conditional-expect */
+
 
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
@@ -13,12 +17,15 @@ import { valueAttributeType, valueAttributeCategory, components } from '../utils
 import { capitalizeFirstLetter } from '../utils/strings.js'
 
 
-describe('prepare AttributeDictionary and Attribute test data', () => {
+describe('prepare attributesDictionary and Attribute test data', () => {
   let connection
+  let connections
+  let models
+  let devices
   let db
   let mockLog
   let attributes
-  let attributeDictionary
+  let attributesDictionary
   let logs
 
   beforeAll(async () => {
@@ -28,8 +35,8 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
     attributes = db.collection('attributes')
     await attributes.deleteMany({})
 
-    attributeDictionary = db.collection('attributesDictionary')
-    await attributeDictionary.deleteMany({})
+    attributesDictionary = db.collection('attributesDictionary')
+    await attributesDictionary.deleteMany({})
   })
 
   afterAll(async () => {
@@ -39,8 +46,12 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
   describe('create 3 attributes dictionary', () => {
     it('should insert a 3 attributes', async () => {
       logs = db.collection('logs')
-      attributeDictionary = db.collection('attributesDictionary')
+      attributesDictionary = db.collection('attributesDictionary')
       attributes = db.collection('attributes')
+      connections = db.collection('connections')
+      models = db.collection('models')
+      devices = db.collection('devices')
+
 
       const allowed = [true]
       const filteredComponents = components.filter((item) => allowed.includes(item.attributes))
@@ -48,8 +59,9 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
       for (let i = 0; i < filteredComponents.length; i++) {
         const currentDateLogs = new Date()
         const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
-        const randomComponent = filteredComponents[Math.floor(Math.random() * filteredComponents.length)].component
-        const allowedAttributeCategory = [filteredComponents[i].component]
+        const iRandom = Math.floor(Math.random() * filteredComponents.length)
+        const randomComponent = filteredComponents[iRandom].component
+        const allowedAttributeCategory = [filteredComponents[iRandom].component]
         const filteredAttributeCategory = valueAttributeCategory.filter((item) => allowedAttributeCategory.includes(item.component))
 
         const mockAttributesDictionary = {
@@ -59,15 +71,15 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
           category: filteredAttributeCategory[Math.floor(Math.random() * filteredAttributeCategory.length)].name,
         }
 
-        await attributeDictionary.insertOne(mockAttributesDictionary)
-        const insertedAttributesDictionary = await attributeDictionary.findOne(mockAttributesDictionary)
+        await attributesDictionary.insertOne(mockAttributesDictionary)
+        const insertedAttributesDictionary = await attributesDictionary.findOne(mockAttributesDictionary)
         expect(insertedAttributesDictionary).toEqual(mockAttributesDictionary)
 
         mockLog = {
           'date': formattedDate,
           'objectId': new ObjectId(insertedAttributesDictionary._id),
           'operation': 'Create',
-          'component': 'AttributeDictionary',
+          'component': 'attributesDictionary',
           'message': mockAttributesDictionary
         }
 
@@ -84,8 +96,9 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
             let mockAttributes
             let insertedAttributes
             if (randomComponent === 'Devices') {
+
               mockAttributes = {
-                attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+                attributesDictionaryId: new ObjectId(insertedAttributesDictionary._id),
                 connectionId: null,
                 deviceId: new ObjectId(),
                 modelId: null,
@@ -99,7 +112,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
             }
             if (randomComponent === 'Models') {
               mockAttributes = {
-                attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+                attributesDictionaryId: new ObjectId(insertedAttributesDictionary._id),
                 connectionId: null,
                 deviceId: null,
                 modelId: new ObjectId(),
@@ -113,7 +126,7 @@ describe('prepare AttributeDictionary and Attribute test data', () => {
             }
             if (randomComponent === 'Connections') {
               mockAttributes = {
-                attributeDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+                attributesDictionaryId: new ObjectId(insertedAttributesDictionary._id),
                 connectionId: new ObjectId(),
                 deviceId: null,
                 modelId: null,

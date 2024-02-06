@@ -1,5 +1,5 @@
 {
-    "title": "attribute-dictionary",
+    "title": "attributesDictionary",
     "properties": {
         "_id": {
             "bsonType": "objectId"

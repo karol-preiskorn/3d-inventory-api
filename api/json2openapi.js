@@ -16,7 +16,7 @@ const attributeSchema = {
     _id: {
       bsonType: 'objectId',
     },
-    attributeDictionaryId: {
+    attributesDictionaryId: {
       bsonType: 'string',
     },
     connectionId: {

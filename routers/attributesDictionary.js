@@ -1,17 +1,17 @@
 /**
  * @file /routers/attributesDictionary.js
  * @module /routers
- * @description
+ * @description attributesDictionary router
  * @version 2024-01-30 C2RLO - Initial
-**/
+ */
 
 import express from 'express'
 import { ObjectId } from 'mongodb'
 import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
-export const attributeDictionarySchema = {
-  name: 'attributeDictionary',
+export const attributesDictionarySchema = {
+  name: 'attributesDictionary',
   properties: {
     _id: 'objectId',
     category: 'string?',

@@ -1,9 +1,10 @@
 /**
  * @file /routers/logs.js
  * @module /routers
- * @description
+ * @description This file contains the router for handling log-related API endpoints.
  * @version 2024-01-27 C2RLO - Initial
 **/
+
 
 import express from 'express'
 import { ObjectId } from 'mongodb'

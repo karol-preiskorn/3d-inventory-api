@@ -1,7 +1,7 @@
 ﻿/**
  * @file /tests/types.js
  * @module /tests
- * @description
+ * @description This file contains tests for the '/logs' endpoint of the API. It includes tests for retrieving an array of logs and retrieving a specific log by ID.
  * @version 2024-01-31 C2RLO - add valueAttributeType remove deviceCategory
  * @version 2024-01-30 C2RLO - Initial
  */

@@ -1,7 +1,7 @@
 /**
  * @file /utils/generateTextures.js
  * @module /utils
- * @description
+ * @description Generate textures
  * @version 2024-01-28 C2RLO - Initial
 **/
 

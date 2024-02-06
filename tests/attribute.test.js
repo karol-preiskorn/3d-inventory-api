@@ -1,22 +1,13 @@
 /**
  * @file /tests/devices.test copy.js
  * @module /tests
- * @description
+ * @description Test suite for the GET /devices endpoint.
  * @version 2024-01-30 C2RLO - Initial
-**/
-
-
-
-/**
- * File:        /tests/devices.js
- * Description: Test devices api operation
- *
- * Date        By     Comments
- * ----------  -----  ------------------------------
- * 2024-01-13  C2RLO  Add variant promises test, async/await and superagent for learn
- * 2024-01-06  C2RLO  Add array test
- * 2024-01-03  C2RLO  Initial
+ * @version 2024-01-13  C2RLO  Add variant promises test, async/await and superagent for learn
+ * @version 2024-01-06  C2RLO  Add array test
+ * @version 2024-01-03  C2RLO  Initial
  */
+
 
 // import faker from "@faker-js/faker"
 import request from 'supertest'
