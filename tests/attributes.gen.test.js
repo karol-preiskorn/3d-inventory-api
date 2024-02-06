@@ -13,7 +13,7 @@
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
 import { MongoClient, ObjectId } from 'mongodb'
-import { valueAttributeType, valueAttributeCategory, components } from '../utils/types.js'
+import { valueAttributeType } from '../utils/types.js'
 import { capitalizeFirstLetter } from '../utils/strings.js'
 
 
@@ -26,7 +26,11 @@ describe('prepare attributesDictionary and Attribute test data', () => {
   let mockLog
   let attributes
   let attributesDictionary
+  let attributesTypes
   let logs
+
+  let attributesCategory
+  let components
 
   beforeAll(async () => {
     connection = await MongoClient.connect(process.env.ATLAS_URI, {})
@@ -51,10 +55,15 @@ describe('prepare attributesDictionary and Attribute test data', () => {
       connections = db.collection('connections')
       models = db.collection('models')
       devices = db.collection('devices')
+      components = db.collection('components')
+      attributesCategory = db.collection('attributesCategory')
+      attributesTypes = db.collection('attributesTypes')
 
+      const attributesCategoryData = await attributesCategory.findMany({})
+      const componentsData = await components.findMany({})
 
       const allowed = [true]
-      const filteredComponents = components.filter((item) => allowed.includes(item.attributes))
+      const filteredComponents = componentsData.filter((item) => allowed.includes(item.attributes))
 
       for (let i = 0; i < filteredComponents.length; i++) {
         const currentDateLogs = new Date()
@@ -62,12 +71,12 @@ describe('prepare attributesDictionary and Attribute test data', () => {
         const iRandom = Math.floor(Math.random() * filteredComponents.length)
         const randomComponent = filteredComponents[iRandom].component
         const allowedAttributeCategory = [filteredComponents[iRandom].component]
-        const filteredAttributeCategory = valueAttributeCategory.filter((item) => allowedAttributeCategory.includes(item.component))
+        const filteredAttributeCategory = attributesCategoryData.filter((item) => allowedAttributeCategory.includes(item.component))
 
         const mockAttributesDictionary = {
           name: capitalizeFirstLetter(faker.hacker.noun()) + ' ' + capitalizeFirstLetter(faker.color.human()) + ' ' + capitalizeFirstLetter(faker.commerce.product()),
           component: filteredComponents[i].component,
-          type: valueAttributeType[Math.floor(Math.random() * valueAttributeType.length)].type,
+          type: attributesTypes[Math.floor(Math.random() * attributesTypes.length)].type,
           category: filteredAttributeCategory[Math.floor(Math.random() * filteredAttributeCategory.length)].name,
         }
 

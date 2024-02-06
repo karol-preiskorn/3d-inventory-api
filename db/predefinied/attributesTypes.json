@@ -1,0 +1,20 @@
+[
+  {
+    "type": "String",
+    "length": 256,
+    "description": "String",
+    "default": true
+  },
+  {
+    "type": "Number",
+    "length": 8,
+    "description": "Integers",
+    "default": false
+  },
+  {
+    "type": "Object",
+    "length": 0,
+    "description": "JSON",
+    "default": false
+  }
+]
