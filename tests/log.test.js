@@ -8,7 +8,6 @@
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
 import { MongoClient , ObjectId } from 'mongodb'
-import { deviceType, deviceCategory } from './deviceType.js'
 
 describe('prepare test data', () => {
   let connection
@@ -18,7 +17,7 @@ describe('prepare test data', () => {
 
   beforeAll(async () => {
     connection = await MongoClient.connect(process.env.ATLAS_URI, {})
-    db = await connection.db(process.env.DBNAME)
+    db = connection.db(process.env.DBNAME)
   })
 
   afterAll(async () => {
@@ -28,6 +27,23 @@ describe('prepare test data', () => {
   // Create test models by mongo driver
   describe('create 3 logs', () => {
     it('should insert a log doc into collection logs', async () => {
+
+
+      const attributesCategory = db.collection('attributesCategory')
+      const attributesCategoryCursor = await attributesCategory.find({})
+      expect(await attributesCategory.countDocuments({})).not.toBe(0)
+      const attributesCategoryData = await attributesCategoryCursor.toArray()
+
+      const components = db.collection('components')
+      const componentsCursor = await components.find({ attributes: true })
+      expect(await components.countDocuments({ attributes: true })).not.toBe(0)
+      const componentsData = await componentsCursor.toArray()
+
+      const attributesTypes = db.collection('attributesTypes')
+      const attributesTypesCursor = await attributesTypes.find({})
+      expect(await attributesTypes.countDocuments({})).not.toBe(0)
+      const attributesTypesData = await attributesTypesCursor.toArray()
+
       for (let index = 0; index < 3; index++) {
 
         const logs = db.collection('logs')

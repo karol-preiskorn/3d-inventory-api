@@ -51,21 +51,21 @@ describe('prepare attributesDictionary and Attribute test data', () => {
       logs = db.collection('logs')
       attributesDictionary = db.collection('attributesDictionary')
       attributes = db.collection('attributes')
-      components = db.collection('components')
-      attributesCategory = db.collection('attributesCategory')
-      attributesTypes = db.collection('attributesTypes')
       // connections = db.collection('connections')
       // models = db.collection('models')
       // devices = db.collection('devices')
 
+      attributesCategory = db.collection('attributesCategory')
       const attributesCategoryCursor = await attributesCategory.find({})
-      expect(await components.countDocuments({})).not.toBe(0)
+      expect(await attributesCategory.countDocuments({})).not.toBe(0)
       const attributesCategoryData = await attributesCategoryCursor.toArray()
 
+      components = db.collection('components')
       const componentsCursor = await components.find({ attributes: true })
       expect(await components.countDocuments({ attributes: true })).not.toBe(0)
       const componentsData = await componentsCursor.toArray()
 
+      attributesTypes = db.collection('attributesTypes')
       const attributesTypesCursor = await attributesTypes.find({  })
       expect(await attributesTypes.countDocuments({ })).not.toBe(0)
       const attributesTypesData = await attributesTypesCursor.toArray()
@@ -95,11 +95,7 @@ describe('prepare attributesDictionary and Attribute test data', () => {
         }
 
         await logs.insertOne(mockLog)
-        // const error = await getError(async () => logs.findOne(mockLog))
         const insertedLog = await logs.findOne(mockLog)
-        // check that the returned error wasn't that no error was thrown
-        // expect(error).not.toBeInstanceOf(NoErrorThrownError)
-        // expect(error).toBe(mockLog)
         expect(insertedLog).toEqual(mockLog)
 
         if (['Devices', 'Connections', 'Models'].indexOf(randomComponent) > -1) {

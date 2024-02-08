@@ -3,7 +3,7 @@
  * @module: /tests
  * @description:
  * @version 2024-01-20 C2RLO - Initial
-**/
+ */
 
 import { connectToCluster, connectToDb } from '../db/conn.js'
 import '../utils/loadEnvironment.js'

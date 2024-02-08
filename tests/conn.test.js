@@ -3,7 +3,7 @@
  * @module: /tests
  * @description:
  * @version 2024-01-14 C2RLO - Initial
-**/
+ */
 
 import '../utils/loadEnvironment'
 const { MongoClient } = require('mongodb')
@@ -14,7 +14,7 @@ describe('ConnectToDatabase Mongo Atlas', () => {
 
   beforeAll(async () => {
     connection = await MongoClient.connect(process.env.ATLAS_URI, {})
-    db = await connection.db(process.env.DBNAME)
+    db = connection.db(process.env.DBNAME)
   })
 
   afterAll(async () => {
