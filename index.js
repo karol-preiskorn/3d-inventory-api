@@ -3,7 +3,7 @@
  * @description API 3d-inventory. Project is a simple solution that allows you to build a spatial and database representation of all types
  *              of warehouses and server rooms.
  * @version 2023-12-29  C2RLO - Initial
- **/
+ */
 
 import express from 'express'
 import * as OpenApiValidator from 'express-openapi-validator'
@@ -21,6 +21,7 @@ import logs from './routers/logs.js'
 import readme from './routers/readme.js'
 import attributes from './routers/attributes.js'
 import attributesDictionary from './routers/attributesDictionary.js'
+import connections from './routers/connections.js'
 import { logger, stream } from './utils/logger.js'
 import { banner } from './utils/banner.js'
 
@@ -64,6 +65,7 @@ app.use('/devices', devices)
 app.use('/models', models)
 app.use('/attributes', attributes)
 app.use('/attributesDictionary', attributesDictionary)
+app.use('/connections', connections)
 
 banner()
 

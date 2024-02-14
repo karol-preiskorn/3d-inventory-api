@@ -1,16 +1,16 @@
 /**
- * @file /routers/devices.js
+ * @file /routers/floors.js
  * @module /routers
- * @description devices router
- * @version 2024-01-25 C2RLO - add new way to connect to DB
+ * @description floors router
+ * @version 2024-02-13 C2RLO - init
  */
 
 import express from 'express'
 import { ObjectId } from 'mongodb'
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
-const collectionName = 'devices'
+const collectionName = 'floors'
 const router = express.Router()
 
 // Get all

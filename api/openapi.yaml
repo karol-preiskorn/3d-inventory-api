@@ -826,7 +826,7 @@ paths:
     delete:
       tags:
         - connections
-      summary: Delete connections logs
+      summary: Delete connections
       description: Delete specific connections logs.
       operationId: connectionDelete
       parameters:
@@ -853,15 +853,187 @@ paths:
               schema:
                 $ref: "#/components/schemas/Connections"
       x-swagger-router-controller: Connections
-  "/connections/device/{id}":
+  "/connections/from/{id}":
     get:
       tags:
         - connections
       summary: Get information about Connections between Devices.
       description: Get connection for device
-      operationId: connectionsDeviceGet
+      operationId: connectionsGetFrom
       parameters:
         - name: id
+          in: path
+          description: ID of attributesDictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: Success get connection between devices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connections"
+      x-swagger-router-controller: Connections
+    delete:
+      tags:
+        - connections
+      summary: Delete connections logs from device id
+      description: Delete specific connections.
+      operationId: connectionDeleteFrom
+      parameters:
+        - name: id
+          in: path
+          description: ID of connection to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connections"
+      x-swagger-router-controller: Connections
+  "/connections/to/{id}":
+    get:
+      tags:
+        - connections
+      summary: Get information about Connections between Devices.
+      description: Get connection for device
+      operationId: connectionsGetTo
+      parameters:
+        - name: id
+          in: path
+          description: ID of attributesDictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: Success get connection between devices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connections"
+      x-swagger-router-controller: Connections
+    delete:
+      tags:
+        - connections
+      summary: Delete connections logs to device id
+      description: Delete specific connections.
+      operationId: connectionDeleteTo
+      parameters:
+        - name: id
+          in: path
+          description: ID of connection to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Error log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connections"
+      x-swagger-router-controller: Connections
+  "/connections/from/{idFrom}/to/{idTo}":
+    get:
+      tags:
+        - connections
+      summary: Get information about Connections between Devices.
+      description: Get connection for device
+      operationId: connectionsFromToGet
+      parameters:
+        - name: idFrom
+          in: path
+          description: ID of attributesDictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+        - name: idTo
+          in: path
+          description: ID of attributesDictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: Success get connection between devices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connections"
+      x-swagger-router-controller: Connections
+    delete:
+      tags:
+        - connections
+      summary: Delete information about Connections between Devices.
+      description: Delete connection for device
+      operationId: connectionsFromToDelete
+      parameters:
+        - name: idFrom
+          in: path
+          description: ID of attributesDictionary to fetch logs
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+        - name: idTo
           in: path
           description: ID of attributesDictionary to fetch logs
           required: true
@@ -948,7 +1120,7 @@ paths:
         - attributes
       summary: Create new Attributes
       description: 3d-inventory attributes from dictionary attributes
-      operationId: attributesPOST
+      operationId: attributesPost
       requestBody:
         content:
           application/json:
@@ -1591,7 +1763,7 @@ paths:
         - users
       summary: "Get all user data"
       description: Get all user data
-      operationId: userGet
+      operationId: usersGet
       responses:
         "200":
           description: OK
@@ -1603,7 +1775,7 @@ paths:
         - users
       summary: Update user
       description: Create user
-      operationId: userPut
+      operationId: usersPut
       requestBody:
         content:
           application/json:
@@ -1660,7 +1832,7 @@ paths:
       x-swagger-router-controller: Users
     delete:
       tags:
-        - floors
+        - users
       summary: Delete all users
       description: Delate all users
       operationId: usersDelete
@@ -1688,7 +1860,7 @@ paths:
         - users
       summary: "Get the single user :id"
       description: Get single user
-      operationId: userIdGet
+      operationId: userGetId
       parameters:
         - name: id
           in: path
@@ -1718,7 +1890,7 @@ paths:
         - users
       summary: "Get the single user :id"
       description: Get single user
-      operationId: userIdGet
+      operationId: userPostId
       parameters:
         - name: id
           in: path
