@@ -5,11 +5,11 @@
  * Date        By     Comments
  * ----------  -----  ------------------------------
  * 2023-12-29  C2RLO  Initial
- **/
+ */
 
 import express from 'express'
 import { ObjectId } from 'mongodb'
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
 const router = express.Router()

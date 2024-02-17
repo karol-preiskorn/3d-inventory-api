@@ -1,47 +1,56 @@
 /**
  * @file        floors.test.js
- * @description Create connection to DB and test the connection
+ * @description Create Floors to DB and test the Floors
  * @version 2024-10-29 C2RLO - Init
  */
 
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
 import { MongoClient } from 'mongodb'
+import { capitalizeFirstLetter } from '../utils/strings.js'
 
-describe('create 10 connections', () => {
-  let connection
+describe('create 10 floors', () => {
+  let conn
   let db
-  let mockConnection
-  let insertedConnection
+  let mockFloors
+  let insertedFloors
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI, {})
-    db = connection.db(process.env.DBNAME)
+    conn = await MongoClient.connect(process.env.ATLAS_URI, {})
+    db = conn.db(process.env.DBNAME)
   })
 
   afterAll(async () => {
-    await connection.close()
+    await conn.close()
   })
 
-  it('should insert a 10 connections', async () => {
-    const devices = db.collection('devices')
-    const devicesCursor = await devices.find({}).limit(11)
-    const countDevices = await devices.countDocuments({})
-    expect(countDevices).not.toBe(0)
-    const devicesData = await devicesCursor.toArray()
-    const connections = db.collection('connections')
-    console.log(JSON.stringify(devicesData[faker.number.int({ min: 0, max: 11 })]._id))
+  it('should insert a 10 floors', async () => {
+    const floors = db.collection('floors')
+    await floors.deleteMany({})
     for (let index = 0; index < 10; index++) {
-      const to = devicesData[faker.number.int({ min: 0, max: 10 })]._id
-      const from = devicesData[faker.number.int({ min: 0, max: 10 })]._id
-      mockConnection = {
-        name: faker.color.human() + ' ' + faker.commerce.product(),
-        deviceIdTo: to,
-        deviceIdFrom: from,
+      mockFloors = {
+        name: capitalizeFirstLetter(faker.color.human()) + ' ' + faker.commerce.product(),
+        address: {
+          street: faker.location.street(),
+          city: faker.location.city(),
+          country: faker.location.country(),
+          postcode: faker.number.int({ min: 10000, max: 99999 }),
+        },
+        dimension: [
+          {
+            description: faker.commerce.productDescription(),
+            x: faker.number.int({ min: 10, max: 100 }),
+            y: faker.number.int({ min: 10, max: 100 }),
+            h: faker.number.int({ min: 10, max: 100 }),
+            xPos: faker.number.int({ min: 10, max: 100 }),
+            yPos: faker.number.int({ min: 10, max: 100 }),
+            hPos: faker.number.int({ min: 10, max: 100 })
+          }
+        ]
       }
-      await connections.insertOne(mockConnection)
-      insertedConnection = await connections.findOne(mockConnection)
-      expect(insertedConnection).toEqual(mockConnection)
+      await floors.insertOne(mockFloors)
+      insertedFloors = await floors.findOne(mockFloors)
+      expect(insertedFloors).toEqual(mockFloors)
     }
   })
 })

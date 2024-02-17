@@ -7,7 +7,7 @@
 
 import express from 'express'
 import { ObjectId } from 'mongodb'
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
 const collectionName = 'devices'

@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "Mongo API for 3d-inventory project",
   "keywords": [
     "3d-inventory",
@@ -17,6 +17,7 @@
   },
   "license": "Common Development and Distribution License",
   "author": "Karol Preiskorn",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "clean:cache": "npm cache clean --force",
@@ -37,7 +38,7 @@
     "openapi:format": "npx openapi-format api/openapi.yaml --output api/openapi-formatted.yaml",
     "prepare": "node .husky/install.mjs",
     "prepare:husky": "cd ../ && husky install server/.husky",
-    "start": "node --trace-warnings index.js",
+    "start": "node --experimental-modules --trace-warnings index.js",
     "start:debug": "nodemon --inspect --experimental-modules --verbose --delay 3 index.js",
     "swagger:editor": "podman run -d -p 80:8080 -v ${PWD}:/tmp -e SWAGGER_FILE=/tmp/api/openapi.yaml swaggerapi/swagger-editor",
     "swagger:generate": "pwd && java -jar api/target/jars/swagger-codegen-cli.jar generate -i api/openapi.yaml -l nodejs-server -o src",

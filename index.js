@@ -22,6 +22,7 @@ import readme from './routers/readme.js'
 import attributes from './routers/attributes.js'
 import attributesDictionary from './routers/attributesDictionary.js'
 import connections from './routers/connections.js'
+import floors from './routers/floors.js'
 import { logger, stream } from './utils/logger.js'
 import { banner } from './utils/banner.js'
 
@@ -66,6 +67,7 @@ app.use('/models', models)
 app.use('/attributes', attributes)
 app.use('/attributesDictionary', attributesDictionary)
 app.use('/connections', connections)
+app.use('/floors', floors)
 
 banner()
 
