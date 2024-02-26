@@ -5,7 +5,7 @@
  * Date        By     Comments
  * ----------  -----  ------------------------------
  * 2024-01-07  C2RLO  Initial
-**/
+ */
 
 import express from 'express'
 import fs from 'fs'

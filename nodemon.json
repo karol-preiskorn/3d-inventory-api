@@ -3,20 +3,18 @@
     "**/*.test.js",
     "**/*.spec.js",
     ".git",
-    "node_modules",
     "doc/**/*",
     "coverage/**/*"
   ],
   "watch": [
-    "api/openapi.yaml",
-    "index.js",
-    "assets/*",
-    "routers/*",
-    "schema/*",
-    "tests/*",
-    "db/*",
-    "utils"
+    "src/api/openapi.yaml",
+    "src/index.js",
+    "src/assets/*",
+    "src/routers/*",
+    "src/schema/*",
+    "src/db/*",
+    "src/utils"
   ],
-  "exec": "npm start",
+  "exec": "babel src -d build src/index.js",
   "ext": "js,json,yaml"
 }

@@ -78,7 +78,7 @@ app.use((err, _req, res, next) => {
 })
 
 app.use(express.json())
-const yamlFilename = './api/openapi.yaml'
+const yamlFilename = 'src/api/openapi.yaml'
 
 fs.open(yamlFilename, 'r', (err, fd) => {
   if (err) {

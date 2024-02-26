@@ -26,3 +26,5 @@ node_modules/
 gcs/d-inventory-406007-f0b2acc85b03.json
 gcs/d-inventory-406007-7f3cc8e7a8f3.json
 gcs/d-inventory-406007-b220e292572a.json
+lib
+build

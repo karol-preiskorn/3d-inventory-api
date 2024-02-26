@@ -50,7 +50,7 @@ export const logger = createLogger({
     }),
     new transports.File({
       level: 'info',
-      filename: './logs/api.log',
+      filename: 'logs/api.log',
       handleExceptions: true,
       json: true,
       maxsize: 1024, // 1MB

@@ -12,7 +12,7 @@ const config = {
   testEnvironment: 'node',
   projects: [
     {
-      displayName: 'EsLint',
+      displayName: 'esLint',
       clearMocks: true,
       globals: {
         __DEV__: true
@@ -20,28 +20,29 @@ const config = {
       moduleFileExtensions: ['js', 'mjs', 'cjs', 'json'],
       preset: '@shelf/jest-mongodb',
       runner: 'jest-runner-eslint',
-      testPathIgnorePatterns: ['<rootDir>/build/', '<rootDir>/node_modules/'],
-      testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(mjs?|js?|tsx?|ts?)$',
+      testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/doc/', '<rootDir>/build/', '<rootDir>/logs/', '<rootDir>/coverage/'],
+      testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(mjs?|js?|tsx?|ts?)$',
       transform: {
         '^.+\\.js$': 'babel-jest',
       },
     },
     {
-      displayName: 'Prettier',
+      displayName: 'prettier',
       clearMocks: true,
       globals: {
         __DEV__: true
       },
       preset: 'jest-runner-prettier',
       runner: 'prettier',
-      testPathIgnorePatterns: ['<rootDir>/node_modules/'],
+      testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/doc/', '<rootDir>/build/', '<rootDir>/logs/', '<rootDir>/coverage/'],
       transform: {
         '^.+\\.js$': 'babel-jest',
-        '^.+\\.jsx?$': 'babel-jest'
+        '^.+\\.(c|m)js$': 'babel-jest'
       },
       moduleFileExtensions: [
         'js',
         'mjs',
+        'cjs',
         'jsx',
         'vue',
         'ts',
@@ -60,6 +61,7 @@ const config = {
       ],
       testMatch: [
         '**/*.js',
+        '**/*.cjs',
         '**/*.mjs',
         '**/*.jsx',
         '**/*.vue',
@@ -87,8 +89,8 @@ const config = {
       moduleFileExtensions: ['js', 'mjs', 'cjs', 'json'],
       preset: '@shelf/jest-mongodb',
       runner: 'jest-runner',
-      testPathIgnorePatterns: ['<rootDir>/node_modules/'],
-      testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(mjs?|js?|tsx?|ts?)$',
+      testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/doc/', '<rootDir>/build/', '<rootDir>/logs/', '<rootDir>/coverage/'],
+      testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(mjs?|cjs?|js?|tsx?|ts?)$',
       transform: {
         '^.+\\.js$': 'babel-jest',
       },

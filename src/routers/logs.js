@@ -3,13 +3,14 @@
  * @module /routers
  * @description This file contains the router for handling log-related API endpoints.
  * @version 2024-01-27 C2RLO - Initial
-**/
+ */
 
 
 import express from 'express'
 import { ObjectId } from 'mongodb'
 import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import { logger } from '../utils/logger.js'
 
 const collectionName = 'logs'
 const router = express.Router()
@@ -31,6 +32,10 @@ router.get('/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   // console.log('req.params.id: ' + req.params.id)
+  if (!ObjectId.isValid(req.params.id)) {
+    res.status(400).send('Invalid ID')
+    return
+  }
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.status(404).send('Not found')
@@ -38,17 +43,47 @@ router.get('/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// Get a log for specific model
+router.get('/component/:component', async (req, res) => {
+  const client = await connectToCluster()
+  const db = await connectToDb(client)
+  const components = db.collection('components')
+  if (req.params.component.length === 0) {
+    res.status(400).send('Not provide component name')
+    return
+  }
+  const componentsResult = await components.find({ collection: req.params.component }).toArray()
+  logger.info(`componentsResult(${req.params.component}): ${JSON.stringify(componentsResult)}`)
+  if (componentsResult.length === 0) {
+    res.status(400).send('Invalid component name')
+    return
+  }
+  // find all logs for this component
+  const collection = db.collection(collectionName)
+  const query = { component: componentsResult[0].component }
+  logger.info(`query: ${JSON.stringify(query)}`)
+  const result = await collection.find(query).toArray()
+  if (!result) res.status(404).send('Not found any logs for this component')
+  else res.status(200).send(result)
+  connectionClose(client)
+})
+
+
+// Get all logs for a specific model
 router.get('/model/:id', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
+  if (!ObjectId.isValid(req.params.id)) {
+    res.status(400).send('Invalid ID')
+    return
+  }
   const query = { modelId: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.send('Not found').status(404)
   else res.send(result).status(200)
   connectionClose(client)
 })
+
 
 // Create
 router.post('/', async (req, res) => {

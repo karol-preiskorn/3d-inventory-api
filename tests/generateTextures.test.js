@@ -66,7 +66,7 @@ describe('Generate textures', () => {
     function generateNaturalTexture(width, height, scale, filename) {
       const canvas = createCanvas(width, height)
       const ctx = canvas.getContext('2d')
-      const noise = perlin.generatePerlinNoise(width, height, { octaveCount: 6, amplitude: 0.1, persistence: 0.2})
+      const noise = perlin.generatePerlinNoise(width, height, { octaveCount: 6, amplitude: 0.1, persistence: 0.2 })
       // Draw the pattern on the canvas based on the Perlin noise
       for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {

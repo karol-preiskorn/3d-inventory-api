@@ -1,0 +1,72 @@
+[{
+  "_id": {
+    "$oid": "65bf702333f11260ffda1459"
+  },
+  "component": "Model",
+  "collection": "models",
+  "attributes": true
+},
+{
+  "_id": {
+    "$oid": "65bf702333f11260ffda145c"
+  },
+  "component": "Connection",
+  "collection": "connections",
+  "attributes": true
+},
+{
+  "_id": {
+    "$oid": "65bf702333f11260ffda1458"
+  },
+  "component": "Device",
+  "collection": "devices",
+  "attributes": true
+},
+{
+  "_id": {
+    "$oid": "65bf702333f11260ffda1457"
+  },
+  "component": "Log",
+  "collection": "logs",
+  "attributes": false
+},
+{
+  "_id": {
+    "$oid": "65bf702333f11260ffda145b"
+  },
+  "component": "AttributesDictionary",
+  "collection": "attributes-dictionary",
+  "attributes": false
+},
+{
+  "_id": {
+    "$oid": "65bf702333f11260ffda145d"
+  },
+  "component": "User",
+  "collection": "users",
+  "attributes": false
+},
+{
+  "_id": {
+    "$oid": "65bf702333f11260ffda145e"
+  },
+  "component": "Role",
+  "collection": "roles",
+  "attributes": false
+},
+{
+  "_id": {
+    "$oid": "65bf702333f11260ffda145a"
+  },
+  "component": "Attribute",
+  "collection": "attributes",
+  "attributes": false
+},
+{
+  "_id": {
+    "$oid": "65bf702333f11260ffda145f"
+  },
+  "component": "Permission",
+  "collection": "permissions",
+  "attributes": false
+}]
