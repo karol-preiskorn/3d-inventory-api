@@ -64,11 +64,13 @@
     "*.[m]js": [
       "npm --no-git-tag-version version patch",
       "prettier --double-quote --write",
-      "eslint --fix"
+      "eslint --fix",
+      "npm --no-git-tag-version version patch",
+      "git add -A ."
     ]
   },
   "dependencies": {
-    "@apollo/client": "^3.9.5",
+    "@apollo/client": "^3.9.6",
     "@babel/register": "^7.23.7",
     "@google-cloud/storage": "^7.7.0",
     "async": "3.2.5",
@@ -105,7 +107,7 @@
     "oas-normalize": "^11.0.1",
     "oas3-tools": "^2.2.3",
     "open": "^10.0.4",
-    "openapi-format": "^1.16.0",
+    "openapi-format": "^1.16.1",
     "passport": "0.7.0",
     "passport-local": "1.0.0",
     "perlin-noise": "^0.0.1",

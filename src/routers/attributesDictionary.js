@@ -25,7 +25,6 @@ export const attributesDictionarySchema = {
 const collectionName = 'attributesDictionary'
 const router = express.Router()
 
-// Get all
 router.get('/', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -36,12 +35,10 @@ router.get('/', async (req, res) => {
   connectionClose(client)
 })
 
-// Get a single post
 router.get('/:id', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
-  // console.log('req.params.id: ' + req.params.id)
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.status(404).send('Not found')
@@ -49,7 +46,6 @@ router.get('/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// Get a log for specific model
 router.get('/model/:id', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -61,7 +57,6 @@ router.get('/model/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// Create
 router.post('/', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -73,7 +68,6 @@ router.post('/', async (req, res) => {
   connectionClose(client)
 })
 
-// Update the device's :id position
 router.patch('/position/:id', async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) }
   const updates = {
@@ -87,7 +81,6 @@ router.patch('/position/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// Delete an entry
 router.delete('/:id', async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) }
   const client = await connectToCluster()
@@ -98,7 +91,6 @@ router.delete('/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// delete all devices
 router.delete('/', async (req, res) => {
   const query = {}
   const client = await connectToCluster()
@@ -109,7 +101,6 @@ router.delete('/', async (req, res) => {
   connectionClose(client)
 })
 
-// delete all devices with specific :id model
 router.delete('/model/:id', async (req, res) => {
   const query = { modelId: new ObjectId(req.params.id) }
   const client = await connectToCluster()
