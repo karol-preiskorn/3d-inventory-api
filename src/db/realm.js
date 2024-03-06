@@ -3,12 +3,13 @@
  * @module /db
  * @description Realm database
  * @version 2024-01-30 C2RLO - Initial
-**/
+ */
 
 import Realm from 'realm'
 import '../utils/loadEnvironment.js'
+import { app } from './realm.js'
 
-const app = new Realm.App({ id: process.env.REALM_APP_ID })
+app = new Realm.App({ id: process.env.REALM_APP_ID })
 const credentials = Realm.Credentials.anonymous()
 
 export const attributeSchema = {
@@ -35,8 +36,10 @@ export const attributesDictionarySchema = {
   primaryKey: '_id',
 }
 
-try {
-  const user = await app.logIn(credentials)
-} catch (err) {
-  console.error("Failed to log in", err)
-}
+(async () => {
+  try {
+    await app.logIn(credentials)
+  } catch (err) {
+    console.error('Failed to log in', err)
+  }
+})()

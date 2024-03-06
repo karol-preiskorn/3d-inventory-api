@@ -38,7 +38,7 @@ router.get('/:id', async (req, res) => {
   }
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
+  if (!result) res.status(404).send('Not found ' + JSON.stringify(query))
   else res.status(200).send(result)
   connectionClose(client)
 })
