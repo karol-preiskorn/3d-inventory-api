@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.1.24",
+  "version": "0.1.25",
   "description": "Mongo API for 3d-inventory project",
   "keywords": [
     "3d-inventory",
@@ -41,7 +41,7 @@
     "prepare": "node .husky/install.mjs",
     "prepare:husky": "cd ../ && husky install server/.husky",
     "start": "npm run build && node --experimental-modules --trace-warnings build/index.js",
-    "start:debug": "nodemon --exec npm run babel-node -- src/index.js",
+    "start:debug": "nodemon --exec npm run babel-node --presets='@babel/preset-env' src/index.js",
     "start:nodemon": "npm run build && nodemon build/index.js",
     "swagger:editor": "podman run -d -p 80:8080 -v ${PWD}:/tmp -e SWAGGER_FILE=/tmp/api/openapi.yaml swaggerapi/swagger-editor",
     "swagger:generate": "pwd && java -jar api/target/jars/swagger-codegen-cli.jar generate -i api/openapi.yaml -l nodejs-server -o src",
@@ -74,6 +74,7 @@
     "@babel/register": "^7.23.7",
     "@google-cloud/storage": "^7.7.0",
     "async": "3.2.5",
+    "babel-node": "^0.0.1-security",
     "body-parser": "^1.20.2",
     "c8": "^9.1.0",
     "canvas": "^2.11.2",
