@@ -30,7 +30,6 @@ const PORT = process.env.PORT || 8080
 const app = express()
 
 try {
-  // const accessLogStream = fs.createWriteStream("./logs/access.log", { flags: "a" })
   app.use(
     morgan(
       function (tokens, req, res) {

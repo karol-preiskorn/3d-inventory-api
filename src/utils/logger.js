@@ -12,7 +12,7 @@ import 'winston-daily-rotate-file'
 const { combine, timestamp, printf, colorize } = format
 
 const transport = new transports.DailyRotateFile({
-  filename: 'app-%DATE%.log',
+  filename: 'logs/%DATE%.log',
   datePattern: 'YYYYMMDD',
   zippedArchive: true,
   maxSize: '1m',
