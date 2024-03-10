@@ -1,15 +1,10 @@
 #!/usr/bin/bash
 # File:        /.husky/pre-commit
 # Description: lint and increase path version
-# Used by:
-# Dependency:
-#
-# Date        By       Comments
-# ----------  -------  ------------------------------
 # 2023-11-26  C2RLO    Initial
-#
 
 . "$(dirname "$0")/_/husky.sh"
 
+npm --no-git-tag-version version patch
+# npx lint-staged
 npx lint-staged
-

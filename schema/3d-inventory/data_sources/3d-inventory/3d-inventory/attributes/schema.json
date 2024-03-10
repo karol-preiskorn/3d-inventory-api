@@ -1,26 +1,24 @@
 {
-    "title": "attribute",
-    "properties": {
-        "_id": {
-            "bsonType": "objectId"
-        },
-        "attributesDictionaryId": {
-            "bsonType": "string"
-        },
-        "connectionId": {
-            "bsonType": "string"
-        },
-        "deviceId": {
-            "bsonType": "string"
-        },
-        "modelId": {
-            "bsonType": "string"
-        },
-        "value": {
-            "bsonType": "string"
-        }
+  "title": "attribute",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
     },
-    "required": [
-        "_id"
-    ]
+    "attributesDictionaryId": {
+      "bsonType": "string"
+    },
+    "connectionId": {
+      "bsonType": "string"
+    },
+    "deviceId": {
+      "bsonType": "string"
+    },
+    "modelId": {
+      "bsonType": "string"
+    },
+    "value": {
+      "bsonType": "string"
+    }
+  },
+  "required": ["_id"]
 }

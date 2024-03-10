@@ -5,9 +5,7 @@
  * @version 2024-02-03 C2RLO - Initial
  */
 
-export class NoErrorThrownError extends Error { }
-
-
+export class NoErrorThrownError extends Error {}
 
 export const getError = async (call) => {
   try {

@@ -46,16 +46,17 @@ We can use MongoDB or programming Mongo Atlas API.
 
 ```javascript
 new Promise(function (resolve, reject) {
-  collection.find(query).cursor()
-    .on('data', function(doc) {
+  collection
+    .find(query)
+    .cursor()
+    .on('data', function (doc) {
       // ...
     })
     .on('error', reject)
-    .on('end', resolve);
-})
-.then(function () {
+    .on('end', resolve)
+}).then(function () {
   // ...
-});
+})
 ```
 
 It is generic code that can be tucked away in a utility function so it doesn't
@@ -65,23 +66,22 @@ In your example simplest utility function would be like
 
 ```js
 function streamToPromise(stream) {
-    return new Promise(function(resolve, reject) {
-        stream.on("end", resolve);
-        stream.on("error", reject);
-    });
+  return new Promise(function (resolve, reject) {
+    stream.on('end', resolve)
+    stream.on('error', reject)
+  })
 }
 ```
 
 And then the application code is simply
 
 ```js
-Promise.map(files, function(file) {
-    var stream = API.getStream(file);
-    stream.pipe(endPoint);
-    return streamToPromise(stream);
-});
+Promise.map(files, function (file) {
+  var stream = API.getStream(file)
+  stream.pipe(endPoint)
+  return streamToPromise(stream)
+})
 ```
-
 
 ##### Reference
 

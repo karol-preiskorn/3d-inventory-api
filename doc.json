@@ -1,0 +1,31 @@
+{
+  "plugins": [
+    "plugins/markdown",
+    "plugins/summarize"
+  ],
+  "recurseDepth": 10,
+  "source": {
+    "exclude": [
+      "jest.config.js",
+      "node_modules/",
+      "build/"
+    ],
+    "include": [
+      "src/",
+      "src/routers/",
+      "src/db/"
+    ]
+  },
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": [
+      "jsdoc",
+      "closure"
+    ]
+  },
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": false
+  }
+}

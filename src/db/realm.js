@@ -34,9 +34,7 @@ export const attributesDictionarySchema = {
     type: 'string?',
   },
   primaryKey: '_id',
-}
-
-(async () => {
+}(async () => {
   try {
     await app.logIn(credentials)
   } catch (err) {

@@ -9,12 +9,10 @@
  */
 /* eslint-disable jest/no-conditional-expect */
 
-
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
 import { MongoClient, ObjectId } from 'mongodb'
 import { capitalizeFirstLetter } from '../utils/strings.js'
-
 
 describe('prepare attributesDictionary and Attribute test data', () => {
   let connection
@@ -66,50 +64,75 @@ describe('prepare attributesDictionary and Attribute test data', () => {
       const componentsData = await componentsCursor.toArray()
 
       attributesTypes = db.collection('attributesTypes')
-      const attributesTypesCursor = await attributesTypes.find({  })
-      expect(await attributesTypes.countDocuments({ })).not.toBe(0)
+      const attributesTypesCursor = await attributesTypes.find({})
+      expect(await attributesTypes.countDocuments({})).not.toBe(0)
       const attributesTypesData = await attributesTypesCursor.toArray()
 
       for (let i = 0; i < componentsData.length; i++) {
         const currentDateLogs = new Date()
-        const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
+        const formattedDate = currentDateLogs
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '')
         const iRandom = Math.floor(Math.random() * componentsData.length)
         const randomComponent = componentsData[iRandom].component
 
         const mockAttributesDictionary = {
-          name: capitalizeFirstLetter(faker.hacker.noun()) + ' ' + capitalizeFirstLetter(faker.color.human()) + ' ' + capitalizeFirstLetter(faker.commerce.product()),
+          name:
+            capitalizeFirstLetter(faker.hacker.noun()) +
+            ' ' +
+            capitalizeFirstLetter(faker.color.human()) +
+            ' ' +
+            capitalizeFirstLetter(faker.commerce.product()),
           component: componentsData[i].component,
-          type: attributesTypesData[Math.floor(Math.random() * attributesTypesData.length)].type,
-          category: attributesCategoryData[Math.floor(Math.random() * attributesCategoryData.length)].name,
+          type: attributesTypesData[
+            Math.floor(Math.random() * attributesTypesData.length)
+          ].type,
+          category:
+            attributesCategoryData[
+              Math.floor(Math.random() * attributesCategoryData.length)
+            ].name,
         }
-        mockAttributesDictionary._id = (await attributesDictionary.insertOne(mockAttributesDictionary)).insertedId
-        const insertedAttributesDictionary = await attributesDictionary.findOne(mockAttributesDictionary)
+        mockAttributesDictionary._id = (
+          await attributesDictionary.insertOne(mockAttributesDictionary)
+        ).insertedId
+        const insertedAttributesDictionary = await attributesDictionary.findOne(
+          mockAttributesDictionary,
+        )
         expect(insertedAttributesDictionary).toEqual(mockAttributesDictionary)
 
         mockLog = {
-          'date': formattedDate,
-          'objectId': new ObjectId(insertedAttributesDictionary._id),
-          'operation': 'Create',
-          'component': 'attributesDictionary',
-          'message': mockAttributesDictionary
+          date: formattedDate,
+          objectId: new ObjectId(insertedAttributesDictionary._id),
+          operation: 'Create',
+          component: 'attributesDictionary',
+          message: mockAttributesDictionary,
         }
 
         await logs.insertOne(mockLog)
         const insertedLog = await logs.findOne(mockLog)
         expect(insertedLog).toEqual(mockLog)
 
-        if (['Devices', 'Connections', 'Models'].indexOf(randomComponent) > -1) {
+        if (
+          ['Devices', 'Connections', 'Models'].indexOf(randomComponent) > -1
+        ) {
           for (let j = 0; j < 3; j++) {
             let mockAttributes
             let insertedAttributes
             if (randomComponent === 'Devices') {
-
               mockAttributes = {
-                attributesDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+                attributesDictionaryId: new ObjectId(
+                  insertedAttributesDictionary._id,
+                ),
                 connectionId: null,
                 deviceId: new ObjectId(),
                 modelId: null,
-                name: faker.color.human() + ' ' + faker.commerce.product() + ' ' + faker.color.human(),
+                name:
+                  faker.color.human() +
+                  ' ' +
+                  faker.commerce.product() +
+                  ' ' +
+                  faker.color.human(),
                 value: faker.commerce.productAdjective(),
               }
               await attributes.insertOne(mockAttributes)
@@ -119,11 +142,18 @@ describe('prepare attributesDictionary and Attribute test data', () => {
             }
             if (randomComponent === 'Models') {
               mockAttributes = {
-                attributesDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+                attributesDictionaryId: new ObjectId(
+                  insertedAttributesDictionary._id,
+                ),
                 connectionId: null,
                 deviceId: null,
                 modelId: new ObjectId(),
-                name: faker.color.human() + ' ' + faker.commerce.product() + ' ' + faker.color.human(),
+                name:
+                  faker.color.human() +
+                  ' ' +
+                  faker.commerce.product() +
+                  ' ' +
+                  faker.color.human(),
                 value: faker.commerce.productAdjective(),
               }
               await attributes.insertOne(mockAttributes)
@@ -133,11 +163,18 @@ describe('prepare attributesDictionary and Attribute test data', () => {
             }
             if (randomComponent === 'Connections') {
               mockAttributes = {
-                attributesDictionaryId: new ObjectId(insertedAttributesDictionary._id),
+                attributesDictionaryId: new ObjectId(
+                  insertedAttributesDictionary._id,
+                ),
                 connectionId: new ObjectId(),
                 deviceId: null,
                 modelId: null,
-                name: faker.color.human() + ' ' + faker.commerce.product() + ' ' + faker.color.human(),
+                name:
+                  faker.color.human() +
+                  ' ' +
+                  faker.commerce.product() +
+                  ' ' +
+                  faker.color.human(),
                 value: faker.commerce.productAdjective(),
               }
               await attributes.insertOne(mockAttributes)
@@ -147,11 +184,11 @@ describe('prepare attributesDictionary and Attribute test data', () => {
             }
 
             mockLog = {
-              'date': formattedDate,
-              'objectId': new ObjectId(insertedAttributes._id),
-              'operation': 'Create',
-              'component': 'Attributes',
-              'message': mockAttributes
+              date: formattedDate,
+              objectId: new ObjectId(insertedAttributes._id),
+              operation: 'Create',
+              component: 'Attributes',
+              message: mockAttributes,
             }
             await logs.insertOne(mockLog)
             const insertedLog = await logs.findOne(mockLog)

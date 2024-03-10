@@ -3,13 +3,12 @@
  * @description create device in mongo DB /api/devices
  *              https://jestjs.io/docs/bypassing-module-mocks
  * @version     2023-12-26 C2RLO - Initial
- **/
+ */
 
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
 import { MongoClient } from 'mongodb'
 import { deviceType, deviceCategory } from './deviceType.js'
-
 
 describe('prepare test data', () => {
   let connection
@@ -57,7 +56,12 @@ describe('prepare test data', () => {
       for (let index = 0; index < 3; index++) {
         const model = db.collection('models')
         mockModel = {
-          name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
+          name:
+            faker.commerce.product() +
+            ' ' +
+            faker.color.human() +
+            ' ' +
+            faker.animal.type(),
           dimension: {
             width: faker.number.int({ min: 1, max: 10 }),
             height: faker.number.int({ min: 1, max: 10 }),
@@ -79,14 +83,17 @@ describe('prepare test data', () => {
 
         const logs = db.collection('logs')
         let currentDateLogs = new Date()
-        let formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
+        let formattedDate = currentDateLogs
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '')
 
         let mockLog = {
-          'date': formattedDate,
-          'objectId': insertedModel._id,
-          'operation': 'Create',
-          'component': 'Model',
-          'message': mockModel
+          date: formattedDate,
+          objectId: insertedModel._id,
+          operation: 'Create',
+          component: 'Model',
+          message: mockModel,
         }
 
         await logs.insertOne(mockLog)
@@ -96,7 +103,12 @@ describe('prepare test data', () => {
         const device = db.collection('devices')
         for (let index = 0; index < 5; index++) {
           const mockDevice = {
-            name: faker.commerce.product() + ' ' + faker.color.human() + '-' + faker.animal.type(),
+            name:
+              faker.commerce.product() +
+              ' ' +
+              faker.color.human() +
+              '-' +
+              faker.animal.type(),
             modelId: insertedModel._id,
             position: {
               x: faker.number.int({ min: 1, max: 100 }),
@@ -109,14 +121,17 @@ describe('prepare test data', () => {
           expect(insertedDevice).toEqual(mockDevice)
 
           currentDateLogs = new Date()
-          formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
+          formattedDate = currentDateLogs
+            .toISOString()
+            .replace(/T/, ' ')
+            .replace(/\..+/, '')
 
           mockLog = {
-            'date': formattedDate,
-            'objectId': insertedLog._id,
-            'operation': 'Create',
-            'component': 'Device',
-            'message': mockDevice
+            date: formattedDate,
+            objectId: insertedLog._id,
+            operation: 'Create',
+            component: 'Device',
+            message: mockDevice,
           }
           await logs.insertOne(mockLog)
           insertedLog = await logs.findOne(mockLog)

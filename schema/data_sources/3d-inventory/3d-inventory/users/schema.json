@@ -1,29 +1,27 @@
 {
-    "properties": {
-        "_id": {
-            "bsonType": "objectId"
-        },
-        "email": {
-            "bsonType": "string"
-        },
-        "name": {
-            "bsonType": "string"
-        },
-        "password": {
-            "bsonType": "string"
-        },
-        "rights": {
-            "bsonType": "array",
-            "items": {
-                "bsonType": "string"
-            }
-        },
-        "token": {
-            "bsonType": "string"
-        }
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
     },
-    "required": [
-        "_id"
-    ],
-    "title": "user"
+    "email": {
+      "bsonType": "string"
+    },
+    "name": {
+      "bsonType": "string"
+    },
+    "password": {
+      "bsonType": "string"
+    },
+    "rights": {
+      "bsonType": "array",
+      "items": {
+        "bsonType": "string"
+      }
+    },
+    "token": {
+      "bsonType": "string"
+    }
+  },
+  "required": ["_id"],
+  "title": "user"
 }

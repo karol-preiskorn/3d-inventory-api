@@ -1,6 +1,6 @@
 /* eslint-disable n/no-exports-assign */
 
-  /*
+/*
     This function will be run when the client SDK 'callResetPasswordFunction' and is called with an object parameter
     which contains four keys: 'token', 'tokenId', 'username', and 'password', and additional parameters
     for each parameter passed in as part of the argument list from the SDK.
@@ -50,7 +50,7 @@
     The uncommented function below is just a placeholder and will result in failure.
   */
 
-  exports = ({ token, tokenId, username, password }) => {
-    // will not reset the password
-    return { status: "fail" }
-  }
+exports = ({ token, tokenId, username, password }) => {
+  // will not reset the password
+  return { status: 'fail' }
+}

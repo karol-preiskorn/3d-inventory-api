@@ -2557,8 +2557,7 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
     "504":
-      description:
-        Gateway Timeout. The server is acting as a gateway and cannot get a response in time for a request.
+      description: Gateway Timeout. The server is acting as a gateway and cannot get a response in time for a request.
       content:
         application/json:
           schema:

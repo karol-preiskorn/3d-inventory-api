@@ -1,18 +1,12 @@
 {
-  "plugins": [
-    "plugins/markdown",
-    "plugins/summarize"
-  ],
+  "plugins": ["plugins/markdown", "plugins/summarize"],
   "source": {
     "excludePattern": "(node_modules|docs)"
   },
   "sourceType": "module",
   "tags": {
     "allowUnknownTags": true,
-    "dictionaries": [
-      "jsdoc",
-      "closure"
-    ]
+    "dictionaries": ["jsdoc", "closure"]
   },
   "templates": {
     "cleverLinks": false,

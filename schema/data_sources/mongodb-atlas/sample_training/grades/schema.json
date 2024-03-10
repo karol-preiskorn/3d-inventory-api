@@ -1,31 +1,29 @@
 {
-    "properties": {
-        "_id": {
-            "bsonType": "objectId"
-        },
-        "class_id": {
-            "bsonType": "double"
-        },
-        "scores": {
-            "bsonType": "array",
-            "items": {
-                "bsonType": "object",
-                "properties": {
-                    "score": {
-                        "bsonType": "double"
-                    },
-                    "type": {
-                        "bsonType": "string"
-                    }
-                }
-            }
-        },
-        "student_id": {
-            "bsonType": "double"
-        }
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
     },
-    "required": [
-        "_id"
-    ],
-    "title": "grade"
+    "class_id": {
+      "bsonType": "double"
+    },
+    "scores": {
+      "bsonType": "array",
+      "items": {
+        "bsonType": "object",
+        "properties": {
+          "score": {
+            "bsonType": "double"
+          },
+          "type": {
+            "bsonType": "string"
+          }
+        }
+      }
+    },
+    "student_id": {
+      "bsonType": "double"
+    }
+  },
+  "required": ["_id"],
+  "title": "grade"
 }

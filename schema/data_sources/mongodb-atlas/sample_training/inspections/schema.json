@@ -1,46 +1,44 @@
 {
-    "properties": {
-        "_id": {
-            "bsonType": "objectId"
-        },
-        "address": {
-            "bsonType": "object",
-            "properties": {
-                "city": {
-                    "bsonType": "string"
-                },
-                "number": {
-                    "bsonType": "int"
-                },
-                "street": {
-                    "bsonType": "string"
-                },
-                "zip": {
-                    "bsonType": "int"
-                }
-            }
-        },
-        "business_name": {
-            "bsonType": "string"
-        },
-        "certificate_number": {
-            "bsonType": "int"
-        },
-        "date": {
-            "bsonType": "string"
-        },
-        "id": {
-            "bsonType": "string"
-        },
-        "result": {
-            "bsonType": "string"
-        },
-        "sector": {
-            "bsonType": "string"
-        }
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
     },
-    "required": [
-        "_id"
-    ],
-    "title": "inspection"
+    "address": {
+      "bsonType": "object",
+      "properties": {
+        "city": {
+          "bsonType": "string"
+        },
+        "number": {
+          "bsonType": "int"
+        },
+        "street": {
+          "bsonType": "string"
+        },
+        "zip": {
+          "bsonType": "int"
+        }
+      }
+    },
+    "business_name": {
+      "bsonType": "string"
+    },
+    "certificate_number": {
+      "bsonType": "int"
+    },
+    "date": {
+      "bsonType": "string"
+    },
+    "id": {
+      "bsonType": "string"
+    },
+    "result": {
+      "bsonType": "string"
+    },
+    "sector": {
+      "bsonType": "string"
+    }
+  },
+  "required": ["_id"],
+  "title": "inspection"
 }

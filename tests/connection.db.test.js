@@ -1,7 +1,7 @@
 /**
  * @file: /tests/conn.test.js
  * @module: /tests
- * @description:
+ * @description: This file contains the global setup for Jest testing.
  * @version 2024-01-14 C2RLO - Initial
  */
 
@@ -32,8 +32,8 @@ describe('ConnectToDatabase Mongo Atlas', () => {
 
     const deleteUser = await users.deleteOne({ _id: 'some-user-id' })
     expect(deleteUser).toEqual({
-      'acknowledged': true,
-      'deletedCount': 1,
+      acknowledged: true,
+      deletedCount: 1,
     })
   })
 

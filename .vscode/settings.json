@@ -3,10 +3,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "eslint.validate": [
-    "javascript",
-    "typescript"
-  ],
+  "eslint.validate": ["javascript", "typescript"],
   "editor.formatOnSave": true,
   "[javascript]": {
     "editor.formatOnSave": false
@@ -24,16 +21,10 @@
     "**/coverage": true
   },
   "typescript.referencesCodeLens.enabled": true,
-  "appService.zipIgnorePattern": [
-    ".vscode{,/**}"
-  ],
+  "appService.zipIgnorePattern": [".vscode{,/**}"],
   "appService.deploySubpath": "",
   "jest.jestCommandLine": "jest test",
   "jest.rootPath": ".",
-  "cSpell.words": [
-    "mvn",
-    "oracledb",
-    "tsc"
-  ],
+  "cSpell.words": ["mvn", "oracledb", "tsc"],
   "mocha.enabled": true
 }

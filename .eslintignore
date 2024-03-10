@@ -16,3 +16,7 @@ typescript/*
 .git/*
 .vscode/*
 lib/*
+doc/*
+build/*
+.mocharc.js
+src/db/realm.js

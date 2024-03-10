@@ -1,7 +1,6 @@
 /**
  * @file: /tests/conn.test copy.js
- * @module: /tests
- * @description:
+ * @description: This file contains the global setup for Jest testing.
  * @version 2024-01-20 C2RLO - Initial
  */
 
@@ -9,7 +8,6 @@ import { connectToCluster, connectToDb } from '../db/conn.js'
 import '../utils/loadEnvironment.js'
 
 describe('ConnectToDatabase Mongo Atlas', () => {
-
   it('should insert a doc into collection', async () => {
     const client = await connectToCluster()
     const db = await connectToDb(client)
@@ -24,8 +22,8 @@ describe('ConnectToDatabase Mongo Atlas', () => {
 
     const deleteUser = await users.deleteOne({ _id: 'some-user-id' })
     expect(deleteUser).toEqual({
-      'acknowledged': true,
-      'deletedCount': 1,
+      acknowledged: true,
+      deletedCount: 1,
     })
   })
 

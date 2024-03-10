@@ -1,31 +1,29 @@
 {
-    "properties": {
-        "_id": {
-            "bsonType": "objectId"
-        },
-        "modelId": {
-            "bsonType": "objectId"
-        },
-        "name": {
-            "bsonType": "string"
-        },
-        "position": {
-            "bsonType": "object",
-            "properties": {
-                "h": {
-                    "bsonType": "int"
-                },
-                "x": {
-                    "bsonType": "int"
-                },
-                "y": {
-                    "bsonType": "int"
-                }
-            }
-        }
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
     },
-    "required": [
-        "_id"
-    ],
-    "title": "device"
+    "modelId": {
+      "bsonType": "objectId"
+    },
+    "name": {
+      "bsonType": "string"
+    },
+    "position": {
+      "bsonType": "object",
+      "properties": {
+        "h": {
+          "bsonType": "int"
+        },
+        "x": {
+          "bsonType": "int"
+        },
+        "y": {
+          "bsonType": "int"
+        }
+      }
+    }
+  },
+  "required": ["_id"],
+  "title": "device"
 }

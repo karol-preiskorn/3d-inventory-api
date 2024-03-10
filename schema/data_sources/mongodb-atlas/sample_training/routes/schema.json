@@ -1,43 +1,41 @@
 {
-    "properties": {
-        "_id": {
-            "bsonType": "objectId"
-        },
-        "airline": {
-            "bsonType": "object",
-            "properties": {
-                "alias": {
-                    "bsonType": "string"
-                },
-                "iata": {
-                    "bsonType": "string"
-                },
-                "id": {
-                    "bsonType": "int"
-                },
-                "name": {
-                    "bsonType": "string"
-                }
-            }
-        },
-        "airplane": {
-            "bsonType": "int"
-        },
-        "codeshare": {
-            "bsonType": "string"
-        },
-        "dst_airport": {
-            "bsonType": "string"
-        },
-        "src_airport": {
-            "bsonType": "string"
-        },
-        "stops": {
-            "bsonType": "int"
-        }
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
     },
-    "required": [
-        "_id"
-    ],
-    "title": "route"
+    "airline": {
+      "bsonType": "object",
+      "properties": {
+        "alias": {
+          "bsonType": "string"
+        },
+        "iata": {
+          "bsonType": "string"
+        },
+        "id": {
+          "bsonType": "int"
+        },
+        "name": {
+          "bsonType": "string"
+        }
+      }
+    },
+    "airplane": {
+      "bsonType": "int"
+    },
+    "codeshare": {
+      "bsonType": "string"
+    },
+    "dst_airport": {
+      "bsonType": "string"
+    },
+    "src_airport": {
+      "bsonType": "string"
+    },
+    "stops": {
+      "bsonType": "int"
+    }
+  },
+  "required": ["_id"],
+  "title": "route"
 }

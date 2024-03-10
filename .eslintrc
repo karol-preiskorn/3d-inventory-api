@@ -18,35 +18,30 @@
     }
   },
   "rules": {
-    "jsdoc/check-values": 0, // Recommended
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "never"
-    ],
+    "jsdoc/check-values": 0,
     "jest/no-disabled-tests": "warn",
     "jest/no-focused-tests": "error",
     "jest/no-identical-title": "error",
     "jest/prefer-to-have-length": "warn",
     "jest/valid-expect": "error",
-    "indent": [
-      "error",
-      2
-    ]
+    "@babel/new-cap": "off",
+    "@babel/no-invalid-this": "error",
+    "@babel/no-undef": "off",
+    "@babel/no-unused-expressions": "error",
+    "import/no-unresolved": "off",
+    "jsdoc/check-tag-names": "off",
+    "no-unused-vars": "off"
   },
   "env": {
     "es2020": true,
     "es6": true,
     "jest": true,
     "jest/globals": true,
-    "mocha": true,
+    "mocha": false,
     "mongo": true,
     "node": true,
     "commonjs": true,
-    "jasmine": true
+    "jasmine": false
   },
   "overrides": [
     {
@@ -60,7 +55,6 @@
         "plugin:jest/recommended"
       ],
       "env": {
-        "mocha": true,
         "node": true,
         "jest/globals": true
       }
@@ -68,6 +62,7 @@
   ],
   "plugins": [
     "jest",
-    "jsdoc"
+    "jsdoc",
+    "@babel"
   ]
 }

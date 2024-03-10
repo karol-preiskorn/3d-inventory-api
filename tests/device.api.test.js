@@ -1,9 +1,6 @@
 /**
  * File:        /tests/devices.js
  * Description: Test devices api operation
- *
- * Date        By     Comments
- * ----------  -----  ------------------------------
  * 2024-01-13  C2RLO  Add variant promises test, async/await and superagent for learn
  * 2024-01-06  C2RLO  Add array test
  * 2024-01-03  C2RLO  Initial
@@ -15,7 +12,6 @@ import request from 'supertest'
 import app from '../index.js'
 
 describe('GET /devices', () => {
-
   afterAll(async () => {
     await app.listen().close()
   })
@@ -39,7 +35,7 @@ describe('GET /devices', () => {
             h: expect.any(Number),
           },
         }),
-      ])
+      ]),
     )
 
     const responseGetId = await request(app)
@@ -58,7 +54,7 @@ describe('GET /devices', () => {
             h: expect.any(Number),
           },
         }),
-      ])
+      ]),
     )
   })
 })

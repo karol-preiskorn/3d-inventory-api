@@ -1,18 +1,13 @@
 /**
  * @file /tests/attributesDictionary.test.js
- * @module /tests
  * @description This file contains tests for the '/logs' endpoint of the API. It includes tests for retrieving an array of logs and retrieving a specific log by ID.
  * @version 2024-01-30 C2RLO - Initial
-**/
+ */
 
-
-// import faker from "@faker-js/faker"
-// import assert from "assert"
 import request from 'supertest'
 import app from '../index.js'
 
 describe('GET /logs', () => {
-
   let response
 
   beforeAll(async () => {
@@ -28,7 +23,6 @@ describe('GET /logs', () => {
   })
 
   it('GET /logs => array of items', async () => {
-
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -39,7 +33,7 @@ describe('GET /logs', () => {
           component: expect.any(String),
           message: expect.any(Object),
         }),
-      ])
+      ]),
     )
     // console.log('response.body: ' + JSON.stringify(response.body))
   })

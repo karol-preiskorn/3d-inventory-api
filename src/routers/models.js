@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection('models')
   const results = await collection.find({}).limit(50).toArray()
-  res.status(200).send(results)
+  res.status(200).sendStatus(results)
   connectionClose(client)
 })
 
@@ -31,8 +31,8 @@ router.get('/:id', async (req, res) => {
   const collection = db.collection('models')
   const query = { _id: ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.send('Not found').status(404)
-  else res.status(200).send(result)
+  if (!result) res.sendStatus('Not found').status(404)
+  else res.status(200).sendStatus(result)
   connectionClose(client)
 })
 
@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
   const newDocument = req.body
   // newDocument.date = new Date()
   const results = await collection.insertOne(newDocument)
-  res.status(204).send(results)
+  res.status(204).sendStatus(results)
   connectionClose(client)
 })
 
@@ -52,13 +52,13 @@ router.post('/', async (req, res) => {
 router.patch('/position/:id', async (req, res) => {
   const query = { _id: ObjectId(req.params.id) }
   const updates = {
-    $push: { position: req.body }
+    $push: { position: req.body },
   }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection('models')
   const result = await collection.updateOne(query, updates)
-  res.status(200).send(result)
+  res.status(200).sendStatus(result)
   connectionClose(client)
 })
 
@@ -69,18 +69,18 @@ router.delete('/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection('models')
   const result = await collection.deleteOne(query)
-  res.status(200).send(result)
+  res.status(200).sendStatus(result)
   connectionClose(client)
 })
 
 // Delete all
 router.delete('/', async (req, res) => {
-  const query = { }
+  const query = {}
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection('models')
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  res.status(200).sendStatus(result)
   connectionClose(client)
 })
 

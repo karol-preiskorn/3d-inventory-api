@@ -1,7 +1,6 @@
 /**
  * @file /tests/models.test.js
- * @module /tests
- * @description test models api operation
+ * @description test models api operatio
  * @version 2024-02-01 C2RLO - Add test for post device
  */
 
@@ -12,7 +11,6 @@ import '../utils/loadEnvironment.js'
 import { MongoClient } from 'mongodb'
 
 describe('GET /models', () => {
-
   let connection
   let db
 
@@ -27,14 +25,15 @@ describe('GET /models', () => {
   })
 
   it('GET /models => array of models', async () => {
-
     const components = db.collection('components')
     const componentsCursor = await components.find({ attributes: true })
     expect(await components.countDocuments({ attributes: true })).not.toBe(0)
     const componentsData = await componentsCursor.toArray()
 
     const attributesTypes = db.collection('attributesTypes')
-    const attributesTypesCursor = await attributesTypes.find({ component: 'Devices' })
+    const attributesTypesCursor = await attributesTypes.find({
+      component: 'Devices',
+    })
     expect(await attributesTypes.countDocuments({})).not.toBe(0)
     const attributesTypesData = await attributesTypesCursor.toArray()
 
@@ -80,7 +79,7 @@ describe('GET /models', () => {
             top: expect.any(String),
           },
         }),
-      ])
+      ]),
     )
 
     const responseGetId = await request(app)
@@ -103,9 +102,8 @@ describe('GET /models', () => {
           side: expect.any(String),
           top: expect.any(String),
           bottom: expect.any(String),
-        }
+        },
       }),
     )
-  }
-  )
+  })
 })

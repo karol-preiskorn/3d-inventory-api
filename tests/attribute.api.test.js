@@ -8,14 +8,10 @@
  * @version 2024-01-03  C2RLO  Initial
  */
 
-
-// import faker from "@faker-js/faker"
 import request from 'supertest'
-// import assert from "assert"
-import app from '../index.js'
+import app from '../../../../../index.js'
 
 describe('GET /devices', () => {
-
   afterAll(async () => {
     await app.listen().close()
   })
@@ -39,7 +35,7 @@ describe('GET /devices', () => {
             h: expect.any(Number),
           },
         }),
-      ])
+      ]),
     )
 
     const responseGetId = await request(app)
@@ -58,7 +54,7 @@ describe('GET /devices', () => {
             h: expect.any(Number),
           },
         }),
-      ])
+      ]),
     )
   })
 })

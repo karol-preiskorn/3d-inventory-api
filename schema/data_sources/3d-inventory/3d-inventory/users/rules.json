@@ -1,55 +1,55 @@
 {
-    "collection": "users",
-    "database": "3d-inventory",
-    "roles": [
-        {
-            "name": "readOwnWriteOwn",
-            "apply_when": {},
-            "document_filters": {
-                "write": {
-                    "owner_id": "%%user.id"
-                },
-                "read": {
-                    "owner_id": "%%user.id"
-                }
-            },
-            "read": true,
-            "write": true,
-            "insert": true,
-            "delete": true,
-            "search": true
+  "collection": "users",
+  "database": "3d-inventory",
+  "roles": [
+    {
+      "name": "readOwnWriteOwn",
+      "apply_when": {},
+      "document_filters": {
+        "write": {
+          "owner_id": "%%user.id"
         },
-        {
-            "name": "admin",
-            "apply_when": {
-                "%%user.custom_data.isGlobalAdmin": true
-            },
-            "document_filters": {
-                "write": true,
-                "read": true
-            },
-            "read": true,
-            "write": true,
-            "insert": true,
-            "delete": true,
-            "search": true
-        },
-        {
-            "name": "user",
-            "apply_when": {},
-            "document_filters": {
-                "write": {
-                    "owner_id": "%%user.id"
-                },
-                "read": {
-                    "owner_id": "%%user.id"
-                }
-            },
-            "read": true,
-            "write": true,
-            "insert": true,
-            "delete": true,
-            "search": true
+        "read": {
+          "owner_id": "%%user.id"
         }
-    ]
+      },
+      "read": true,
+      "write": true,
+      "insert": true,
+      "delete": true,
+      "search": true
+    },
+    {
+      "name": "admin",
+      "apply_when": {
+        "%%user.custom_data.isGlobalAdmin": true
+      },
+      "document_filters": {
+        "write": true,
+        "read": true
+      },
+      "read": true,
+      "write": true,
+      "insert": true,
+      "delete": true,
+      "search": true
+    },
+    {
+      "name": "user",
+      "apply_when": {},
+      "document_filters": {
+        "write": {
+          "owner_id": "%%user.id"
+        },
+        "read": {
+          "owner_id": "%%user.id"
+        }
+      },
+      "read": true,
+      "write": true,
+      "insert": true,
+      "delete": true,
+      "search": true
+    }
+  ]
 }

@@ -29,7 +29,10 @@ describe('create 10 floors', () => {
     await floors.deleteMany({})
     for (let index = 0; index < 10; index++) {
       mockFloors = {
-        name: capitalizeFirstLetter(faker.color.human()) + ' ' + faker.commerce.product(),
+        name:
+          capitalizeFirstLetter(faker.color.human()) +
+          ' ' +
+          faker.commerce.product(),
         address: {
           street: faker.location.street(),
           city: faker.location.city(),
@@ -44,9 +47,9 @@ describe('create 10 floors', () => {
             h: faker.number.int({ min: 10, max: 100 }),
             xPos: faker.number.int({ min: 10, max: 100 }),
             yPos: faker.number.int({ min: 10, max: 100 }),
-            hPos: faker.number.int({ min: 10, max: 100 })
-          }
-        ]
+            hPos: faker.number.int({ min: 10, max: 100 }),
+          },
+        ],
       }
       await floors.insertOne(mockFloors)
       insertedFloors = await floors.findOne(mockFloors)

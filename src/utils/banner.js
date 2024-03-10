@@ -12,7 +12,6 @@ import fs from 'fs'
 import { logger } from './logger.js'
 import { promisify } from 'util'
 
-
 const readFile = promisify(fs.readFile)
 
 let fontLoaded = false
@@ -33,8 +32,5 @@ async function loadFont() {
  */
 export async function banner() {
   await loadFont()
-  logger.warn(
-    '\n' +
-    figlet.textSync('3d-inv API', 'myfont')
-  )
+  logger.warn('\n' + figlet.textSync('3d-inv API', 'myfont'))
 }

@@ -21,8 +21,9 @@ router.get('/', async (req, res) => {
     if (err) {
       logger.error(`Error read ${path} file: ${err}`)
     }
-    if (!data) res.send(`File ${path} not found, error: ${err}`).status(404)
-    res.send(md.render(data)).status(200)
+    if (!data)
+      res.sendStatus(`File ${path} not found, error: ${err}`).status(404)
+    res.sendStatus(md.render(data)).status(200)
   })
 })
 

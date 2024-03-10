@@ -11,15 +11,15 @@ db.getCollection('models').insertOne({
   dimension: {
     width: '1',
     height: '2',
-    depth: '2'
+    depth: '2',
   },
   texture: {
     front: '/assets/r710-2.5-nobezel__29341.png',
     back: '/assets/r710-2.5-nobezel__29341.png',
     side: '/assets/r710-2.5-nobezel__29341.png',
     top: '/assets/r710-2.5-nobezel__29341.png',
-    botom: '/assets/r710-2.5-nobezel__29341.png'
+    botom: '/assets/r710-2.5-nobezel__29341.png',
   },
   type: 'CoolAir',
-  category: 'Facility'
+  category: 'Facility',
 })

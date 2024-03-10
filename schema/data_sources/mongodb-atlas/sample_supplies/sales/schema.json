@@ -1,63 +1,61 @@
 {
-    "properties": {
-        "_id": {
-            "bsonType": "objectId"
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
+    },
+    "couponUsed": {
+      "bsonType": "bool"
+    },
+    "customer": {
+      "bsonType": "object",
+      "properties": {
+        "age": {
+          "bsonType": "int"
         },
-        "couponUsed": {
-            "bsonType": "bool"
+        "email": {
+          "bsonType": "string"
         },
-        "customer": {
-            "bsonType": "object",
-            "properties": {
-                "age": {
-                    "bsonType": "int"
-                },
-                "email": {
-                    "bsonType": "string"
-                },
-                "gender": {
-                    "bsonType": "string"
-                },
-                "satisfaction": {
-                    "bsonType": "int"
-                }
-            }
+        "gender": {
+          "bsonType": "string"
         },
-        "items": {
+        "satisfaction": {
+          "bsonType": "int"
+        }
+      }
+    },
+    "items": {
+      "bsonType": "array",
+      "items": {
+        "bsonType": "object",
+        "properties": {
+          "name": {
+            "bsonType": "string"
+          },
+          "price": {
+            "bsonType": "decimal"
+          },
+          "quantity": {
+            "bsonType": "int"
+          },
+          "tags": {
             "bsonType": "array",
             "items": {
-                "bsonType": "object",
-                "properties": {
-                    "name": {
-                        "bsonType": "string"
-                    },
-                    "price": {
-                        "bsonType": "decimal"
-                    },
-                    "quantity": {
-                        "bsonType": "int"
-                    },
-                    "tags": {
-                        "bsonType": "array",
-                        "items": {
-                            "bsonType": "string"
-                        }
-                    }
-                }
+              "bsonType": "string"
             }
-        },
-        "purchaseMethod": {
-            "bsonType": "string"
-        },
-        "saleDate": {
-            "bsonType": "date"
-        },
-        "storeLocation": {
-            "bsonType": "string"
+          }
         }
+      }
     },
-    "required": [
-        "_id"
-    ],
-    "title": "sale"
+    "purchaseMethod": {
+      "bsonType": "string"
+    },
+    "saleDate": {
+      "bsonType": "date"
+    },
+    "storeLocation": {
+      "bsonType": "string"
+    }
+  },
+  "required": ["_id"],
+  "title": "sale"
 }

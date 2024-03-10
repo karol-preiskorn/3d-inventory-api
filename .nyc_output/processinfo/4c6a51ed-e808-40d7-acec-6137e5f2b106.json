@@ -1,1 +1,38 @@
-{"parent":null,"pid":1390753,"argv":["/home/karol/.nvm/versions/node/v21.1.0/bin/node","/home/karol/GitHub/3d-inventory-mongo-api/node_modules/nyc/bin/nyc.js","--all","--reporter=html","--reporter=text","--reporter=lcov","/home/karol/GitHub/3d-inventory-mongo-api/node_modules/mocha/bin/_mocha","test/**/*.js","--exit"],"execArgv":[],"cwd":"/home/karol/GitHub/3d-inventory-mongo-api","time":1705221734487,"ppid":1387519,"coverageFilename":"/home/karol/GitHub/3d-inventory-mongo-api/.nyc_output/4c6a51ed-e808-40d7-acec-6137e5f2b106.json","externalId":"","uuid":"4c6a51ed-e808-40d7-acec-6137e5f2b106","files":["/home/karol/GitHub/3d-inventory-mongo-api/api/json2openapi.js","/home/karol/GitHub/3d-inventory-mongo-api/db/conn.js","/home/karol/GitHub/3d-inventory-mongo-api/db/mongo/insertOneDevice.mongodb.js","/home/karol/GitHub/3d-inventory-mongo-api/db/mongo/insertOneModel.mongodb.js","/home/karol/GitHub/3d-inventory-mongo-api/gcs/authenticateImplicitWithAdc.js","/home/karol/GitHub/3d-inventory-mongo-api/index.js","/home/karol/GitHub/3d-inventory-mongo-api/routers/devices.js","/home/karol/GitHub/3d-inventory-mongo-api/routers/models.js","/home/karol/GitHub/3d-inventory-mongo-api/routers/readme.js","/home/karol/GitHub/3d-inventory-mongo-api/schema/3d-inventory/functions/resetFunc.js","/home/karol/GitHub/3d-inventory-mongo-api/schema/functions/resetFunc.js","/home/karol/GitHub/3d-inventory-mongo-api/utils/banner.js","/home/karol/GitHub/3d-inventory-mongo-api/utils/loadEnvironment.js","/home/karol/GitHub/3d-inventory-mongo-api/utils/logger.js"]}
+{
+  "parent": null,
+  "pid": 1390753,
+  "argv": [
+    "/home/karol/.nvm/versions/node/v21.1.0/bin/node",
+    "/home/karol/GitHub/3d-inventory-mongo-api/node_modules/nyc/bin/nyc.js",
+    "--all",
+    "--reporter=html",
+    "--reporter=text",
+    "--reporter=lcov",
+    "/home/karol/GitHub/3d-inventory-mongo-api/node_modules/mocha/bin/_mocha",
+    "test/**/*.js",
+    "--exit"
+  ],
+  "execArgv": [],
+  "cwd": "/home/karol/GitHub/3d-inventory-mongo-api",
+  "time": 1705221734487,
+  "ppid": 1387519,
+  "coverageFilename": "/home/karol/GitHub/3d-inventory-mongo-api/.nyc_output/4c6a51ed-e808-40d7-acec-6137e5f2b106.json",
+  "externalId": "",
+  "uuid": "4c6a51ed-e808-40d7-acec-6137e5f2b106",
+  "files": [
+    "/home/karol/GitHub/3d-inventory-mongo-api/api/json2openapi.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/db/conn.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/db/mongo/insertOneDevice.mongodb.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/db/mongo/insertOneModel.mongodb.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/gcs/authenticateImplicitWithAdc.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/index.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/routers/devices.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/routers/models.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/routers/readme.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/schema/3d-inventory/functions/resetFunc.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/schema/functions/resetFunc.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/utils/banner.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/utils/loadEnvironment.js",
+    "/home/karol/GitHub/3d-inventory-mongo-api/utils/logger.js"
+  ]
+}

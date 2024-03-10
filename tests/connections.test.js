@@ -30,7 +30,9 @@ describe('create 10 connections', () => {
     expect(countDevices).not.toBe(0)
     const devicesData = await devicesCursor.toArray()
     const connections = db.collection('connections')
-    console.log(JSON.stringify(devicesData[faker.number.int({ min: 0, max: 11 })]._id))
+    console.log(
+      JSON.stringify(devicesData[faker.number.int({ min: 0, max: 11 })]._id),
+    )
     for (let index = 0; index < 10; index++) {
       const to = devicesData[faker.number.int({ min: 0, max: 10 })]._id
       const from = devicesData[faker.number.int({ min: 0, max: 10 })]._id

@@ -1,17 +1,15 @@
 {
-    "properties": {
-        "_id": {
-            "bsonType": "objectId"
-        },
-        "jwt": {
-            "bsonType": "string"
-        },
-        "user_id": {
-            "bsonType": "string"
-        }
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
     },
-    "required": [
-        "_id"
-    ],
-    "title": "session"
+    "jwt": {
+      "bsonType": "string"
+    },
+    "user_id": {
+      "bsonType": "string"
+    }
+  },
+  "required": ["_id"],
+  "title": "session"
 }

@@ -14,7 +14,6 @@
 
 /**
  * Shows credentials auto-detections in the intercation with GCP libraries
- *
  * @param {string} projectId - Project ID or project number of the Cloud project you want to use.
  */
 function main(projectId) {
@@ -28,8 +27,11 @@ function main(projectId) {
    */
   // const projectId = 'YOUR_PROJECT_ID';
 
-  const {Storage} = require('@google-cloud/storage')
+  const { Storage } = require('@google-cloud/storage')
 
+  /**
+   *
+   */
   async function authenticateImplicitWithAdc() {
     // This snippet demonstrates how to list buckets.
     // NOTE: Replace the client created below with the client required for your application.
@@ -52,7 +54,7 @@ function main(projectId) {
   // [END auth_cloud_implicit_adc]
 }
 
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   console.error(err.message)
   process.exitCode = 1
 })

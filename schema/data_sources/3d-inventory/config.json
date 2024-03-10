@@ -1,10 +1,10 @@
 {
-    "name": "3d-inventory",
-    "type": "mongodb-atlas",
-    "config": {
-        "clusterName": "Cluster0",
-        "readPreference": "primary",
-        "wireProtocolEnabled": true
-    },
-    "version": 1
+  "name": "3d-inventory",
+  "type": "mongodb-atlas",
+  "config": {
+    "clusterName": "Cluster0",
+    "readPreference": "primary",
+    "wireProtocolEnabled": true
+  },
+  "version": 1
 }

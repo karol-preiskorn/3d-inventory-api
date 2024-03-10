@@ -26,28 +26,37 @@ import floors from './routers/floors.js'
 import { logger, stream } from './utils/logger.js'
 import { banner } from './utils/banner.js'
 
-
 const PORT = process.env.PORT || 8080
 const app = express()
 
 try {
   // const accessLogStream = fs.createWriteStream("./logs/access.log", { flags: "a" })
-  app.use(morgan(function (tokens, req, res) {
-    return [
-      tokens.method(req, res),
-      tokens.url(req, res),
-      tokens.status(req, res),
-      tokens.res(req, res, 'content-length'), '-',
-      tokens['response-time'](req, res), 'ms'
-    ].join(' ')
-  }, { stream }))
+  app.use(
+    morgan(
+      function (tokens, req, res) {
+        return [
+          tokens.method(req, res),
+          tokens.url(req, res),
+          tokens.status(req, res),
+          tokens.res(req, res, 'content-length'),
+          '-',
+          tokens['response-time'](req, res),
+          'ms',
+        ].join(' ')
+      },
+      { stream },
+    ),
+  )
 } catch (error) {
   logger.error(`[morgan] ${error}`)
 }
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', process.env.DOMAIN) // update to match the domain you will make the request from
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
+  )
   next()
 })
 
@@ -55,7 +64,7 @@ app.use(express.json())
 app.use(bodyParser.json())
 morganBody(app, {
   noColors: true,
-  stream
+  stream,
 })
 app.use(express.urlencoded({ extended: false }))
 
@@ -74,7 +83,7 @@ banner()
 // Global error handling
 app.use((err, _req, res, next) => {
   logger.error(`Uh oh! An unexpected error occurred. ${err}`)
-  res.status(500).send(`Uh oh! An unexpected error occurred. ${err}`)
+  res.status(500).sendStatus(`Uh oh! An unexpected error occurred. ${err}`)
 })
 
 app.use(express.json())
@@ -83,7 +92,7 @@ const yamlFilename = 'src/api/openapi.yaml'
 fs.open(yamlFilename, 'r', (err, fd) => {
   if (err) {
     if (err.code === 'ENOENT') {
-      logger.error('File Doesn\'t Exist')
+      logger.error("File Doesn't Exist")
       return
     }
     if (err.code === 'EACCES') {
@@ -103,17 +112,24 @@ try {
   if (typeof e === 'string') {
     logger.warn(e.toUpperCase())
   } else if (e instanceof Error) {
-    logger.error('[Open SwaggerUI] Exception ' + e.message + ', open: ' + encodeURI('https://stackoverflow.com/search?q=[js]' + e.message))
+    logger.error(
+      '[Open SwaggerUI] Exception ' +
+        e.message +
+        ', open: ' +
+        encodeURI('https://stackoverflow.com/search?q=[js]' + e.message),
+    )
   }
 }
 
 // OpenApi validation
 try {
-  app.use(OpenApiValidator.middleware({
-    apiSpec: yamlFilename,
-    validateRequests: true,
-    validateResponses: true
-  }))
+  app.use(
+    OpenApiValidator.middleware({
+      apiSpec: yamlFilename,
+      validateRequests: true,
+      validateResponses: true,
+    }),
+  )
   // logger.info("OpenApiValidator started")
 } catch (error) {
   logger.error(`OpenApiValidator: ${error}`)
@@ -141,6 +157,5 @@ process.on('SIGTERM', () => {
     logger.debug('HTTP server closed')
   })
 })
-
 
 export default app

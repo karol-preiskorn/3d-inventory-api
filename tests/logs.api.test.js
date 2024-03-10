@@ -12,7 +12,6 @@ import request from 'supertest'
 import app from '../src/index.js'
 
 describe('GET /logs', () => {
-
   let response
 
   beforeAll(async () => {
@@ -28,7 +27,6 @@ describe('GET /logs', () => {
   })
 
   it('GET /logs => array of items', async () => {
-
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -39,7 +37,7 @@ describe('GET /logs', () => {
           component: expect.any(String),
           message: expect.any(Object),
         }),
-      ])
+      ]),
     )
     // console.log('response.body: ' + JSON.stringify(response.body))
   })
@@ -78,8 +76,7 @@ describe('GET /logs', () => {
           component: expect.any(String),
           message: expect.any(Object),
         }),
-      ])
+      ]),
     )
   })
-
 })

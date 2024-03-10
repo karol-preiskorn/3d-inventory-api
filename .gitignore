@@ -29,3 +29,6 @@ gcs/d-inventory-406007-b220e292572a.json
 lib
 build
 .92ed10cc980e98503850e47148b86420cc328706-audit.json
+.nyc_output
+doc/**/*
+doc/

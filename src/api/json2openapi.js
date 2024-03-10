@@ -8,7 +8,7 @@
  */
 
 // eslint-disable-next-line import/namespace
-import { OASNormalize }  from 'oas-normalize'
+import { OASNormalize } from 'oas-normalize'
 import toOpenApi from 'json-schema-to-openapi-schema'
 
 const attributeSchema = {
@@ -31,22 +31,23 @@ const attributeSchema = {
     value: {
       bsonType: 'string',
     },
-  }
+  },
 }
 
 const convertedSchema = toOpenApi(attributeSchema)
 console.log(convertedSchema)
 
 const oas = new OASNormalize(
-  convertedSchema
+  convertedSchema,
   // ...or a string, path, JSON blob, whatever you've got.
 )
 
-oas.validate()
-  .then(definition => {
+oas
+  .validate()
+  .then((definition) => {
     // Definition will always be JSON, and valid.
     console.log(definition)
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err)
   })

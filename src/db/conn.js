@@ -45,7 +45,9 @@ export async function connectToDb(client) {
     logger.info(`Successfully connected to Atlas DB ${process.env.DBNAME}`)
     return db
   } catch (error) {
-    logger.error(`Connection to Atlas DB failed ${process.env.DBNAME}: ${error}`)
+    logger.error(
+      `Connection to Atlas DB failed ${process.env.DBNAME}: ${error}`,
+    )
     process.exit(1)
   }
 }
