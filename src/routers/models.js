@@ -1,10 +1,7 @@
 /**
- * File:        /routers/models.js
- * Description:
- *
- * Date        By     Comments
- * ----------  -----  ------------------------------
- * 2023-12-29  C2RLO  Initial
+ * @file:        /routers/models.js
+ * @description: This file contains the router for handling model-related API endpoints.
+ * @version: 2023-12-29  C2RLO  Initial
  */
 
 import express from 'express'
@@ -20,7 +17,7 @@ router.get('/', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection('models')
   const results = await collection.find({}).limit(50).toArray()
-  res.status(200).sendStatus(results)
+  res.status(200).send(results)
   connectionClose(client)
 })
 
@@ -32,7 +29,7 @@ router.get('/:id', async (req, res) => {
   const query = { _id: ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.sendStatus('Not found').status(404)
-  else res.status(200).sendStatus(result)
+  else res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -58,7 +55,7 @@ router.patch('/position/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection('models')
   const result = await collection.updateOne(query, updates)
-  res.status(200).sendStatus(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -69,7 +66,7 @@ router.delete('/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection('models')
   const result = await collection.deleteOne(query)
-  res.status(200).sendStatus(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -80,7 +77,7 @@ router.delete('/', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection('models')
   const result = await collection.deleteMany(query)
-  res.status(200).sendStatus(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 

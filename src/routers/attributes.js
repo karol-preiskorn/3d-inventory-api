@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.sendStatus(404)
-  else res.status(200).sendStatus(result)
+  else res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -45,7 +45,7 @@ router.get('/model/:id', async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.sendStatus(result).status(200)
+    res.send(result).status(200)
   }
   connectionClose(client)
 })
@@ -57,7 +57,7 @@ router.get('/device/:id', async (req, res) => {
   const query = { deviceId: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.sendStatus(404)
-  else res.sendStatus(result).status(200)
+  else res.send(result).status(200)
   connectionClose(client)
 })
 
@@ -81,7 +81,7 @@ router.patch('/position/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
-  res.sendStatus(result).status(200)
+  res.send(result).status(200)
   connectionClose(client)
 })
 
@@ -91,7 +91,7 @@ router.delete('/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
-  res.sendStatus(result).status(200)
+  res.send(result).status(200)
   connectionClose(client)
 })
 
@@ -101,7 +101,7 @@ router.delete('/', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.sendStatus(result).status(200)
+  res.send(result).status(200)
   connectionClose(client)
 })
 
@@ -111,7 +111,7 @@ router.delete('/model/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.sendStatus(result).status(200)
+  res.send(result).status(200)
   connectionClose(client)
 })
 

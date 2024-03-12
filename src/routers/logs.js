@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
   const results = await collection.find({}).limit(10).toArray()
   if (!results) res.sendStatus(404)
   else {
-    res.sendStatus(200).sendStatus(results)
+    res.sendStatus(200).send(results)
   }
   connectionClose(client)
 })
@@ -31,14 +31,13 @@ router.get('/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(400).sendStatus('Invalid ID')
+    res.sendStatus(400).send('Invalid ID')
     return
   }
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result)
-    res.sendStatus(404).sendStatus('Not found ' + JSON.stringify(query))
-  else res.sendStatus(200).sendStatus(result)
+  if (!result) res.status(404).send('Not found ' + JSON.stringify(query))
+  else res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -48,7 +47,7 @@ router.get('/component/:component', async (req, res) => {
   const db = await connectToDb(client)
   const components = db.collection('components')
   if (req.params.component.length === 0) {
-    res.sendStatus(400).sendStatus('Not provide component name')
+    res.sendStatus(400).send('Not provide component name')
     return
   }
   const componentsResult = await components
@@ -58,7 +57,7 @@ router.get('/component/:component', async (req, res) => {
     `componentsResult(${req.params.component}): ${JSON.stringify(componentsResult)}`,
   )
   if (componentsResult.length === 0) {
-    res.sendStatus(400).sendStatus('Invalid component name')
+    res.sendStatus(400).send('Invalid component name')
     return
   }
   // find all logs for this component
@@ -66,9 +65,8 @@ router.get('/component/:component', async (req, res) => {
   const query = { component: componentsResult[0].component }
   logger.info(`query: ${JSON.stringify(query)}`)
   const result = await collection.find(query).toArray()
-  if (!result)
-    res.sendStatus(404).sendStatus('Not found any logs for this component')
-  else res.sendStatus(200).sendStatus(result)
+  if (!result) res.status(404).send('Not found any logs for this component')
+  else res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -78,13 +76,13 @@ router.get('/model/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(400).sendStatus('Invalid ID')
+    res.sendStatus(400).send('Invalid ID')
     return
   }
   const query = { modelId: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.sendStatus('Not found').sendStatus(404)
-  else res.sendStatus(result).sendStatus(200)
+  if (!result) res.sendStatus(404)
+  else res.sendStatus(200).send(result)
   connectionClose(client)
 })
 
@@ -96,7 +94,7 @@ router.post('/', async (req, res) => {
   const newDocument = req.body
   newDocument.date = new Date()
   const results = await collection.insertOne(newDocument)
-  res.sendStatus(results).sendStatus(204)
+  res.sendStatus(204)
   connectionClose(client)
 })
 
@@ -110,7 +108,7 @@ router.patch('/position/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
-  res.sendStatus(result).sendStatus(200)
+  res.send(result).send(result)
   connectionClose(client)
 })
 
@@ -121,7 +119,7 @@ router.delete('/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
-  res.sendStatus(result).sendStatus(200)
+  res.sendStatus(200).send(result)
   connectionClose(client)
 })
 
@@ -132,7 +130,7 @@ router.delete('/', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.sendStatus(result).sendStatus(200)
+  res.sendStatus(200).send(result)
   connectionClose(client)
 })
 
@@ -143,7 +141,7 @@ router.delete('/model/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.sendStatus(result).sendStatus(200)
+  res.sendStatus(200).send(result)
   connectionClose(client)
 })
 

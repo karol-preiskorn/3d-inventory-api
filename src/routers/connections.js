@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
   const collection = db.collection('devices')
   const results = await collection.find({}).limit(10).toArray()
   if (!results) res.status(404).sendStatus('Not found')
-  else res.status(200).sendStatus(results)
+  else res.status(200).send(results)
   connectionClose(client)
 })
 
@@ -31,8 +31,8 @@ router.get('/:id', async (req, res) => {
   const collection = db.collection(collectionName)
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).sendStatus('Not found')
-  else res.status(200).sendStatus(result)
+  if (!result) res.status(404).send('Not found')
+  else res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -43,8 +43,8 @@ router.get('/from/:id', async (req, res) => {
   const collection = db.collection(collectionName)
   const query = { deviceIdFrom: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).sendStatus('Not found')
-  else res.status(200).sendStatus(result)
+  if (!result) res.status(404).send('Not found')
+  else res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -54,8 +54,8 @@ router.get('/to/:id', async (req, res) => {
   const collection = db.collection(collectionName)
   const query = { deviceIdTo: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).sendStatus('Not found')
-  else res.status(200).sendStatus(result)
+  if (!result) res.status(404).send('Not found')
+  else res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -68,8 +68,8 @@ router.get('/from/:idFrom/to/:idTo', async (req, res) => {
     deviceIdTo: new ObjectId(req.params.idTo),
   }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).sendStatus('Not found')
-  else res.status(200).sendStatus(result)
+  if (!result) res.status(404).send('Not found')
+  else res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -91,7 +91,7 @@ router.delete('/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
-  res.status(200).sendStatus(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -102,7 +102,7 @@ router.delete('/', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).sendStatus(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -113,7 +113,7 @@ router.delete('/from/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).sendStatus(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -124,7 +124,7 @@ router.delete('/to/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).sendStatus(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -138,7 +138,7 @@ router.delete('/from/:idFrom/to/:idTo', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).sendStatus(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 
