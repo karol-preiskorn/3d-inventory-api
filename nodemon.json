@@ -9,11 +9,12 @@
   "watch": [
     "src/api/openapi.yaml",
     "src/index.js",
+    "src/**/*.js",
     "src/assets/*",
     "src/routers/*",
     "src/schema/*",
     "src/db/*",
-    "src/utils"
+    "src/utils/*"
   ],
   "exec": "babel src -d build src/index.js",
   "ext": "js,json,yaml"

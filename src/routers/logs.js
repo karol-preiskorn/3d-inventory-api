@@ -7,6 +7,7 @@
 
 import express from 'express'
 import { ObjectId } from 'mongodb'
+import { format } from 'date-fns'
 import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 import { logger } from '../utils/logger.js'
@@ -18,7 +19,11 @@ router.get('/', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
-  const results = await collection.find({}).limit(10).toArray()
+  const results = await collection
+    .find({})
+    .sort({ date: -1 })
+    .limit(10)
+    .toArray()
   if (!results) res.sendStatus(404)
   else {
     res.sendStatus(200)
@@ -52,6 +57,7 @@ router.get('/component/:component', async (req, res) => {
   }
   const componentsResult = await components
     .find({ collection: req.params.component })
+    .sort({ date: -1 })
     .toArray()
   logger.info(
     `componentsResult(${req.params.component}): ${JSON.stringify(componentsResult)}`,
@@ -64,7 +70,7 @@ router.get('/component/:component', async (req, res) => {
   const collection = db.collection(collectionName)
   const query = { component: componentsResult[0].component }
   logger.info(`query: ${JSON.stringify(query)}`)
-  const result = await collection.find(query).toArray()
+  const result = await collection.find(query).sort({ date: -1 }).toArray()
   if (!result) res.status(404).send('Not found any logs for this component')
   else res.status(200).send(result)
   connectionClose(client)
@@ -76,13 +82,35 @@ router.get('/model/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(400).send('Invalid ID')
+    res.status(400).send('Invalid ID')
     return
   }
   const query = { modelId: new ObjectId(req.params.id) }
-  const result = await collection.findOne(query)
+  const result = await collection.find(query).sort({ date: -1 }).toArray()
   if (!result) res.sendStatus(404)
-  else res.sendStatus(200).send(result)
+  else res.status(200).send(result)
+  connectionClose(client)
+})
+
+router.get('/object/:id', async (req, res) => {
+  const client = await connectToCluster()
+  const db = await connectToDb(client)
+  const collection = db.collection(collectionName)
+  if (!ObjectId.isValid(req.params.id)) {
+    logger.info(`get /object/${req.params.id} Invalid Id`)
+    res.status(400).send('Invalid ID')
+    return
+  }
+  const query = { objectId: req.params.id }
+  const result = await collection.find(query).sort({ date: -1 }).toArray()
+  if (result.length === 0) {
+    logger.warn(
+      `get /object/${req.params.id}, query: ${JSON.stringify(query)} - 404 not fout any logs for this objectId`,
+    )
+    res.sendStatus(404)
+  } else {
+    res.status(200).send(result)
+  }
   connectionClose(client)
 })
 
@@ -92,7 +120,7 @@ router.post('/', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const newDocument = req.body
-  newDocument.date = new Date()
+  newDocument.date = format(new Date(), 'yyyy-MM-dd hh:mm:ss')
   const results = await collection.insertOne(newDocument)
   if (!results) {
     res.status(404).send('Not create log')
@@ -123,7 +151,7 @@ router.delete('/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
-  res.sendStatus(200).send(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -134,7 +162,7 @@ router.delete('/', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.sendStatus(200).send(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 
@@ -145,7 +173,7 @@ router.delete('/model/:id', async (req, res) => {
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.sendStatus(200).send(result)
+  res.status(200).send(result)
   connectionClose(client)
 })
 
