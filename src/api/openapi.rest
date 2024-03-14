@@ -58,14 +58,29 @@ content-type: application/json
     "device_name": "tall_turquoise_sheep"
 }
 
-### get request selected context
+
+### get logs
 
 GET http://localhost:8080/logs HTTP/1.1
 content-type: application/json
 
+### get request selected context
+
+POST http://localhost:8080/logs HTTP/1.1
+content-type: application/json
+
 {
-    "device_name": "tall_turquoise_sheep"
+ "objectId": "65b67f8bf42bf190aca7029d",
+ "operation": "Update",
+ "component": "Devices",
+ "message": "{\"_id\":\"65b67f8bf42bf190aca7029d\",\"name\":\"Gloves pink-cow\",\"modelId\":\"65b67f8bf42bf190aca7029b\",\"position\":{\"x\":43,\"y\":86,\"h\":\"0\"}}"
 }
+
+### get logs
+
+GET http://localhost:8080/logs/65f15b8b56931f757dfb1936 HTTP/1.1
+content-type: application/json
+
 
 ###
 
@@ -77,5 +92,6 @@ content-type: application/json
 }
 
 ### get logs for components
+
 GET http://localhost:8080/logs/component/devices HTTP/1.1
 content-type: application/json
