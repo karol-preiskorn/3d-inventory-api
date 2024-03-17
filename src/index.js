@@ -5,26 +5,26 @@
  * @version 2023-12-29  C2RLO - Initial
  */
 
+import bodyParser from 'body-parser'
 import express from 'express'
 import * as OpenApiValidator from 'express-openapi-validator'
 import fs from 'fs'
+import helmet from 'helmet'
 import morgan from 'morgan'
 import morganBody from 'morgan-body'
 import swaggerUi from 'swagger-ui-express'
-import bodyParser from 'body-parser'
 import YAML from 'yaml'
-import helmet from 'helmet'
-import './utils/loadEnvironment.js'
-import devices from './routers/devices.js'
-import models from './routers/models.js'
-import logs from './routers/logs.js'
-import readme from './routers/readme.js'
 import attributes from './routers/attributes.js'
 import attributesDictionary from './routers/attributesDictionary.js'
 import connections from './routers/connections.js'
+import devices from './routers/devices.js'
 import floors from './routers/floors.js'
-import { logger, stream } from './utils/logger.js'
+import logs from './routers/logs.js'
+import models from './routers/models.js'
+import readme from './routers/readme.js'
 import { banner } from './utils/banner.js'
+import './utils/loadEnvironment.js'
+import { logger, stream } from './utils/logger.js'
 
 const PORT = process.env.PORT || 8080
 const app = express()

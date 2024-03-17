@@ -60,7 +60,7 @@ router.get('/component/:component', async (req, res) => {
     .sort({ date: -1 })
     .toArray()
   logger.info(
-    `componentsResult(${req.params.component}): ${JSON.stringify(componentsResult)}`,
+    `GET /logs/component/${req.params.component}: ${JSON.stringify(componentsResult)}`,
   )
   if (componentsResult.length === 0) {
     res.status(404).send('Invalid component name')
@@ -69,9 +69,14 @@ router.get('/component/:component', async (req, res) => {
   // find all logs for this component
   const collection = db.collection(collectionName)
   const query = { component: componentsResult[0].component }
-  logger.info(`query: ${JSON.stringify(query)}`)
+  logger.info(
+    `GET /logs/component/${req.params.component} query: ${JSON.stringify(query)}`,
+  )
   const result = await collection.find(query).sort({ date: -1 }).toArray()
-  if (!result) res.status(404).send('Not found any logs for this component')
+  if (result.length === 0)
+    res
+      .status(404)
+      .send(`Not found any logs for component ${componentsResult[0].component}`)
   else res.status(200).send(result)
   connectionClose(client)
 })

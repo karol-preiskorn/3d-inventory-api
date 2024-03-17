@@ -1,7 +1,7 @@
 /**
  * @file /routers/connections.js
  * @module /routers
- * @description connections router
+ * @description connections router for the API
  * @version 2024-01-25 C2RLO - add new way to connect to DB
  */
 
@@ -13,21 +13,19 @@ import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 const collectionName = 'connections'
 const router = express.Router()
 
-// Get all
 router.get('/', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
-  const collection = db.collection('devices')
-  const results = await collection.find({}).limit(10).toArray()
-  if (!results) res.status(404).sendStatus('Not found')
+  const collection = db.collection(collectionName)
+  const results = await collection.find({}).limit(256).toArray()
+  if (!results) res.status(404).send('Not found any connection')
   else res.status(200).send(results)
   connectionClose(client)
 })
 
-// Get a single post
 router.get('/:id', async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
+    res.status(404).send('Not provide valid id')
   }
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -39,7 +37,27 @@ router.get('/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// Get a single post from a device
+router.put('/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.status(404).send('Not provide valid id')
+  }
+  const query = { _id: new ObjectId(req.params.id) }
+  const updates = {
+    $set: {
+      name: req.body.name,
+      deviceIdFrom: req.body.deviceIdFrom,
+      deviceIdTo: req.body.deviceIdFrom,
+    },
+  }
+  const client = await connectToCluster()
+  const db = await connectToDb(client)
+  const collection = db.collection(collectionName)
+  const result = await collection.updateOne(query, updates)
+  if (!result) res.status(404).send('Not found devices to update')
+  res.status(200).send(result)
+  connectionClose(client)
+})
+
 router.get('/from/:id', async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
@@ -99,7 +117,6 @@ router.post('/', async (req, res) => {
   connectionClose(client)
 })
 
-// Delete an entry
 router.delete('/:id', async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
@@ -113,7 +130,6 @@ router.delete('/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// delete all devices
 router.delete('/', async (req, res) => {
   const query = {}
   const client = await connectToCluster()
@@ -124,7 +140,6 @@ router.delete('/', async (req, res) => {
   connectionClose(client)
 })
 
-// delete all devices with specific :id model
 router.delete('/from/:id', async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
@@ -138,7 +153,6 @@ router.delete('/from/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// delete all devices with specific :id model
 router.delete('/to/:id', async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)

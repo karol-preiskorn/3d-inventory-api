@@ -3,7 +3,10 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "eslint.validate": ["javascript", "typescript"],
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ],
   "editor.formatOnSave": true,
   "[javascript]": {
     "editor.formatOnSave": false
@@ -21,10 +24,22 @@
     "**/coverage": true
   },
   "typescript.referencesCodeLens.enabled": true,
-  "appService.zipIgnorePattern": [".vscode{,/**}"],
+  "appService.zipIgnorePattern": [
+    ".vscode{,/**}"
+  ],
   "appService.deploySubpath": "",
   "jest.jestCommandLine": "jest test",
   "jest.rootPath": ".",
-  "cSpell.words": ["mvn", "oracledb", "tsc"],
-  "mocha.enabled": true
+  "cSpell.words": [
+    "mvn",
+    "oracledb",
+    "tsc"
+  ],
+  "mocha.enabled": true,
+  "yaml.suggest.parentSkeletonSelectedFirst": true,
+  "vsicons.projectDetection.autoReload": true,
+  "workbench.editor.sharedViewState": true,
+  "workbench.commandPalette.preserveInput": true,
+  "rest-client.fontWeight": "400",
+  "rest-client.fontSize": 11
 }

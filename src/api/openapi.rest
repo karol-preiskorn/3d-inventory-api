@@ -120,3 +120,25 @@ content-type: application/json
 
 GET http://localhost:8080/models HTTP/1.1
 content-type: application/json
+
+
+### connections
+
+GET http://localhost:8080/connections HTTP/1.1
+content-type: application/json
+
+### connections logs
+
+GET http://localhost:8080/logs/component/connections HTTP/1.1
+content-type: application/json
+
+### connection update
+
+PUT http://localhost:8080/connections/65cbd0f7fb3ea819dbcdbfb4 HTTP/1.1
+content-type: application/json
+
+{
+ "name": "turquoise Device",
+ "deviceIdTo": "65b67f8cf42bf190aca702a9",
+ "deviceIdFrom": "65b67f8df42bf190aca702ad"
+}

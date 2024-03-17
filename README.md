@@ -14,7 +14,7 @@
 
 ## Purposes
 
-Create REST mongo API for [3d-inventory](https://github.com/users/karol-preiskorn/3d-inventory-angular-ui) application in Angular.
+Create REST mongo API for [3d-inventory](https://github.com/users/karol-preiskorn/3d-inventory-angular-ui) application 3d-inventory — solution that allows you to build a spatial and database representation of yours datacenters.
 
 ### Architecture
 
