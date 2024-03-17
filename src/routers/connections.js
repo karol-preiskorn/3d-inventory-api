@@ -26,6 +26,9 @@ router.get('/', async (req, res) => {
 
 // Get a single post
 router.get('/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
@@ -38,6 +41,9 @@ router.get('/:id', async (req, res) => {
 
 // Get a single post from a device
 router.get('/from/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
@@ -49,6 +55,9 @@ router.get('/from/:id', async (req, res) => {
 })
 
 router.get('/to/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
@@ -60,6 +69,12 @@ router.get('/to/:id', async (req, res) => {
 })
 
 router.get('/from/:idFrom/to/:idTo', async (req, res) => {
+  if (
+    !ObjectId.isValid(req.params.idFrom) ||
+    !ObjectId.isValid(req.params.idTo)
+  ) {
+    res.sendStatus(404)
+  }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
@@ -86,6 +101,9 @@ router.post('/', async (req, res) => {
 
 // Delete an entry
 router.delete('/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const query = { _id: new ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -108,6 +126,9 @@ router.delete('/', async (req, res) => {
 
 // delete all devices with specific :id model
 router.delete('/from/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const query = { deviceIdFrom: new ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -119,6 +140,9 @@ router.delete('/from/:id', async (req, res) => {
 
 // delete all devices with specific :id model
 router.delete('/to/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const query = { deviceIdTo: new ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -130,6 +154,12 @@ router.delete('/to/:id', async (req, res) => {
 
 // delete all devices with specific :id model
 router.delete('/from/:idFrom/to/:idTo', async (req, res) => {
+  if (
+    !ObjectId.isValid(req.params.idFrom) ||
+    !ObjectId.isValid(req.params.idTo)
+  ) {
+    res.sendStatus(404)
+  }
   const query = {
     deviceIdFrom: new ObjectId(req.params.idFrom),
     deviceIdTo: new ObjectId(req.params.idTo),

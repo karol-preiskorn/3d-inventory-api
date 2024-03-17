@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
   const results = await collection
     .find({})
     .sort({ date: -1 })
-    .limit(10)
+    .limit(200)
     .toArray()
   if (!results) res.sendStatus(404)
   else {
@@ -78,6 +78,9 @@ router.get('/component/:component', async (req, res) => {
 
 // Get all logs for a specific model
 router.get('/model/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
@@ -132,6 +135,9 @@ router.post('/', async (req, res) => {
 
 // Update the device's :id position
 router.patch('/position/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const query = { _id: new ObjectId(req.params.id) }
   const updates = {
     $push: { position: req.body },
@@ -168,6 +174,9 @@ router.delete('/', async (req, res) => {
 
 // delete all devices with specific :id model
 router.delete('/model/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const query = { modelId: new ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)

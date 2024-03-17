@@ -23,10 +23,13 @@ router.get('/', async (req, res) => {
 
 // Get a single post
 router.get('/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection('models')
-  const query = { _id: ObjectId(req.params.id) }
+  const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.sendStatus('Not found').status(404)
   else res.status(200).send(result)
@@ -47,6 +50,9 @@ router.post('/', async (req, res) => {
 
 // Update the device's :id position
 router.patch('/position/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const query = { _id: ObjectId(req.params.id) }
   const updates = {
     $push: { position: req.body },
@@ -61,6 +67,9 @@ router.patch('/position/:id', async (req, res) => {
 
 // Delete an entry
 router.delete('/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const query = { _id: ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)

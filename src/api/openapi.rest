@@ -95,3 +95,28 @@ content-type: application/json
 
 GET http://localhost:8080/logs/component/devices HTTP/1.1
 content-type: application/json
+
+###
+
+PUT http://localhost:8080/devices/65b67f8bf42bf190aca7029d HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Gloves aaa",
+    "modelId": "65b67f8bf42bf190aca7029b",
+    "position": {
+        "x": 43,
+        "y": 86,
+        "h": 1222
+    }
+}
+
+###
+
+GET http://localhost:8080/devices/65b67f8bf42bf190aca7029d HTTP/1.1
+content-type: application/json
+
+###
+
+GET http://localhost:8080/models HTTP/1.1
+content-type: application/json

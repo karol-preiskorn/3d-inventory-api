@@ -26,6 +26,9 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
@@ -37,6 +40,9 @@ router.get('/:id', async (req, res) => {
 })
 
 router.get('/model/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
@@ -51,6 +57,9 @@ router.get('/model/:id', async (req, res) => {
 })
 
 router.get('/device/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
@@ -73,6 +82,9 @@ router.post('/', async (req, res) => {
 })
 
 router.patch('/position/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const query = { _id: new ObjectId(req.params.id) }
   const updates = {
     $push: { position: req.body },
@@ -86,6 +98,9 @@ router.patch('/position/:id', async (req, res) => {
 })
 
 router.delete('/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const query = { _id: new ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -106,6 +121,9 @@ router.delete('/', async (req, res) => {
 })
 
 router.delete('/model/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const query = { modelId: new ObjectId(req.params.id) }
   const client = await connectToCluster()
   const db = await connectToDb(client)

@@ -19,7 +19,7 @@ const transport = new transports.DailyRotateFile({
   maxFiles: '1d',
 })
 
-transport.on('rotate', function (oldFilename, newFilename) {
+transport.on('rotate', function (_oldFilename, _newFilename) {
   // do something fun
 })
 
@@ -61,7 +61,7 @@ export const logger = createLogger({
 })
 
 export const stream = {
-  write: function (message, encoding) {
+  write: function (message, _encoding) {
     message = message.substring(0, message.lastIndexOf('\n')).replace('\n', '')
     logger.info(message)
   },

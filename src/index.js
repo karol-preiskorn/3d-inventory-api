@@ -77,19 +77,14 @@ app.use('/attributesDictionary', attributesDictionary)
 app.use('/connections', connections)
 app.use('/floors', floors)
 
-app.use((req, res, next) => {
-  res.status(404).send("Sorry can't find that!")
-})
-
-app.use((err, req, res, next) => {
-  console.error(err.stack)
-  res.status(500).send('Something broke!')
+app.use((req, res, _next) => {
+  res.status(404).send("Sorry can't find that route!")
 })
 
 banner()
 
 // Global error handling
-app.use((err, _req, res, next) => {
+app.use((err, _req, res, _next) => {
   logger.error(`Uh oh! An unexpected error occurred. ${err}`)
   res.status(500).sendStatus(`Uh oh! An unexpected error occurred. ${err}`)
 })
@@ -97,7 +92,7 @@ app.use((err, _req, res, next) => {
 app.use(express.json())
 const yamlFilename = 'src/api/openapi.yaml'
 
-fs.open(yamlFilename, 'r', (err, fd) => {
+fs.open(yamlFilename, 'r', (err, _fd) => {
   if (err) {
     if (err.code === 'ENOENT') {
       logger.error("File Doesn't Exist")

@@ -7,7 +7,8 @@
     "plugin:jest/recommended",
     "prettier",
     "plugin:jest/style",
-    "plugin:jsdoc/recommended"
+    "plugin:jsdoc/recommended",
+    "plugin:eslint-plugin/recommended"
   ],
   "parserOptions": {
     "ecmaVersion": 2020,
@@ -30,7 +31,18 @@
     "@babel/no-unused-expressions": "error",
     "import/no-unresolved": "off",
     "jsdoc/check-tag-names": "off",
-    "no-unused-vars": "off"
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "eslint-plugin/require-meta-docs-description": "error"
   },
   "env": {
     "es2020": true,
@@ -63,6 +75,7 @@
   "plugins": [
     "jest",
     "jsdoc",
-    "@babel"
+    "@babel",
+    "unused-imports"
   ]
 }
