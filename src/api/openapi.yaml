@@ -1760,6 +1760,38 @@ paths:
         "500":
           description: Unexpected server error.
       x-swagger-router-controller: Models
+    put:
+      tags:
+        - models
+      summary: Update selected model :id
+      description: Modify one model e.
+      operationId: modelIdPut
+      parameters:
+        - name: id
+          in: path
+          description: Id of model
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Model"
+        "404":
+          description: Not found model to update
+        "500":
+          description: Unexpected server error.
+      x-swagger-router-controller: Models
     delete:
       tags:
         - models

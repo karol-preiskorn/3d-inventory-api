@@ -11,7 +11,6 @@ import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
 const router = express.Router()
 
-// Get all
 router.get('/', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -21,7 +20,6 @@ router.get('/', async (req, res) => {
   connectionClose(client)
 })
 
-// Get a single post
 router.get('/:id', async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
@@ -36,7 +34,35 @@ router.get('/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// Create
+router.put('/:id', async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.status(404).send('Not correct id')
+  }
+  const query = { _id: new ObjectId(req.params.id) }
+  const updates = {
+    $set: {
+      name: req.body.name,
+      width: req.body.dimension.width,
+      height: req.body.dimension.height,
+      depth: req.body.dimension.depth,
+      front: req.body.texture.front,
+      back: req.body.texture.back,
+      side: req.body.texture.side,
+      top: req.body.texture.top,
+      botom: req.body.texture.botom,
+      type: req.body.type,
+      category: req.body.category,
+    },
+  }
+  const client = await connectToCluster()
+  const db = await connectToDb(client)
+  const collection = db.collection('models')
+  const result = await collection.updateOne(query, updates)
+  if (!result) res.status(404).send('Not found models to update')
+  res.status(200).send(result)
+  connectionClose(client)
+})
+
 router.post('/', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -48,7 +74,6 @@ router.post('/', async (req, res) => {
   connectionClose(client)
 })
 
-// Update the device's :id position
 router.patch('/position/:id', async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
@@ -65,7 +90,6 @@ router.patch('/position/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// Delete an entry
 router.delete('/:id', async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
@@ -79,7 +103,6 @@ router.delete('/:id', async (req, res) => {
   connectionClose(client)
 })
 
-// Delete all
 router.delete('/', async (req, res) => {
   const query = {}
   const client = await connectToCluster()
