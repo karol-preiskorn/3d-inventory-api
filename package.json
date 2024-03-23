@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Mongo API for 3d-inventory project",
   "keywords": [
     "3d-inventory",
@@ -41,7 +41,7 @@
     "prepare": "node .husky/install.mjs && husky install",
     "prepare:husky": "cd ../ && husky install server/.husky",
     "start": "npm --no-git-tag-version version patch && npm run build && node --experimental-modules --trace-warnings build/index.js",
-    "debug": "npm --no-git-tag-version version patch && nodemon --exec 'npm --no-git-tag-version version prepatch && babel-node --presets='@babel/preset-env' src/index.js'",
+    "debug": "npm --no-git-tag-version version patch && nodemon --exec 'babel-node --presets='@babel/preset-env' src/index.js'",
     "swagger:editor": "podman run -d -p 80:8080 -v ${PWD}:/tmp -e SWAGGER_FILE=/tmp/api/openapi.yaml swaggerapi/swagger-editor",
     "swagger:generate": "pwd && java -jar api/target/jars/swagger-codegen-cli.jar generate -i api/openapi.yaml -l nodejs-server -o src",
     "swagger:get-jars": "mvn package -f api/pom.xml",
@@ -59,7 +59,7 @@
     "*.js": "eslint --cache --fix"
   },
   "dependencies": {
-    "@apollo/client": "^3.9.7",
+    "@apollo/client": "^3.9.8",
     "@babel/register": "^7.23.7",
     "@google-cloud/storage": "^7.9.0",
     "async": "3.2.5",
@@ -71,7 +71,7 @@
     "dotenv": "^16.4.5",
     "eslint-formatter-codeframe": "^7.32.1",
     "eslint-plugin-jest": "^27.9.0",
-    "express": "^4.18.3",
+    "express": "^4.19.1",
     "express-async-errors": "^3.1.1",
     "express-openapi-validator": "^5.1.6",
     "express-session": "1.18.0",
@@ -111,12 +111,12 @@
     "yaml": "^2.4.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.9",
-    "@babel/core": "^7.24.0",
+    "@babel/cli": "^7.24.1",
+    "@babel/core": "^7.24.3",
     "@babel/eslint-plugin": "^7.23.5",
     "@babel/node": "^7.23.9",
-    "@babel/preset-env": "^7.24.0",
-    "@babel/preset-typescript": "^7.23.3",
+    "@babel/preset-env": "^7.24.3",
+    "@babel/preset-typescript": "^7.24.1",
     "@faker-js/faker": "^8.4.1",
     "@shelf/jest-mongodb": "^4.2.0",
     "@types/supertest": "^6.0.2",

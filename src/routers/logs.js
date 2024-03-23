@@ -113,9 +113,9 @@ router.get('/object/:id', async (req, res) => {
   const result = await collection.find(query).sort({ date: -1 }).toArray()
   if (result.length === 0) {
     logger.warn(
-      `get /object/${req.params.id}, query: ${JSON.stringify(query)} - 404 not fout any logs for this objectId`,
+      `get /object/${req.params.id}, query: ${JSON.stringify(query)} - 404 not found any logs for this objectId`,
     )
-    res.sendStatus(404)
+    res.status(404).send(result)
   } else {
     res.status(200).send(result)
   }

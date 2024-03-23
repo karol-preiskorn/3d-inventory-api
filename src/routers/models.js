@@ -39,17 +39,18 @@ router.put('/:id', async (req, res) => {
     res.status(404).send('Not correct id')
   }
   const query = { _id: new ObjectId(req.params.id) }
+  console.log('models.router.put: ' + JSON.stringify(req.body))
   const updates = {
     $set: {
       name: req.body.name,
-      width: req.body.dimension.width,
-      height: req.body.dimension.height,
-      depth: req.body.dimension.depth,
-      front: req.body.texture.front,
-      back: req.body.texture.back,
-      side: req.body.texture.side,
-      top: req.body.texture.top,
-      botom: req.body.texture.botom,
+      'dimension.width': req.body.dimension.width,
+      'dimension.height': req.body.dimension.height,
+      'dimension.depth': req.body.dimension.depth,
+      'texture.front': req.body.texture.front,
+      'texture.back': req.body.texture.back,
+      'texture.side': req.body.texture.side,
+      'texture.top': req.body.texture.top,
+      'texture.botom': req.body.texture.botom,
       type: req.body.type,
       category: req.body.category,
     },

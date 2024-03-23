@@ -41,5 +41,17 @@
   "workbench.editor.sharedViewState": true,
   "workbench.commandPalette.preserveInput": true,
   "rest-client.fontWeight": "400",
-  "rest-client.fontSize": 11
+  "rest-client.fontSize": 11,
+  "workbench.colorCustomizations": {
+    "badge.background": "#445691",
+    "statusBar.debuggingBackground": "#005f5f",
+    "statusBar.debuggingForeground": "#ffffff",
+    "statusBar.foreground": "#ffffff",
+    "statusBar.noFolderBackground": "#005f5f",
+    "tree.inactiveIndentGuidesStroke": "#571212",
+    "tree.indentGuidesStroke": "#3f793f",
+    "activityBar.background": "#122E53",
+    "titleBar.activeBackground": "#194074",
+    "titleBar.activeForeground": "#F8FAFD"
+  }
 }
