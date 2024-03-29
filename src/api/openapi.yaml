@@ -51,6 +51,25 @@ tags:
   - name: floors
     description: Floors manipulation API
 paths:
+  /components:
+    get:
+      tags:
+        - components
+      summary: Get all components
+      description: List all components.
+      operationId: componentsGet
+      responses:
+        "200":
+          description: List of components
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Components"
+        "404":
+          description: Components not found
+        "500":
+          description: Unexpected server error
+      x-swagger-router-controller: Components
   /devices:
     get:
       tags:
@@ -2528,6 +2547,30 @@ components:
       description: Array of Connections
       items:
         $ref: "#/components/schemas/Connection"
+    Component:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        component:
+          type: string
+          maxLength: 20
+        collection:
+          type: string
+          maxLength: 20
+        attributes:
+          type: boolean
+      description: Component object
+      example:
+        _id: 653e10ecd6025afb66017c65
+        component: "Attribute"
+        collection: "attributes"
+        attributes: false
     Error:
       type: object
       properties:
