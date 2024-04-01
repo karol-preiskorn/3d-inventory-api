@@ -16,6 +16,6 @@
     "src/db/*",
     "src/utils/*"
   ],
-  "exec": "babel src -d build src/index.js",
+  "exec": "npx tsc",
   "ext": "js,json,yaml"
 }

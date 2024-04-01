@@ -31,8 +31,11 @@
   "jest.jestCommandLine": "jest test",
   "jest.rootPath": ".",
   "cSpell.words": [
+    "codeframe",
     "mvn",
+    "myfont",
     "oracledb",
+    "smoothstep",
     "tsc"
   ],
   "mocha.enabled": true,
@@ -49,9 +52,6 @@
     "statusBar.foreground": "#ffffff",
     "statusBar.noFolderBackground": "#005f5f",
     "tree.inactiveIndentGuidesStroke": "#571212",
-    "tree.indentGuidesStroke": "#3f793f",
-    "activityBar.background": "#122E53",
-    "titleBar.activeBackground": "#194074",
-    "titleBar.activeForeground": "#F8FAFD"
+    "tree.indentGuidesStroke": "#3f793f"
   }
 }

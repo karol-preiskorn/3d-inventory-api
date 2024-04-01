@@ -32,3 +32,4 @@ build
 .nyc_output
 doc/**/*
 doc/
+docs

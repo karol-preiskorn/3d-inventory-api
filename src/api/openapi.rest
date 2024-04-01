@@ -147,8 +147,13 @@ content-type: application/json
 ### get model
 GET http://localhost:8080/models/65b67f8bf42bf190aca7029b HTTP/1.1
 content-type: application/json
+
 ### update model
 PUT http://localhost:8080/models/65b67f8bf42bf190aca7029b HTTP/1.1
 content-type: application/json
 
 { "id": "65b67f8bf42bf190aca7029b", "name": "Mode 1", "dimension": { "width": "0", "height": "0", "depth": "0" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "botom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
+
+### get componet
+GET http://localhost:8080/components HTTP/1.1
+content-type: application/json

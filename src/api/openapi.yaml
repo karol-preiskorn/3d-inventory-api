@@ -2571,6 +2571,11 @@ components:
         component: "Attribute"
         collection: "attributes"
         attributes: false
+    Components:
+      type: array
+      description: Array of Components
+      items:
+        $ref: "#/components/schemas/Component"
     Error:
       type: object
       properties:
