@@ -7,7 +7,7 @@
 
 export class NoErrorThrownError extends Error {}
 
-export async function getError(call: () => any): Promise<unknown> {
+export async function getError(call: () => Promise<unknown>): Promise<unknown> {
   try {
     await call()
 

@@ -40,20 +40,25 @@ router.put('/:id', async (req, res) => {
   }
   const query = { _id: new ObjectId(req.params.id) }
   console.log('models.router.put: ' + JSON.stringify(req.body))
+  const b = req.body
   const updates = {
     $set: {
-      name: req.body.name,
-      'dimension.width': req.body.dimension.width,
-      'dimension.height': req.body.dimension.height,
-      'dimension.depth': req.body.dimension.depth,
-      'texture.front': req.body.texture.front,
-      'texture.back': req.body.texture.back,
-      'texture.side': req.body.texture.side,
-      'texture.top': req.body.texture.top,
-      'texture.botom': req.body.texture.botom,
+      name: b.name,
+      dimension: {
+        width: b.dimension.width,
+        height: req.body.dimension.height,
+        depth: req.body.dimension.depth,
+      },
+      texture: {
+        front: req.body.texture.front,
+        back: req.body.texture.back,
+        side: req.body.texture.side,
+        top: req.body.texture.top,
+        botom: req.body.texture.botom,
+      },
       type: req.body.type,
-      category: req.body.category
-    }
+      category: req.body.category,
+    } ,
   }
   const client = await connectToCluster()
   const db = await connectToDb(client)
@@ -80,7 +85,7 @@ router.patch('/position/:id', async (req, res) => {
   }
   const query = { _id: new ObjectId(req.params.id) }
   const updates = {
-    $push: { position: req.body }
+    $push: { position: req.body },
   }
   const client = await connectToCluster()
   const db = await connectToDb(client)

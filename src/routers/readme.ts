@@ -1,30 +1,26 @@
 /**
- * File:        /routers/readme.js
- * Description: Render README.md in express
- *
- * Date        By     Comments
- * ----------  -----  ------------------------------
- * 2024-01-07  C2RLO  Initial
+ * @file: /routers/readme.js
+ * @description: Render README.md in express
+ * @version 2024-04-02 C2RLO - refactor use fs.readFile
+ * @version 2024-01-07 C2RLO - Initial
  */
 
-import express from 'express'
+import express, { Response } from 'express'
 import fs from 'fs'
 import Markdown from 'markdown-it'
-import { logger } from '../utils/logger.js'
 
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+router.get('/', (res: Response) => {
   const path = '../../../README.md'
   const md = Markdown()
-  fs.readFile(path, 'utf8', function (err, data) {
+  fs.readFile(path, 'utf8', (err, data) => {
     if (err) {
-      logger.error(`Error readFile ${path}: ${err}`)
-    }
-    if (!data) {
-      res.status(404).send(`File ${path} not found: ${err}`)
+      res.status(404).send(`File ${path}: ${err.message}`)
+      return
     } else {
       res.status(200).send(md.render(data))
+      return
     }
   })
 })

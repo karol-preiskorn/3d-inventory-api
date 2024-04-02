@@ -1,4 +1,4 @@
-**/*.d.ts
+*/**/*.d.ts
 .git/*
 .mocharc.js
 .vscode/*

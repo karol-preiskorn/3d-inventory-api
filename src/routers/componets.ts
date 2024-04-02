@@ -35,7 +35,6 @@ router.get('/collection/:collection', async (req, res) => {
   const collection = db.collection(collectionName)
   if (!req.params.collection) {
     res.sendStatus(400)
-    return
   }
   const query = { collection: new ObjectId(req.params.collection) }
   const result = await collection.findOne(query)

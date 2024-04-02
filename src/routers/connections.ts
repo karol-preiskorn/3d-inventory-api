@@ -13,15 +13,20 @@ import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 const collectionName = 'connections'
 const router = express.Router()
 
-router.get('/', async (req, res) => {
-  const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
-  const results = await collection.find({}).limit(256).toArray()
-  if (!results) res.status(404).send('Not found any connection')
-  else res.status(200).send(results)
-  connectionClose(client)
-})
+try {
+  router.get('/', async (_req, res) => {
+    const client = await connectToCluster()
+    const db = await connectToDb(client)
+    const collection = db.collection(collectionName)
+    const results = await collection.find({}).limit(256).toArray()
+    if (!results) res.status(404).send('Not found any connection')
+    else res.status(200).send(results)
+    connectionClose(client)
+  })
+} catch (next) {
+  console.error(next)
+}
+
 
 router.get('/:id', async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
@@ -110,7 +115,7 @@ router.post('/', async (req, res) => {
   const client = await connectToCluster()
   const db = await connectToDb(client)
   const collection = db.collection(collectionName)
-  const newDocument = req.body
+  const newDocument: Object = req.body
   newDocument.date = new Date()
   const results = await collection.insertOne(newDocument)
   res.status(200).send(results)

@@ -16,7 +16,7 @@ export function deleteFilesInDirectory(directory: string) {
   try {
     fs.readdir(directory, (err, files) => {
       if (err) {
-        console.error(`read dir: ${directory} - ${err}`)
+        console.error(`read dir: ${directory} - ${err.message}`)
         return
       }
       for (const file of files) {
@@ -25,12 +25,12 @@ export function deleteFilesInDirectory(directory: string) {
             if (err) throw err
           })
         } catch (err) {
-          console.error(`unlink ${file}: ${err}`)
+          console.error(`unlink ${file}: ${err.message}`)
         }
       }
     })
   } catch (err) {
-    console.error(`read dir: ${directory} - ${err}`)
+    console.error(`read dir: ${directory} - ${err.message}`)
   }
 }
 

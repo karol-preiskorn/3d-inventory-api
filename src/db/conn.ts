@@ -8,7 +8,7 @@
  * @version 2023-12-29 C2RLO - Initial
  */
 
-import { MongoClient } from 'mongodb'
+import { Db, MongoClient } from 'mongodb'
 import { logger } from '../utils/logger.js'
 
 const uri = process.env.ATLAS_URI || ''
@@ -17,41 +17,39 @@ const uri = process.env.ATLAS_URI || ''
  * Connects to the MongoDB Atlas cluster.
  * @returns {Promise<MongoClient>} The connected MongoDB client.
  */
-export async function connectToCluster() {
+export async function connectToCluster(): Promise<MongoClient> {
   let client
   let connect
   try {
     client = new MongoClient(uri)
-    // logger.info('Connecting to MongoDB Atlas cluster...')
     connect = await client.connect()
     logger.info('Successfully connected to Atlas cluster')
     return connect
   } catch (error) {
-    logger.error(`Connection to Atlas cluster failed: ${error}`)
+    logger.error(`Connection to Atlas cluster failed: ${error as string}`)
     process.exit(1)
   }
 }
 
 /**
- * Connects to the MongoDB Atlas database.
+ * Connects to the MongoDB Atlas db.
  * @param {MongoClient} client - The MongoDB client.
  * @returns {db} The connected database.
  */
 /**
  * Connects to the MongoDB Atlas db.
  * @param {MongoClient} client - The MongoDB client.
- * @returns {db} The connected database.
+ * @returns {Promise<Db>} The connected database.
  */
-export async function connectToDb(client: MongoClient) {
+export async function connectToDb(client: MongoClient): Promise<Db> {
   let db
   try {
-    // logger.info('Connecting to MongoDB Atlas db...')
-    db = await client.db(process.env.DBNAME)
+    db = client.db(process.env.DBNAME)
     logger.info(`Successfully connected to Atlas DB ${process.env.DBNAME}`)
     return db
-  } catch (error) {
+  } catch (e) {
     logger.error(
-      `Connection to Atlas DB failed ${process.env.DBNAME}: ${error}`,
+      `Connection to Atlas DB failed ${process.env.DBNAME}: ${e as string}`,
     )
     process.exit(1)
   }
@@ -62,7 +60,7 @@ export async function connectToDb(client: MongoClient) {
  * @param {MongoClient} connection - The MongoDB connection.
  * @returns {void}
  */
-export async function connectionClose(connection: MongoClient) {
+export async function connectionClose(connection: MongoClient): void {
   try {
     await connection.close()
     logger.info('Successfully closed the connection.')

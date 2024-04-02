@@ -5,27 +5,24 @@
  * @version 2023-12-29 C2RLO - Initial
  */
 
-import bodyParser from "body-parser";
-import express from "express";
-import * as OpenApiValidator from "express-openapi-validator";
-import fs from "fs";
-import helmet from "helmet";
-import morgan, { StreamOptions } from "morgan";
-import morganBody from "morgan-body";
-import swaggerUi from "swagger-ui-express";
-import YAML from "yaml";
-import attributes from "./routers/attributes.js";
-import attributesDictionary from "./routers/attributesDictionary.js";
-import connections from "./routers/connections.js";
-import devices from "./routers/devices.js";
-import floors from "./routers/floors.js";
-import logs from "./routers/logs.js";
-import models from "./routers/models.js";
-import readme from "./routers/readme.js";
-import { banner } from "./utils/banner.js";
-import "./utils/loadEnvironment.js";
-import { logger, stream } from "./utils/logger.js";
-import http from "http";
+import bodyParser from "body-parser"
+import express from "express"
+import * as OpenApiValidator from "express-openapi-validator"
+import fs from "fs"
+import morgan from "morgan"
+import morganBody from "morgan-body"
+import swaggerUi from "swagger-ui-express"
+import YAML from "yaml"
+import attributes from "./routers/attributes.js"
+import attributesDictionary from "./routers/attributesDictionary.js"
+import connections from "./routers/connections.js"
+import devices from "./routers/devices.js"
+import floors from "./routers/floors.js"
+import logs from "./routers/logs.js"
+import models from "./routers/models.js"
+import readme from "./routers/readme.js"
+import "./utils/loadEnvironment.js"
+import { logger } from "./utils/logger.js"
 
 const PORT = process.env.PORT || 8080;
 const yamlFilename = process.env.API_YAML_FILE || "src/api/openapi.yaml";
@@ -49,7 +46,7 @@ try {
           "ms",
         ].join(" ");
       },
-      { stream: { write: (message: string, _encoding: any) => {} } as any },
+      { stream: { write: (_message: string, _encoding: any) => {} } as any },
     ),
   );
 } catch (error) {
@@ -70,7 +67,7 @@ app.use(bodyParser.json());
 
 morganBody(app, {
   noColors: true,
-  stream: { write: (message: string, _encoding: any) => {} } as any,
+  stream: { write: (_message: string, _encoding: any) => {} } as any,
 });
 
 app.use(express.urlencoded({ extended: false }));
@@ -85,9 +82,9 @@ app.use("/attributesDictionary", attributesDictionary);
 app.use("/connections", connections);
 app.use("/floors", floors);
 
-app.use((err: any, _req: any, res: express.Response, _next: any): any => {
-  logger.error(`Uh oh! An unexpected error occurred. ${err}`);
-  res.status(500).send(`Uh oh! An unexpected error occurred. ${err}`);
+app.use((err: Error, _req: express.Request, res: express.Response): express.Response => {
+  logger.error(`Uh oh! An unexpected error occurred. ${err.message}`);
+  return res.status(500).send(`Uh oh! An unexpected error occurred. ${err.message}`);
 });
 
 fs.open(yamlFilename, "r", (err, _fd) => {
@@ -106,7 +103,7 @@ fs.open(yamlFilename, "r", (err, _fd) => {
 
 try {
   const file = fs.readFileSync(yamlFilename, "utf8");
-  const swaggerDocument = YAML.parse(file);
+  const swaggerDocument: any = YAML.parse(file);
   app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   logger.info(`Open SwaggerUI in http://localhost:${PORT}/`);
 } catch (e) {

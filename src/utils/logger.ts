@@ -15,13 +15,13 @@ const transport = new transports.DailyRotateFile({
   filename: 'logs/%DATE%.log',
   datePattern: 'YYYYMMDD',
   zippedArchive: true,
-  maxSize: '1m',
-  maxFiles: '1d',
+  maxSize: '2k',
+  maxFiles: '7d',
 })
 
-transport.on('rotate', function (_oldFilename, _newFilename) {
-  // do something fun
-})
+// transport.on('rotate', function (_oldFilename, _newFilename) {
+//   // do something fun
+// })
 
 const myFormat = printf(({ level, message, timestamp }) => {
   return `${timestamp} ${level}: ${message}`
@@ -53,7 +53,7 @@ export const logger = createLogger({
 })
 
 export const stream = {
-  write: function (message: string, _encoding: any) {
+  write: function (message: string) {
     message = message.substring(0, message.lastIndexOf('\n')).replace('\n', '')
     logger.info(message)
   },
