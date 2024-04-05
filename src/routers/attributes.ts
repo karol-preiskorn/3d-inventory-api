@@ -5,146 +5,159 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import express from 'express'
-import { ObjectId } from 'mongodb'
+import express, { RequestHandler } from 'express'
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
-const collectionName = 'attributes'
+type Attributes = {
+  attributesDictionaryId: ObjectId
+  connectionId: ObjectId
+  deviceId: ObjectId
+  modelId: ObjectId
+  name: string
+  value: string
+}
+
+const collectionName: string = 'attributes'
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+router.get('/', (async (req, res) => {
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
-  const results = await collection.find({}).limit(10).toArray()
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
+  const results: object[] = await collection.find({}).limit(10).toArray()
   if (!results) {
     res.status(404).send('Not found')
   } else {
     res.status(200).send(results)
   }
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
   }
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.sendStatus(404)
   else res.status(200).send(result)
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.get('/model/:id', async (req, res) => {
+router.get('/model/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
   }
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   const query = { modelId: new ObjectId(req.params.id) }
-  const result = await collection.findOne(query)
+  const result = await collection.find(query).toArray()
   if (!result) {
     res.sendStatus(404)
   } else {
     res.send(result).status(200)
   }
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.get('/device/:id', async (req, res) => {
+router.get('/device/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
   }
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   const query = { deviceId: new ObjectId(req.params.id) }
-  const result = await collection.findOne(query)
-  if (!result) res.sendStatus(404)
-  else res.status(200).send(result)
-  connectionClose(client)
-})
+  const result = await collection.find(query).toArray()
+  if (!result) {
+    res.sendStatus(404)
+  } else {
+    res.send(result).status(200)
+  }
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.post('/', async (req, res) => {
+router.get('/connection/:id', (async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+  }
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
-  const newDocument = req.body
-  newDocument.date = new Date()
-  const results = await collection.insertOne(newDocument)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
+  const query = { connectionId: new ObjectId(req.params.id) }
+  const result = await collection.find(query).toArray()
+  if (!result) {
+    res.sendStatus(404)
+  } else {
+    res.send(result).status(200)
+  }
+  await connectionClose(client)
+}) as RequestHandler)
+
+router.post('/', (async (req, res) => {
+  const client = await connectToCluster()
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
+  const newDocument: Attributes = req.body as Attributes // Fix: Explicitly define the type of newDocument
+  const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   if (!results) res.sendStatus(404)
   else res.status(200).send(results)
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.patch('/position/:id', async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
-  }
-  const query = { _id: new ObjectId(req.params.id) }
-  const updates = {
-    $push: { position: req.body }
-  }
-  const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
-  const result = await collection.updateOne(query, updates)
-  res.status(200).send(result)
-  connectionClose(client)
-})
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
   }
   const query = { _id: new ObjectId(req.params.id) }
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {
     res.status(200).send(result)
   }
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.delete('/', async (req, res) => {
+router.delete('/', (async (req, res) => {
   const query = {}
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {
     res.status(200).send(result)
   }
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.delete('/model/:id', async (req, res) => {
+router.delete('/model/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
   }
   const query = { modelId: new ObjectId(req.params.id) }
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {
     res.status(200).send(result)
   }
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
 export default router

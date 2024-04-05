@@ -1639,6 +1639,66 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       x-swagger-router-controller: attributesDictionary
+  /model/texture/:id:
+    get:
+      tags:
+        - models
+      summary: Get models texture
+      operationId: modelTextureGet
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Models"
+              example:
+                $ref: "#/components/schemas/Models/example"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Models
+    put:
+      tags:
+        - models
+      summary: Update model
+      description: Update single model
+      operationId: modelsPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Model"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Models
   /models:
     get:
       tags:

@@ -8,7 +8,7 @@
  * @version 2023-12-29 C2RLO - Initial
  */
 
-import { Db, MongoClient } from 'mongodb'
+import { MongoClient } from 'mongodb'
 import { logger } from '../utils/logger.js'
 
 const uri = process.env.ATLAS_URI || ''
@@ -34,14 +34,9 @@ export async function connectToCluster(): Promise<MongoClient> {
 /**
  * Connects to the MongoDB Atlas db.
  * @param {MongoClient} client - The MongoDB client.
- * @returns {db} The connected database.
- */
-/**
- * Connects to the MongoDB Atlas db.
- * @param {MongoClient} client - The MongoDB client.
  * @returns {Promise<Db>} The connected database.
  */
-export async function connectToDb(client: MongoClient): Promise<Db> {
+export function connectToDb(client: MongoClient) {
   let db
   try {
     db = client.db(process.env.DBNAME)
@@ -60,7 +55,7 @@ export async function connectToDb(client: MongoClient): Promise<Db> {
  * @param {MongoClient} connection - The MongoDB connection.
  * @returns {void}
  */
-export async function connectionClose(connection: MongoClient): void {
+export async function connectionClose(connection: MongoClient): Promise<void> {
   try {
     await connection.close()
     logger.info('Successfully closed the connection.')

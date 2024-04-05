@@ -8,3 +8,4 @@ dist/*
 docs/*
 realm/*
 schema/*
+jest.config.js

@@ -10,7 +10,7 @@ import '../utils/loadEnvironment.js'
 describe('ConnectToDatabase Mongo Atlas', () => {
   it('should insert a doc into collection', async () => {
     const client = await connectToCluster()
-    const db = await connectToDb(client)
+    const db: Db = await connectToDb(client)
 
     const users = db.collection('users')
 
@@ -29,7 +29,7 @@ describe('ConnectToDatabase Mongo Atlas', () => {
 
   it(`connect to ${process.env.DBNAME}`, async () => {
     const client = await connectToCluster()
-    const db = await connectToDb(client)
+    const db: Db = await connectToDb(client)
 
     const devices = db.collection('devices')
     const device = await devices.findOne({})

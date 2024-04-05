@@ -5,36 +5,43 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
-import express from 'express'
-import { ObjectId } from 'mongodb'
+import express, { RequestHandler } from 'express'
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 import { format } from 'date-fns'
 import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 import { logger } from '../utils/logger.js'
 
-const collectionName = 'logs'
+
+export type Log = {
+  _id: ObjectId
+  objectId: string
+  date: string
+  component: string
+  message: string
+}
+
+const collectionName: string = 'logs'
 const router = express.Router()
 
-router.get('/', async (req, res) => {
-  const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
-  const results = await collection
-    .find({})
-    .sort({ date: -1 })
-    .limit(200)
-    .toArray()
-  if (!results) res.sendStatus(404)
-  else {
-    res.sendStatus(200)
-  }
-  connectionClose(client)
-})
 
-router.get('/:id', async (req, res) => {
+router.get('/', (async (req: express.Request, res: express.Response): Promise<void> => {
   const client = await connectToCluster()
-  const db = await connectToDb(client)
+  const db: Db = connectToDb(client)
   const collection = db.collection(collectionName)
+  const results: object[] = await collection.find({}).sort({ date: -1 }).limit(200).toArray()
+  if (!results) {
+    res.sendStatus(404)
+  } else {
+    res.status(200).send(results)
+  }
+  await connectionClose(client)
+}) as RequestHandler)
+
+router.get('/:id', (async (req, res) => {
+  const client = await connectToCluster()
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(400)
     return
@@ -43,52 +50,36 @@ router.get('/:id', async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).send('Not found ' + JSON.stringify(query))
   else res.status(200).send(result)
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-// Get all logs for a specific component
-router.get('/component/:component', async (req, res) => {
+router.get('/component/:component', (async (req, res) => {
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const components = db.collection('components')
+  const componentsResult: { component: string }[] = [] // Declare and initialize the componentsResult variable with the appropriate type
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   if (req.params.component.length === 0) {
     res.status(400).send('Not provide component name')
     return
   }
-  const componentsResult = await components
-    .find({ collection: req.params.component })
-    .sort({ date: -1 })
-    .toArray()
-  logger.info(
-    `GET /logs/component/${req.params.component}: ${JSON.stringify(componentsResult)}`
-  )
-  if (componentsResult.length === 0) {
-    res.status(404).send('Invalid component name')
-    return
-  }
-  // find all logs for this component
-  const collection = db.collection(collectionName)
-  const query = { component: componentsResult[0].component }
-  logger.info(
-    `GET /logs/component/${req.params.component} query: ${JSON.stringify(query)}`
-  )
-  const result = await collection.find(query).sort({ date: -1 }).toArray()
+  const query: { component: string } = { component: componentsResult[0]?.component }; // Access the component property safely using optional chaining
+  logger.info(`GET /logs/component/${req.params.component} query: ${JSON.stringify(query)}`);
+  const result = await collection.find(query).sort({ date: -1 }).toArray();
   if (result.length === 0) {
-    res
-      .status(404)
-      .send(`Not found any logs for component ${componentsResult[0].component}`)
-  } else res.status(200).send(result)
-  connectionClose(client)
-})
+    res.status(404).send(`Not found any logs for component ${componentsResult[0]?.component}`); // Access the component property safely using optional chaining
+  } else {
+    res.status(200).send(result);
+  }
+  await connectionClose(client);
+}) as RequestHandler)
 
-// Get all logs for a specific model
-router.get('/model/:id', async (req, res) => {
+router.get('/model/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
   }
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   if (!ObjectId.isValid(req.params.id)) {
     res.status(400).send('Invalid ID')
     return
@@ -97,13 +88,13 @@ router.get('/model/:id', async (req, res) => {
   const result = await collection.find(query).sort({ date: -1 }).toArray()
   if (!result) res.sendStatus(404)
   else res.status(200).send(result)
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.get('/object/:id', async (req, res) => {
+router.get('/object/:id', (async (req, res) => {
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   if (!ObjectId.isValid(req.params.id)) {
     logger.info(`get /object/${req.params.id} Invalid Id`)
     res.status(400).send('Invalid ID')
@@ -119,76 +110,42 @@ router.get('/object/:id', async (req, res) => {
   } else {
     res.status(200).send(result)
   }
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-// Create
-router.post('/', async (req, res) => {
+router.post('/', (async (req, res) => {
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
-  const newDocument = req.body
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
+  const newDocument: Log = req.body as Log
   newDocument.date = format(new Date(), 'yyyy-MM-dd hh:mm:ss')
-  const results = await collection.insertOne(newDocument)
+  const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   if (!results) {
     res.status(404).send('Not create log')
   } else {
     res.status(200).send(results)
   }
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-// Update the device's :id position
-router.patch('/position/:id', async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
-  }
-  const query = { _id: new ObjectId(req.params.id) }
-  const updates = {
-    $push: { position: req.body }
-  }
-  const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
-  const result = await collection.updateOne(query, updates)
-  res.send(result).send(result)
-  connectionClose(client)
-})
-
-// Delete an entry
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', (async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) }
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
   res.status(200).send(result)
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-// delete all devices
-router.delete('/', async (req, res) => {
+router.delete('/', (async (req, res) => {
   const query = {}
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.status(200).send(result)
-  connectionClose(client)
-})
-
-// delete all devices with specific :id model
-router.delete('/model/:id', async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
-  }
-  const query = { modelId: new ObjectId(req.params.id) }
-  const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
-  const result = await collection.deleteMany(query)
-  res.status(200).send(result)
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
 export default router

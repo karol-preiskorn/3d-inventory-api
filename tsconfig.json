@@ -107,10 +107,12 @@
     "release",
     "node_modules",
     "src/test.ts",
+    "jest.config.js",
     "src/**/*.spec.ts"
   ],
   "include": [
     "src/**/*.ts",
+    "tests/**/*.ts",
     "src/**/*.d.ts"
   ]
 }

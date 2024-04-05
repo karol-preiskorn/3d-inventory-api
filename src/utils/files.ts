@@ -13,25 +13,19 @@ import path from 'path'
  * @param {string} directory - The directory path.
  */
 export function deleteFilesInDirectory(directory: string) {
-  try {
-    fs.readdir(directory, (err, files) => {
-      if (err) {
-        console.error(`read dir: ${directory} - ${err.message}`)
-        return
-      }
-      for (const file of files) {
-        try {
-          fs.unlink(path.join(directory, file), (err) => {
-            if (err) throw err
-          })
-        } catch (err) {
-          console.error(`unlink ${file}: ${err.message}`)
+  fs.readdir(directory, (err, files) => {
+    if (err) {
+      console.error(`read dir: ${directory} - ${err.message}`)
+      return
+    }
+    for (const file of files) {
+      fs.unlink(path.join(directory, file), (error) => {
+        if (error) {
+          console.error(`unlink ${file}: ${error.message}`)
         }
-      }
-    })
-  } catch (err) {
-    console.error(`read dir: ${directory} - ${err.message}`)
-  }
+      }) // Add closing parenthesis here
+    }
+  })
 }
 
 export default deleteFilesInDirectory

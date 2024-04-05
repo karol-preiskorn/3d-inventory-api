@@ -6,38 +6,40 @@
 
 import { faker } from '@faker-js/faker'
 import '../src/utils/loadEnvironment.js'
-import { MongoClient, ObjectId } from 'mongodb'
+import { Db, MongoClient, ObjectId, OptionalId } from 'mongodb'
+import { Model } from '../src/routers/models'
+import { Log } from '../src/routers/logs'
 
 describe('prepare test data', () => {
-  let connection
-  let db
-  let mockModel
-  let mockLog
+  let connection: MongoClient | undefined;
+  let db: Db
+  let mockModel: Model
+  let mockLog: OptionalId<Log>
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI, {})
-    db = connection.db(process.env.DBNAME)
-  })
+    connection = await MongoClient.connect(process.env.ATLAS_URI || '', {});
+    db = connection.db(process.env.DBNAME);
+  });
 
   afterAll(async () => {
-    await connection.close()
-  })
+    await connection?.close();
+  });
 
   // Create test models by mongo driver
   describe('create 3 logs', () => {
     it('should insert a log doc into collection logs', async () => {
       const attributesCategory = db.collection('attributesCategory')
-      const attributesCategoryCursor = await attributesCategory.find({})
+      const attributesCategoryCursor = attributesCategory.find({})
       expect(await attributesCategory.countDocuments({})).not.toBe(0)
       const attributesCategoryData = await attributesCategoryCursor.toArray()
 
       const components = db.collection('components')
-      const componentsCursor = await components.find({ attributes: true })
+      const componentsCursor = components.find({ attributes: true })
       expect(await components.countDocuments({ attributes: true })).not.toBe(0)
       const componentsData = await componentsCursor.toArray()
 
       const attributesTypes = db.collection('attributesTypes')
-      const attributesTypesCursor = await attributesTypes.find({})
+      const attributesTypesCursor = attributesTypes.find({})
       expect(await attributesTypes.countDocuments({})).not.toBe(0)
       const attributesTypesData = await attributesTypesCursor.toArray()
 
@@ -67,15 +69,16 @@ describe('prepare test data', () => {
             top: '/assets/r710-2.5-nobezel__29341.png',
             botom: '/assets/r710-2.5-nobezel__29341.png',
           },
-          type: faker.helpers.arrayElement(1).name,
-          category: faker.helpers.arrayElement(1).name,
+          type: (faker.helpers.arrayElement as (array: any[]) => any)([1]).name,
+          category: (faker.helpers.arrayElement as (array: any[]) => any)([1]).name,
         }
+
         mockLog = {
           date: formattedDate,
           objectId: new ObjectId('659a4400672627600b093713'),
           operation: 'Create',
           component: 'Model',
-          message: mockModel,
+          message: mockModel as string,
         }
 
         await logs.insertOne(mockLog)

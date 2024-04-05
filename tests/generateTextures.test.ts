@@ -7,7 +7,7 @@
 import { createCanvas } from 'canvas'
 import { writeFileSync } from 'fs'
 import perlin from 'perlin-noise'
-import { deleteFilesInDirectory } from '../utils/files.js'
+import { deleteFilesInDirectory } from '../src/utils/files.ts'
 
 /**
  * Test suite for generating textures.

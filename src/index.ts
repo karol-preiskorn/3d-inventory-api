@@ -11,7 +11,7 @@ import * as OpenApiValidator from "express-openapi-validator"
 import fs from "fs"
 import morgan from "morgan"
 import morganBody from "morgan-body"
-import swaggerUi from "swagger-ui-express"
+import swaggerUi, { JsonObject } from "swagger-ui-express"
 import YAML from "yaml"
 import attributes from "./routers/attributes.js"
 import attributesDictionary from "./routers/attributesDictionary.js"
@@ -46,11 +46,11 @@ try {
           "ms",
         ].join(" ");
       },
-      { stream: { write: (_message: string, _encoding: any) => {} } as any },
+      { stream: { write: () => {} } as unknown as NodeJS.WritableStream },
     ),
   );
 } catch (error) {
-  logger.error(`[morgan] ${error}`);
+  logger.error(`[morgan] ${String(error)}`);
 }
 
 app.use(function (req, res, next) {
@@ -67,7 +67,7 @@ app.use(bodyParser.json());
 
 morganBody(app, {
   noColors: true,
-  stream: { write: (_message: string, _encoding: any) => {} } as any,
+  stream: { write: () => true },
 });
 
 app.use(express.urlencoded({ extended: false }));
@@ -87,7 +87,7 @@ app.use((err: Error, _req: express.Request, res: express.Response): express.Resp
   return res.status(500).send(`Uh oh! An unexpected error occurred. ${err.message}`);
 });
 
-fs.open(yamlFilename, "r", (err, _fd) => {
+fs.open(yamlFilename, "r", (err) => {
   if (err) {
     if (err.code === "ENOENT") {
       logger.error("File Doesn't Exist");
@@ -103,7 +103,7 @@ fs.open(yamlFilename, "r", (err, _fd) => {
 
 try {
   const file = fs.readFileSync(yamlFilename, "utf8");
-  const swaggerDocument: any = YAML.parse(file);
+  const swaggerDocument = YAML.parse(file) as JsonObject;
   app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   logger.info(`Open SwaggerUI in http://localhost:${PORT}/`);
 } catch (e) {
@@ -130,7 +130,7 @@ try {
   );
   // logger.info("OpenApiValidator started")
 } catch (error) {
-  logger.error(`OpenApiValidator: ${error}`);
+  logger.error(`OpenApiValidator: ${String(error)}`);
 }
 
 // Create the server instance using createServer function
@@ -142,7 +142,7 @@ server.on("error", (err) => {
   if (err instanceof Error && err.message.includes("EADDRINUSE")) {
     logger.error("Error: address already in use");
   } else {
-    logger.error(`[listen] ${err}`);
+    logger.error(`[listen] ${String(err)}`);
   }
 });
 

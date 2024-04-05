@@ -11,15 +11,15 @@
 
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment.js'
-import { MongoClient, ObjectId } from 'mongodb'
-import { capitalizeFirstLetter } from '../utils/strings.js'
+import { Db, MongoClient, ObjectId } from 'mongodb'
+import { capitalizeFirstLetter } from '../src/utils/strings'
 
 describe('prepare attributesDictionary and Attribute test data', () => {
   let connection
   // let connections
   // let models
   // let devices
-  let db
+  let db: Db
   let mockLog
   let attributes
   let attributesDictionary
@@ -30,7 +30,8 @@ describe('prepare attributesDictionary and Attribute test data', () => {
   let components
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI, {})
+    const atlasUri = process.env.ATLAS_URI || 'default-uri'
+    connection = await MongoClient.connect(atlasUri, {})
     db = connection.db(process.env.DBNAME)
 
     attributes = db.collection('attributes')
@@ -54,17 +55,17 @@ describe('prepare attributesDictionary and Attribute test data', () => {
       // devices = db.collection('devices')
 
       attributesCategory = db.collection('attributesCategory')
-      const attributesCategoryCursor = await attributesCategory.find({})
+      const attributesCategoryCursor = attributesCategory.find({})
       expect(await attributesCategory.countDocuments({})).not.toBe(0)
       const attributesCategoryData = await attributesCategoryCursor.toArray()
 
       components = db.collection('components')
-      const componentsCursor = await components.find({ attributes: true })
+      const componentsCursor = components.find({ attributes: true })
       expect(await components.countDocuments({ attributes: true })).not.toBe(0)
       const componentsData = await componentsCursor.toArray()
 
       attributesTypes = db.collection('attributesTypes')
-      const attributesTypesCursor = await attributesTypes.find({})
+      const attributesTypesCursor = attributesTypes.find({})
       expect(await attributesTypes.countDocuments({})).not.toBe(0)
       const attributesTypesData = await attributesTypesCursor.toArray()
 
@@ -75,9 +76,17 @@ describe('prepare attributesDictionary and Attribute test data', () => {
           .replace(/T/, ' ')
           .replace(/\..+/, '')
         const iRandom = Math.floor(Math.random() * componentsData.length)
-        const randomComponent = componentsData[iRandom].component
+        const randomComponent: string = componentsData[iRandom].component as string;
 
-        const mockAttributesDictionary = {
+        interface AttributesDictionary {
+          _id?: ObjectId;
+          name: string;
+          component: string;
+          type: string;
+          category: string;
+        }
+
+        const mockAttributesDictionary: AttributesDictionary = {
           name:
             capitalizeFirstLetter(faker.hacker.noun()) +
             ' ' +
@@ -101,9 +110,11 @@ describe('prepare attributesDictionary and Attribute test data', () => {
         )
         expect(insertedAttributesDictionary).toEqual(mockAttributesDictionary)
 
+        const objectId = insertedAttributesDictionary?._id ? new ObjectId(insertedAttributesDictionary._id) : null;
+
         mockLog = {
           date: formattedDate,
-          objectId: new ObjectId(insertedAttributesDictionary._id),
+          objectId: objectId,
           operation: 'Create',
           component: 'attributesDictionary',
           message: mockAttributesDictionary,
@@ -122,7 +133,7 @@ describe('prepare attributesDictionary and Attribute test data', () => {
             if (randomComponent === 'Devices') {
               mockAttributes = {
                 attributesDictionaryId: new ObjectId(
-                  insertedAttributesDictionary._id,
+                  insertedAttributesDictionary?._id,
                 ),
                 connectionId: null,
                 deviceId: new ObjectId(),
@@ -143,7 +154,7 @@ describe('prepare attributesDictionary and Attribute test data', () => {
             if (randomComponent === 'Models') {
               mockAttributes = {
                 attributesDictionaryId: new ObjectId(
-                  insertedAttributesDictionary._id,
+                  insertedAttributesDictionary?._id,
                 ),
                 connectionId: null,
                 deviceId: null,
@@ -164,7 +175,7 @@ describe('prepare attributesDictionary and Attribute test data', () => {
             if (randomComponent === 'Connections') {
               mockAttributes = {
                 attributesDictionaryId: new ObjectId(
-                  insertedAttributesDictionary._id,
+                  insertedAttributesDictionary?._id,
                 ),
                 connectionId: new ObjectId(),
                 deviceId: null,
@@ -183,14 +194,16 @@ describe('prepare attributesDictionary and Attribute test data', () => {
               expect(insertedAttributes).toBe(insertedAttributes)
             }
 
-            mockLog = {
-              date: formattedDate,
-              objectId: new ObjectId(insertedAttributes._id),
-              operation: 'Create',
-              component: 'Attributes',
-              message: mockAttributes,
+            if (insertedAttributes) {
+              mockLog = {
+                date: formattedDate,
+                objectId: new ObjectId(insertedAttributes._id),
+                operation: 'Create',
+                component: 'Attributes',
+                message: mockAttributes,
+              }
+              await logs.insertOne(mockLog)
             }
-            await logs.insertOne(mockLog)
             const insertedLog = await logs.findOne(mockLog)
             expect(insertedLog).toEqual(mockLog)
           }

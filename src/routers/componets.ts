@@ -5,19 +5,19 @@
  * @version 2024-03-29 C2RLO - Initial
  */
 
-import express from 'express'
-import { ObjectId } from 'mongodb'
+import express, { RequestHandler } from 'express'
+import { Collection, Db, ObjectId } from 'mongodb'
 import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
-const collectionName = 'components'
+const collectionName: string = 'components'
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+router.get('/', (async (req, res) => {
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
-  const results = await collection
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
+  const results: object[] = await collection
     .find({})
     .sort({ date: -1 })
     .limit(200)
@@ -26,13 +26,13 @@ router.get('/', async (req, res) => {
   else {
     res.sendStatus(200)
   }
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.get('/collection/:collection', async (req, res) => {
+router.get('/collection/:collection', (async (req, res) => {
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   if (!req.params.collection) {
     res.sendStatus(400)
   }
@@ -40,13 +40,13 @@ router.get('/collection/:collection', async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).send('Not found ' + JSON.stringify(query))
   else res.status(200).send(result)
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.get('/component/:component', async (req, res) => {
+router.get('/component/:component', (async (req, res) => {
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   if (!ObjectId.isValid(req.params.component)) {
     res.sendStatus(400)
     return
@@ -55,13 +55,13 @@ router.get('/component/:component', async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).send('Not found ' + JSON.stringify(query))
   else res.status(200).send(result)
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
-router.get('/attributes/:has', async (req, res) => {
+router.get('/attributes/:has', (async (req, res) => {
   const client = await connectToCluster()
-  const db = await connectToDb(client)
-  const collection = db.collection(collectionName)
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
   let query
   if (req.params.has === 'true' || req.params.has === 'false') {
     res.sendStatus(400)
@@ -75,7 +75,7 @@ router.get('/attributes/:has', async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).send('Not found ' + JSON.stringify(query))
   else res.status(200).send(result)
-  connectionClose(client)
-})
+  await connectionClose(client)
+}) as RequestHandler)
 
 export default router
