@@ -1,6 +1,6 @@
 /**
- * @file /routers/logs copy.js
- * @description attributes.js, is a module that sets up routes for a server using the Express.js framework. It's designed to interact with a MongoDB database, specifically with a collection named 'attributes'.
+ * @file /routers/users.ts
+ * @description
  * @version 2024-03-06 C2RLO - add _id to schema
  * @version 2024-01-30 C2RLO - Initial
  */
@@ -10,14 +10,16 @@ import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
-export type Attributes = {
-  attributesDictionaryId: ObjectId
-  connectionId: ObjectId | null
-  deviceId: ObjectId | null
-  modelId: ObjectId | null
+export type User = {
+  _id: ObjectId
   name: string
-  value: string
+  email: string
+  password: string
+  token: string
+  rigths: Array<string> // Fix: Replace Array<Object> with Array<object>
 }
+
+export type Users = User[]
 
 const collectionName: string = 'attributes'
 const router = express.Router()
@@ -66,14 +68,14 @@ router.get('/model/:id', (async (req, res) => {
   await connectionClose(client)
 }) as RequestHandler)
 
-router.get('/device/:id', (async (req, res) => {
+router.get('/user/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
   }
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const query = { deviceId: new ObjectId(req.params.id) }
+  const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.find(query).toArray()
   if (!result) {
     res.sendStatus(404)
@@ -83,14 +85,14 @@ router.get('/device/:id', (async (req, res) => {
   await connectionClose(client)
 }) as RequestHandler)
 
-router.get('/connection/:id', (async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
+router.get('/rights/:name', (async (req, res) => {
+  if (!ObjectId.isValid(req.params.name)) {
     res.sendStatus(404)
   }
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const query = { connectionId: new ObjectId(req.params.id) }
+  const query = { rights: [req.params.name] }
   const result = await collection.find(query).toArray()
   if (!result) {
     res.sendStatus(404)
@@ -104,12 +106,13 @@ router.post('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const newDocument: Attributes = req.body as Attributes // Fix: Explicitly define the type of newDocument
+  const newDocument: Users = req.body as Users // Fix: Explicitly define the type of newDocument
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   if (!results) res.sendStatus(404)
   else res.status(200).send(results)
   await connectionClose(client)
 }) as RequestHandler)
+
 
 router.delete('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
@@ -142,7 +145,7 @@ router.delete('/', (async (req, res) => {
   await connectionClose(client)
 }) as RequestHandler)
 
-router.delete('/model/:id', (async (req, res) => {
+router.delete('/user/:id/right/:name', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
   }

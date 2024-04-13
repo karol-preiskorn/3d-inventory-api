@@ -17,10 +17,10 @@ router.get('/', (res: Response) => {
   fs.readFile(path, 'utf8', (err, data) => {
     if (err) {
       res.status(404).send(`File ${path}: ${err.message}`)
-      return
+      
     } else {
       res.status(200).send(md.render(data))
-      return
+      
     }
   })
 })

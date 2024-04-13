@@ -5,15 +5,14 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
+import { format } from 'date-fns'
 import express, { RequestHandler } from 'express'
 import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import { format } from 'date-fns'
-import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import '../utils/loadEnvironment.js'
 import { logger } from '../utils/logger.js'
 
-
-export type Log = {
+export type Logs = {
   _id: ObjectId
   objectId: string
   date: string
@@ -21,9 +20,8 @@ export type Log = {
   message: string
 }
 
-const collectionName: string = 'logs'
+const collectionName = 'logs'
 const router = express.Router()
-
 
 router.get('/', (async (req: express.Request, res: express.Response): Promise<void> => {
   const client = await connectToCluster()
@@ -62,15 +60,15 @@ router.get('/component/:component', (async (req, res) => {
     res.status(400).send('Not provide component name')
     return
   }
-  const query: { component: string } = { component: componentsResult[0]?.component }; // Access the component property safely using optional chaining
-  logger.info(`GET /logs/component/${req.params.component} query: ${JSON.stringify(query)}`);
-  const result = await collection.find(query).sort({ date: -1 }).toArray();
+  const query: { component: string } = { component: componentsResult[0]?.component } // Access the component property safely using optional chaining
+  logger.info(`GET /logs/component/${req.params.component} query: ${JSON.stringify(query)}`)
+  const result = await collection.find(query).sort({ date: -1 }).toArray()
   if (result.length === 0) {
-    res.status(404).send(`Not found any logs for component ${componentsResult[0]?.component}`); // Access the component property safely using optional chaining
+    res.status(404).send(`Not found any logs for component ${componentsResult[0]?.component}`) // Access the component property safely using optional chaining
   } else {
-    res.status(200).send(result);
+    res.status(200).send(result)
   }
-  await connectionClose(client);
+  await connectionClose(client)
 }) as RequestHandler)
 
 router.get('/model/:id', (async (req, res) => {
@@ -103,9 +101,7 @@ router.get('/object/:id', (async (req, res) => {
   const query = { objectId: req.params.id }
   const result = await collection.find(query).sort({ date: -1 }).toArray()
   if (result.length === 0) {
-    logger.warn(
-      `get /object/${req.params.id}, query: ${JSON.stringify(query)} - 404 not found any logs for this objectId`
-    )
+    logger.warn(`get /object/${req.params.id}, query: ${JSON.stringify(query)} - 404 not found any logs for this objectId`)
     res.status(404).send(result)
   } else {
     res.status(200).send(result)
@@ -117,7 +113,7 @@ router.post('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const newDocument: Log = req.body as Log
+  const newDocument: Logs = req.body as Logs
   newDocument.date = format(new Date(), 'yyyy-MM-dd hh:mm:ss')
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   if (!results) {

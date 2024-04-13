@@ -1,11 +1,12 @@
 {
   "env": {
-    "es2020": true,
+    "es2022": true,
     "jasmine": false,
     "mongo": true,
     "node": true
   },
   "extends": [
+    "standard",
     "plugin:eslint-plugin/recommended",
     "plugin:@typescript-eslint/recommended-type-checked",
     "prettier"
@@ -44,7 +45,6 @@
   },
   "plugins": [
     "@typescript-eslint",
-    "unused-imports"
   ],
   "root": true,
   "rules": {
@@ -55,16 +55,5 @@
     "jest/no-identical-title": "error",
     "jest/prefer-to-have-length": "warn",
     "jest/valid-expect": "error",
-    "no-unused-vars": "off",
-    "unused-imports/no-unused-imports": "error",
-    "unused-imports/no-unused-vars": [
-      "warn",
-      {
-        "args": "after-used",
-        "argsIgnorePattern": "^_",
-        "vars": "all",
-        "varsIgnorePattern": "^_"
-      }
-    ]
   }
 }

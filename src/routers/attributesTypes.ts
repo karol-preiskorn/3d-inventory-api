@@ -1,25 +1,28 @@
 /**
- * @file /routers/logs copy.js
- * @description attributes.js, is a module that sets up routes for a server using the Express.js framework. It's designed to interact with a MongoDB database, specifically with a collection named 'attributes'.
- * @version 2024-03-06 C2RLO - add _id to schema
+ * @file /routers/attributesDictionary.js
+ * @module /routers
+ * @description attributesDictionary router
+ * @version 2024-03-11 C2RLO - fix status/send problem
  * @version 2024-01-30 C2RLO - Initial
  */
 
 import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
 import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import { AttributesDictionary } from '../routers/attributesDictionary'
 
-export type Attributes = {
-  attributesDictionaryId: ObjectId
-  connectionId: ObjectId | null
-  deviceId: ObjectId | null
-  modelId: ObjectId | null
+export type AttributesTypes = {
+  _id: ObjectId
+  component: string
+  description: string
+  length: number
   name: string
+  type: string
   value: string
 }
 
-const collectionName: string = 'attributes'
+const collectionName: string = 'attributesDictionary'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {
@@ -27,9 +30,8 @@ router.get('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const results: object[] = await collection.find({}).limit(10).toArray()
-  if (!results) {
-    res.status(404).send('Not found')
-  } else {
+  if (!results) res.status(404).send('Not found')
+  else {
     res.status(200).send(results)
   }
   await connectionClose(client)
@@ -44,7 +46,7 @@ router.get('/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.sendStatus(404)
+  if (!result) res.status(404).send('Not found')
   else res.status(200).send(result)
   await connectionClose(client)
 }) as RequestHandler)
@@ -57,46 +59,9 @@ router.get('/model/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const query = { modelId: new ObjectId(req.params.id) }
-  const result = await collection.find(query).toArray()
-  if (!result) {
-    res.sendStatus(404)
-  } else {
-    res.send(result).status(200)
-  }
-  await connectionClose(client)
-}) as RequestHandler)
-
-router.get('/device/:id', (async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
-  }
-  const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-  const query = { deviceId: new ObjectId(req.params.id) }
-  const result = await collection.find(query).toArray()
-  if (!result) {
-    res.sendStatus(404)
-  } else {
-    res.send(result).status(200)
-  }
-  await connectionClose(client)
-}) as RequestHandler)
-
-router.get('/connection/:id', (async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
-  }
-  const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-  const query = { connectionId: new ObjectId(req.params.id) }
-  const result = await collection.find(query).toArray()
-  if (!result) {
-    res.sendStatus(404)
-  } else {
-    res.send(result).status(200)
-  }
+  const result = await collection.findOne(query)
+  if (!result) res.status(404).send('Not found')
+  else res.status(200).send(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -104,10 +69,9 @@ router.post('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const newDocument: Attributes = req.body as Attributes // Fix: Explicitly define the type of newDocument
-  const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
-  if (!results) res.sendStatus(404)
-  else res.status(200).send(results)
+  const newDocument = req.body as WithoutId<AttributesDictionary>
+  const results = await collection.insertOne(newDocument)
+  res.status(204).send(results)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -120,11 +84,7 @@ router.delete('/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
-  if (!result) {
-    res.status(404).send('Not found models to delete')
-  } else {
-    res.status(200).send(result)
-  }
+  res.status(200).send(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -134,11 +94,7 @@ router.delete('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  if (!result) {
-    res.status(404).send('Not found models to delete')
-  } else {
-    res.status(200).send(result)
-  }
+  res.status(200).send(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -151,11 +107,7 @@ router.delete('/model/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  if (!result) {
-    res.status(404).send('Not found models to delete')
-  } else {
-    res.status(200).send(result)
-  }
+  res.status(200).send(result)
   await connectionClose(client)
 }) as RequestHandler)
 

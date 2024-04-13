@@ -8,8 +8,7 @@
 
 import { createLogger, format, transports } from 'winston'
 import 'winston-daily-rotate-file'
-
-const { combine, timestamp, printf, colorize } = format
+const { combine, timestamp, printf, colorize } = format;
 
 const transport = new transports.DailyRotateFile({
   filename: 'logs/%DATE%.log',
@@ -17,15 +16,16 @@ const transport = new transports.DailyRotateFile({
   zippedArchive: true,
   maxSize: '2k',
   maxFiles: '7d',
-})
+});
 
 // transport.on('rotate', function (_oldFilename, _newFilename) {
 //   // do something fun
-// })
+// });
 
 const myFormat = printf(({ level, message, timestamp }) => {
-  return `${timestamp} ${level}: ${message}`
-})
+  return `${timestamp} ${level}: ${message}`;
+});
+
 
 export const logger = createLogger({
   transports: [

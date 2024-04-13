@@ -11,7 +11,7 @@ import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
 import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
-type attributesDictionary = {
+export type AttributesDictionary = {
     _id: ObjectId,
     category: string,
     component: string,
@@ -66,7 +66,7 @@ router.post('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const newDocument = req.body as WithoutId<attributesDictionary>
+  const newDocument = req.body as WithoutId<AttributesDictionary>
   const results = await collection.insertOne(newDocument)
   res.status(204).send(results)
   await connectionClose(client)
