@@ -105,7 +105,7 @@
     "yaml": "^2.4.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.0.0",
+    "@eslint/js": "^9.1.1",
     "@faker-js/faker": "^8.4.1",
     "@shelf/jest-mongodb": "^4.2.0",
     "@tsconfig/node21": "^21.0.3",
