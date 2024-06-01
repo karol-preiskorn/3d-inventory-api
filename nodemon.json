@@ -16,6 +16,6 @@
     "src/db/*",
     "src/utils/*"
   ],
-  "exec": "npx tsc",
-  "ext": "js,json,yaml"
+  "exec": "npx tsc && node dist/index.js",
+  "ext": "ts,js,json,yaml"
 }

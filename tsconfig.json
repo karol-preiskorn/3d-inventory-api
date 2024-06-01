@@ -119,6 +119,8 @@
   ],
   "include": [
     "src/**/*.ts",
-    "src/**/*.d.ts"
-, "src/tests/generateTextures.test.js"  ]
+    "src/**/*.d.ts",
+    "src/tests/generateTextures.test.js",
+    "src/tests/attributes.gen.test.ts__"
+  ]
 }

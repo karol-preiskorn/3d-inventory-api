@@ -8,14 +8,13 @@
 import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment'
 import { Db, MongoClient, ObjectId, OptionalId } from 'mongodb'
-import { Log } from '../routers/logs'
+import { Logs } from '../routers/logs'
 import { formatDate } from 'date-fns'
-
 
 describe('prepare test data', () => {
   let connection: MongoClient | undefined
   let db: Db
-  let mockLog: OptionalId<Log>
+  let mockLog: OptionalId<Logs>
 
   beforeAll(async () => {
     connection = await MongoClient.connect(process.env.ATLAS_URI || '', {})
@@ -46,7 +45,7 @@ describe('prepare test data', () => {
 
       for (let index = 0; index < 3; index++) {
         const logs = db.collection('logs')
-        const arrayElement = (array: string[]): string => faker.helpers.arrayElement(array);
+        const arrayElement = (array: string[]): string => faker.helpers.arrayElement(array)
         const mockModel = {
           name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
           dimension: {
@@ -63,16 +62,16 @@ describe('prepare test data', () => {
           },
           type: 'string',
           category: 'string',
-        };
+        }
 
-        const formattedDate: string = formatDate(new Date(), 'yyyy-MM-dd');
+        const formattedDate: string = formatDate(new Date(), 'yyyy-MM-dd')
         mockLog = {
           date: formattedDate,
           objectId: new ObjectId('659a4400672627600b093713').toString(),
           operation: 'Create',
           component: 'Model',
           message: JSON.stringify(mockModel),
-        } as OptionalId<Log>;
+        } as OptionalId<Logs>
 
         await logs.insertOne(mockLog)
         const insertedLog = await logs.findOne(mockLog)

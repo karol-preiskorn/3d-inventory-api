@@ -12,11 +12,11 @@ import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
 export type AttributesDictionary = {
-    _id: ObjectId,
-    category: string,
-    component: string,
-    name: string,
-    type: string
+  _id: ObjectId | null
+  category: string
+  component: string
+  name: string
+  type: string
 }
 
 const collectionName: string = 'attributesDictionary'
@@ -71,7 +71,6 @@ router.post('/', (async (req, res) => {
   res.status(204).send(results)
   await connectionClose(client)
 }) as RequestHandler)
-
 
 router.delete('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {

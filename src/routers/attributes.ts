@@ -11,7 +11,8 @@ import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
 export type Attributes = {
-  attributesDictionaryId: ObjectId
+  _id: ObjectId
+  attributesDictionaryId: ObjectId | null
   connectionId: ObjectId | null
   deviceId: ObjectId | null
   modelId: ObjectId | null

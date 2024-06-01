@@ -16,6 +16,7 @@ export type Logs = {
   _id: ObjectId
   objectId: string
   date: string
+  operation: string
   component: string
   message: string
 }

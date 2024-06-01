@@ -10,6 +10,13 @@ import { Collection, Db, ObjectId } from 'mongodb'
 import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
+export type Components = {
+  _id: ObjectId
+  component: string
+  collection: string
+  attributes: boolean
+}
+
 const collectionName: string = 'components'
 const router = express.Router()
 
@@ -17,11 +24,7 @@ router.get('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const results: object[] = await collection
-    .find({})
-    .sort({ date: -1 })
-    .limit(200)
-    .toArray()
+  const results: object[] = await collection.find({}).sort({ date: -1 }).limit(200).toArray()
   if (!results) res.sendStatus(404)
   else {
     res.sendStatus(200)
