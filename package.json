@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "description": "Mongo API for 3d-inventory project",
   "keywords": [
     "3d-inventory",
@@ -40,7 +40,7 @@
     "openapi:format": "npx openapi-format api/openapi.yaml --output api/openapi-formatted.yaml",
     "prepare": "node .husky/install.mjs && husky install",
     "prepare:husky": "cd ../ && husky install server/.husky",
-    "start": "node dist/index.js",
+    "start": "nodemon",
     "swagger:editor": "podman run -d -p 80:8080 -v ${PWD}:/tmp -e SWAGGER_FILE=/tmp/api/openapi.yaml swaggerapi/swagger-editor",
     "swagger:generate": "pwd && java -jar api/target/jars/swagger-codegen-cli.jar generate -i api/openapi.yaml -l nodejs-server -o src",
     "swagger:get-jars": "mvn package -f api/pom.xml",
@@ -49,13 +49,13 @@
     "test:jest": "node --trace-deprecation node_modules/jest/bin/jest.js ",
     "test:watch": "npm run test --watchAll",
     "unused": "./unused.sh",
-    "update": "npm-check-updates -u && npm update && npm upgrade",
-    "upgrade": "npm upgrade",
+    "upgrade": "npm-check-updates -u && npm update && npm upgrade",
+    "update": "npm upgrade",
     "vscode:cache": "rm -rf '$HOME/.config/Code/Cache/*'"
   },
   "lint-staged": {
     "*.{ts,js,css,md}": "prettier --no-semi --single-quote --bracket-same-line --write",
-    "*.{ts,js}": "eslint --cache --fix"
+    "*.{ts,js}": "eslint --fix"
   },
   "dependencies": {
     "@apollo/client": "^3.10.4",
@@ -68,7 +68,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
-    "express-openapi-validator": "^5.1.6",
+    "express-openapi-validator": "^5.2.0",
     "express-session": "1.18.0",
     "figlet": "^1.7.0",
     "fs": "^0.0.2",
@@ -101,7 +101,7 @@
     "ts-jest": "^29.1.4",
     "winston": "3.13.0",
     "winston-daily-rotate-file": "^5.0.0",
-    "yaml": "^2.4.2"
+    "yaml": "^2.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.4.0",
@@ -117,7 +117,8 @@
     "@types/node": "^20.13.0",
     "@types/supertest": "^6.0.2",
     "@types/swagger-ui-express": "^4.1.6",
-    "eslint": "^9.4.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest": "^28.5.0",
     "eslint-plugin-tsdoc": "^0.3.0",
@@ -127,7 +128,7 @@
     "lint-staged": "^15.2.5",
     "nodemon": "^3.1.2",
     "npm-check-updates": "^16.14.20",
-    "prettier": "3.2.5",
+    "prettier": "3.3.0",
     "supertest": "^7.0.0",
     "ts-node-dev": "^2.0.0",
     "typedoc": "^0.25.13",

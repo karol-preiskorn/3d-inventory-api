@@ -11,6 +11,7 @@ import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 import '../utils/loadEnvironment.js'
 import { logger } from '../utils/logger.js'
+import { capitalize } from '../utils/strings.js'
 
 export type Logs = {
   _id: ObjectId
@@ -52,25 +53,26 @@ router.get('/:id', (async (req, res) => {
   await connectionClose(client)
 }) as RequestHandler)
 
-router.get('/component/:component', (async (req, res) => {
+router.get('/component/:component', async (req, res) => {
   const client = await connectToCluster()
-  const componentsResult: { component: string }[] = [] // Declare and initialize the componentsResult variable with the appropriate type
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
+
+  const componentsResult: { component: string }[] = []
   if (req.params.component.length === 0) {
     res.status(400).send('Not provide component name')
     return
   }
-  const query: { component: string } = { component: componentsResult[0]?.component } // Access the component property safely using optional chaining
-  logger.info(`GET /logs/component/${req.params.component} query: ${JSON.stringify(query)}`)
+  const query: { component: string } = { component: capitalize(req.params.component) }
+  logger.info(`GET /logs/component/${req.params.component} - query: ${JSON.stringify(query)}`)
   const result = await collection.find(query).sort({ date: -1 }).toArray()
   if (result.length === 0) {
-    res.status(404).send(`Not found any logs for component ${componentsResult[0]?.component}`) // Access the component property safely using optional chaining
+    res.status(404).send(`Not found any logs for component ${req.params.component}`)
   } else {
     res.status(200).send(result)
   }
   await connectionClose(client)
-}) as RequestHandler)
+})
 
 router.get('/model/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {

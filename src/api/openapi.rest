@@ -148,6 +148,10 @@ content-type: application/json
 GET http://localhost:8080/models/65b67f8bf42bf190aca7029b HTTP/1.1
 content-type: application/json
 
+### get model
+GET http://localhost:8080/models/65b67f8cf42bf190aca702a7 HTTP/1.1
+content-type: application/json
+
 ### update model
 PUT http://localhost:8080/models/65b67f8bf42bf190aca7029b HTTP/1.1
 content-type: application/json
@@ -157,3 +161,5 @@ content-type: application/json
 ### get componet
 GET http://localhost:8080/components HTTP/1.1
 content-type: application/json
+
+##

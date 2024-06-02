@@ -54,7 +54,7 @@ router.put('/:id', (async (req, res) => {
     $set: {
       name: c.name,
       deviceIdFrom: c.deviceIdFrom,
-      deviceIdTo: c.deviceIdTo
+      deviceIdTo: c.deviceIdTo,
     },
   }
   const client = await connectToCluster()

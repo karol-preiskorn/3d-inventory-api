@@ -11,8 +11,8 @@ import '../utils/loadEnvironment.js'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
 
 type position = {
-  x: number,
-  y: number,
+  x: number
+  y: number
   h: number
 }
 

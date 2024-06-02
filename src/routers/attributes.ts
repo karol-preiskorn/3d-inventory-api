@@ -62,7 +62,7 @@ router.get('/model/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -79,7 +79,7 @@ router.get('/device/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -96,7 +96,7 @@ router.get('/connection/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)

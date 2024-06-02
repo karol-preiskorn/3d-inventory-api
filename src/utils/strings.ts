@@ -13,3 +13,13 @@
 export function capitalizeFirstLetter([first = '', ...rest]: string[]) {
   return [first.toUpperCase(), ...rest].join('')
 }
+
+/**
+ * Capitalizes the first letter of a string and cut last letter
+ *
+ * @param s - The string to capitalize.
+ * @returns The capitalized string.
+ */
+export function capitalize(s: string): string {
+  return s[0].toUpperCase().slice(0, 1) + s.slice(1, s.length - 1)
+}

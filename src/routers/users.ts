@@ -63,7 +63,7 @@ router.get('/model/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -80,7 +80,7 @@ router.get('/user/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -97,7 +97,7 @@ router.get('/rights/:name', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -112,7 +112,6 @@ router.post('/', (async (req, res) => {
   else res.status(200).send(results)
   await connectionClose(client)
 }) as RequestHandler)
-
 
 router.delete('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
