@@ -8,8 +8,8 @@
 
 import express, { RequestHandler } from 'express'
 import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
-import '../utils/loadEnvironment.js'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import '../utils/loadEnvironment'
+import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 
 export type AttributesDictionary = {
   _id: ObjectId | null

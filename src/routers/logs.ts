@@ -8,10 +8,10 @@
 import { format } from 'date-fns'
 import express, { RequestHandler } from 'express'
 import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
-import '../utils/loadEnvironment.js'
-import { logger } from '../utils/logger.js'
-import { capitalize } from '../utils/strings.js'
+import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
+import '../utils/loadEnvironment'
+import { logger } from '../utils/logger'
+import { capitalize } from '../utils/strings'
 
 export type Logs = {
   _id: ObjectId

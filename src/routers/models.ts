@@ -5,9 +5,9 @@
  */
 
 import express, { RequestHandler } from 'express'
-import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, UpdateFilter } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
-import '../utils/loadEnvironment.js'
+import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
+import '../utils/loadEnvironment'
 
 export type Dimension = {
   width: number
@@ -94,7 +94,7 @@ router.post('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const newDocument: DocumentType = req.body as DocumentType
+  const newDocument: OptionalId<Document> = req.body as OptionalId<Document>
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   res.status(200).send(results)
   await connectionClose(client)

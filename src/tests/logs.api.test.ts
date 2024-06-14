@@ -6,23 +6,18 @@
  */
 
 import request from 'supertest'
-import app from '../index.js'
-
+import app from '../index'
 
 describe('GET /logs', () => {
-  let response: request.Response;
+  let response: request.Response
 
   beforeAll(async () => {
-    response = await request(app)
-      .get('/logs')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200);
-  });
+    response = await request(app).get('/logs').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
+  })
 
   afterAll(async () => {
-    app.listen().close();
-  });
+    app.listen().close()
+  })
 
   it('GET /logs => array of items', async () => {
     expect(response.body).toEqual(
@@ -41,11 +36,11 @@ describe('GET /logs', () => {
   })
 
   it('GET /logs/:id => item', async () => {
-    const firstLogId = (response.body)[0]?._id as string;
+    const firstLogId = response.body[0]?._id as string
 
     const responseGetId = await request(app)
       .get('/logs/' + firstLogId)
-      .expect(200);
+      .expect(200)
 
     expect(responseGetId.body).toEqual(
       expect.objectContaining({
@@ -56,15 +51,11 @@ describe('GET /logs', () => {
         component: expect.any(String) as string,
         message: expect.any(Object) as object,
       }),
-    );
+    )
   })
 
   it('GET /logs/collection/devices', async () => {
-    const responseGetId = await request(app)
-      .get('/logs/collection/devices')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200)
+    const responseGetId = await request(app).get('/logs/collection/devices').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
 
     expect(responseGetId.body).toEqual(
       expect.arrayContaining([

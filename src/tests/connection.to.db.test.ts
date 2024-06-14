@@ -5,8 +5,8 @@
  */
 
 import { Db, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb } from '../db/conn.js'
-import '../utils/loadEnvironment.js'
+import { connectToCluster, connectToDb } from '../db/conn'
+import '../utils/loadEnvironment'
 
 describe('ConnectToDatabase Mongo Atlas', () => {
   it('should insert a doc into collection', async () => {

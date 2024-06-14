@@ -7,8 +7,8 @@
 
 import express, { RequestHandler } from 'express'
 import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import '../utils/loadEnvironment.js'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import '../utils/loadEnvironment'
+import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 
 export type User = {
   _id: ObjectId

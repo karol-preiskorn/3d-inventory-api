@@ -9,7 +9,7 @@
  */
 
 import { MongoClient } from 'mongodb'
-import { logger } from '../utils/logger.js'
+import { logger } from '../utils/logger'
 
 const uri = process.env.ATLAS_URI || ''
 

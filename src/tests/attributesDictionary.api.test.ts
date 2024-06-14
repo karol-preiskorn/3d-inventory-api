@@ -4,13 +4,13 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import app from '../index.js'
+import app from '../index'
 import supertest from 'supertest'
 
 describe('GET /logs', () => {
   it('should return an array of items', async () => {
-    const response = await supertest(app).get('/logs');
-    expect(response.status).toBe(200);
+    const response = await supertest(app).get('/logs')
+    expect(response.status).toBe(200)
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -22,12 +22,12 @@ describe('GET /logs', () => {
         }),
       ]),
     )
-  });
+  })
 
   it('should return a specific log by ID', async () => {
-    const body: { _id: string } = { _id: 'your_id_here' };
-    const responseGetId = await supertest(app).get('/logs/' + body._id);
-    expect(responseGetId.status).toBe(200);
+    const body: { _id: string } = { _id: 'your_id_here' }
+    const responseGetId = await supertest(app).get('/logs/' + body._id)
+    expect(responseGetId.status).toBe(200)
     // Add your assertions for the specific log here
-  });
-});
+  })
+})

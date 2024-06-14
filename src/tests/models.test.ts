@@ -6,8 +6,8 @@
 
 import { Db, MongoClient } from 'mongodb'
 import request, { Response } from 'supertest'
-import app from '../index.js'
-import '../utils/loadEnvironment.js'
+import app from '../index'
+import '../utils/loadEnvironment'
 
 describe('GET /models', () => {
   let connection: MongoClient

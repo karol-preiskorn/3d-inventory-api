@@ -45,7 +45,7 @@ const config = {
       testPathIgnorePatterns: [, '<rootDir>/dist/', '<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/logs/', '<rootDir>/coverage/'],
       transform: {},
       moduleFileExtensions: ['js', 'ts', 'css', 'less', 'scss', 'html', 'json', 'graphql', 'md', 'yaml'],
-      testMatch: ['**/*.js', '**/*.ts', '**/*.css', '**/*.less', '**/*.scss', '**/*.html', '**/*.json', '**/*.graphql', '**/*.md', '**/*.yaml'],
+      testMatch: ['**/*', '**/*.ts', '**/*.css', '**/*.less', '**/*.scss', '**/*.html', '**/*.json', '**/*.graphql', '**/*.md', '**/*.yaml'],
     },
     {
       displayName: 'Jest',

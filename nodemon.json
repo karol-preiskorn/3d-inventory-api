@@ -4,7 +4,8 @@
     "**/*.spec.js",
     ".git",
     "doc/**/*",
-    "coverage/**/*"
+    "coverage/**/*",
+    "node_modules/**/*"
   ],
   "watch": [
     "src/api/openapi.yaml",
@@ -16,6 +17,6 @@
     "src/db/*",
     "src/utils/*"
   ],
-  "exec": "npx tsc && node dist/index.js",
+  "exec": "ts-node src/index.ts",
   "ext": "ts,js,json,yaml"
 }

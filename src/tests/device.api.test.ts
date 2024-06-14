@@ -9,7 +9,7 @@
 // import faker from "@faker-js/faker"
 import request from 'supertest'
 // import assert from "assert"
-import app from '../index.js'
+import app from '../index'
 
 describe('GET /devices', () => {
   afterAll(() => {
@@ -17,11 +17,7 @@ describe('GET /devices', () => {
   })
 
   it('GET /devices => array of devices', async () => {
-    const response = await request(app)
-      .get('/devices')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200)
+    const response = await request(app).get('/devices').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
 
     expect(response.body).toEqual(
       expect.arrayContaining([

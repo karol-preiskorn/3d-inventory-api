@@ -12,8 +12,8 @@ var __awaiter =
       return value instanceof P
         ? value
         : new P(function (resolve) {
-            resolve(value)
-          })
+          resolve(value)
+        })
     }
     return new (P || (P = Promise))(function (resolve, reject) {
       function fulfilled(value) {
@@ -46,8 +46,8 @@ var __importDefault =
 Object.defineProperty(exports, '__esModule', { value: true })
 exports.attributesDictionarySchema = exports.attributeSchema = void 0
 const realm_1 = __importDefault(require('realm'))
-require('../src/utils/loadEnvironment.js')
-const realm_js_1 = require('./realm.js')
+require('../src/utils/loadEnvironment')
+const realm_js_1 = require('./realm')
 realm_js_1.app = new realm_1.default.App({ id: process.env.REALM_APP_ID })
 const credentials = realm_1.default.Credentials.anonymous()
 exports.attributeSchema = {

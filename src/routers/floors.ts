@@ -8,8 +8,8 @@
 
 import express, { RequestHandler } from 'express'
 import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
-import '../utils/loadEnvironment.js'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import '../utils/loadEnvironment'
+import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 
 type Floor = {
   _id: ObjectId

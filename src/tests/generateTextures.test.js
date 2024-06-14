@@ -7,7 +7,7 @@
 const { createCanvas } = require('canvas')
 const { writeFileSync } = require('fs')
 const perlin = require('perlin-noise')
-const { deleteFilesInDirectory } = require('../utils/files.js')
+const { deleteFilesInDirectory } = require('../utils/files')
 
 
 /**

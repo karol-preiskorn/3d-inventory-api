@@ -11,13 +11,13 @@
 
 import { faker } from '@faker-js/faker'
 import { Collection, Db, MongoClient, ObjectId, OptionalId, WithId } from 'mongodb'
-import '../utils/loadEnvironment.js'
-import { AttributesDictionary } from '../routers/attributesDictionary.js'
-import { capitalizeFirstLetter } from '../utils/strings.js'
-import { Attributes } from '../routers/attributes.js'
-import { AttributesTypes } from '../routers/attributesTypes.js'
-import { Logs } from '../routers/logs.js'
-import { Components } from '../routers/attributesTypes.js'
+import '../utils/loadEnvironment'
+import { AttributesDictionary } from '../routers/attributesDictionary'
+import { capitalizeFirstLetter } from '../utils/strings'
+import { Attributes } from '../routers/attributes'
+import { AttributesTypes } from '../routers/attributesTypes'
+import { Logs } from '../routers/logs'
+import { Components } from '../routers/attributesTypes'
 
 describe('prepare attributesDictionary and Attribute test data', () => {
   let connection: MongoClient

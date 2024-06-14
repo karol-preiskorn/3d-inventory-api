@@ -7,7 +7,7 @@
  */
 
 import { faker } from '@faker-js/faker'
-import '../utils/loadEnvironment.js'
+import '../utils/loadEnvironment'
 import { Db, MongoClient } from 'mongodb'
 
 describe('create 3 models', () => {
@@ -36,12 +36,7 @@ describe('create 3 models', () => {
       const models = db.collection('models')
       // const attributesTypesData: { name: string }[] = await attributesTypesCursor.toArray().then(data => data.map((doc: { name: string }) => ({ name: doc.name })));
       mockModel = {
-        name:
-          faker.commerce.product() +
-          ' ' +
-          faker.color.human() +
-          ' ' +
-          faker.animal.type(),
+        name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
         dimension: {
           width: faker.number.int({ min: 1, max: 10 }),
           height: faker.number.int({ min: 1, max: 10 }),
