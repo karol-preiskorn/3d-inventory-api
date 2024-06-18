@@ -5,6 +5,11 @@
  */
 
 const config = {
+  testTimeout: 1000,
+  fakeTimers: {
+    doNotFake: ['nextTick'],
+    timerLimit: 1000,
+  },
   bail: 1,
   verbose: true,
   coverageProvider: 'v8',
@@ -48,14 +53,13 @@ const config = {
       testMatch: ['**/*', '**/*.ts', '**/*.css', '**/*.less', '**/*.scss', '**/*.html', '**/*.json', '**/*.graphql', '**/*.md', '**/*.yaml'],
     },
     {
-      displayName: 'Jest',
+      displayName: 'ts-jest',
       clearMocks: false,
       globals: {
         __DEV__: true,
       },
       moduleFileExtensions: ['js', 'ts', 'yaml', 'json'],
-      preset: '@shelf/jest-mongodb',
-      runner: 'jest-runner',
+      preset: 'ts-jest',
       testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/dist/', '<rootDir>/logs/', '<rootDir>/coverage/'],
       testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(mjs?|cjs?|js?|tsx?|ts?)$',
       transform: {},

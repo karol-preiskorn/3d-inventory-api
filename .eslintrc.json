@@ -1,0 +1,45 @@
+{
+  "env": {
+    "es2022": true,
+    "jasmine": false,
+    "mongo": true,
+    "node": true,
+    "jest": true,
+    "jest/globals": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "project": true,
+    "sourceType": "module",
+    "tsconfigRootDir": "."
+  },
+  "plugins": [
+    "jest",
+  ],
+  "rules": {
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/prefer-to-have-length": "warn",
+    "jest/valid-expect": "error"
+  },
+  "ignorePatterns": [
+    "node_modules/**/*",
+    "documentation/**/*",
+    ".git/**/*",
+    "dist/**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "./**/*.ts"
+      ],
+      "extends": [
+        "plugin:eslint-plugin/recommended",
+        "plugin:jest/recommended",
+        "plugin:jest/style",
+        "prettier"
+      ]
+    }
+  ]
+}
