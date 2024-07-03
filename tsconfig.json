@@ -121,6 +121,8 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/tests/generateTextures.test.js",
-    "src/tests/attributes.gen.test.ts__"
+    "src/tests/attributes.gen.test.ts__",
+    "eslint.config.mjs",
+    ".husky/install.mjs"
   ]
 }

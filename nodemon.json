@@ -15,7 +15,8 @@
     "src/routers/*",
     "src/schema/*",
     "src/db/*",
-    "src/utils/*"
+    "src/utils/*",
+    "README.md"
   ],
   "exec": "ts-node src/index.ts",
   "ext": "ts,js,json,yaml"
