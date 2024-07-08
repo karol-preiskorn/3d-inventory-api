@@ -4,10 +4,12 @@
  * @version: 2023-12-29  C2RLO  Initial
  */
 
+import '../utils/loadEnvironment'
+
 import express, { RequestHandler } from 'express'
 import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
-import '../utils/loadEnvironment'
+
+import { connectionClose, connectToCluster, connectToDb } from '../db/conn'
 
 export type Dimension = {
   width: number
@@ -25,8 +27,6 @@ export type Model = {
   name: string
   dimension: Dimension
   texture: Texture
-  type: string
-  category: string
 }
 
 const collectionName: string = 'models'
@@ -77,8 +77,6 @@ router.put('/:id', (async (req, res) => {
         top: b.texture.top,
         botom: b.texture.botom,
       },
-      type: b.type,
-      category: b.category,
     },
   }
   const client = await connectToCluster()

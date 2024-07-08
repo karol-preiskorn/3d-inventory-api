@@ -5,11 +5,13 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
+import '../utils/loadEnvironment'
+
 import { format } from 'date-fns'
 import express, { RequestHandler } from 'express'
 import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
-import '../utils/loadEnvironment'
+
+import { connectionClose, connectToCluster, connectToDb } from '../db/conn'
 import { logger } from '../utils/logger'
 import { capitalize } from '../utils/strings'
 
@@ -117,7 +119,7 @@ router.post('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const newDocument: Logs = req.body as Logs
-  newDocument.date = format(new Date(), 'yyyy-MM-dd hh:mm:ss')
+  newDocument.date = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   if (!results) {
     res.status(404).send('Not create log')
