@@ -5,10 +5,12 @@
  * @version 2024-01-25 C2RLO - add new way to connect to DB
  */
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
-import '../utils/loadEnvironment'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
+import '../utils/loadEnvironment';
+
+import express, { RequestHandler } from 'express';
+import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb';
+
+import { connectionClose, connectToCluster, connectToDb } from '../db/conn';
 
 type position = {
   x: number
@@ -19,6 +21,7 @@ type position = {
 const router = express.Router()
 
 const collectionName: string = 'devices'
+
 router.get('/', (async (_req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
@@ -53,9 +56,9 @@ router.put('/:id', (async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) }
   const updates = {
     $set: {
-      name: (req.body as { name: string }).name,
-      modelId: (req.body as { modelId: string }).modelId,
-      position: (req.body as { position: string }).position,
+      name: req.body.name,
+      modelId: req.body.modelId,
+      position: req.body.position,
     },
   }
   const client = await connectToCluster()

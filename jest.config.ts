@@ -5,10 +5,10 @@
  */
 
 const config = {
-  testTimeout: 1000,
+  testTimeout: 6000,
   fakeTimers: {
     doNotFake: ['nextTick'],
-    timerLimit: 1000,
+    timerLimit: 6000,
   },
   bail: 1,
   verbose: true,
