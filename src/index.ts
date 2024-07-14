@@ -44,7 +44,7 @@ try {
           'ms',
         ].join(' ')
       },
-      { stream: { write: () => {} } as unknown as NodeJS.WritableStream },
+      { stream: { write: () => { } } as unknown as NodeJS.WritableStream },
     ),
   )
 } catch (error) {
@@ -145,5 +145,12 @@ process.on('SIGTERM', () => {
     logger.debug('HTTP server closed')
   })
 })
+
+export close() {
+  logger.debug('Closing HTTP server')
+  server.close(() => {
+    logger.debug('HTTP server closed')
+  })
+}
 
 export default app
