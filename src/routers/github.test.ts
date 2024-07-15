@@ -1,21 +1,20 @@
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import app from 'express';
-import request from 'supertest';
+import cors from 'cors'
+import request from 'supertest'
+
+import app from '../index'
 
 let issues = ''
 
 describe('GitHub API', () => {
-  afterAll(() => {
-    ;(app as any).close()
-  })
   it('should get GitHub issues', async () => {
     const response = await request(app).get('/github/issues')
 
     expect(response.status).toBe(200)
     expect(response.body).toBeDefined()
 
-    console.log('response.body: ' + JSON.stringify(response.body, null, ' '))
+    console.log('response.body: ' + JSON.stringify(response, null, ' '))
     // expect(response.body).toEqual(issues)
   })
 })

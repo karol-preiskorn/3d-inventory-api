@@ -4,27 +4,27 @@
  * @version 2023-12-29 C2RLO - Initial
  */
 
-import './utils/loadEnvironment';
+import './utils/loadEnvironment'
 
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import * as OpenApiValidator from 'express-openapi-validator';
-import fs from 'fs';
-import morgan from 'morgan';
-import morganBody from 'morgan-body';
-import swaggerUi, { JsonObject } from 'swagger-ui-express';
-import YAML from 'yaml';
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
+import * as OpenApiValidator from 'express-openapi-validator'
+import fs from 'fs'
+import morgan from 'morgan'
+import morganBody from 'morgan-body'
+import swaggerUi, { JsonObject } from 'swagger-ui-express'
+import YAML from 'yaml'
 
-import attributes from './routers/attributes';
-import attributesDictionary from './routers/attributesDictionary';
-import connections from './routers/connections';
-import devices from './routers/devices';
-import floors from './routers/floors';
-import logs from './routers/logs';
-import models from './routers/models';
-import readme from './routers/readme';
-import { logger } from './utils/logger';
+import attributes from './routers/attributes'
+import attributesDictionary from './routers/attributesDictionary'
+import connections from './routers/connections'
+import devices from './routers/devices'
+import floors from './routers/floors'
+import logs from './routers/logs'
+import models from './routers/models'
+import readme from './routers/readme'
+import { logger } from './utils/logger'
 
 const PORT = process.env.PORT || 8080
 const yamlFilename = process.env.API_YAML_FILE || 'src/api/openapi.yaml'
@@ -44,7 +44,7 @@ try {
           'ms',
         ].join(' ')
       },
-      { stream: { write: () => { } } as unknown as NodeJS.WritableStream },
+      { stream: { write: () => {} } as unknown as NodeJS.WritableStream },
     ),
   )
 } catch (error) {
@@ -146,11 +146,11 @@ process.on('SIGTERM', () => {
   })
 })
 
-export close() {
-  logger.debug('Closing HTTP server')
-  server.close(() => {
-    logger.debug('HTTP server closed')
-  })
-}
+// server.close(() => {
+//   logger.debug('Closing HTTP server')
+//   server.close(() => {
+//     logger.debug('HTTP server closed')
+//   })
+// })
 
 export default app

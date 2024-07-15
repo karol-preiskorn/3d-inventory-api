@@ -168,4 +168,7 @@ content-type: application/json
 GET http://localhost:8080/components HTTP/1.1
 content-type: application/json
 
-##
+### get github issues
+GET https://api.github.com/repos/karol-preiskorn/3d-inventory-angular-ui/issues HTTP/1.1
+content-type: application/json
+X-GitHub-Api-Version: 2022-11-28
