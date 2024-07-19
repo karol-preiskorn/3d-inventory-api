@@ -5,15 +5,15 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { format } from 'date-fns'
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { format } from 'date-fns';
+import express, { RequestHandler } from 'express';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/conn'
-import { logger } from '../utils/logger'
-import { capitalize } from '../utils/strings'
+import { connectionClose, connectToCluster, connectToDb } from '../db/conn';
+import { logger } from '../utils/logger';
+import { capitalize } from '../utils/strings';
 
 export type Logs = {
   _id: ObjectId
@@ -69,9 +69,11 @@ router.get('/component/:component', async (req, res) => {
   logger.info(`GET /logs/component/${req.params.component} - query: ${JSON.stringify(query)}`)
   const result = await collection.find(query).sort({ date: -1 }).toArray()
   if (result.length === 0) {
-    res.status(404).send(`Not found any logs for component ${req.params.component}`)
+    res.status(404).send(`GET /logs/component/${req.params.component} - Not found any logs for component.`)
+    logger.warn(`GET /logs/component/${req.params.component}, query: ${JSON.stringify(query)} - 404 not found any component for objectId.`)
   } else {
     res.status(200).send(result)
+    logger.info(`GET /logs/component/${req.params.component}, query: ${JSON.stringify(query)}`)
   }
   await connectionClose(client)
 })
@@ -84,13 +86,19 @@ router.get('/model/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   if (!ObjectId.isValid(req.params.id)) {
+    logger.error(`GET /logs/model/${req.params.id} Invalid Id`)
     res.status(400).send('Invalid ID')
     return
   }
   const query = { modelId: new ObjectId(req.params.id) }
   const result = await collection.find(query).sort({ date: -1 }).toArray()
-  if (!result) res.sendStatus(404)
-  else res.status(200).send(result)
+  if (!result) {
+    res.sendStatus(404)
+    logger.warn(`GET /logs/model/${req.params.id}, query: ${JSON.stringify(query)} - 404 not found any model for objectId.`)
+  } else {
+    res.status(200).send(result)
+    logger.info(`GET /logs/model/${req.params.id}, query: ${JSON.stringify(query)}`)
+  }
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -99,17 +107,18 @@ router.get('/object/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   if (!ObjectId.isValid(req.params.id)) {
-    logger.info(`get /object/${req.params.id} Invalid Id`)
+    logger.error(`GET /logs/object/${req.params.id} Invalid Id`)
     res.status(400).send('Invalid ID')
     return
   }
   const query = { objectId: req.params.id }
   const result = await collection.find(query).sort({ date: -1 }).toArray()
   if (result.length === 0) {
-    logger.warn(`get /object/${req.params.id}, query: ${JSON.stringify(query)} - 404 not found any logs for this objectId`)
+    logger.warn(`GET /logs/object/${req.params.id}, query: ${JSON.stringify(query)} - 404 not found any logs for objectId.`)
     res.status(404).send(result)
   } else {
     res.status(200).send(result)
+    logger.info(`GET /logs/object/${req.params.id}, query: ${JSON.stringify(query)}`)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -123,8 +132,10 @@ router.post('/', (async (req, res) => {
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   if (!results) {
     res.status(404).send('Not create log')
+    logger.warn(`POST /logs/, query: ${JSON.stringify(newDocument)} not created.`)
   } else {
     res.status(200).send(results)
+    logger.info(`POST /logs/, query: ${JSON.stringify(newDocument)} created.`)
   }
   await connectionClose(client)
 }) as RequestHandler)
