@@ -5,12 +5,13 @@
  * @version 2024-01-25 C2RLO - add new way to connect to DB
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import express, { RequestHandler } from 'express';
-import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb';
+import express, { RequestHandler } from 'express'
+import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/conn';
+import { connectionClose, connectToCluster, connectToDb } from '../db/conn'
+import { logger } from '../utils/logger'
 
 type position = {
   x: number
@@ -28,8 +29,10 @@ router.get('/', (async (_req, res) => {
   const collection: Collection = db.collection(collectionName)
   const results: object[] = await collection.find({}).limit(10).toArray()
   if (!results) {
+    logger.warn('GET /devices - not found')
     res.status(404).send('Not found')
   } else {
+    logger.info(`GET /devices - oki return ${results.length} devices`)
     res.status(200).send(results)
   }
   await connectionClose(client)

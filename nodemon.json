@@ -1,7 +1,7 @@
 ﻿{
   "ignore": [
-    "**/*.test.js",
-    "**/*.spec.js",
+    "**/*.test.ts",
+    "**/*.spec.ts",
     ".git",
     "doc/**/*",
     "coverage/**/*",
@@ -9,8 +9,8 @@
   ],
   "watch": [
     "src/api/openapi.yaml",
-    "src/index.js",
-    "src/**/*.js",
+    "src/index.ts",
+    "src/**/*.ts",
     "src/assets/*",
     "src/routers/*",
     "src/schema/*",

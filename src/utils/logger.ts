@@ -6,25 +6,25 @@
  * @version 2023-12-02 C2RLO - Initial add parent-module
  */
 
-import { createLogger, format, transports } from 'winston'
 import 'winston-daily-rotate-file'
+
+import { createLogger, format, transports } from 'winston'
+
 const { combine, timestamp, printf, colorize } = format
+const myFormat = printf(({ level, message, timestamp }) => {
+  return `${timestamp} ${level}: ${message} ${process.env.PARENT_MODULE ? `parent-module: ${process.env.PARENT_MODULE}` : ''}`
+})
 
 const transport = new transports.DailyRotateFile({
   filename: 'logs/%DATE%.log',
   datePattern: 'YYYYMMDD',
-  zippedArchive: true,
-  maxSize: '2k',
-  maxFiles: '7d',
+  maxFiles: '3d',
+  level: 'debug',
 })
 
 // transport.on('rotate', function (_oldFilename, _newFilename) {
 //   // do something fun
 // });
-
-const myFormat = printf(({ level, message, timestamp }) => {
-  return `${timestamp} ${level}: ${message}`
-})
 
 export const logger = createLogger({
   transports: [
@@ -42,7 +42,7 @@ export const logger = createLogger({
       ),
     }),
     new transports.File({
-      level: 'info',
+      level: 'debug',
       filename: 'logs/api.log',
       handleExceptions: true,
       maxsize: 1024, // 1MB
