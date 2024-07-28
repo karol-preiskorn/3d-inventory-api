@@ -1,8 +1,7 @@
 /**
- * @file:        /routers/models.js
- * @description: This file contains the router for handling model-related API endpoints.
- * @version: 2023-12-29  C2RLO  Initial
- */
+ * @description:  This file contains the router for handling model-related API endpoints.
+ * @version:      2023-12-29  C2RLO  Initial
+ **/
 
 import '../utils/loadEnvironment'
 
@@ -10,6 +9,7 @@ import express, { RequestHandler } from 'express'
 import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
 
 import { connectionClose, connectToCluster, connectToDb } from '../db/conn'
+import { logger } from '../utils/logger'
 
 export type Dimension = {
   width: number
@@ -37,7 +37,13 @@ router.get('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const results: object[] = await collection.find({}).limit(50).toArray()
-  res.status(200).send(results)
+  if (!results) {
+    logger.warn('GET /models - not found')
+    res.status(404).send('Not found')
+  } else {
+    logger.info('GET /models - oki return ' + results.length + ' models')
+    res.status(200).send(results)
+  }
   await connectionClose(client)
 }) as RequestHandler)
 
