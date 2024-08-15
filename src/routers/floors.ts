@@ -11,21 +11,21 @@ import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
 import '../utils/loadEnvironment'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 
-type Floor = {
+interface Floor {
   _id: ObjectId
   name: string
   address: Address
   dimension: Dimension[]
 }
 
-type Address = {
+interface Address {
   street: string
   city: string
   country: string
   postcode: string
 }
 
-type Dimension = {
+interface Dimension {
   description: string
   x: number
   y: number
@@ -35,7 +35,7 @@ type Dimension = {
   hPos: number
 }
 
-const collectionName: string = 'floors'
+const collectionName = 'floors'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {

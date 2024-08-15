@@ -11,25 +11,25 @@ import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, Up
 import { connectionClose, connectToCluster, connectToDb } from '../db/conn'
 import { logger } from '../utils/logger'
 
-export type Dimension = {
+export interface Dimension {
   width: number
   height: number
   depth: number
 }
-export type Texture = {
+export interface Texture {
   front: string
   back: string
   side: string
   top: string
   botom: string
 }
-export type Model = {
+export interface Model {
   name: string
   dimension: Dimension
   texture: Texture
 }
 
-const collectionName: string = 'models'
+const collectionName = 'models'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {

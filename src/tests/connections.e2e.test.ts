@@ -4,21 +4,15 @@
  * @version 2024-02-01 C2RLO - Add test for post device
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { Db, MongoClient } from 'mongodb'
-import request, { Response } from 'supertest'
+import { MongoClient } from 'mongodb';
+import request, { Response } from 'supertest';
 
-import app from '../index'
+import app from '../index';
 
 describe('GET /logs/object/:id', () => {
   let connection: MongoClient
-  let db: Db
-
-  beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI || '', {})
-    db = connection.db(process.env.DBNAME)
-  })
 
   afterAll(async () => {
     await connection.close()

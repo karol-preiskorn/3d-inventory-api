@@ -10,14 +10,14 @@ import { Collection, Db, ObjectId } from 'mongodb'
 import '../utils/loadEnvironment'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 
-export type Components = {
+export interface Components {
   _id: ObjectId
   component: string
   collection: string
   attributes: boolean
 }
 
-const collectionName: string = 'components'
+const collectionName = 'components'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {

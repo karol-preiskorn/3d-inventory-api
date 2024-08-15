@@ -10,7 +10,7 @@ import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 import '../utils/loadEnvironment'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 
-export type Attributes = {
+export interface Attributes {
   _id: ObjectId
   attributesDictionaryId: ObjectId | null
   connectionId: ObjectId | null
@@ -20,7 +20,7 @@ export type Attributes = {
   value: string
 }
 
-const collectionName: string = 'attributes'
+const collectionName = 'attributes'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {

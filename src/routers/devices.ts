@@ -19,7 +19,7 @@ import { CreateLog } from '../services/logs';
 import { logger } from '../utils/logger';
 import { Logs } from './logs';
 
-type position = {
+interface position {
   x: number
   y: number
   h: number
@@ -27,7 +27,7 @@ type position = {
 
 const router = express.Router()
 
-const collectionName: string = 'devices'
+const collectionName = 'devices'
 
 /**
  * Get Devise array from database.
@@ -146,7 +146,7 @@ router.post('/', (async (req, res) => {
   } else {
     logger.info(`POST /devices - device created successfully with id: ${result.insertedId}, ${JSON.stringify(newDocument)}`)
     resultLog = await CreateLog(result.insertedId.toString(), newDocument, 'Create', 'Device')
-    res.status(200).send(result)
+    res.status(200).send(resultLog)
   }
   await connectionClose(client)
 }) as RequestHandler)

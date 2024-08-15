@@ -5,10 +5,10 @@
  * @version: 2024-01-07 C2RLO - Initial
  */
 
-import express, { Response } from 'express'
-import fs from 'fs'
-import Markdown from 'markdown-it'
-import { promisify } from 'util'
+import express from 'express';
+import fs from 'fs';
+import Markdown from 'markdown-it';
+import { promisify } from 'util';
 
 const router = express.Router()
 const readFileAsync = promisify(fs.readFile)

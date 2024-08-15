@@ -25,6 +25,7 @@ const config = {
     },
   },
   testEnvironment: 'node',
+  watchPlugins: ['jest-runner-eslint/watch-fix'],
   projects: [
     {
       displayName: 'prettier',

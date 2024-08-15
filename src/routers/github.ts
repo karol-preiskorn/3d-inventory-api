@@ -1,13 +1,13 @@
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import express from 'express'
+import express from 'express';
 
 const router = express.Router()
-const collectionName: string = 'github'
+//const collectionName = 'github'
 const githubIssuesUrl = 'https://api.github.com/repos/karol-preiskorn/3d-inventory-angular-ui/issues'
 const authToken = process.env.GITHUB_AUTH_TOKEN
-const baseUrl = 'https://api.github.com'
-let issues = ''
+//const baseUrl = 'https://api.github.com'
+//let issues = ''
 
 router.get(
   githubIssuesUrl,

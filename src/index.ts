@@ -10,7 +10,7 @@ import './utils/loadEnvironment';
 
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import express, { ErrorRequestHandler, Request, Response } from 'express';
 import * as OpenApiValidator from 'express-openapi-validator';
 import fs from 'fs';
 import morgan from 'morgan';
@@ -63,10 +63,9 @@ try {
  */
 app.use(cors())
 
-app.use(function (req, res, next) {
+app.use(function (req, res) {
   res.header('Access-Control-Allow-Origin', `http://localhost:${PORT}`)
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-  next()
 })
 
 app.use(express.json())
@@ -77,7 +76,7 @@ morganBody(app, {
   stream: { write: () => true },
 })
 
-app.use((error: ErrorRequestHandler, request: Request, response: Response, next: NextFunction) => {
+app.use((error: ErrorRequestHandler, request: Request, response: Response) => {
   console.error(error)
   response.send('Internal Server Error')
   response.status(500).end()

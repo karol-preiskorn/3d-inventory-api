@@ -62,8 +62,8 @@
     "@yields"
   ],
   "cleanOutputDir": true,
-  "customFooterHtml": "<span>Copyright <i>ultimasolution.pl</i> 3d-inventory 2024</span>",
-  "customFooterHtmlDisableWrapper": false,
+  "customFooterHtml": "<span>Copyright <a href='https://ultimasolution.pl/>ultimasolution.pl</a> <a href='https://ultimasolution.pl/3d-inventory-mongo-api'>3d-inventory</a> 2024</span>",
+  "customFooterHtmlDisableWrapper": true,
   "entryPointStrategy": "expand",
   "entryPoints": [
     "./src/services",
@@ -92,5 +92,16 @@
   "readme": "README.md",
   "theme": "default",
   "tsconfig": "./tsconfig.json",
-  "resolveUtilityTypes": false
+  "resolveUtilityTypes": true,
+  "exclude": [
+    "**/node_modules/**/*",
+    "**/tests/**/*",
+    "**/dist/**/*",
+    "**/coverage/**/*",
+    "**/src/assets/**/*",
+    "**/src/db/**/*",
+    "**/src/tests/**/*",
+    "**/src/routers/**/*",
+    "**/src/services/**/*"
+  ]
 }

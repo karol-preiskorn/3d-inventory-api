@@ -15,8 +15,8 @@ import request from 'supertest';
 import app from '../index';
 
 describe('GET /devices', () => {
-  afterAll(async () => {
-    app.listen().close()
+  afterAll(async function () {
+    await app.listen().close()
   })
 
   it('GET /devices => array of devices', async () => {
@@ -38,7 +38,7 @@ describe('GET /devices', () => {
     )
 
     const responseGetId = await request(app)
-      .get('/devices/' + response.body[0]._id)
+      .get('/devices/' + (response.body as { _id: string }[])[0]._id)
       .expect(200)
 
     expect(responseGetId.body).toEqual(

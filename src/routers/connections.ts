@@ -10,14 +10,14 @@ import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 import '../utils/loadEnvironment'
 
-type Connection = {
+interface Connection {
   _id: ObjectId
   name: string
   deviceIdFrom: ObjectId
   deviceIdTo: ObjectId
 }
 
-const collectionName: string = 'connections'
+const collectionName = 'connections'
 const router = express.Router()
 
 router.get('/', (async (_req, res) => {

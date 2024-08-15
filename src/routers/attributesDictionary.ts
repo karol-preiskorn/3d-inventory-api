@@ -11,7 +11,7 @@ import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
 import '../utils/loadEnvironment'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 
-export type AttributesDictionary = {
+export interface AttributesDictionary {
   _id: ObjectId | null
   category: string
   component: string
@@ -19,7 +19,7 @@ export type AttributesDictionary = {
   type: string
 }
 
-const collectionName: string = 'attributesDictionary'
+const collectionName = 'attributesDictionary'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {

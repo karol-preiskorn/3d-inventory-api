@@ -17,3 +17,5 @@ build
 doc
 dist
 .vscode/branch-timer.json
+docs
+jsdocs

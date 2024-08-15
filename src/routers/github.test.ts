@@ -1,11 +1,8 @@
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import cors from 'cors'
-import request from 'supertest'
+import request from 'supertest';
 
-import app from '../index'
-
-let issues = ''
+import app from '../index';
 
 describe('GitHub API', () => {
   it('should get GitHub issues', async () => {

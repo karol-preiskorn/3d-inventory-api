@@ -5,17 +5,17 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { format } from 'date-fns'
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { format } from 'date-fns';
+import express, { RequestHandler } from 'express';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/conn'
-import { logger } from '../utils/logger'
-import { capitalize } from '../utils/strings'
+import { connectionClose, connectToCluster, connectToDb } from '../db/conn';
+import { logger } from '../utils/logger';
+import { capitalize } from '../utils/strings';
 
-export type Logs = {
+export interface Logs {
   _id: ObjectId
   objectId: string
   date: string
@@ -60,11 +60,11 @@ router.get('/component/:component', async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
 
-  const componentsResult: { component: string }[] = []
   if (req.params.component.length === 0) {
     res.status(400).send('Not provide component name')
     return
   }
+
   const query: { component: string } = { component: capitalize(req.params.component) }
   // logger.info(`GET /logs/component/${req.params.component} - query: ${JSON.stringify(query)}`)
   const result = await collection.find(query).sort({ date: -1 }).toArray()

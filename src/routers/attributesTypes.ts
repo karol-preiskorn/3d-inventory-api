@@ -12,7 +12,7 @@ import '../utils/loadEnvironment'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 import { AttributesDictionary } from '../routers/attributesDictionary'
 
-export type AttributesTypes = {
+export interface AttributesTypes {
   _id: ObjectId
   component: string
   description: string
@@ -22,7 +22,7 @@ export type AttributesTypes = {
   value: string
 }
 
-const collectionName: string = 'attributesDictionary'
+const collectionName = 'attributesDictionary'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {

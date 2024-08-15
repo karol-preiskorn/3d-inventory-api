@@ -6,11 +6,14 @@
  * @version: 2023-10-29  C2RLO  Init
  */
 
-import { faker } from '@faker-js/faker'
-import '../../../../../src/utils/loadEnvironment'
-import { connectToCluster, connectToDb } from '../db/conn'
-import { User } from '../routers/users'
-import { Db, Collection, Document, MongoClient, ObjectId } from 'mongodb'
+import '../../../../../src/utils/loadEnvironment';
+
+import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb';
+
+import { faker } from '@faker-js/faker';
+
+import { connectToCluster, connectToDb } from '../db/conn';
+import { User } from '../routers/users';
 
 describe('Test Mongo Atlas DB users', () => {
   let db: Db

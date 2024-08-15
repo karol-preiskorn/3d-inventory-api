@@ -10,18 +10,18 @@ import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 import '../utils/loadEnvironment'
 import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 
-export type User = {
+export interface User {
   _id: ObjectId
   name: string
   email: string
   password: string
   token: string
-  rigths: Array<string> // Fix: Replace Array<Object> with Array<object>
+  rigths: string[] // Fix: Replace Array<Object> with Array<object>
 }
 
 export type Users = User[]
 
-const collectionName: string = 'attributes'
+const collectionName = 'attributes'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {

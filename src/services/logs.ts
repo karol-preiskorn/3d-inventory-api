@@ -4,11 +4,11 @@
  * @version 2024-08-04 C2RLO - Initial
  **/
 
-import { format } from 'date-fns'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import { Observable, of } from 'rxjs'
+import { format } from 'date-fns';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import { Observable, of } from 'rxjs';
 
-import { connectToCluster, connectToDb } from '../db/conn'
+import { connectToCluster, connectToDb } from '../db/conn';
 
 /**
  * Represents a log entry.
@@ -38,20 +38,20 @@ export interface LogCreate {
  * @param data - The log input data.
  * @returns An Observable that emits a Log or LogIn object.
  */
-export async function CreateLog(objectId: string, message: object, operation: string, component: string): Promise<Observable<Log | LogCreate>> {
+export async function CreateLog(objectId: string, message: object, operation: string, component: string): Promise<Observable<InsertOneResult<Document>>> {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection('logs')
 
-  let log: LogCreate = {
+  const log: LogCreate = {
     date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
     message: message,
-    operation: 'Create',
-    component: 'Device',
+    operation: operation,
+    component: component,
     objectId: objectId,
   }
 
   console.log('LogCreate: ' + JSON.stringify(log, null, ' '))
   const result: InsertOneResult<Document> = await collection.insertOne(log) // Replace 'collection' with the correct collection name
-  return of(log)
+  return of(result)
 }

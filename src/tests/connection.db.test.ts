@@ -26,7 +26,7 @@ describe('ConnectToDatabase Mongo Atlas', () => {
   })
 
   afterAll(async () => {
-    connection.close()
+    await connection.close()
   })
 
   it(`connect to ${process.env.DBNAME}`, async () => {
