@@ -5,10 +5,13 @@
  * @version 2023-10-29 C2RLO - Init
  */
 
-import { faker } from '@faker-js/faker'
-import '../utils/loadEnvironment'
-import { Db, MongoClient } from 'mongodb'
-import { capitalizeFirstLetter } from '../utils/strings'
+import '../utils/loadEnvironment';
+
+import { Db, MongoClient } from 'mongodb';
+
+import { faker } from '@faker-js/faker';
+
+import { capitalizeFirstLetter } from '../utils/strings';
 
 describe('create 10 floors', () => {
   let conn: MongoClient
@@ -34,7 +37,7 @@ describe('create 10 floors', () => {
       address: { street: string; city: string; country: string; postcode: number }
       dimension: { description: string; x: number; y: number; h: number; xPos: number; yPos: number; hPos: number }[]
     } = {
-      name: capitalizeFirstLetter([faker.color.human()]) + ' ' + faker.commerce.product(),
+      name: capitalizeFirstLetter(faker.color.human()) + ' ' + faker.commerce.product(),
       address: {
         street: faker.location.street(),
         city: faker.location.city(),
@@ -56,7 +59,7 @@ describe('create 10 floors', () => {
     await floors.insertOne(mockFloors)
     for (let index = 0; index < 10; index++) {
       mockFloors = {
-        name: capitalizeFirstLetter([faker.color.human()[0]]) + ' ' + faker.commerce.product(),
+        name: capitalizeFirstLetter(faker.color.human()[0]) + ' ' + faker.commerce.product(),
         address: {
           street: faker.location.street(),
           city: faker.location.city(),

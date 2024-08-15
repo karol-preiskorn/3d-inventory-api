@@ -6,9 +6,11 @@
  * @version 2023-10-29  C2RLO  Init
  */
 
-import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment'
+
 import { Db, MongoClient } from 'mongodb'
+
+import { faker } from '@faker-js/faker'
 
 describe('create 3 models', () => {
   let connection: MongoClient
@@ -27,9 +29,6 @@ describe('create 3 models', () => {
 
   it('should insert a 10 models', async () => {
     const attributesTypes = db.collection('attributesTypes')
-    const attributesTypesCursor = attributesTypes.find({
-      component: 'Devices',
-    })
     expect(await attributesTypes.countDocuments({})).not.toBe(0)
     // const attributesTypesData = await attributesTypesCursor.toArray()
     for (let index = 0; index < 10; index++) {

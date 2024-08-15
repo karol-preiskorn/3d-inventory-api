@@ -2,32 +2,38 @@
  * @description API 3d-inventory. Project is a simple solution that allows you to build a spatial and database representation of all types of warehouses and server rooms.
  * @version 2024-03-31 C2RLO - transform to typescript
  * @version 2023-12-29 C2RLO - Initial
+ * @public
+ * @alpha
  */
 
-import './utils/loadEnvironment'
+import './utils/loadEnvironment';
 
-import bodyParser from 'body-parser'
-import cors from 'cors'
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
-import * as OpenApiValidator from 'express-openapi-validator'
-import fs from 'fs'
-import morgan from 'morgan'
-import morganBody from 'morgan-body'
-import swaggerUi, { JsonObject } from 'swagger-ui-express'
-import YAML from 'yaml'
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import * as OpenApiValidator from 'express-openapi-validator';
+import fs from 'fs';
+import morgan from 'morgan';
+import morganBody from 'morgan-body';
+import swaggerUi, { JsonObject } from 'swagger-ui-express';
+import YAML from 'yaml';
 
-import attributes from './routers/attributes'
-import attributesDictionary from './routers/attributesDictionary'
-import connections from './routers/connections'
-import devices from './routers/devices'
-import floors from './routers/floors'
-import logs from './routers/logs'
-import models from './routers/models'
-import readme from './routers/readme'
-import { logger } from './utils/logger'
+import attributes from './routers/attributes';
+import attributesDictionary from './routers/attributesDictionary';
+import connections from './routers/connections';
+import devices from './routers/devices';
+import floors from './routers/floors';
+import logs from './routers/logs';
+import models from './routers/models';
+import readme from './routers/readme';
+import { logger } from './utils/logger';
 
 const PORT = process.env.PORT || 8080
 const yamlFilename = process.env.API_YAML_FILE || 'src/api/openapi.yaml'
+
+/**
+ * @public
+ */
 const app = express()
 
 try {
@@ -52,10 +58,13 @@ try {
   logger.error(`[morgan] ${String(error)}`)
 }
 
+/**
+ * @internal
+ */
 app.use(cors())
 
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:4200')
+  res.header('Access-Control-Allow-Origin', `http://localhost:${PORT}`)
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   next()
 })
@@ -154,4 +163,7 @@ process.on('SIGTERM', () => {
 //   })
 // })
 
+/**
+ * @public
+ */
 export default app

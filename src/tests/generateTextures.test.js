@@ -1,18 +1,17 @@
 /**
- * @file /home/karol/GitHub/3d-inventory-mongo-api/tests/generateTextures.test.js
- * @description Generate textures
- * @version 2024-01-28 C2RLO - Initial
- */
+* @file /home/karol/GitHub/3d-inventory-mongo-api/tests/generateTextures.test.js
+* @description Generate textures
+* @version 2024-01-28 C2RLO - Initial
+*/
 
-const { createCanvas } = require('canvas')
-const { writeFileSync } = require('fs')
-const perlin = require('perlin-noise')
-const { deleteFilesInDirectory } = require('../utils/files')
+import { beforeAll, describe, expect, it } from 'mocha'
 
+import { console } from 'console'
+import { createCanvas } from 'canvas'
+import { deleteFilesInDirectory } from '../util/files'
+import perlin from 'perlin-noise'
+import { writeFileSync } from 'fs'
 
-/**
- * Test suite for generating textures.
- */
 describe('Generate textures', () => {
   // Test suite for generating colorful textures
   describe('Colorful textures', () => {
@@ -83,10 +82,9 @@ function generateColorfulTexture(width, height, tileSize, filename) {
  * Generates a natural texture based on Perlin noise and saves it as a PNG file.
  * @param {number} width - The width of the texture in pixels.
  * @param {number} height - The height of the texture in pixels.
- * @param {number} scale - The scale of the Perlin noise.
  * @param {string} filename - The name of the file to save the texture as.
  */
-function generateNaturalTexture(width, height, scale, filename) {
+function generateNaturalTexture(width, height, filename) {
   const canvas = createCanvas(width, height)
   const ctx = canvas.getContext('2d')
   const noise = perlin.generatePerlinNoise(width, height, {
@@ -111,25 +109,7 @@ function generateNaturalTexture(width, height, scale, filename) {
 }
 
 /**
- * Test case for generating colorful textures.
- */
-it('should create 6 files with colorful textures', async () => {
-  // Set the dimensions of your texture and the size of the pattern tiles
-  const textureWidth = 500
-  const textureHeight = 500
-  const tileSize = 80
-
-  // Generate 6 different colorful textures with patterns
-  for (let i = 1; i <= 6; i++) {
-    const filename = `assets/textures/texture_${i}.png`
-    generateColorfulTexture(textureWidth, textureHeight, tileSize, filename)
-    console.log(`Colorful texture ${i} generated and saved as ${filename}`)
-  }
-
-  // Add an assertion to the test
-  expect(true).toBe(true)
-})
-
+// Remove the duplicate test case for generating colorful textures
 /**
  * Test case for generating natural textures.
  */

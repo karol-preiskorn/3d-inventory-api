@@ -27,19 +27,6 @@ const config = {
   testEnvironment: 'node',
   projects: [
     {
-      displayName: 'esLint',
-      clearMocks: true,
-      globals: {
-        __DEV__: true,
-      },
-      moduleFileExtensions: ['ts', 'json'],
-      preset: '@shelf/jest-mongodb',
-      runner: 'jest-runner-eslint',
-      testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/doc/', '<rootDir>/dist/', '<rootDir>/docs/', '<rootDir>/logs/', '<rootDir>/coverage/'],
-      testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(mjs?|js?|tsx?|ts?)$',
-      transform: {},
-    },
-    {
       displayName: 'prettier',
       clearMocks: true,
       globals: {

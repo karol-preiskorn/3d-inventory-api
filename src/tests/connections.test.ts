@@ -4,9 +4,11 @@
  * @version 2024-10-29 C2RLO - Init
  */
 
-import { faker } from '@faker-js/faker'
-import '../utils/loadEnvironment'
-import { Db, MongoClient } from 'mongodb'
+import '../utils/loadEnvironment';
+
+import { Db, MongoClient } from 'mongodb';
+
+import { faker } from '@faker-js/faker';
 
 describe('create 10 connections', () => {
   let connection: MongoClient
@@ -15,8 +17,8 @@ describe('create 10 connections', () => {
   let insertedConnection
 
   beforeAll(async () => {
-    const atlasUri = process.env.ATLAS_URI || '' // Ensure ATLAS_URI is defined or use an empty string as default
-    connection = await MongoClient.connect(atlasUri, {}) // Pass the updated atlasUri variable as an argument
+    const atlasUri = process.env.ATLAS_URI || ''
+    connection = await MongoClient.connect(atlasUri, {})
     db = connection.db(process.env.DBNAME)
   })
 

@@ -1,8 +1,12 @@
 ﻿# TODO: fix device POST with seting from body
 # TODO: fix device GET
 
+### get all devices
 
-### get devices
+GET http://localhost:8080/devices HTTP/1.1
+content-type: application/json
+
+### get request selected devices
 
 GET http://localhost:8080/devices HTTP/1.1
 content-type: application/json
@@ -13,7 +17,6 @@ content-type: application/json
     "device_category": "Server",
     "device_type": "Racks"
 }
-
 
 ### post device
 
@@ -40,14 +43,6 @@ content-type: application/json
 }
 
 
-### get request selected devices
-
-GET http://localhost:8080/devices HTTP/1.1
-content-type: application/json
-
-{
-
-}
 
 ### get request selected context
 
@@ -57,6 +52,11 @@ content-type: application/json
 {
     "device_name": "tall_turquoise_sheep"
 }
+
+### get specyfic device: 666f1f912af8066b915ff098
+
+GET http://localhost:8080/devices/666f1f912af8066b915ff098 HTTP/1.1
+content-type: application/json
 
 
 ### get logs

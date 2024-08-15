@@ -5,10 +5,12 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
-import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment'
+
 import { Db, MongoClient, ObjectId, OptionalId } from 'mongodb'
+
 import { Logs } from '../routers/logs'
+import { faker } from '@faker-js/faker'
 import { formatDate } from 'date-fns'
 
 describe('prepare test data', () => {
@@ -29,23 +31,16 @@ describe('prepare test data', () => {
   describe('create 3 logs', () => {
     it('should insert a log doc into collection logs', async () => {
       const attributesCategory = db.collection('attributesCategory')
-      const attributesCategoryCursor = attributesCategory.find({})
       expect(await attributesCategory.countDocuments({})).not.toBe(0)
-      const attributesCategoryData = await attributesCategoryCursor.toArray()
 
       const components = db.collection('components')
-      const componentsCursor = components.find({ attributes: true })
       expect(await components.countDocuments({ attributes: true })).not.toBe(0)
-      const componentsData = await componentsCursor.toArray()
 
       const attributesTypes = db.collection('attributesTypes')
-      const attributesTypesCursor = attributesTypes.find({})
       expect(await attributesTypes.countDocuments({})).not.toBe(0)
-      const attributesTypesData = await attributesTypesCursor.toArray()
 
       for (let index = 0; index < 3; index++) {
         const logs = db.collection('logs')
-        const arrayElement = (array: string[]): string => faker.helpers.arrayElement(array)
         const mockModel = {
           name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
           dimension: {

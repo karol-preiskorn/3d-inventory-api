@@ -4,10 +4,12 @@
  * @version 2024-02-01 C2RLO - Add test for post device
  */
 
+import '../utils/loadEnvironment'
+
 import { Db, MongoClient } from 'mongodb'
 import request, { Response } from 'supertest'
+
 import app from '../index'
-import '../utils/loadEnvironment'
 
 describe('GET /models', () => {
   let connection: MongoClient
@@ -28,14 +30,12 @@ describe('GET /models', () => {
     const components = db.collection('components')
     const componentsCursor = components.find({ attributes: true })
     expect(await components.countDocuments({ attributes: true })).not.toBe(0)
-    const componentsData = await componentsCursor.toArray()
 
     const attributesTypes = db.collection('attributesTypes')
     const attributesTypesCursor = attributesTypes.find({
       component: 'Devices',
     })
     expect(await attributesTypes.countDocuments({})).not.toBe(0)
-    const attributesTypesData = await attributesTypesCursor.toArray()
 
     expect((response as Response).body).toEqual(
       expect.arrayContaining([

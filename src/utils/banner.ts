@@ -3,17 +3,17 @@
  * @version: 2024-01-07  C2RLO  Initial
  */
 
-import figlet, { Fonts } from 'figlet'
-import { promises as fs } from 'fs'
+import figlet, { Fonts } from 'figlet';
+import fs from 'fs/promises';
 
-import { logger } from './logger.js'
+import { logger } from './logger';
 
 let fontLoaded = false
 
 /**
  * Loads the font used for rendering ASCII art.
  * If the font is not already loaded, it reads the font file and parses it.
- * @returns {Promise<void>} A promise that resolves when the font is loaded.
+ * @returns Promise<void> A promise that resolves when the font is loaded.
  */
 async function loadFont(): Promise<void> {
   if (!fontLoaded) {
