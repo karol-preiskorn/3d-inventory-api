@@ -2,14 +2,15 @@
  * @file /routers/floors.js
  * @module /routers
  * @description floors router
- * @version 2024-04-05 C2RLO - convert to typescript
+ * @version 2024-04-05 C2RLO - Convert to typescript
  * @version 2024-02-13 C2RLO - init
  */
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
 import '../utils/loadEnvironment'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
+
+import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
 
 interface Floor {
   _id: ObjectId

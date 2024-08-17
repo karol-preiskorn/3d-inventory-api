@@ -1,5 +1,5 @@
 /**
- * @file conn.js Connect to Mongo Atlas DB
+ * @resume Connect to Mongo Atlas DB.
  * @module db/conn
  * @description This module exports a MongoDB client and a database connection.
  * @version 2024-01-27 C2RLO - add exit(1) on error

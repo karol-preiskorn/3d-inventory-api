@@ -5,10 +5,11 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 import '../utils/loadEnvironment'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
+
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
 
 export interface Attributes {
   _id: ObjectId

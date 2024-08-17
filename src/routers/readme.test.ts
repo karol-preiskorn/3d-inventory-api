@@ -1,10 +1,14 @@
-import express from 'express';
-import request from 'supertest';
-
-import router from '../routers/readme';
+/**
+ * @description This file is used to test the README.md file rendering
+ * @module tests
+ * @version 2024-01-27 C2RLO - Initial
+ */
+import express from 'express'
+import request from 'supertest'
+import router from '../routers/readme'
 
 const app = express()
-app.use('/', router)
+app.use('/', router as express.RequestHandler)
 
 describe('GET /', () => {
   it('should return the rendered README.md', async () => {
@@ -14,7 +18,7 @@ describe('GET /', () => {
   })
 
   it('should return 404 if README.md file is not found', async () => {
-    jest.spyOn(router, 'get').mockImplementation(() => {
+    jest.spyOn(router as express.Router, 'get').mockImplementation(() => {
       throw new Error('File not found')
     })
     const response = await request(app).get('/')

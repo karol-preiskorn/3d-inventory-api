@@ -5,10 +5,11 @@
  * @version 2024-01-25 C2RLO - add new way to connect to DB
  */
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
 import '../utils/loadEnvironment'
+
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
 
 interface Connection {
   _id: ObjectId

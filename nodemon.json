@@ -1,7 +1,6 @@
 ﻿{
   "ignore": [
-    "**/*.test.ts",
-    "**/*.spec.ts",
+    "tests/**/*.ts",
     ".git",
     "doc/**/*",
     "coverage/**/*",
@@ -16,7 +15,9 @@
     "src/schema/*",
     "src/db/*",
     "src/utils/*",
-    "README.md"
+    "README.md",
+    "*.json",
+    "*.(mjs|yaml|md)"
   ],
   "exec": "ts-node src/index.ts",
   "ext": "ts,js,json,yaml"

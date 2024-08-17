@@ -1,19 +1,25 @@
-import '../utils/loadEnvironment';
+/**
+ * @remarks This file contains the router for accessing the GitHub issues API
+ * endpoint. It defines a GET route for retrieving GitHub issues and sets the
+ * necessary headers for authentication.
+ */
+import '../utils/loadEnvironment'
 
-import express from 'express';
+import express from 'express'
 
 const router = express.Router()
-//const collectionName = 'github'
+/**
+ * The URL for accessing the GitHub issues API endpoint.
+ */
 const githubIssuesUrl = 'https://api.github.com/repos/karol-preiskorn/3d-inventory-angular-ui/issues'
 const authToken = process.env.GITHUB_AUTH_TOKEN
-//const baseUrl = 'https://api.github.com'
-//let issues = ''
 
 router.get(
   githubIssuesUrl,
   (req: express.Request, res: express.Response) => {
     console.log('Get Issues ' + JSON.stringify(res, null, ' '))
-    issues = res as unknown as string
+    const issues = res as unknown as string
+    return issues
   },
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     res.set('Authorization', `Bearer ${authToken}`)

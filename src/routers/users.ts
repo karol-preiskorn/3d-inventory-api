@@ -1,14 +1,16 @@
 /**
  * @file /routers/users.ts
- * @description
+ * @description This file contains the router for handling user-related API endpoints. It defines GET, POST, and DELETE routes for interacting with users in the database.
+ * @module /routers
  * @version 2024-03-06 C2RLO - add _id to schema
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 import '../utils/loadEnvironment'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
+
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
 
 export interface User {
   _id: ObjectId

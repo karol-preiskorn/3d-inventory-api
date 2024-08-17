@@ -59,17 +59,38 @@
     "@throws",
     "@type",
     "@var",
-    "@yields"
+    "@yields",
+    "@remarks"
   ],
   "cleanOutputDir": true,
+  "commentStyle": "jsdoc",
   "customFooterHtml": "<span>Copyright <a href='https://ultimasolution.pl/>ultimasolution.pl</a> <a href='https://ultimasolution.pl/3d-inventory-mongo-api'>3d-inventory</a> 2024</span>",
-  "customFooterHtmlDisableWrapper": true,
-  "entryPointStrategy": "expand",
+  "customFooterHtmlDisableWrapper": false,
+  "entryPointStrategy": "resolve",
   "entryPoints": [
-    "./src/services",
-    "./src/routers",
-    "./src/tests",
-    "./src/db"
+    "./src/index.ts",
+    "./src/routers/attributes.ts",
+    "./src/routers/attributesDictionary.ts",
+    "./src/routers/attributesTypes.ts",
+    "./src/routers/componets.ts",
+    "./src/routers/connections.ts",
+    "./src/routers/devices.ts",
+    "./src/routers/floors.ts",
+    "./src/routers/generateTextures.ts",
+    "./src/routers/github.ts",
+    "./src/routers/github.test.ts",
+    "./src/routers/logs.ts",
+    "./src/routers/models.ts",
+    "./src/routers/models.ts",
+    "./src/routers/readme.ts",
+    "./src/routers/users.ts",
+    "./src/services/logs.ts",
+    "./src/tests/generateTextures.test.js"
+  ],
+  "exclude": [
+    "**/node_modules/**/*",
+    "**/dist/**/*",
+    "**/coverage/**/*"
   ],
   "includeVersion": true,
   "inlineTags": [
@@ -84,24 +105,21 @@
   "out": "./docs",
   "plugin": [
     "typedoc-plugin-mdn-links",
-    "typedoc-plugin-missing-exports"
+    "typedoc-plugin-missing-exports",
+    "typedoc-plugin-merge-modules"
   ],
   "projectDocuments": [
     "README.md"
   ],
   "readme": "README.md",
+  "resolveUtilityTypes": true,
   "theme": "default",
   "tsconfig": "./tsconfig.json",
-  "resolveUtilityTypes": true,
-  "exclude": [
-    "**/node_modules/**/*",
-    "**/tests/**/*",
-    "**/dist/**/*",
-    "**/coverage/**/*",
-    "**/src/assets/**/*",
-    "**/src/db/**/*",
-    "**/src/tests/**/*",
-    "**/src/routers/**/*",
-    "**/src/services/**/*"
-  ]
+  "modifierTags": [
+    "@alpha",
+    "@beta",
+    "@experimental"
+  ],
+  "mergeModulesRenameDefaults": true,
+  "mergeModulesMergeMode": "module",
 }

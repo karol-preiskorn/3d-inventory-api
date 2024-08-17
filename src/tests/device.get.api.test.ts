@@ -10,13 +10,13 @@
  * @version 2024-01-03  C2RLO  Initial
  */
 
-import request from 'supertest';
+import request from 'supertest'
 
-import app from '../index';
+import app from '../index'
 
 describe('GET /devices', () => {
-  afterAll(async function () {
-    await app.listen().close()
+  afterAll(function () {
+    app.listen().close()
   })
 
   it('GET /devices => array of devices', async () => {

@@ -6,10 +6,11 @@
  * @version 2024-01-30 C2RLO - Initial
  **/
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
 import '../utils/loadEnvironment'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn'
+
+import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
 
 export interface AttributesDictionary {
   _id: ObjectId | null

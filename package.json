@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.44.0",
+  "version": "0.45.0",
   "description": "Mongo REST API for 3d-inventory project",
   "keywords": [
     "3d-inventory",
@@ -130,7 +130,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/mocha": "^10.0.7",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^22.3.0",
+    "@types/node": "^22.4.0",
     "@types/supertest": "^6.0.2",
     "@types/swagger-ui-express": "^4.1.6",
     "@typescript-eslint/eslint-plugin": "^8.1.0",

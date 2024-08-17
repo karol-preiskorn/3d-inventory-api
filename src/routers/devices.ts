@@ -4,22 +4,31 @@
  * @description: Routers for devices CRUD operations.
  * @module: /routers/devices
  * @public
- **/
+ */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import { format } from 'date-fns';
-import express, { RequestHandler } from 'express';
-import {
-    Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter, WithId
-} from 'mongodb';
+import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter, WithId } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/conn';
-import { CreateLog } from '../services/logs';
-import { logger } from '../utils/logger';
-import { Logs } from './logs';
+import { CreateLog } from '../services/logs'
+// import { Logs } from './logs'
+// import { format } from 'date-fns'
+import { logger } from '../utils/logger'
 
-interface position {
+export interface Device {
+  _id: string
+  name: string
+  modelId: string
+  position: {
+    x: number
+    y: number
+    h: number
+  }
+}
+
+export interface position {
   x: number
   y: number
   h: number
@@ -93,9 +102,9 @@ router.put('/:id', (async (req, res) => {
    */
   const updates = {
     $set: {
-      name: req.body.name,
-      modelId: req.body.modelId,
-      position: req.body.position,
+      name: (req.body as { name: string }).name,
+      modelId: (req.body as { modelId: string }).modelId,
+      position: (req.body as { position: position }).position,
     },
   }
   const client = await connectToCluster()
@@ -144,7 +153,7 @@ router.post('/', (async (req, res) => {
     resultLog = await CreateLog('', newDocument, 'Create', 'Device')
     res.status(500).send('POST /devices - Device not created')
   } else {
-    logger.info(`POST /devices - device created successfully with id: ${result.insertedId}, ${JSON.stringify(newDocument)}`)
+    logger.info(`POST /devices - device created successfully with id: ${result.insertedId.toString()}, ${JSON.stringify(newDocument)}`)
     resultLog = await CreateLog(result.insertedId.toString(), newDocument, 'Create', 'Device')
     res.status(200).send(resultLog)
   }

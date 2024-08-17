@@ -1,19 +1,19 @@
 /**
- * @file /routers/logs.js
+ * @description This file contains the router for handling log-related API endpoints.
  * @module /routers
  * @description This file contains the router for handling log-related API endpoints.
  * @version 2024-01-27 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import { format } from 'date-fns';
-import express, { RequestHandler } from 'express';
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/conn';
-import { logger } from '../utils/logger';
-import { capitalize } from '../utils/strings';
+import { capitalize } from '../utils/strings'
+import { format } from 'date-fns'
+import { logger } from '../utils/logger'
 
 export interface Logs {
   _id: ObjectId
@@ -55,7 +55,7 @@ router.get('/:id', (async (req, res) => {
   await connectionClose(client)
 }) as RequestHandler)
 
-router.get('/component/:component', async (req, res) => {
+router.get('/component/:component', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
@@ -76,7 +76,7 @@ router.get('/component/:component', async (req, res) => {
     logger.info(`GET /logs/component/${req.params.component}, query: ${JSON.stringify(query)}`)
   }
   await connectionClose(client)
-})
+}) as RequestHandler)
 
 router.get('/model/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {

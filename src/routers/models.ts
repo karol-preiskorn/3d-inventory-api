@@ -1,14 +1,15 @@
 /**
- * @description:  This file contains the router for handling model-related API endpoints.
- * @version:      2023-12-29  C2RLO  Initial
+ * @description This file contains the router for handling model-related API endpoints. It defines GET, PUT, POST, PATCH, and DELETE routes for interacting with models in the database.
+ * @module /routers
+ * @version 2023-12-29  C2RLO - Initial
  **/
 
 import '../utils/loadEnvironment'
 
-import express, { RequestHandler } from 'express'
 import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/conn'
 import { logger } from '../utils/logger'
 
 export interface Dimension {

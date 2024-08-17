@@ -1,8 +1,11 @@
 /**
- * @file /utils/files.js
+ * @file /utils/files.ts
  * @module /utils
- * @description operation on files
+ * @description Toolset operation on files
  * @version 2024-01-29 C2RLO - Initial
+ * @version 2024-01-30 C2RLO - Add deleteFilesInDirectory
+ * @version 2024-01-30 C2RLO - Fix deleteFilesInDirectory
+ * @public
  */
 
 import fs from 'fs'
@@ -11,6 +14,9 @@ import path from 'path'
 /**
  * Deletes all files in a given directory.
  * @param {string} directory - The directory path.
+ * @returns {void}
+ * @example deleteFilesInDirectory('path/to/directory')
+ * @public
  */
 export function deleteFilesInDirectory(directory: string) {
   fs.readdir(directory, (err, files) => {

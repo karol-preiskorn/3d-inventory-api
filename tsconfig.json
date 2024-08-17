@@ -1,15 +1,16 @@
-{
+/* Visit https://aka.ms/tsconfig to read more about this file */{
   "$schema": "https://json.schemastore.org/tsconfig",
   "_version": "21.0.0",
   "compileOnSave": true,
   "compilerOptions": {
+    "allowJs": true, // Allow JavaScript files to be compiled
     "declaration": true, /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
     "declarationMap": true, /* Create sourcemaps for d.ts files. */
-    //"experimentalDecorators": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
-    "module": "Node16" /* Specify what module code is generated. */,
+    "module": "CommonJS" /* Specify what module code is generated. */,
     "moduleDetection": "auto", /* Control what method is used to detect module-format JS files. */
-    "moduleResolution": "node16" /* Specify how TypeScript looks up a file from a given module specifier. */,
     "outDir": "./dist" /* Specify an output folder for all emitted files. */,
     "pretty": true,
     "removeComments": false,
@@ -17,29 +18,24 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "sourceMap": true /* Create source map files for emitted JavaScript files. */,
     "strict": true /* Enable all strict type-checking options. */,
-    /* Visit https://aka.ms/tsconfig to read more about this file */
-    "target": "es2022" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "target": "ES6" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     "types": [
       "node",
       "jest"
     ]
   },
-  "display": "Node 21",
+  "display": "node", /* Specify the environment for the TypeScript language service. */
   "exclude": [
     "dist",
     "realm",
     "schema",
     "docs",
     "release",
-    "./node_modules/*",
-    "jest.config.ts",
-    "tests/**/*.test.*",
-    "tests/**/__mocks__/*",
-    "tests/**/__tests__/*"
+    "node_modules"
   ],
   "include": [
     "src/**/*.ts",
-    "src/**/*.yaml",
-    "schema/**/*.json",
+    "src/**/*.js", // Include JavaScript files
+    "tests/**/*.(t|j)s" // Include test files
   ]
 }

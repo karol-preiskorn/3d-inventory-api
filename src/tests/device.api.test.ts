@@ -7,31 +7,19 @@
  * @version: 2024-01-03  C2RLO  Initial
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import { Collection, Db, ObjectId } from 'mongodb';
-import request from 'supertest';
+import { Collection, Db, ObjectId } from 'mongodb'
+import { connectToCluster, connectToDb } from '../db/dbUtils'
 
-import { faker } from '@faker-js/faker';
-
-import { connectToCluster, connectToDb } from '../db/conn';
-import { Device } from '../types';
-
-interface Device {
-  _id: string
-  name: string
-  modelId: string
-  position: {
-    x: number
-    y: number
-    h: number
-  }
-}
+import { Device } from '../routers/devices'
+import { faker } from '@faker-js/faker'
+import request from 'supertest'
 
 describe('GET /devices', () => {
   it('GET /devices => array of devices', async () => {
     const response = await request(app).get('/devices').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
-    const devices: Device[] = response.body
+    const devices: Device[] = response.body as Device[]
 
     if (devices.length === 0) {
       console.log('No devices found')
@@ -40,13 +28,13 @@ describe('GET /devices', () => {
       expect(devices).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            _id: expect.any(String),
-            name: expect.any(String),
-            modelId: expect.any(String),
+            _id: expect.any(String) as ObjectId,
+            name: expect.any(String) as string,
+            modelId: expect.any(String) as ObjectId,
             position: {
-              x: expect.any(Number),
-              y: expect.any(Number),
-              h: expect.any(Number),
+              x: expect.any(Number) as number,
+              y: expect.any(Number) as number,
+              h: expect.any(Number) as number,
             },
           }),
         ]),
@@ -64,19 +52,44 @@ describe('Database Connection', () => {
 
     if (!results) {
       // Simulate response for testing
-      const res = { status: jest.fn().mockReturnThis(), send: jest.fn() }
-      res.status(404).send('Not found')
+      const res: { status: jest.Mock; send: jest.Mock } = { status: jest.fn().mockReturnThis(), send: jest.fn() }
       expect(res.status).toHaveBeenCalledWith(404)
       expect(res.send).toHaveBeenCalledWith('Not found')
     } else {
       // Simulate response for testing
-      const res = { status: jest.fn().mockReturnThis(), send: jest.fn() }
-      res.status(200).send(results)
+      const res: { status: jest.Mock; send: jest.Mock } = { status: jest.fn().mockReturnThis(), send: jest.fn() }
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.send).toHaveBeenCalledWith(results)
     }
 
     done()
+  })
+})
+
+describe('POST /devices', () => {
+  it('POST /devices => create new device', async () => {
+    const device = {
+      name: faker.color.human() + ' ' + faker.commerce.product(),
+      modelId: new ObjectId(),
+      position: {
+        x: faker.number.int({ min: 1, max: 10 }),
+        y: faker.number.int({ min: 1, max: 10 }),
+        h: faker.number.int({ min: 1, max: 10 }),
+      },
+    }
+
+    const response = await request(app).post('/devices').send(device).set('Accept', 'application/json').expect('Content-Type', /json/).expect(201)
+
+    const createdDevice: Device = response.body as Device
+
+    expect(createdDevice).toEqual(
+      expect.objectContaining({
+        _id: expect.any(String) as ObjectId,
+        name: device.name,
+        modelId: device.modelId,
+        position: device.position,
+      }),
+    )
   })
 })
 
@@ -86,9 +99,9 @@ describe('GET /devices', () => {
   it('GET /devices => array of devices', async () => {
     const response = await request(app).get('/devices').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
 
-    if (response.body.length === 0) {
+    if (Array.isArray(response.body) && response.body.length === 0) {
       console.log('No devices found')
-    } else if (typeof response.body.length === 'object') {
+    } else if (typeof response.body === 'object' && response.body !== null) {
       console.log('Device found')
       expect.objectContaining({
         _id: expect.any(String) as ObjectId,
@@ -118,8 +131,19 @@ describe('GET /devices', () => {
       )
     }
 
+    interface Device {
+      _id: string
+      // Add other properties as needed
+    }
+
+    interface GetDevicesResponse {
+      body: Device[]
+    }
+
+    const getDevicesResponse = response as GetDevicesResponse
+
     const responseGetId = await request(app)
-      .get('/devices/' + response.body[0]._id)
+      .get('/devices/' + getDevicesResponse.body[0]._id)
       .expect(200)
 
     expect(responseGetId.body).toEqual(
