@@ -8,13 +8,12 @@
 
 import '../utils/loadEnvironment'
 
-import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter, WithId } from 'mongodb'
+import { Collection, Db, Filter, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
+import { Request, RequestHandler, Response } from 'express'
 import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
-import express, { RequestHandler } from 'express'
 
 import { CreateLog } from '../services/logs'
-// import { Logs } from './logs'
-// import { format } from 'date-fns'
+import express from 'express'
 import { logger } from '../utils/logger'
 
 export interface Device {
@@ -70,15 +69,16 @@ router.get('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     logger.error(`GET /devices/${req.params.id} - wrong id`)
     res.sendStatus(500)
+    return
   }
   const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-  const query = { _id: req.params.id } as unknown as Promise<WithId<Document>>
+  const db = connectToDb(client)
+  const collection = db.collection(collectionName) // Replace with your actual collection name
+  const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) {
     logger.warn(`GET /devices/${req.params.id} - not found device`)
-    res.status(404).send(`Device ${req.params.id} not found`)
+    res.status(404).send('Not found')
   } else {
     logger.info(`GET /devices/${req.params.id} - oki, device: ${JSON.stringify(result)}`)
     res.status(200).send(result)
@@ -92,14 +92,6 @@ router.put('/:id', (async (req, res) => {
     res.sendStatus(404)
   }
   const query = { _id: new ObjectId(req.params.id) }
-  /**
-   * Updates object for modifying device properties.
-   * @typedef {Object} Updates
-   * @property {$set} $set - The $set operator for specifying the fields to update.
-   * @property {string} name - The new name of the device.
-   * @property {string} modelId - The new model ID of the device.
-   * @property {string} position - The new position of the device.
-   */
   const updates = {
     $set: {
       name: (req.body as { name: string }).name,

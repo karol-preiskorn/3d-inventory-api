@@ -43,7 +43,6 @@ content-type: application/json
 }
 
 
-
 ### get request selected context
 
 GET http://localhost:8080/devices HTTP/1.1
@@ -53,11 +52,12 @@ content-type: application/json
     "device_name": "tall_turquoise_sheep"
 }
 
-### get specyfic device: 666f1f912af8066b915ff098
 
-GET http://localhost:8080/devices/666f1f912af8066b915ff098 HTTP/1.1
+
+### get specyfic device: 66af8c766f87d90fa87bb982
+
+http://localhost:8080/devices/66af8c766f87d90fa87bb982 HTTP/1.1
 content-type: application/json
-
 
 ### get logs
 
