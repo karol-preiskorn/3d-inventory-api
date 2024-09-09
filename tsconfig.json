@@ -1,0 +1,41 @@
+/* Visit https://aka.ms/tsconfig to read more about this file */{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "_version": "21.0.0",
+  "compileOnSave": true,
+  "compilerOptions": {
+    "allowJs": true, // Allow JavaScript files to be compiled
+    "declaration": true, /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
+    "declarationMap": true, /* Create sourcemaps for d.ts files. */
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+    "module": "CommonJS" /* Specify what module code is generated. */,
+    "moduleDetection": "auto", /* Control what method is used to detect module-format JS files. */
+    "outDir": "./dist" /* Specify an output folder for all emitted files. */,
+    "pretty": true,
+    "removeComments": false,
+    "rootDir": "./src" /* Specify the root folder within your source files. */,
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+    "sourceMap": true /* Create source map files for emitted JavaScript files. */,
+    "strict": true /* Enable all strict type-checking options. */,
+    "target": "ES6" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "types": [
+      "node",
+      "jest"
+    ]
+  },
+  "display": "node", /* Specify the environment for the TypeScript language service. */
+  "exclude": [
+    "dist",
+    "realm",
+    "schema",
+    "docs",
+    "release",
+    "node_modules"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js", // Include JavaScript files
+    "tests/**/*.(t|j)s" // Include test files
+  ]
+}

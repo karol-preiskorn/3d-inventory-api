@@ -1,12 +1,13 @@
-# Ignore artifacts:
-build
-coveragedoc
-
-
-# Ignore all HTML files:
 **/*.html
-
 **/.git
-**/.svn
-**/.hg
 **/node_modules
+*/**/*.d.ts
+*/**/node_modules/*
+.git/*
+.mocharc.js
+.vscode/*
+coverage/*
+dist/*
+docs/*
+realm/*
+schema/*

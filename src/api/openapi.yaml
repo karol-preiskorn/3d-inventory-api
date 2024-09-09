@@ -50,7 +50,39 @@ tags:
     description: Attributes Dictionary API
   - name: floors
     description: Floors manipulation API
+  - name: github
+    description: GitHub API
 paths:
+  /github/issues:
+    get:
+      responses:
+        "200":
+          description: List all issues.
+      tags:
+        - github
+      summary: Get all issues for GitHub
+      description: List all issues.
+      operationId: githubIssuesGet
+      x-swagger-router-controller: github
+  /components:
+    get:
+      tags:
+        - components
+      summary: Get all components
+      description: List all components.
+      operationId: componentsGet
+      responses:
+        "200":
+          description: List of components
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Components"
+        "404":
+          description: Components not found
+        "500":
+          description: Unexpected server error
+      x-swagger-router-controller: Components
   /devices:
     get:
       tags:
@@ -1620,6 +1652,66 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       x-swagger-router-controller: attributesDictionary
+  /model/texture/:id:
+    get:
+      tags:
+        - models
+      summary: Get models texture
+      operationId: modelTextureGet
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Models"
+              example:
+                $ref: "#/components/schemas/Models/example"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Models
+    put:
+      tags:
+        - models
+      summary: Update model
+      description: Update single model
+      operationId: modelsPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Model"
+        required: true
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description:
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Models
   /models:
     get:
       tags:
@@ -2528,6 +2620,35 @@ components:
       description: Array of Connections
       items:
         $ref: "#/components/schemas/Connection"
+    Component:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: "o:uuid"
+        component:
+          type: string
+          maxLength: 20
+        collection:
+          type: string
+          maxLength: 20
+        attributes:
+          type: boolean
+      description: Component object
+      example:
+        _id: 653e10ecd6025afb66017c65
+        component: "Attribute"
+        collection: "attributes"
+        attributes: false
+    Components:
+      type: array
+      description: Array of Components
+      items:
+        $ref: "#/components/schemas/Component"
     Error:
       type: object
       properties:
