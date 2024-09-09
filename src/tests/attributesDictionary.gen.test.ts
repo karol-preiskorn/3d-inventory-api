@@ -5,9 +5,9 @@
  */
 
 import { faker } from '@faker-js/faker'
-import '../utils/loadEnvironment.js'
+import '../utils/loadEnvironment'
 import { Collection, Document, MongoClient, ObjectId } from 'mongodb'
-import { valueAttributeCategory } from '../utils/types.js'
+import { valueAttributeCategory } from '../utils/types'
 
 describe('test create attributesDictionary', () => {
   let connection: MongoClient
@@ -23,7 +23,7 @@ describe('test create attributesDictionary', () => {
   })
 
   afterAll(async () => {
-    await (connection).close()
+    await connection.close()
   })
 
   // Create test models by mongo driver
@@ -31,17 +31,9 @@ describe('test create attributesDictionary', () => {
     it('should insert a attributesDictionary x10', async () => {
       for (let index = 0; index < 10; index++) {
         const currentDateLogs = new Date()
-        const formattedDate = currentDateLogs
-          .toISOString()
-          .replace(/T/, ' ')
-          .replace(/\..+/, '')
+        const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
         mockModel = {
-          name:
-            faker.commerce.product() +
-            ' ' +
-            faker.color.human() +
-            ' ' +
-            faker.animal.type(),
+          name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
           dimension: {
             width: faker.number.int({ min: 1, max: 10 }),
             height: faker.number.int({ min: 1, max: 10 }),
@@ -54,10 +46,7 @@ describe('test create attributesDictionary', () => {
             top: '/assets/r710-2.5-nobezel__29341.png',
             botom: '/assets/r710-2.5-nobezel__29341.png',
           },
-          category:
-            valueAttributeCategory[
-              Math.floor(Math.random() * valueAttributeCategory.length)
-            ].name,
+          category: valueAttributeCategory[Math.floor(Math.random() * valueAttributeCategory.length)].name,
         }
         mockLog = {
           date: formattedDate,

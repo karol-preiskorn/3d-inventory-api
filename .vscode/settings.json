@@ -1,8 +1,11 @@
-// Place your settings in this file to overwrite default and user settings.
 {
-  "workbench.colorCustomizations": {
-    "activityBar.background": "#122E53",
-    "titleBar.activeBackground": "#194074",
-    "titleBar.activeForeground": "#F8FAFD"
-  }
+  "cSpell.words": [
+    "memberof",
+    "myfont",
+    "prestart",
+    "smoothstep",
+    "tsdoc",
+    "tseslint",
+    "wraping"
+  ]
 }

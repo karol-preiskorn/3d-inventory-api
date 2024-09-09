@@ -5,17 +5,18 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
-import { faker } from '@faker-js/faker'
 import '../utils/loadEnvironment'
-import { Db, MongoClient, ObjectId, OptionalId } from 'mongodb'
-import { Log } from '../routers/logs'
-import { formatDate } from 'date-fns'
 
+import { Db, MongoClient, ObjectId, OptionalId } from 'mongodb'
+
+import { Logs } from '../routers/logs'
+import { faker } from '@faker-js/faker'
+import { formatDate } from 'date-fns'
 
 describe('prepare test data', () => {
   let connection: MongoClient | undefined
   let db: Db
-  let mockLog: OptionalId<Log>
+  let mockLog: OptionalId<Logs>
 
   beforeAll(async () => {
     connection = await MongoClient.connect(process.env.ATLAS_URI || '', {})
@@ -30,23 +31,16 @@ describe('prepare test data', () => {
   describe('create 3 logs', () => {
     it('should insert a log doc into collection logs', async () => {
       const attributesCategory = db.collection('attributesCategory')
-      const attributesCategoryCursor = attributesCategory.find({})
       expect(await attributesCategory.countDocuments({})).not.toBe(0)
-      const attributesCategoryData = await attributesCategoryCursor.toArray()
 
       const components = db.collection('components')
-      const componentsCursor = components.find({ attributes: true })
       expect(await components.countDocuments({ attributes: true })).not.toBe(0)
-      const componentsData = await componentsCursor.toArray()
 
       const attributesTypes = db.collection('attributesTypes')
-      const attributesTypesCursor = attributesTypes.find({})
       expect(await attributesTypes.countDocuments({})).not.toBe(0)
-      const attributesTypesData = await attributesTypesCursor.toArray()
 
       for (let index = 0; index < 3; index++) {
         const logs = db.collection('logs')
-        const arrayElement = (array: string[]): string => faker.helpers.arrayElement(array);
         const mockModel = {
           name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
           dimension: {
@@ -63,16 +57,16 @@ describe('prepare test data', () => {
           },
           type: 'string',
           category: 'string',
-        };
+        }
 
-        const formattedDate: string = formatDate(new Date(), 'yyyy-MM-dd');
+        const formattedDate: string = formatDate(new Date(), 'yyyy-MM-dd')
         mockLog = {
           date: formattedDate,
           objectId: new ObjectId('659a4400672627600b093713').toString(),
           operation: 'Create',
           component: 'Model',
           message: JSON.stringify(mockModel),
-        } as OptionalId<Log>;
+        } as OptionalId<Logs>
 
         await logs.insertOne(mockLog)
         const insertedLog = await logs.findOne(mockLog)

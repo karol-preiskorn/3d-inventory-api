@@ -4,9 +4,10 @@
  * @version 2024-01-20 C2RLO - Initial
  */
 
+import '../utils/loadEnvironment'
+
 import { Db, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb } from '../db/conn.js'
-import '../utils/loadEnvironment.js'
+import { connectToCluster, connectToDb } from '../db/dbUtils'
 
 describe('ConnectToDatabase Mongo Atlas', () => {
   it('should insert a doc into collection', async () => {

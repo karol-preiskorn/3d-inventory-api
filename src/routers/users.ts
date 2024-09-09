@@ -1,27 +1,29 @@
 /**
  * @file /routers/users.ts
- * @description
+ * @description This file contains the router for handling user-related API endpoints. It defines GET, POST, and DELETE routes for interacting with users in the database.
+ * @module /routers
  * @version 2024-03-06 C2RLO - add _id to schema
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import '../utils/loadEnvironment.js'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import '../utils/loadEnvironment'
 
-export type User = {
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
+
+export interface User {
   _id: ObjectId
   name: string
   email: string
   password: string
   token: string
-  rigths: Array<string> // Fix: Replace Array<Object> with Array<object>
+  rigths: string[] // Fix: Replace Array<Object> with Array<object>
 }
 
 export type Users = User[]
 
-const collectionName: string = 'attributes'
+const collectionName = 'attributes'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {
@@ -63,7 +65,7 @@ router.get('/model/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -80,7 +82,7 @@ router.get('/user/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -97,7 +99,7 @@ router.get('/rights/:name', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -112,7 +114,6 @@ router.post('/', (async (req, res) => {
   else res.status(200).send(results)
   await connectionClose(client)
 }) as RequestHandler)
-
 
 router.delete('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {

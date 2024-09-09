@@ -1,5 +1,5 @@
 /**
- * @file conn.js Connect to Mongo Atlas DB
+ * @resume Connect to Mongo Atlas DB.
  * @module db/conn
  * @description This module exports a MongoDB client and a database connection.
  * @version 2024-01-27 C2RLO - add exit(1) on error
@@ -9,7 +9,7 @@
  */
 
 import { MongoClient } from 'mongodb'
-import { logger } from '../utils/logger.js'
+import { logger } from '../utils/logger'
 
 const uri = process.env.ATLAS_URI || ''
 
@@ -23,7 +23,7 @@ export async function connectToCluster(): Promise<MongoClient> {
   try {
     client = new MongoClient(uri)
     connect = await client.connect()
-    logger.info('Successfully connected to Atlas cluster')
+    // logger.info('Successfully connected to Atlas cluster')
     return connect
   } catch (error) {
     logger.error(`Connection to Atlas cluster failed: ${error as string}`)
@@ -40,12 +40,10 @@ export function connectToDb(client: MongoClient) {
   let db
   try {
     db = client.db(process.env.DBNAME)
-    logger.info(`Successfully connected to Atlas DB ${process.env.DBNAME}`)
+    // logger.info(`Successfully connected to Atlas DB ${process.env.DBNAME}`)
     return db
   } catch (e) {
-    logger.error(
-      `Connection to Atlas DB failed ${process.env.DBNAME}: ${e as string}`,
-    )
+    logger.error(`Connection to Atlas DB failed ${process.env.DBNAME}: ${e as string}`)
     process.exit(1)
   }
 }
@@ -58,7 +56,7 @@ export function connectToDb(client: MongoClient) {
 export async function connectionClose(connection: MongoClient): Promise<void> {
   try {
     await connection.close()
-    logger.info('Successfully closed the connection.')
+    // logger.info('Successfully closed the connection.')
   } catch (error) {
     logger.error('Failed to close the connection!', error)
   }

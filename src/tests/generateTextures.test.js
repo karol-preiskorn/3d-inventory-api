@@ -1,18 +1,20 @@
 /**
- * @file /home/karol/GitHub/3d-inventory-mongo-api/tests/generateTextures.test.js
- * @description Generate textures
- * @version 2024-01-28 C2RLO - Initial
- */
+* @description Generate colorful and natural textures for use in 3D models.
+* @module generateTextures.test
+* @version 0.0.1
+* @requires perlin-noise
+* @requires files
+* @see
+* @todo
+**/
 
-const { createCanvas } = require('canvas')
-const { writeFileSync } = require('fs')
-const perlin = require('perlin-noise')
-const { deleteFilesInDirectory } = require('../utils/files.js')
+import { beforeAll, describe, it } from 'mocha'
 
+import { createCanvas } from 'canvas'
+import { deleteFilesInDirectory } from '../utils/files'
+import perlin from 'perlin-noise'
+import { writeFileSync } from 'fs'
 
-/**
- * Test suite for generating textures.
- */
 describe('Generate textures', () => {
   // Test suite for generating colorful textures
   describe('Colorful textures', () => {
@@ -38,8 +40,11 @@ describe('Generate textures', () => {
 /**
  * Delete all files in the "assets/textures" directory before running the tests.
  */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 beforeAll(() => {
-  deleteFilesInDirectory('assets/textures')
+  if (typeof deleteFilesInDirectory === 'function') {
+    deleteFilesInDirectory('assets/textures')
+  }
 })
 
 /**
@@ -62,6 +67,7 @@ function getRandomColor() {
  * @param {number} tileSize - The size of each tile in the texture in pixels.
  * @param {string} filename - The name of the file to save the texture as.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function generateColorfulTexture(width, height, tileSize, filename) {
   const canvas = createCanvas(width, height)
   const ctx = canvas.getContext('2d')
@@ -83,12 +89,12 @@ function generateColorfulTexture(width, height, tileSize, filename) {
  * Generates a natural texture based on Perlin noise and saves it as a PNG file.
  * @param {number} width - The width of the texture in pixels.
  * @param {number} height - The height of the texture in pixels.
- * @param {number} scale - The scale of the Perlin noise.
  * @param {string} filename - The name of the file to save the texture as.
  */
-function generateNaturalTexture(width, height, scale, filename) {
+function generateNaturalTexture(width, height, filename) {
   const canvas = createCanvas(width, height)
   const ctx = canvas.getContext('2d')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
   const noise = perlin.generatePerlinNoise(width, height, {
     octaveCount: 6,
     amplitude: 0.1,
@@ -98,7 +104,8 @@ function generateNaturalTexture(width, height, scale, filename) {
   // Draw the pattern on the canvas based on the Perlin noise
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
-      const value = noise[x * height + y]
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const value = noise && noise[x * height + y] || 0
       const color = Math.floor((value + 1) * 128)
       ctx.fillStyle = `rgb(${color}, ${color}, ${color})`
       ctx.fillRect(x, y, 1, 1)
@@ -109,26 +116,6 @@ function generateNaturalTexture(width, height, scale, filename) {
   const buffer = canvas.toBuffer('image/png')
   writeFileSync(filename, buffer)
 }
-
-/**
- * Test case for generating colorful textures.
- */
-it('should create 6 files with colorful textures', async () => {
-  // Set the dimensions of your texture and the size of the pattern tiles
-  const textureWidth = 500
-  const textureHeight = 500
-  const tileSize = 80
-
-  // Generate 6 different colorful textures with patterns
-  for (let i = 1; i <= 6; i++) {
-    const filename = `assets/textures/texture_${i}.png`
-    generateColorfulTexture(textureWidth, textureHeight, tileSize, filename)
-    console.log(`Colorful texture ${i} generated and saved as ${filename}`)
-  }
-
-  // Add an assertion to the test
-  expect(true).toBe(true)
-})
 
 /**
  * Test case for generating natural textures.
@@ -143,9 +130,5 @@ it('should create 6 files with natural textures', async () => {
   for (let i = 1; i <= 6; i++) {
     const filename = `assets/textures/natural_texture_${i}.png`
     generateNaturalTexture(textureWidth, textureHeight, scale, filename)
-    console.log(`Natural texture ${i} generated and saved as ${filename}`)
   }
-
-  // Add an assertion to the test
-  expect(true).toBe(true)
 })

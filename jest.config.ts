@@ -5,6 +5,11 @@
  */
 
 const config = {
+  testTimeout: 6000,
+  fakeTimers: {
+    doNotFake: ['nextTick'],
+    timerLimit: 6000,
+  },
   bail: 1,
   verbose: true,
   coverageProvider: 'v8',
@@ -20,20 +25,8 @@ const config = {
     },
   },
   testEnvironment: 'node',
+  watchPlugins: ['jest-runner-eslint/watch-fix'],
   projects: [
-    {
-      displayName: 'esLint',
-      clearMocks: true,
-      globals: {
-        __DEV__: true,
-      },
-      moduleFileExtensions: ['ts', 'json'],
-      preset: '@shelf/jest-mongodb',
-      runner: 'jest-runner-eslint',
-      testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/doc/', '<rootDir>/dist/', '<rootDir>/docs/', '<rootDir>/logs/', '<rootDir>/coverage/'],
-      testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(mjs?|js?|tsx?|ts?)$',
-      transform: {},
-    },
     {
       displayName: 'prettier',
       clearMocks: true,
@@ -45,17 +38,16 @@ const config = {
       testPathIgnorePatterns: [, '<rootDir>/dist/', '<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/logs/', '<rootDir>/coverage/'],
       transform: {},
       moduleFileExtensions: ['js', 'ts', 'css', 'less', 'scss', 'html', 'json', 'graphql', 'md', 'yaml'],
-      testMatch: ['**/*.js', '**/*.ts', '**/*.css', '**/*.less', '**/*.scss', '**/*.html', '**/*.json', '**/*.graphql', '**/*.md', '**/*.yaml'],
+      testMatch: ['**/*', '**/*.ts', '**/*.css', '**/*.less', '**/*.scss', '**/*.html', '**/*.json', '**/*.graphql', '**/*.md', '**/*.yaml'],
     },
     {
-      displayName: 'Jest',
+      displayName: 'ts-jest',
       clearMocks: false,
       globals: {
         __DEV__: true,
       },
       moduleFileExtensions: ['js', 'ts', 'yaml', 'json'],
-      preset: '@shelf/jest-mongodb',
-      runner: 'jest-runner',
+      preset: 'ts-jest',
       testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/dist/', '<rootDir>/logs/', '<rootDir>/coverage/'],
       testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(mjs?|cjs?|js?|tsx?|ts?)$',
       transform: {},

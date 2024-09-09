@@ -6,7 +6,7 @@
  */
 
 import { faker } from '@faker-js/faker'
-import '../utils/loadEnvironment.js'
+import '../utils/loadEnvironment'
 import { Db, MongoClient } from 'mongodb'
 
 describe('prepare test data', () => {
