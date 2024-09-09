@@ -143,6 +143,7 @@
     "husky": "^9.1.4",
     "jest": "^29.7.0",
     "jest-runner-prettier": "^1.0.0",
+
     "lint-staged": "^15.2.9",
     "mocha": "^10.7.3",
     "nodemon": "^3.1.4",
@@ -152,6 +153,7 @@
     "svelte": "^4.2.18",
     "ts-jest": "^29.2.4",
     "ts-node": "^10.9.2",
+
     "ts-node-dev": "^2.0.0",
     "tsdoc": "^0.0.4",
     "tsx": "^4.17.0",
