@@ -2,30 +2,31 @@
  * @file /routers/floors.js
  * @module /routers
  * @description floors router
- * @version 2024-04-05 C2RLO - convert to typescript
+ * @version 2024-04-05 C2RLO - Convert to typescript
  * @version 2024-02-13 C2RLO - init
  */
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
-import '../utils/loadEnvironment.js'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import '../utils/loadEnvironment'
 
-type Floor = {
+import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
+
+interface Floor {
   _id: ObjectId
   name: string
   address: Address
   dimension: Dimension[]
 }
 
-type Address = {
+interface Address {
   street: string
   city: string
   country: string
   postcode: string
 }
 
-type Dimension = {
+interface Dimension {
   description: string
   x: number
   y: number
@@ -35,7 +36,7 @@ type Dimension = {
   hPos: number
 }
 
-const collectionName: string = 'floors'
+const collectionName = 'floors'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {

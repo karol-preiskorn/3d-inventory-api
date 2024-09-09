@@ -4,22 +4,23 @@
  * @description attributesDictionary router
  * @version 2024-03-11 C2RLO - fix status/send problem
  * @version 2024-01-30 C2RLO - Initial
- */
+ **/
 
-import express, { RequestHandler } from 'express'
+import '../utils/loadEnvironment'
+
 import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
-import '../utils/loadEnvironment.js'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
 
-type attributesDictionary = {
-    _id: ObjectId,
-    category: string,
-    component: string,
-    name: string,
-    type: string
+export interface AttributesDictionary {
+  _id: ObjectId | null
+  category: string
+  component: string
+  name: string
+  type: string
 }
 
-const collectionName: string = 'attributesDictionary'
+const collectionName = 'attributesDictionary'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {
@@ -57,8 +58,8 @@ router.get('/model/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const query = { modelId: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
-  else res.status(200).send(result)
+  if (!result) res.status(404)
+  else res.status(200).send('Not found').send(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -66,12 +67,11 @@ router.post('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const newDocument = req.body as WithoutId<attributesDictionary>
+  const newDocument = req.body as WithoutId<AttributesDictionary>
   const results = await collection.insertOne(newDocument)
   res.status(204).send(results)
   await connectionClose(client)
 }) as RequestHandler)
-
 
 router.delete('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {

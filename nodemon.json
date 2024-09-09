@@ -1,21 +1,24 @@
 ﻿{
   "ignore": [
-    "**/*.test.js",
-    "**/*.spec.js",
+    "tests/**/*.ts",
     ".git",
     "doc/**/*",
-    "coverage/**/*"
+    "coverage/**/*",
+    "node_modules/**/*"
   ],
   "watch": [
     "src/api/openapi.yaml",
-    "src/index.js",
-    "src/**/*.js",
+    "src/index.ts",
+    "src/**/*.ts",
     "src/assets/*",
     "src/routers/*",
     "src/schema/*",
     "src/db/*",
-    "src/utils/*"
+    "src/utils/*",
+    "README.md",
+    "*.json",
+    "*.(mjs|yaml|md)"
   ],
-  "exec": "npx tsc",
-  "ext": "js,json,yaml"
+  "exec": "ts-node src/index.ts",
+  "ext": "ts,js,json,yaml"
 }

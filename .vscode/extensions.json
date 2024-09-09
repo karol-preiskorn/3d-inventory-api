@@ -17,6 +17,11 @@
     "github.github-vscode-theme",
     "mikestead.dotenv",
     "ms-vscode-remote.remote-containers",
-    "gabriielbs0673.pull-request-time"
+    "gabriielbs0673.pull-request-time",
+    "yoavbls.pretty-ts-errors",
+    "ms-1es.pull-request-quantifier",
+    "unional.vscode-sort-package-json",
+    "richie5um2.vscode-sort-json",
+    "tyriar.sort-lines"
   ]
 }

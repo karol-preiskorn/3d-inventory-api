@@ -1,5 +1,3 @@
 apis:
   api/openapi.yaml:
     alias: api-for-project-3d-inventory
-  src/api/openapi.yaml:
-    alias: api-for-project-3d-inventory1

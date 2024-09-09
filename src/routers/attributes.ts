@@ -5,21 +5,23 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import '../utils/loadEnvironment.js'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import '../utils/loadEnvironment'
 
-type Attributes = {
-  attributesDictionaryId: ObjectId
-  connectionId: ObjectId
-  deviceId: ObjectId
-  modelId: ObjectId
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
+
+export interface Attributes {
+  _id: ObjectId
+  attributesDictionaryId: ObjectId | null
+  connectionId: ObjectId | null
+  deviceId: ObjectId | null
+  modelId: ObjectId | null
   name: string
   value: string
 }
 
-const collectionName: string = 'attributes'
+const collectionName = 'attributes'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {
@@ -61,7 +63,7 @@ router.get('/model/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -78,7 +80,7 @@ router.get('/device/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -95,7 +97,7 @@ router.get('/connection/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.send(result).status(200)
+    res.status(200).send(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -110,7 +112,6 @@ router.post('/', (async (req, res) => {
   else res.status(200).send(results)
   await connectionClose(client)
 }) as RequestHandler)
-
 
 router.delete('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {

@@ -50,7 +50,20 @@ tags:
     description: Attributes Dictionary API
   - name: floors
     description: Floors manipulation API
+  - name: github
+    description: GitHub API
 paths:
+  /github/issues:
+    get:
+      responses:
+        "200":
+          description: List all issues.
+      tags:
+        - github
+      summary: Get all issues for GitHub
+      description: List all issues.
+      operationId: githubIssuesGet
+      x-swagger-router-controller: github
   /components:
     get:
       tags:

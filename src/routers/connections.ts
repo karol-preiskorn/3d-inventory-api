@@ -5,19 +5,20 @@
  * @version 2024-01-25 C2RLO - add new way to connect to DB
  */
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
-import '../utils/loadEnvironment.js'
+import '../utils/loadEnvironment'
 
-type Connection = {
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
+
+interface Connection {
   _id: ObjectId
   name: string
   deviceIdFrom: ObjectId
   deviceIdTo: ObjectId
 }
 
-const collectionName: string = 'connections'
+const collectionName = 'connections'
 const router = express.Router()
 
 router.get('/', (async (_req, res) => {
@@ -54,7 +55,7 @@ router.put('/:id', (async (req, res) => {
     $set: {
       name: c.name,
       deviceIdFrom: c.deviceIdFrom,
-      deviceIdTo: c.deviceIdTo
+      deviceIdTo: c.deviceIdTo,
     },
   }
   const client = await connectToCluster()

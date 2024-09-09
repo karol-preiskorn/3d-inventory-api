@@ -5,23 +5,27 @@
  * @version 2024-03-29 C2RLO - Initial
  */
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, ObjectId } from 'mongodb'
-import '../utils/loadEnvironment.js'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import '../utils/loadEnvironment'
 
-const collectionName: string = 'components'
+import { Collection, Db, ObjectId } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
+
+export interface Components {
+  _id: ObjectId
+  component: string
+  collection: string
+  attributes: boolean
+}
+
+const collectionName = 'components'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const results: object[] = await collection
-    .find({})
-    .sort({ date: -1 })
-    .limit(200)
-    .toArray()
+  const results: object[] = await collection.find({}).sort({ date: -1 }).limit(200).toArray()
   if (!results) res.sendStatus(404)
   else {
     res.sendStatus(200)
