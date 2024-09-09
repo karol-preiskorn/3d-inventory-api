@@ -4,10 +4,11 @@
  * @version 2024-10-29 C2RLO - Init
  */
 
-import { faker } from '@faker-js/faker'
-import '../utils/loadEnvironment.js'
-import { Db, MongoClient } from 'mongodb'
+import '../utils/loadEnvironment';
 
+import { Db, MongoClient } from 'mongodb';
+
+import { faker } from '@faker-js/faker';
 
 describe('create 10 connections', () => {
   let connection: MongoClient
@@ -16,8 +17,8 @@ describe('create 10 connections', () => {
   let insertedConnection
 
   beforeAll(async () => {
-    const atlasUri = process.env.ATLAS_URI || '' // Ensure ATLAS_URI is defined or use an empty string as default
-    connection = await MongoClient.connect(atlasUri, {}) // Pass the updated atlasUri variable as an argument
+    const atlasUri = process.env.ATLAS_URI || ''
+    connection = await MongoClient.connect(atlasUri, {})
     db = connection.db(process.env.DBNAME)
   })
 
@@ -32,9 +33,7 @@ describe('create 10 connections', () => {
     expect(countDevices).not.toBe(0)
     const devicesData = await devicesCursor.toArray()
     const connections = db.collection('connections')
-    console.log(
-      JSON.stringify(devicesData[faker.number.int({ min: 0, max: 11 })]._id),
-    )
+    console.log(JSON.stringify(devicesData[faker.number.int({ min: 0, max: 11 })]._id))
     for (let index = 0; index < 10; index++) {
       const to = devicesData[faker.number.int({ min: 0, max: 10 })]._id
       const from = devicesData[faker.number.int({ min: 0, max: 10 })]._id

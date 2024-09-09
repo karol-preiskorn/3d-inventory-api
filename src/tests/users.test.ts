@@ -6,11 +6,13 @@
  * @version: 2023-10-29  C2RLO  Init
  */
 
+import '../../../../../src/utils/loadEnvironment'
+
+import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb'
+import { connectToCluster, connectToDb } from '../db/dbUtils'
+
+import { User } from '../routers/users'
 import { faker } from '@faker-js/faker'
-import '../../../../../src/utils/loadEnvironment.js'
-import { connectToCluster, connectToDb } from '../db/conn'
-import { User } from '../routers/users.js'
-import { Db, Collection, Document, MongoClient, ObjectId } from 'mongodb'
 
 describe('Test Mongo Atlas DB users', () => {
   let db: Db
@@ -35,7 +37,7 @@ describe('Test Mongo Atlas DB users', () => {
       password: faker.internet.password({ length: 10 }),
       rigths: faker.helpers.arrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
       token: faker.internet.password({ length: 50 }),
-      _id: new ObjectId
+      _id: new ObjectId(),
     }
     await users.insertOne(mockUser)
     const insertedUser = await users.findOne(mockUser)
@@ -49,7 +51,7 @@ describe('Test Mongo Atlas DB users', () => {
     const users = db.collection('users')
     const mock = {}
     await users.deleteMany(mock)
-    const deleted = await users.findOne(mock) as User | null
+    const deleted = (await users.findOne(mock)) as User | null
     expect(deleted).toBeNull()
   })
 

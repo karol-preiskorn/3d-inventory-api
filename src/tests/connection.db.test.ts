@@ -5,9 +5,9 @@
  * @version 2024-01-14 C2RLO - Initial
  */
 
-import { Db, MongoClient } from 'mongodb'
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
+import { Db, MongoClient } from 'mongodb';
 
 describe('ConnectToDatabase Mongo Atlas', () => {
   let connection: MongoClient
@@ -17,8 +17,12 @@ describe('ConnectToDatabase Mongo Atlas', () => {
     if (!process.env.ATLAS_URI) {
       throw new Error('ATLAS_URI environment variable is not defined.')
     }
-    connection = await MongoClient.connect(process.env.ATLAS_URI, {})
-    db = connection.db(process.env.DBNAME)
+    try {
+      connection = await MongoClient.connect(process.env.ATLAS_URI, {})
+      db = connection.db(process.env.DBNAME)
+    } catch (error) {
+      console.error('Error connecting to the database:', error)
+    }
   })
 
   afterAll(async () => {

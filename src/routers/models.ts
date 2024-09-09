@@ -1,35 +1,36 @@
 /**
- * @file:        /routers/models.js
- * @description: This file contains the router for handling model-related API endpoints.
- * @version: 2023-12-29  C2RLO  Initial
- */
+ * @description This file contains the router for handling model-related API endpoints. It defines GET, PUT, POST, PATCH, and DELETE routes for interacting with models in the database.
+ * @module /routers
+ * @version 2023-12-29  C2RLO - Initial
+ **/
 
+import '../utils/loadEnvironment'
+
+import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
 import express, { RequestHandler } from 'express'
-import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, UpdateFilter } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
-import '../utils/loadEnvironment.js'
 
-export type Dimension = {
+import { logger } from '../utils/logger'
+
+export interface Dimension {
   width: number
   height: number
   depth: number
 }
-export type Texture = {
+export interface Texture {
   front: string
   back: string
   side: string
   top: string
   botom: string
 }
-export type Model = {
+export interface Model {
   name: string
   dimension: Dimension
   texture: Texture
-  type: string
-  category: string
 }
 
-const collectionName: string = 'models'
+const collectionName = 'models'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {
@@ -37,7 +38,13 @@ router.get('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const results: object[] = await collection.find({}).limit(50).toArray()
-  res.status(200).send(results)
+  if (!results) {
+    logger.warn('GET /models - not found')
+    res.status(404).send('Not found')
+  } else {
+    logger.info('GET /models - oki return ' + results.length + ' models')
+    res.status(200).send(results)
+  }
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -77,8 +84,6 @@ router.put('/:id', (async (req, res) => {
         top: b.texture.top,
         botom: b.texture.botom,
       },
-      type: b.type,
-      category: b.category,
     },
   }
   const client = await connectToCluster()
@@ -94,7 +99,7 @@ router.post('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const newDocument: DocumentType = req.body as DocumentType
+  const newDocument: OptionalId<Document> = req.body as OptionalId<Document>
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   res.status(200).send(results)
   await connectionClose(client)

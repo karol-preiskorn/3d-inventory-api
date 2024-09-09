@@ -6,8 +6,8 @@
  */
 
 import Realm from 'realm'
-import '../src/utils/loadEnvironment.js'
-import { app } from './realm.js'
+import '../src/utils/loadEnvironment'
+import { app } from './realm'
 
 app = new Realm.App({ id: process.env.REALM_APP_ID })
 const credentials = Realm.Credentials.anonymous()

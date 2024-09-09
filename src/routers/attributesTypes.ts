@@ -6,13 +6,15 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import express, { RequestHandler } from 'express'
+import '../utils/loadEnvironment'
+
 import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
-import '../utils/loadEnvironment.js'
-import { connectToCluster, connectToDb, connectionClose } from '../db/conn.js'
+import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express'
+
 import { AttributesDictionary } from '../routers/attributesDictionary'
 
-export type AttributesTypes = {
+export interface AttributesTypes {
   _id: ObjectId
   component: string
   description: string
@@ -22,7 +24,7 @@ export type AttributesTypes = {
   value: string
 }
 
-const collectionName: string = 'attributesDictionary'
+const collectionName = 'attributesDictionary'
 const router = express.Router()
 
 router.get('/', (async (req, res) => {
