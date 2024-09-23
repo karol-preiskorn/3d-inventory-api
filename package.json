@@ -71,8 +71,10 @@
     "@angular-eslint/eslint-plugin": "^18.3.0",
     "@apollo/client": "^3.11.5",
     "@google-cloud/storage": "^7.12.1",
-    "async": "3.2.6",
-    "body-parser": "^1.20.2",
+
+    "async": "3.2.5",
+    "body-parser": "^1.20.3",
+
     "canvas": "^2.11.2",
     "cookie-session": "^2.1.0",
     "cors": "^2.8.5",
@@ -82,7 +84,9 @@
     "eslint-formatter-codeframe": "^7.32.1",
     "eslint-plugin-jest": "^27.9.0",
 
-    "express": "^4.20.0",
+
+    "express": "^4.21.0",
+
     "express-async-errors": "^3.1.1",
 
     "express-openapi-validator": "^5.3.3",
