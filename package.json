@@ -72,7 +72,7 @@
     "@apollo/client": "^3.11.5",
     "@google-cloud/storage": "^7.12.1",
 
-    "async": "3.2.5",
+    "async": "3.2.6",
     "body-parser": "^1.20.3",
 
     "canvas": "^2.11.2",
