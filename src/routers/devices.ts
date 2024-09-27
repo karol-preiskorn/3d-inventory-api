@@ -6,15 +6,16 @@
  * @public
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { Collection, Db, Filter, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
-import { Request, RequestHandler, Response } from 'express'
-import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
+import express, { RequestHandler } from 'express';
+import {
+    Collection, Db, InsertOneResult, MongoClient, ObjectId, OptionalId, UpdateFilter
+} from 'mongodb';
 
-import { CreateLog } from '../services/logs'
-import express from 'express'
-import { logger } from '../utils/logger'
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
+import { CreateLog } from '../services/logs';
+import { logger } from '../utils/logger';
 
 export interface Device {
   _id: string
@@ -25,6 +26,12 @@ export interface Device {
     y: number
     h: number
   }
+  attributes: [Attribute]
+}
+
+export interface Attribute {
+  key: string
+  value: string
 }
 
 export interface position {
@@ -72,8 +79,8 @@ router.get('/:id', (async (req, res) => {
     return
   }
   const client = await connectToCluster()
-  const db = connectToDb(client)
-  const collection = db.collection(collectionName) // Replace with your actual collection name
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName) // Replace with your actual collection name
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) {
@@ -97,17 +104,63 @@ router.put('/:id', (async (req, res) => {
       name: (req.body as { name: string }).name,
       modelId: (req.body as { modelId: string }).modelId,
       position: (req.body as { position: position }).position,
+      attributes: (req.body as { attributes: [Attribute] }).attributes,
     },
   }
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const result = await collection.updateOne(query, updates)
+  let result
+  try {
+    result = await collection.updateOne(query, updates)
+  } catch (error) {
+    logger.error(`PUT /devices/${req.params.id} - error updating device: ${(error as Error).message}`)
+    res.status(500).send('Internal Server Error')
+    return
+  }
   if (!result) {
     logger.error(`PUT /devices/${req.params.id} - not found devices to update`)
     res.status(404).send('Not found devices to update')
   } else {
     logger.info(`PUT /devices/${req.params.id} - oki updated ${result.modifiedCount} devices`)
+    res.status(200).send(result)
+  }
+  await connectionClose(client)
+}) as RequestHandler)
+
+router.put('/:id/attributes', (async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    logger.error(`PUT /devices/${req.params.id}/attributes - wrong device id`)
+    res.sendStatus(404)
+  }
+  const query = { _id: new ObjectId(req.params.id) }
+  const updates = {
+    $set: {
+      attributes: (req.body as { attributes: [Attribute] }).attributes,
+    },
+  }
+  if (!process.env.ATLAS_URI) {
+    throw new Error('ATLAS_URI is not defined in the environment variables')
+  }
+  const atlasUri = process.env.ATLAS_URI
+  if (!atlasUri) {
+    throw new Error('ATLAS_URI is not defined in the environment variables')
+  }
+  const client = new MongoClient(atlasUri)
+  await client.connect()
+  if (!client || !(client instanceof MongoClient)) {
+    logger.error('Failed to initialize MongoClient')
+    res.status(500).send('Internal Server Error')
+    return
+  }
+  const db: Db = client.db(process.env.DBNAME as string)
+  const collection: Collection = db.collection(collectionName)
+  const result = await collection.updateOne(query, updates)
+  if (!result) {
+    logger.error(`PUT /devices/${req.params.id}/attributes - error update devices attributes`)
+    res.status(404).send('Not found devices attributes to update')
+  } else {
+    logger.info(`PUT /devices/${req.params.id} - success updated device ${req.params.id} attributes`)
     res.status(200).send(result)
   }
   await connectionClose(client)
@@ -166,8 +219,22 @@ router.patch('/position/:id', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const result = await collection.updateOne(query, updates)
-  res.status(200).send(result)
+  let result
+  try {
+    result = await collection.updateOne(query, updates)
+  } catch (error) {
+    logger.error(`PATCH /devices/position/${req.params.id} - error updating position: ${(error as Error).message}`)
+    res.status(500).send('Internal Server Error')
+    await connectionClose(client)
+    return
+  }
+  if (!result || result.modifiedCount === 0) {
+    logger.error(`PATCH /devices/position/${req.params.id} - no position updated`)
+    res.status(404).send('No position updated')
+  } else {
+    logger.info(`PATCH /devices/position/${req.params.id} - position updated successfully`)
+    res.status(200).send(result)
+  }
   await connectionClose(client)
 }) as RequestHandler)
 
