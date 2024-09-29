@@ -24,22 +24,33 @@ POST http://localhost:8080/devices HTTP/1.1
 content-type: application/json
 
 {
-    "device_id": "sample45",
-    "device_name": "device-name-a1",
-    "device_category": "Server",
-    "device_type": "Racks"
+  "name": "Device 5",
+  "modelId": "666f1f97468aefc2cafefa18",
+  "position": {
+    "x": 11,
+    "y": 3,
+    "h": 3
+  },
+  "attributes": [
+    {
+      "key": "color",
+      "value": "red"
+    },
+        {
+      "key": "power",
+      "value": "100W"
+    }
+  ]
 }
 
-### post device
+### put device
 
 PUT http://localhost:8080/devices HTTP/1.1
 content-type: application/json
 
 {
     "device_id": "sample3",
-    "device_name": "device-name-a1",
-    "device_category": "Server",
-    "device_type": "Racks"
+
 }
 
 

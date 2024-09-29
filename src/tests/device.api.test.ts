@@ -7,18 +7,19 @@
  * @version: 2024-01-03  C2RLO  Initial
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { Collection, Db, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb } from '../db/dbUtils'
+import { Collection, Db, ObjectId } from 'mongodb';
+import request from 'supertest';
 
-import { Device } from '../routers/devices'
-import { faker } from '@faker-js/faker'
-import request from 'supertest'
+import { faker } from '@faker-js/faker';
+
+import { connectToCluster, connectToDb } from '../db/dbUtils';
+import { Device } from '../routers/devices';
 
 describe('GET /devices', () => {
   it('GET /devices => array of devices', async () => {
-    const response = await request(app).get('/devices').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
+    const response = await request(app).get('/devices').set('Accept', 'application/json; charset=utf-8').expect(200)
     const devices: Device[] = response.body as Device[]
 
     if (devices.length === 0) {
@@ -97,7 +98,7 @@ const app = 'http://localhost:8080'
 
 describe('GET /devices', () => {
   it('GET /devices => array of devices', async () => {
-    const response = await request(app).get('/devices').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
+    const response = await request(app).get('/devices').set('Accept', 'application/json; charset=utf-8').expect(200)
 
     if (Array.isArray(response.body) && response.body.length === 0) {
       console.log('No devices found')
