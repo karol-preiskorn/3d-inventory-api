@@ -6,16 +6,14 @@
  * @public
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import express, { RequestHandler } from 'express';
-import {
-    Collection, Db, InsertOneResult, MongoClient, ObjectId, OptionalId, UpdateFilter
-} from 'mongodb';
+import express, { RequestHandler } from 'express'
+import { Collection, Db, InsertOneResult, MongoClient, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
-import { CreateLog } from '../services/logs';
-import { logger } from '../utils/logger';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
+import { CreateLog } from '../services/logs'
+import { logger } from '../utils/logger'
 
 export interface Device {
   _id: string
@@ -88,7 +86,7 @@ router.get('/:id', (async (req, res) => {
     res.status(404).send('Not found')
   } else {
     logger.info(`GET /devices/${req.params.id} - oki, device: ${JSON.stringify(result)}`)
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -97,6 +95,7 @@ router.put('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     logger.error(`PUT /devices/${req.params.id} - wrong id`)
     res.sendStatus(404)
+    return
   }
   const query = { _id: new ObjectId(req.params.id) }
   const updates = {
@@ -118,12 +117,13 @@ router.put('/:id', (async (req, res) => {
     res.status(500).send('Internal Server Error')
     return
   }
-  if (!result) {
+  if (result.modifiedCount === 0) {
     logger.error(`PUT /devices/${req.params.id} - not found devices to update`)
     res.status(404).send('Not found devices to update')
   } else {
+    const updatedDevice = await collection.findOne(query)
     logger.info(`PUT /devices/${req.params.id} - oki updated ${result.modifiedCount} devices`)
-    res.status(200).send(result)
+    res.status(200).json(updatedDevice)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -133,7 +133,6 @@ router.put('/:id/attributes', (async (req, res) => {
     logger.error(`PUT /devices/${req.params.id}/attributes - wrong device id`)
     res.sendStatus(404)
   }
-  const query = { _id: new ObjectId(req.params.id) }
   const updates = {
     $set: {
       attributes: (req.body as { attributes: [Attribute] }).attributes,
@@ -155,13 +154,14 @@ router.put('/:id/attributes', (async (req, res) => {
   }
   const db: Db = client.db(process.env.DBNAME as string)
   const collection: Collection = db.collection(collectionName)
+  const query = { _id: new ObjectId(req.params.id.toString()) }
   const result = await collection.updateOne(query, updates)
   if (!result) {
     logger.error(`PUT /devices/${req.params.id}/attributes - error update devices attributes`)
     res.status(404).send('Not found devices attributes to update')
   } else {
     logger.info(`PUT /devices/${req.params.id} - success updated device ${req.params.id} attributes`)
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -180,8 +180,8 @@ router.get('/model/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const query = { modelId: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
-  else res.status(200).send(result)
+  if (!result) res.status(404).end()
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -200,7 +200,7 @@ router.post('/', (async (req, res) => {
   } else {
     logger.info(`POST /devices - device created successfully with id: ${result.insertedId.toString()}, ${JSON.stringify(newDocument)}`)
     resultLog = await CreateLog(result.insertedId.toString(), newDocument, 'Create', 'Device')
-    res.status(200).send(resultLog)
+    res.status(200).json(resultLog)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -233,7 +233,7 @@ router.patch('/position/:id', (async (req, res) => {
     res.status(404).send('No position updated')
   } else {
     logger.info(`PATCH /devices/position/${req.params.id} - position updated successfully`)
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -249,10 +249,10 @@ router.delete('/:id', (async (req, res) => {
   const result = await collection.deleteOne(query)
   if (!result) {
     logger.error(`POST /devices/${req.params.id} - Device not created`)
-    res.status(500).send(`POST /devices/${req.params.id} - Device not created`)
+    res.status(500).json({ error: `POST /devices/${req.params.id} - Device not created` })
   } else {
     logger.info(`POST /devices/${req.params.id} - device created successfully.`)
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -276,7 +276,7 @@ router.delete('/model/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 

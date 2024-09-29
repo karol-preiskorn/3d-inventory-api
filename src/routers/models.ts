@@ -4,13 +4,15 @@
  * @version 2023-12-29  C2RLO - Initial
  **/
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
-import express, { RequestHandler } from 'express'
+import express, { RequestHandler } from 'express';
+import {
+    Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter
+} from 'mongodb';
 
-import { logger } from '../utils/logger'
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
+import { logger } from '../utils/logger';
 
 export interface Dimension {
   width: number
@@ -57,8 +59,8 @@ router.get('/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
-  else res.status(200).send(result)
+  if (!result) res.status(404).end()
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -91,7 +93,7 @@ router.put('/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
   if (!result) res.status(404).send('Not found models to update')
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -101,7 +103,7 @@ router.post('/', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const newDocument: OptionalId<Document> = req.body as OptionalId<Document>
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
-  res.status(200).send(results)
+  res.status(200).json(results)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -115,7 +117,7 @@ router.patch('/dimension/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -129,7 +131,7 @@ router.patch('/texture/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -142,7 +144,7 @@ router.delete('/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 

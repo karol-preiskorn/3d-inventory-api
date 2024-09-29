@@ -6,33 +6,36 @@
  * @alpha 3d-inventory API
  */
 
-import './utils/loadEnvironment'
+import './utils/loadEnvironment';
 
-import * as OpenApiValidator from 'express-openapi-validator'
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import csurf from 'csurf';
+import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import * as OpenApiValidator from 'express-openapi-validator';
+import fs from 'fs';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import morganBody from 'morgan-body';
+import swaggerUi, { JsonObject } from 'swagger-ui-express';
+import YAML from 'yaml';
 
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
-import swaggerUi, { JsonObject } from 'swagger-ui-express'
-
-import YAML from 'yaml'
-import attributes from './routers/attributes'
-import attributesDictionary from './routers/attributesDictionary'
-import bodyParser from 'body-parser'
-import connections from './routers/connections'
-import cors from 'cors'
-import devices from './routers/devices'
-import floors from './routers/floors'
-import fs from 'fs'
-import { logger } from './utils/logger'
-import logs from './routers/logs'
-import models from './routers/models'
-import morgan from 'morgan'
-import morganBody from 'morgan-body'
-import readme from './routers/readme'
+import attributes from './routers/attributes';
+import attributesDictionary from './routers/attributesDictionary';
+import connections from './routers/connections';
+import devices from './routers/devices';
+import floors from './routers/floors';
+import logs from './routers/logs';
+import models from './routers/models';
+import readme from './routers/readme';
+import { logger } from './utils/logger';
 
 const PORT = process.env.PORT || 8080
 const yamlFilename = process.env.API_YAML_FILE || 'src/api/openapi.yaml'
 
 const app = express()
+app.use(helmet())
+app.use(csurf({ cookie: true }))
 
 try {
   app.use(

@@ -1,5 +1,7 @@
+import csrf from 'csurf';
 import dotenv from 'dotenv';
 import express from 'express';
+import helmet from 'helmet';
 import { Collection, Db, MongoClient } from 'mongodb';
 import request from 'supertest';
 
@@ -16,12 +18,14 @@ jest.mock('../utils/logger')
 
 const app = express()
 app.use(express.json())
+app.use(csrf({ cookie: true }))
+app.use(helmet())
 app.use('/devices', router)
 
 describe('PUT /devices/:id/attributes', () => {
   let client: MongoClient
   let db: Db
-  let collection: Collection<any>
+  let collection: Collection<{ [key: string]: any }>
 
   beforeAll(() => {
     if (!process.env.ATLAS_URI) {
@@ -38,7 +42,7 @@ describe('PUT /devices/:id/attributes', () => {
       modifiedCount: 0,
       upsertedCount: 0,
       upsertedId: null,
-    }) as jest.MockedFunction<typeof collection.updateOne>
+    } as any) as jest.MockedFunction<typeof collection.updateOne>
   })
 
   afterAll(async () => {

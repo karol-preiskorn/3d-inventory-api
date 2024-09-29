@@ -374,7 +374,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of pet to fetch
+          description: ID of device to fetch
           required: true
           style: simple
           explode: false
@@ -432,9 +432,42 @@ paths:
     put:
       tags:
         - logs
-      summary: Update new log
-      description: Update log record.
+      summary: Update all set log
+      description: Update entire collection logs.
       operationId: logPUT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  example: 6566ed4ace63d42b25fbba19
+                  pattern: ^[0-9A-Fa-f]{24}$
+                  minLength: 24
+                  maxLength: 24
+                  x-42c-format: "o:uuid"
+                object:
+                  type: string
+                  example: 6566ed4ace63d42b25fbba19
+                  pattern: ^[0-9A-Fa-f]{24}$
+                  minLength: 24
+                  maxLength: 24
+                  x-42c-format: "o:uuid"
+                date:
+                  type: string
+                  description: Date as string
+                operation:
+                  type: string
+                  description: CRUD CREATE/UPDATE/DELETE
+                component:
+                  type: string
+                  description: "Device, Connection, Model, Floor"
+                message:
+                  type: object
+                  description: Log message
       responses:
         "200":
           description: OK
@@ -631,7 +664,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of pet to fetch
+          description: ID of device to fetch
           required: true
           style: simple
           explode: false
@@ -665,7 +698,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of pet to fetch
+          description: ID of device to fetch
           required: true
           style: simple
           explode: false
@@ -2651,7 +2684,7 @@ components:
           description: Log message
       description: Save information about all application upstage
       example:
-        _id: "102"
+        _id: "666f1f958237b346e54f2cd0"
         date: "2023/06/17 15:37:58.44"
         object: "6566ed4ace63d42b25fbba19"
         operation: Update
@@ -2668,20 +2701,21 @@ components:
       description: Array of log entries
       items:
         $ref: "#/components/schemas/Log"
+
       example:
-        - _id: "102"
+        - _id: "666f1f958237b346e54f2cd0"
           date: "2023/06/17 15:37:58.44"
-          object: 6566ed4ace63d42b25fbba19
+          object: 666f1f958237b346e54f2cd0
           operation: Update
           component: Device
           message: Message in log
-        - _id: "103"
+        - _id: "666f1f958237b346e54f2cd0"
           date: "2023/02/27 10:37:58.44"
           object: 6566ed4ace63d42b25fbba19
           operation: Update
           component: Device
           message: Message in log
-        - _id: "104"
+        - _id: "666f1f958237b346e54f2cd0"
           date: "2022/01/17 11:37:58.44"
           object: 6566ed4ace63d42b25fbba19
           operation: Update

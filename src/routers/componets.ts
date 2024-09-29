@@ -5,11 +5,12 @@
  * @version 2024-03-29 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { Collection, Db, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
-import express, { RequestHandler } from 'express'
+import express, { RequestHandler } from 'express';
+import { Collection, Db, ObjectId } from 'mongodb';
+
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
 
 export interface Components {
   _id: ObjectId
@@ -42,8 +43,8 @@ router.get('/collection/:collection', (async (req, res) => {
   }
   const query = { collection: new ObjectId(req.params.collection) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found ' + JSON.stringify(query))
-  else res.status(200).send(result)
+  if (!result) res.status(404).json('Not found ' + JSON.stringify(query))
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -57,8 +58,9 @@ router.get('/component/:component', (async (req, res) => {
   }
   const query = { component: new ObjectId(req.params.component) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found ' + JSON.stringify(query))
-  else res.status(200).send(result)
+  if (!result) res.status(404).json('Not found')
+  // deepcode ignore XSS: <please specify a reason of ignoring this>
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 

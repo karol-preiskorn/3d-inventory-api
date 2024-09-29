@@ -5,11 +5,12 @@
  * @version 2024-01-25 C2RLO - add new way to connect to DB
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
-import express, { RequestHandler } from 'express'
+import express, { RequestHandler } from 'express';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
 
 interface Connection {
   _id: ObjectId
@@ -26,8 +27,9 @@ router.get('/', (async (_req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const results: object[] = await collection.find({}).limit(256).toArray()
+  res.set('Content-Type', 'application/json; charset=utf-8')
   if (!results) res.status(404).send('Not found any connection')
-  else res.status(200).send(results)
+  else res.status(200).send(JSON.stringify(results))
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -40,8 +42,8 @@ router.get('/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
-  else res.status(200).send(result)
+  if (!result) res.status(404).end()
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -63,7 +65,7 @@ router.put('/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
   if (!result) res.status(404).send('Not found devices to update')
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -76,8 +78,8 @@ router.get('/from/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const query = { deviceIdFrom: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
-  else res.status(200).send(result)
+  if (!result) res.status(404).end()
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -90,8 +92,8 @@ router.get('/to/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const query = { deviceIdTo: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
-  else res.status(200).send(result)
+  if (!result) res.status(404).json({ error: 'Not found' })
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -107,8 +109,8 @@ router.get('/from/:idFrom/to/:idTo', (async (req, res) => {
     deviceIdTo: new ObjectId(req.params.idTo),
   }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
-  else res.status(200).send(result)
+  if (!result) res.status(404).json('Not found')
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -118,7 +120,7 @@ router.post('/', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const newDocument: Connection = req.body as Connection
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
-  res.status(200).send(results)
+  res.status(200).json(results)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -131,7 +133,7 @@ router.delete('/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -154,7 +156,7 @@ router.delete('/from/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -167,7 +169,7 @@ router.delete('/to/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -184,7 +186,7 @@ router.delete('/from/:idFrom/to/:idTo', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 

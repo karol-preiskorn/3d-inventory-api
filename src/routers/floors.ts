@@ -8,9 +8,11 @@
 
 import '../utils/loadEnvironment'
 
-import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
 import express, { RequestHandler } from 'express'
+import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
+import sanitize from 'sanitize-html'
+
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
 
 interface Floor {
   _id: ObjectId
@@ -58,8 +60,8 @@ router.get('/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
-  else res.status(200).send(result)
+  if (!result) res.status(404).json({ message: 'Not found' })
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -72,8 +74,8 @@ router.get('/model/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const query = { modelId: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
-  else res.status(200).send(result)
+  if (!result) res.status(404).json({ message: 'Not found' })
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -82,8 +84,30 @@ router.post('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const newDocument: Floor = req.body as Floor
-  const results = await collection.insertOne(newDocument)
-  res.status(200).send(results)
+  const result = await collection.insertOne(newDocument)
+  const insertedDocument = await collection.findOne({ _id: result.insertedId })
+  if (!insertedDocument) {
+    res.status(404).send('Inserted document not found')
+    await connectionClose(client)
+    return
+  }
+
+  const sanitizedResult = {
+    ...insertedDocument,
+    name: sanitize(typeof insertedDocument.name === 'string' ? insertedDocument.name : ''),
+    address: {
+      ...insertedDocument.address,
+      street: sanitize(typeof (insertedDocument.address as Address).street === 'string' ? (insertedDocument.address as Address).street : ''),
+      city: sanitize(typeof (insertedDocument.address as Address).city === 'string' ? (insertedDocument.address as Address).city : ''),
+      country: sanitize(typeof (insertedDocument.address as Address).country === 'string' ? (insertedDocument.address as Address).country : ''),
+      postcode: sanitize(typeof (insertedDocument.address as Address).postcode === 'string' ? (insertedDocument.address as Address).postcode : ''),
+    },
+    dimension: (insertedDocument.dimension as Dimension[]).map((dim: Dimension) => ({
+      ...dim,
+      description: sanitize(typeof dim.description === 'string' ? dim.description : ''),
+    })),
+  }
+  res.status(200).json(sanitizedResult)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -97,7 +121,7 @@ router.patch('/dimension/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -110,7 +134,7 @@ router.delete('/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -133,7 +157,7 @@ router.delete('/model/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
