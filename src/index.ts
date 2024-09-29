@@ -101,11 +101,6 @@ fs.open(yamlFilename, 'r', (err: NodeJS.ErrnoException | null) => {
   }
 })
 
-// app.use((err: ErrorRequestHandler, req: Request, res: Response) => {
-//   console.error(err)
-//   //res.status(500).send('Internal Server Error')
-// })
-
 try {
   const file = fs.readFileSync(yamlFilename, 'utf8')
   const swaggerDocument = YAML.parse(file) as JsonObject

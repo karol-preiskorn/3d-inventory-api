@@ -11,7 +11,7 @@ import fs from 'fs';
 import Markdown from 'markdown-it';
 import { promisify } from 'util';
 
-const router = express.Router()
+const router: express.Router = express.Router()
 const readFileAsync = promisify(fs.readFile)
 const md = new Markdown()
 
