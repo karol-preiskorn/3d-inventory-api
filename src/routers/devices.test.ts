@@ -1,15 +1,14 @@
-import csrf from 'csurf'
-import dotenv from 'dotenv'
-import express from 'express'
-import helmet from 'helmet'
-import { Collection, Db, MongoClient } from 'mongodb'
-import request from 'supertest'
+import dotenv from 'dotenv';
+import express from 'express';
+import helmet from 'helmet';
+import { Collection, Db, MongoClient } from 'mongodb';
+import request from 'supertest';
 
-import { expect, jest } from '@jest/globals'
+import { expect, jest } from '@jest/globals';
 
-import { connectionClose } from '../db/dbUtils'
-import { logger } from '../utils/logger'
-import router from './devices'
+import { connectionClose } from '../db/dbUtils';
+import { logger } from '../utils/logger';
+import router from './devices';
 
 dotenv.config()
 
@@ -18,7 +17,6 @@ jest.mock('../utils/logger')
 
 const app = express()
 app.use(express.json())
-app.use(csrf({ cookie: true }))
 app.use(helmet())
 app.use('/devices', router)
 
