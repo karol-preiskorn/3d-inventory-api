@@ -5,11 +5,12 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb, connectionClose } from '../db/dbUtils'
-import express, { RequestHandler } from 'express'
+import express, { RequestHandler } from 'express';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
 
 export interface Attributes {
   _id: ObjectId
@@ -22,7 +23,7 @@ export interface Attributes {
 }
 
 const collectionName = 'attributes'
-const router = express.Router()
+const router: express.Router = express.Router()
 
 router.get('/', (async (req, res) => {
   const client = await connectToCluster()
@@ -32,7 +33,7 @@ router.get('/', (async (req, res) => {
   if (!results) {
     res.status(404).send('Not found')
   } else {
-    res.status(200).send(results)
+    res.status(200).json(results)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -47,7 +48,7 @@ router.get('/:id', (async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) }
   const result = await collection.findOne(query)
   if (!result) res.sendStatus(404)
-  else res.status(200).send(result)
+  else res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -63,7 +64,7 @@ router.get('/model/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -80,7 +81,7 @@ router.get('/device/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -97,7 +98,7 @@ router.get('/connection/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
   } else {
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -109,7 +110,7 @@ router.post('/', (async (req, res) => {
   const newDocument: Attributes = req.body as Attributes // Fix: Explicitly define the type of newDocument
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   if (!results) res.sendStatus(404)
-  else res.status(200).send(results)
+  else res.status(200).json(results)
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -125,7 +126,7 @@ router.delete('/:id', (async (req, res) => {
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -139,7 +140,7 @@ router.delete('/', (async (req, res) => {
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -156,7 +157,7 @@ router.delete('/model/:id', (async (req, res) => {
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)

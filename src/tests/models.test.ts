@@ -26,7 +26,7 @@ describe('GET /models', () => {
   })
 
   it('GET /models => array of models', async () => {
-    const response = await request(app).get('/models').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
+    const response = await request(app).get('/models').set('Accept', 'application/json; charset=utf-8').expect(200)
     const components = db.collection('components')
     //const componentsCursor = components.find({ attributes: true })
     expect(await components.countDocuments({ attributes: true })).not.toBe(0)

@@ -22,8 +22,8 @@ describe('GET /logs/object/:id', () => {
   it('GET /logs/object/:id => ', async () => {
     const response = await request(app)
       .get('/logs/object/65cbd2d6e73505044b5f3aea')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
+      .set('Accept', 'application/json; charset=utf-8')
+      .expect('Content-Type', /json; charset=utf-8/)
       .expect(200)
 
     expect((response as Response).body).toEqual(

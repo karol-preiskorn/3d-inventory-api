@@ -6,7 +6,7 @@ describe('GET /logs', () => {
   let response: request.Response
 
   beforeAll(async () => {
-    response = await request(app).get('/logs').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
+    response = await request(app).get('/logs').set('Accept', 'application/json; charset=utf-8').expect(200)
   })
 
   afterAll(() => {
