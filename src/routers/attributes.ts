@@ -23,7 +23,7 @@ export interface Attributes {
 }
 
 const collectionName = 'attributes'
-const router = express.Router()
+const router: express.Router = express.Router()
 
 router.get('/', (async (req, res) => {
   const client = await connectToCluster()
@@ -33,7 +33,7 @@ router.get('/', (async (req, res) => {
   if (!results) {
     res.status(404).send('Not found')
   } else {
-    res.status(200).send(results)
+    res.status(200).json(results)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -140,7 +140,7 @@ router.delete('/', (async (req, res) => {
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)

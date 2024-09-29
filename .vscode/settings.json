@@ -10,6 +10,7 @@
     "smoothstep",
     "tsdoc",
     "tseslint",
+    "upserted",
     "wraping"
   ]
 }

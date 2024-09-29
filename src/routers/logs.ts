@@ -25,7 +25,7 @@ export interface Logs {
 }
 
 const collectionName = 'logs'
-const router = express.Router()
+const router: express.Router = express.Router()
 
 router.get('/', (async (req: express.Request, res: express.Response): Promise<void> => {
   const client = await connectToCluster()
@@ -35,7 +35,7 @@ router.get('/', (async (req: express.Request, res: express.Response): Promise<vo
   if (!results) {
     res.sendStatus(404)
   } else {
-    res.status(200).send(results)
+    res.status(200).json(results)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -157,7 +157,7 @@ router.delete('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 

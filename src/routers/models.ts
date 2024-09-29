@@ -4,15 +4,13 @@
  * @version 2023-12-29  C2RLO - Initial
  **/
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import express, { RequestHandler } from 'express';
-import {
-    Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter
-} from 'mongodb';
+import express, { RequestHandler } from 'express'
+import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
-import { logger } from '../utils/logger';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
+import { logger } from '../utils/logger'
 
 export interface Dimension {
   width: number
@@ -33,19 +31,19 @@ export interface Model {
 }
 
 const collectionName = 'models'
-const router = express.Router()
+const router: express.Router = express.Router()
 
 router.get('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const results: object[] = await collection.find({}).limit(50).toArray()
+  const results: object[] = await collection.find({}).limit(100).toArray()
   if (!results) {
     logger.warn('GET /models - not found')
     res.status(404).send('Not found')
   } else {
     logger.info('GET /models - oki return ' + results.length + ' models')
-    res.status(200).send(results)
+    res.status(200).json(results)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -154,7 +152,7 @@ router.delete('/', (async (_req, res) => {
   const db = connectToDb(client)
   const collection: Collection = db.collection(collectionName) // Remove the explicit type annotation for 'collection'
   const result: DeleteResult = await collection.deleteMany(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 

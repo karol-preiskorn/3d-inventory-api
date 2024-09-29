@@ -9,7 +9,7 @@
 import '../utils/loadEnvironment'
 
 import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, MongoClient, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
+import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
 
 import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
 import { CreateLog } from '../services/logs'
@@ -38,7 +38,7 @@ export interface position {
   h: number
 }
 
-const router = express.Router()
+const router: express.Router = express.Router()
 
 const collectionName = 'devices'
 
@@ -46,26 +46,19 @@ const collectionName = 'devices'
  * Get Devise array from database.
  * @function GET /devices
  * @returns {Promise<object[]>} A promise that resolves to an array of objects.
- * @throws {Error} If the database is not available.
- * @throws {Error} If the collection is not available.
- * @throws {Error} If the collection is empty.
+ * @throws {Error}
  */
 router.get('/', (async (_req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  /**
-   * Retrieves a list of objects from the collection.
-   *
-   * @returns {Promise<object[]>} A promise that resolves to an array of objects.
-   */
   const results: object[] = await collection.find({}).limit(10).toArray()
   if (!results) {
     logger.warn('GET /devices - not found')
     res.status(404).send('Not found')
   } else {
     logger.info(`GET /devices - oki return ${results.length} devices ${JSON.stringify(results)}`)
-    res.status(200).send(results)
+    res.status(200).json(results)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -98,6 +91,7 @@ router.put('/:id', (async (req, res) => {
     return
   }
   const query = { _id: new ObjectId(req.params.id) }
+
   const updates = {
     $set: {
       name: (req.body as { name: string }).name,
@@ -112,8 +106,9 @@ router.put('/:id', (async (req, res) => {
   let result
   try {
     result = await collection.updateOne(query, updates)
-  } catch (error) {
-    logger.error(`PUT /devices/${req.params.id} - error updating device: ${(error as Error).message}`)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    logger.error(`PUT /devices/${req.params.id} - error updating device: ${errorMessage}`)
     res.status(500).send('Internal Server Error')
     return
   }
@@ -124,44 +119,6 @@ router.put('/:id', (async (req, res) => {
     const updatedDevice = await collection.findOne(query)
     logger.info(`PUT /devices/${req.params.id} - oki updated ${result.modifiedCount} devices`)
     res.status(200).json(updatedDevice)
-  }
-  await connectionClose(client)
-}) as RequestHandler)
-
-router.put('/:id/attributes', (async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    logger.error(`PUT /devices/${req.params.id}/attributes - wrong device id`)
-    res.sendStatus(404)
-  }
-  const updates = {
-    $set: {
-      attributes: (req.body as { attributes: [Attribute] }).attributes,
-    },
-  }
-  if (!process.env.ATLAS_URI) {
-    throw new Error('ATLAS_URI is not defined in the environment variables')
-  }
-  const atlasUri = process.env.ATLAS_URI
-  if (!atlasUri) {
-    throw new Error('ATLAS_URI is not defined in the environment variables')
-  }
-  const client = new MongoClient(atlasUri)
-  await client.connect()
-  if (!client || !(client instanceof MongoClient)) {
-    logger.error('Failed to initialize MongoClient')
-    res.status(500).send('Internal Server Error')
-    return
-  }
-  const db: Db = client.db(process.env.DBNAME as string)
-  const collection: Collection = db.collection(collectionName)
-  const query = { _id: new ObjectId(req.params.id.toString()) }
-  const result = await collection.updateOne(query, updates)
-  if (!result) {
-    logger.error(`PUT /devices/${req.params.id}/attributes - error update devices attributes`)
-    res.status(404).send('Not found devices attributes to update')
-  } else {
-    logger.info(`PUT /devices/${req.params.id} - success updated device ${req.params.id} attributes`)
-    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -257,13 +214,14 @@ router.delete('/:id', (async (req, res) => {
   await connectionClose(client)
 }) as RequestHandler)
 
-router.delete('/', (async (req, res) => {
+router.delete('/', (async (_req, res) => {
   const query = {}
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  const sanitizedResult = result
+  res.status(200).json(sanitizedResult)
   await connectionClose(client)
 }) as RequestHandler)
 

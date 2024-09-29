@@ -9,10 +9,11 @@
 import '../../../../../src/utils/loadEnvironment'
 
 import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb'
-import { connectToCluster, connectToDb } from '../db/dbUtils'
 
-import { User } from '../routers/users'
 import { faker } from '@faker-js/faker'
+
+import { connectToCluster, connectToDb } from '../db/dbUtils'
+import { User } from '../routers/users'
 
 describe('Test Mongo Atlas DB users', () => {
   let db: Db
@@ -35,7 +36,7 @@ describe('Test Mongo Atlas DB users', () => {
       name: faker.person.fullName(),
       email: faker.internet.email(),
       password: faker.internet.password({ length: 10 }),
-      rigths: faker.helpers.arrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
+      permissions: faker.helpers.arrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
       token: faker.internet.password({ length: 50 }),
       _id: new ObjectId(),
     }

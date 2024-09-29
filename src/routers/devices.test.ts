@@ -1,15 +1,15 @@
-import csrf from 'csurf';
-import dotenv from 'dotenv';
-import express from 'express';
-import helmet from 'helmet';
-import { Collection, Db, MongoClient } from 'mongodb';
-import request from 'supertest';
+import csrf from 'csurf'
+import dotenv from 'dotenv'
+import express from 'express'
+import helmet from 'helmet'
+import { Collection, Db, MongoClient } from 'mongodb'
+import request from 'supertest'
 
-import { expect, jest, test } from '@jest/globals';
+import { expect, jest } from '@jest/globals'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
-import { logger } from '../utils/logger';
-import router from './devices';
+import { connectionClose } from '../db/dbUtils'
+import { logger } from '../utils/logger'
+import router from './devices'
 
 dotenv.config()
 
@@ -25,7 +25,12 @@ app.use('/devices', router)
 describe('PUT /devices/:id/attributes', () => {
   let client: MongoClient
   let db: Db
-  let collection: Collection<{ [key: string]: any }>
+  interface Device {
+    _id: string
+    attributes: { key: string; value: string }[]
+  }
+
+  let collection: Collection<Device>
 
   beforeAll(() => {
     if (!process.env.ATLAS_URI) {
@@ -36,13 +41,13 @@ describe('PUT /devices/:id/attributes', () => {
     collection = db.collection('devices')
 
     // Mock the updateOne method
-    collection.updateOne = jest.fn().mockResolvedValue({
+    collection.updateOne = jest.fn<jest.MockedFunction<typeof collection.updateOne>>().mockResolvedValue({
       acknowledged: true,
       matchedCount: 0,
       modifiedCount: 0,
       upsertedCount: 0,
       upsertedId: null,
-    } as any) as jest.MockedFunction<typeof collection.updateOne>
+    })
   })
 
   afterAll(async () => {

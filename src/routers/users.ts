@@ -6,12 +6,13 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import express, { RequestHandler } from 'express';
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import express, { RequestHandler } from 'express'
+import sanitize from 'mongo-sanitize'
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
 
 export interface User {
   _id: ObjectId
@@ -19,13 +20,13 @@ export interface User {
   email: string
   password: string
   token: string
-  rigths: string[] // Fix: Replace Array<Object> with Array<object>
+  permissions: string[] // Fix: Replace Array<Object> with Array<object>
 }
 
 export type Users = User[]
 
 const collectionName = 'attributes'
-const router = express.Router()
+const router: express.Router = express.Router()
 
 router.get('/', (async (req, res) => {
   const client = await connectToCluster()
@@ -35,7 +36,8 @@ router.get('/', (async (req, res) => {
   if (!results) {
     res.status(404).send('Not found')
   } else {
-    res.status(200).send(results)
+    const sanitizedResults = sanitize(results)
+    res.status(200).json(sanitizedResults)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -65,7 +67,8 @@ router.get('/model/:id', (async (req, res) => {
   const result = await collection.find(query).toArray()
   if (!result) {
     res.sendStatus(404)
-  } else {
+    const sanitizedResult = sanitize(result)
+    res.status(200).json(sanitizedResult)
     res.status(200).json(result)
   }
   await connectionClose(client)
@@ -142,7 +145,7 @@ router.delete('/', (async (req, res) => {
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {
-    res.status(200).send(result)
+    res.status(200).json(result)
   }
   await connectionClose(client)
 }) as RequestHandler)

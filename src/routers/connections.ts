@@ -5,12 +5,13 @@
  * @version 2024-01-25 C2RLO - add new way to connect to DB
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import express, { RequestHandler } from 'express';
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import express, { RequestHandler } from 'express'
+import sanitize from 'mongo-sanitize'
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
 
 interface Connection {
   _id: ObjectId
@@ -20,7 +21,7 @@ interface Connection {
 }
 
 const collectionName = 'connections'
-const router = express.Router()
+const router: express.Router = express.Router()
 
 router.get('/', (async (_req, res) => {
   const client = await connectToCluster()
@@ -64,7 +65,7 @@ router.put('/:id', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
-  if (!result) res.status(404).send('Not found devices to update')
+  res.status(200).json(sanitize(result)).send('Not found devices to update')
   res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
@@ -143,7 +144,7 @@ router.delete('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 

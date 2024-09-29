@@ -6,13 +6,13 @@
  * @version 2024-02-13 C2RLO - init
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
-import sanitize from 'sanitize-html'
+import express, { RequestHandler } from 'express';
+import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb';
+import sanitize from 'sanitize-html';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
 
 interface Floor {
   _id: ObjectId
@@ -39,15 +39,35 @@ interface Dimension {
 }
 
 const collectionName = 'floors'
-const router = express.Router()
+const router: express.Router = express.Router()
 
-router.get('/', (async (req, res) => {
+router.get('/', (async (req: express.Request, res: express.Response) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const results: object[] = await collection.find({}).limit(10).toArray()
   if (!results) res.status(404).send('Not found')
-  else res.status(200).send(results)
+  else {
+    const sanitizedResults = results.map((result) => {
+      const floor = result as Floor
+      return {
+        ...floor,
+        name: sanitize(floor.name),
+        address: {
+          ...floor.address,
+          street: sanitize(floor.address.street),
+          city: sanitize(floor.address.city),
+          country: sanitize(floor.address.country),
+          postcode: sanitize(floor.address.postcode),
+        },
+        dimension: floor.dimension.map((dim: Dimension) => ({
+          ...dim,
+          description: sanitize(dim.description),
+        })),
+      }
+    })
+    res.status(200).json(sanitizedResults)
+  }
   await connectionClose(client)
 }) as RequestHandler)
 
@@ -85,7 +105,7 @@ router.post('/', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const newDocument: Floor = req.body as Floor
   const result = await collection.insertOne(newDocument)
-  const insertedDocument = await collection.findOne({ _id: result.insertedId })
+  const insertedDocument = (await collection.findOne({ _id: result.insertedId })) as Floor
   if (!insertedDocument) {
     res.status(404).send('Inserted document not found')
     await connectionClose(client)
@@ -97,12 +117,12 @@ router.post('/', (async (req, res) => {
     name: sanitize(typeof insertedDocument.name === 'string' ? insertedDocument.name : ''),
     address: {
       ...insertedDocument.address,
-      street: sanitize(typeof (insertedDocument.address as Address).street === 'string' ? (insertedDocument.address as Address).street : ''),
-      city: sanitize(typeof (insertedDocument.address as Address).city === 'string' ? (insertedDocument.address as Address).city : ''),
-      country: sanitize(typeof (insertedDocument.address as Address).country === 'string' ? (insertedDocument.address as Address).country : ''),
-      postcode: sanitize(typeof (insertedDocument.address as Address).postcode === 'string' ? (insertedDocument.address as Address).postcode : ''),
+      street: sanitize(typeof insertedDocument.address.street === 'string' ? insertedDocument.address.street : ''),
+      city: sanitize(typeof insertedDocument.address.city === 'string' ? insertedDocument.address.city : ''),
+      country: sanitize(typeof insertedDocument.address.country === 'string' ? insertedDocument.address.country : ''),
+      postcode: sanitize(typeof insertedDocument.address.postcode === 'string' ? insertedDocument.address.postcode : ''),
     },
-    dimension: (insertedDocument.dimension as Dimension[]).map((dim: Dimension) => ({
+    dimension: insertedDocument.dimension.map((dim: Dimension) => ({
       ...dim,
       description: sanitize(typeof dim.description === 'string' ? dim.description : ''),
     })),
@@ -144,7 +164,8 @@ router.delete('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  const sanitizedResult = sanitize(JSON.stringify(result));
+  res.status(200).send(JSON.parse(sanitizedResult));
   await connectionClose(client)
 }) as RequestHandler)
 

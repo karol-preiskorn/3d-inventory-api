@@ -6,13 +6,13 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import express, { RequestHandler } from 'express';
-import { Collection, Db, ObjectId, WithoutId } from 'mongodb';
+import express, { RequestHandler } from 'express'
+import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
-import { AttributesDictionary } from '../routers/attributesDictionary';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
+import { AttributesDictionary } from '../routers/attributesDictionary'
 
 export interface AttributesTypes {
   _id: ObjectId
@@ -25,7 +25,7 @@ export interface AttributesTypes {
 }
 
 const collectionName = 'attributesDictionary'
-const router = express.Router()
+const router: express.Router = express.Router()
 
 router.get('/', (async (req, res) => {
   const client = await connectToCluster()
@@ -34,7 +34,7 @@ router.get('/', (async (req, res) => {
   const results: object[] = await collection.find({}).limit(10).toArray()
   if (!results) res.status(404).send('Not found')
   else {
-    res.status(200).send(results)
+    res.status(200).json(results)
   }
   await connectionClose(client)
 }) as RequestHandler)
@@ -97,7 +97,7 @@ router.delete('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  res.status(200).send(result)
+  res.status(200).json(result)
   await connectionClose(client)
 }) as RequestHandler)
 
