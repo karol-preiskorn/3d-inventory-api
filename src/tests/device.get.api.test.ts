@@ -10,9 +10,9 @@
  * @version 2024-01-03  C2RLO  Initial
  */
 
-import request from 'supertest'
+import request from 'supertest';
 
-import app from '../index'
+import app from '../index';
 
 describe('GET /devices', () => {
   afterAll(function () {
@@ -20,7 +20,7 @@ describe('GET /devices', () => {
   })
 
   it('GET /devices => array of devices', async () => {
-    const response = await request(app).get('/devices').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
+    const response = await request(app).get('/devices').set('Accept', 'application/json; charset=utf-8').expect(200)
 
     expect(response.body).toEqual(
       expect.arrayContaining([

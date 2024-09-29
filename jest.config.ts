@@ -25,7 +25,6 @@ const config = {
     },
   },
   testEnvironment: 'node',
-  watchPlugins: ['jest-runner-eslint/watch-fix'],
   projects: [
     {
       displayName: 'prettier',
@@ -35,7 +34,7 @@ const config = {
       },
       preset: 'jest-runner-prettier',
       runner: 'prettier',
-      testPathIgnorePatterns: [, '<rootDir>/dist/', '<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/logs/', '<rootDir>/coverage/'],
+      testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/logs/', '<rootDir>/coverage/'],
       transform: {},
       moduleFileExtensions: ['js', 'ts', 'css', 'less', 'scss', 'html', 'json', 'graphql', 'md', 'yaml'],
       testMatch: ['**/*', '**/*.ts', '**/*.css', '**/*.less', '**/*.scss', '**/*.html', '**/*.json', '**/*.graphql', '**/*.md', '**/*.yaml'],

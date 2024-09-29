@@ -4,11 +4,11 @@
  * @version 2024-08-04 C2RLO - Initial
  **/
 
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import { Observable, of } from 'rxjs'
-import { connectToCluster, connectToDb } from '../db/dbUtils'
+import { format } from 'date-fns';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import { Observable, of } from 'rxjs';
 
-import { format } from 'date-fns'
+import { connectToCluster, connectToDb } from '../db/dbUtils';
 
 /**
  * Represents a log entry.
@@ -40,7 +40,7 @@ export interface LogCreate {
  */
 export async function CreateLog(objectId: string, message: object, operation: string, component: string): Promise<Observable<InsertOneResult<Document>>> {
   const client = await connectToCluster()
-  const db: Db = connectToDb(client)
+  const db: Db = await connectToDb(client)
   const collection: Collection = db.collection('logs')
 
   const log: LogCreate = {
