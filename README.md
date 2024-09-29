@@ -26,7 +26,7 @@ Create REST API for [✨3d-inventory✨](https://github.com/users/karol-preiskor
 
 ## Data Model
 
-![Data Model](/assets/3d-inventory.png)
+![Data Model](/assets/3d-inventory-data-model.png)
 
 ## API documentation
 
