@@ -115,7 +115,7 @@
     "morgan-body": "^2.6.9",
     "oas-normalize": "^11.1.2",
     "open": "^10.1.0",
-    "openapi-format": "^1.23.2",
+    "openapi-format": "^1.24.2",
     "passport": "0.7.0",
     "passport-local": "1.0.0",
     "perlin-noise": "^0.0.1",
