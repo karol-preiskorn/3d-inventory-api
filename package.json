@@ -70,7 +70,7 @@
   "dependencies": {
 
     "@angular-eslint/eslint-plugin": "^18.3.0",
-    "@apollo/client": "^3.11.6",
+    "@apollo/client": "^3.11.8",
     "@google-cloud/storage": "^7.12.1",
 
 
