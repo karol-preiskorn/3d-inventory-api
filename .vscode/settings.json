@@ -12,5 +12,6 @@
     "tseslint",
     "upserted",
     "wraping"
-  ]
+  ],
+  "gitlens.ai.experimental.vscode.model": ""
 }
