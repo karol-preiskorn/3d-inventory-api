@@ -30,8 +30,8 @@ import models from './routers/models';
 import readme from './routers/readme';
 import { logger } from './utils/logger';
 
-const PORT = process.env.PORT || 8080
-const yamlFilename = process.env.API_YAML_FILE || 'src/api/openapi.yaml'
+const PORT = process.env.PORT ?? 8080
+const yamlFilename = process.env.API_YAML_FILE ?? 'src/api/openapi.yaml'
 
 const app = express()
 app.use(helmet())
@@ -137,7 +137,7 @@ interface CustomError extends Error {
 
 const errorHandler: ErrorRequestHandler = (err: CustomError, req: Request, res: Response) => {
   logger.error(err)
-  res.status(err.status || 500).json({
+  res.status(err.status ?? 500).json({
     message: err.message,
     errors: Array.isArray(err.errors) || (typeof err.errors === 'object' && err.errors !== null) ? (err.errors as Record<string, unknown>) : undefined,
   })

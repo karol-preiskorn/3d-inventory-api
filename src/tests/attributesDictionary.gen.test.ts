@@ -4,10 +4,13 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import { faker } from '@faker-js/faker'
-import '../utils/loadEnvironment'
-import { Collection, Document, MongoClient, ObjectId } from 'mongodb'
-import { valueAttributeCategory } from '../utils/types'
+import '../utils/loadEnvironment';
+
+import { Collection, Document, MongoClient, ObjectId } from 'mongodb';
+
+import { faker } from '@faker-js/faker';
+
+import { valueAttributeCategory } from '../utils/types';
 
 describe('test create attributesDictionary', () => {
   let connection: MongoClient
@@ -17,7 +20,7 @@ describe('test create attributesDictionary', () => {
   let logs: Collection<Document>
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI as string, {})
+    connection = await MongoClient.connect(process.env.ATLAS_URI ?? '', {})
     db = connection.db(process.env.DBNAME)
     logs = db.collection('logs')
   })

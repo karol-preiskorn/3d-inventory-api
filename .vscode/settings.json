@@ -12,5 +12,8 @@
     "tseslint",
     "upserted",
     "wraping"
-  ]
+  ],
+  "gitlens.ai.experimental.vscode.model": "copilot:gpt-4o",
+  "search.useIgnoreFiles": true,
+  "search.useParentIgnoreFiles": true
 }

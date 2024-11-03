@@ -8,10 +8,11 @@
  * @version 2023-12-29 C2RLO - Initial
  */
 
-import { MongoClient } from 'mongodb'
-import { logger } from '../utils/logger'
+import { MongoClient } from 'mongodb';
 
-const uri = process.env.ATLAS_URI || ''
+import { logger } from '../utils/logger';
+
+const uri = process.env.ATLAS_URI ?? ''
 
 /**
  * Connects to the MongoDB Atlas cluster.
