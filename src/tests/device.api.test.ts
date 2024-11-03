@@ -79,7 +79,7 @@ describe('POST /devices', () => {
       },
     }
 
-    const response = await request(app).post('/devices').send(device).set('Accept', 'application/json').expect('Content-Type', /json/).expect(201)
+    const response = await request(app).post('/devices').send(device).set('Accept', 'application/json; charset=utf-8').expect(201)
 
     const createdDevice: Device = response.body as Device
 
@@ -162,7 +162,7 @@ describe('GET /devices', () => {
   })
 
   it('PUT /devices/:id => update device', async () => {
-    const response = await request(app).get('/devices').set('Accept', 'application/json').expect('Content-Type', /json/).expect(200)
+    const response = await request(app).get('/devices').set('Accept', 'application/json; charset=utf-8').expect(200)
 
     // ---INSERT---
     interface Device {

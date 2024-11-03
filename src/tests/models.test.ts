@@ -16,7 +16,7 @@ describe('GET /models', () => {
   let db: Db
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI || '', {})
+    connection = await MongoClient.connect(process.env.ATLAS_URI ?? '', {})
     db = connection.db(process.env.DBNAME)
   })
 
