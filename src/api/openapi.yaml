@@ -56,13 +56,10 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Issues not found
-
         "500":
           description: Unexpected server error
-
         "406":
           description: Not Acceptable
-
       tags:
         - github
       summary: Get all issues for GitHub
@@ -85,10 +82,8 @@ paths:
                 $ref: "#/components/schemas/Components"
         "404":
           description: Components not found
-
         "500":
           description: Unexpected server error
-
       x-swagger-router-controller: Components
   /devices:
     get:
@@ -105,11 +100,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Devices'
         "404":
-          description: No devices found
-
+          description: No devices found.
         "500":
           description: Unexpected server error
-
       x-swagger-router-controller: Devices
     put:
       tags:
@@ -132,10 +125,8 @@ paths:
                 $ref: "#/components/schemas/Device"
         "404":
           description: Device create data is incontinent.
-
         "500":
           description: Unexpected server error
-
       x-swagger-router-controller: Devices
     post:
       tags:
@@ -158,10 +149,8 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "422":
           description: UNPROCESSABLE ENTITY = Request matched and met syntactic contract but validation failed
-
         "500":
           description: Error creating device
-
       x-swagger-router-controller: Devices
     delete:
       tags:
@@ -178,7 +167,6 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: No devices found to delete
-
       x-swagger-router-controller: Devices
   "/devices/{id}":
     get:
@@ -331,7 +319,6 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Not found device to delete
-
       x-swagger-router-controller: Devices
   /logs:
     get:
@@ -498,10 +485,8 @@ paths:
                 $ref: "#/components/schemas/Logs"
         "400":
           description: Bad request
-
         "404":
           description: Error log requested component not found
-
       x-swagger-router-controller: Logs
     delete:
       tags:
@@ -532,10 +517,8 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "400":
           description: Bad request
-
         "404":
           description: Error log not found
-
       x-swagger-router-controller: Logs
   "/logs/device/{id}":
     get:
@@ -598,10 +581,8 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "400":
           description: Bad request
-
         "404":
           description: Error log not found
-
       x-swagger-router-controller: Logs
   "/logs/connection/{id}":
     get:
@@ -633,10 +614,8 @@ paths:
                 $ref: "#/components/schemas/Log"
         "400":
           description: Bad request
-
         "404":
           description: Error logs not found
-
       x-swagger-router-controller: Logs
     delete:
       tags:
@@ -667,10 +646,8 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "400":
           description: Bad request
-
         "404":
           description: Error log not found
-
       x-swagger-router-controller: Logs
   "/logs/attributes/{id}":
     get:
@@ -702,7 +679,6 @@ paths:
                 $ref: "#/components/schemas/Logs"
         "400":
           description: Bad request
-
       x-swagger-router-controller: Logs
   "/logs/model/{id}":
     get:
@@ -734,13 +710,10 @@ paths:
                 $ref: "#/components/schemas/Logs"
         "404":
           description: Not found. Indicates that the request has no logs.
-
         "406":
           description: Not Acceptable. Indicates that the request has no logs.
-
         "500":
           description: Server side error.
-
       x-swagger-router-controller: Logs
     delete:
       tags:
@@ -830,10 +803,6 @@ paths:
       responses:
         "200":
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Confirmation"
         "404":
           description: Error log not found
           content:
@@ -842,7 +811,6 @@ paths:
                 $ref: "#/components/schemas/Log"
         "406":
           description: Not Acceptable
-
       x-swagger-router-controller: Logs
   /connections:
     get:
@@ -1027,10 +995,6 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Connections"
       x-swagger-router-controller: Connections
   "/connections/from/{id}":
     get:
@@ -1090,10 +1054,6 @@ paths:
                 $ref: "#/components/schemas/Connections"
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Connections"
       x-swagger-router-controller: Connections
   "/connections/to/{id}":
     get:
@@ -1149,10 +1109,6 @@ paths:
           description: OK
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Connections"
       x-swagger-router-controller: Connections
   "/connections/from/{idFrom}/to/{idTo}":
     get:
@@ -1255,7 +1211,6 @@ paths:
                 $ref: "#/components/schemas/AttributesDictionaries"
         "400":
           description: Bad request.
-
         "500":
           description:
             Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
@@ -1308,7 +1263,6 @@ paths:
                 $ref: "#/components/schemas/AttributesDictionary/example"
         "400":
           description: Bad request.
-
         "500":
           description:
             Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
@@ -1352,7 +1306,8 @@ paths:
           description: Bad request.
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.      x-swagger-router-controller: attributesDictionary
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
+        x-swagger-router-controller: attributesDictionary
   /attributesDictionary/devices:
     get:
       tags:
@@ -1414,7 +1369,8 @@ paths:
               example:
                 $ref: "#/components/schemas/Models/example"
         "404":
-          description: Not found        "500":
+          description: Not found
+        "500":
           description:
             Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Models
@@ -1438,7 +1394,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Model"
         "404":
-          description: Not found        "500":
+          description: Not found
+        "500":
           description:
             Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Models
@@ -1463,7 +1420,6 @@ paths:
                 $ref: "#/components/schemas/Model"
         "400":
           description: Bad request.
-
         "500":
           description:
             Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
@@ -1478,7 +1434,8 @@ paths:
         "200":
           description: OK. Indicates that the request has succeeded.
         "404":
-          description: Not found        "500":
+          description: Not found
+        "500":
           description:
             Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Models
@@ -1511,7 +1468,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Model"
         "404":
-          description: Not found        "500":
+          description: Not found
+        "500":
           description: Unexpected server error.
       x-swagger-router-controller: Models
     put:
@@ -1574,7 +1532,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Confirmation"
         "404":
-          description: Not found        "500":
+          description: Not found
+        "500":
           description: Unexpected server error.
       x-swagger-router-controller: Models
   /floors:
@@ -1588,7 +1547,8 @@ paths:
         "200":
           description: OK
         "404":
-          description: Not found      x-swagger-router-controller: Floors
+          description: Not found
+      x-swagger-router-controller: Floors
     put:
       tags:
         - floors
@@ -1605,9 +1565,11 @@ paths:
         "200":
           description: OK. Indicates that the request has succeeded.
         "404":
-          description: Not found        "500":
+          description: Not found
+        "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.      x-swagger-router-controller: Floors
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
+      x-swagger-router-controller: Floors
     post:
       tags:
         - floors
@@ -1827,7 +1789,6 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "400":
           description: Bad request.
-
         "500":
           description:
             Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
