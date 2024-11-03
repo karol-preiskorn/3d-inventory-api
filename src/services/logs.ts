@@ -40,7 +40,7 @@ export interface LogCreate {
  */
 export async function CreateLog(objectId: string, message: object, operation: string, component: string): Promise<Observable<InsertOneResult<Document>>> {
   const client = await connectToCluster()
-  const db: Db = await connectToDb(client)
+  const db: Db = connectToDb(client)
   const collection: Collection = db.collection('logs')
 
   const log: LogCreate = {
