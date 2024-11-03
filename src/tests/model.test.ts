@@ -6,11 +6,11 @@
  * @version 2023-10-29  C2RLO  Init
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { Db, MongoClient } from 'mongodb'
+import { Db, MongoClient } from 'mongodb';
 
-import { faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker';
 
 describe('create 3 models', () => {
   let connection: MongoClient
@@ -19,7 +19,7 @@ describe('create 3 models', () => {
   let insertedModel
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI as string, {})
+    connection = await MongoClient.connect(process.env.ATLAS_URI ?? '', {})
     db = connection.db(process.env.DBNAME)
   })
 

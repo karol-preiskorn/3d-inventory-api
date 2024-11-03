@@ -150,7 +150,7 @@ router.post('/', (async (req, res) => {
   const newDocument: OptionalId<Document> & { date: Date } = req.body as OptionalId<Document> & { date: Date }
   newDocument.date = new Date()
   const result: InsertOneResult<Document> = await collection.insertOne(newDocument)
-  if (!result || !result.insertedId) {
+  if (!result?.insertedId) {
     logger.error('POST /devices - Device not created with id:', JSON.stringify(newDocument))
     resultLog = await CreateLog('', newDocument, 'Create', 'Device')
     res.status(500).send('POST /devices - Device not created')

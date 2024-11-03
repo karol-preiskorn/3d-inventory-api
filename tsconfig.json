@@ -1,6 +1,6 @@
 /* Visit https://aka.ms/tsconfig to read more about this file */ {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "_version": "21.0.0", // Specify the version of the schema
+  "version": "23.0.0", // Specify the version of the schema
   "compileOnSave": true, // Compile the project on save
   "compilerOptions": {
     "allowJs": true, // Allow JavaScript files to be compiled
@@ -9,7 +9,6 @@
     "esModuleInterop": true, // Enable interoperability between CommonJS and ES Modules via creation of default exports
     "experimentalDecorators": true, // Enable support for experimental decorators
     "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
-    "module": "CommonJS" /* Specify what module code is generated. */,
     "moduleDetection": "auto", /* Control what method is used to detect module-format JS files. */
     "outDir": "./dist" /* Specify an output folder for all emitted files. */,
     "pretty": true, // Output prettified code
@@ -18,7 +17,8 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "sourceMap": true /* Create source map files for emitted JavaScript files. */,
     "strict": true /* Enable all strict type-checking options. */,
-    "target": "ES6" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "module": "CommonJS", /* Specify the module code generation method. */
+    "target": "ES6",
     "types": [
       "node",
       "jest"
@@ -26,17 +26,14 @@
   },
   "display": "node", /* Specify the environment for the TypeScript language service. */
   "exclude": [
-    "dist",
-    "realm",
-    "schema",
-    "docs",
-    "release",
-    "node_modules"
+    "node_modules",
+    "**/*.test.ts"
   ],
   "include": [
     "src/**/*.ts", // Include TypeScript files
     "src/**/*.js", // Include JavaScript files
     "tests/**/*.(t|j)s", // Include test files
-    "jest.config.ts" // Include Jest configuration file
+    "jest.config.ts", // Include Jest configuration file
+    "eslint.config.js" // Include ESLint configuration file
   ]
 }
