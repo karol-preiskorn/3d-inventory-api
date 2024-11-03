@@ -6,7 +6,6 @@ import request from 'supertest';
 
 import { expect, jest } from '@jest/globals';
 
-import { connectionClose } from '../db/dbUtils';
 import { logger } from '../utils/logger';
 import router from './devices';
 
@@ -30,11 +29,12 @@ describe('PUT /devices/:id/attributes', () => {
 
   let collection: Collection<Device>
 
-  beforeAll(() => {
+  beforeAll(async () => {
     if (!process.env.ATLAS_URI) {
       throw new Error('ATLAS_URI is not defined in the environment variables')
     }
     client = new MongoClient(process.env.ATLAS_URI)
+    await client.connect()
     db = client.db(process.env.DBNAME)
     collection = db.collection('devices')
 
@@ -49,7 +49,7 @@ describe('PUT /devices/:id/attributes', () => {
   })
 
   afterAll(async () => {
-    await connectionClose(client)
+    await client.close()
   })
 
   it('should return 404 if the device id is invalid', async () => {

@@ -17,7 +17,7 @@ describe('create 10 connections', () => {
   let insertedConnection
 
   beforeAll(async () => {
-    const atlasUri = process.env.ATLAS_URI || ''
+    const atlasUri = process.env.ATLAS_URI ?? ''
     connection = await MongoClient.connect(atlasUri, {})
     db = connection.db(process.env.DBNAME)
   })

@@ -10,27 +10,12 @@ info:
     - [Logs](http://localhost:8080/api/#/logs)
     - [Models](http://localhost:8080/api/#/models)
     - [Connection](http://localhost:8080/api/#/connection)
-    - [Attributes](http://localhost:8080/api/#/attributes)
     - [AttributesDictionary](http://localhost:8080/api/#/attributesdictionary)
     - [Floors](http://localhost:8080/api/#/floors)
-
-    ### Responses
-    - 1xx Informational – Communicates transfer protocol-level information.
-    - 2xx Success – Indicates that the client’s request was accepted successfully.
-    - 3xx Redirection - Indicates that the client must take some additional action in order to complete their request.
-    - 4xx Client Error – This category of error status codes points the finger at clients.
-    - 5xx Server Error – The server takes responsibility for these error status codes.
   contact:
     name: 3d-inventory
     url: "https://github.com/karol-preiskorn/3d-inventory-mongo-api/discussions"
-    email: h5xwmtlfp@mozmail.com
-  license:
-    name: Apache 2.0
-    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
   version: 0.0.8
-externalDocs:
-  description: "Find more information about the 3d-inventory-mongo-api"
-  url: "https://ultimasolution.pl/3d-inventory-mongo-api"
 servers:
   - url: "http://localhost:8080"
     description: Localhost
@@ -71,22 +56,10 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Issues not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description: Unexpected server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "406":
           description: Not Acceptable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       tags:
         - github
       summary: Get all issues for GitHub
@@ -109,16 +82,8 @@ paths:
                 $ref: "#/components/schemas/Components"
         "404":
           description: Components not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description: Unexpected server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Components
   /devices:
     get:
@@ -133,19 +98,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Devices"
+                $ref: '#/components/schemas/Devices'
         "404":
-          description: No devices found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          description: No devices found.
         "500":
           description: Unexpected server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
     put:
       tags:
@@ -167,17 +124,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/Device"
         "404":
-          description: Device not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          description: Device create data is incontinent.
         "500":
           description: Unexpected server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
     post:
       tags:
@@ -191,8 +140,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Device"
-            example:
-              $ref: "#/components/schemas/Device/example"
       responses:
         "200":
           description: Device created successfully
@@ -200,12 +147,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Confirmation"
+        "422":
+          description: UNPROCESSABLE ENTITY = Request matched and met syntactic contract but validation failed
         "500":
           description: Error creating device
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
     delete:
       tags:
@@ -222,10 +167,6 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: No devices found to delete
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
   "/devices/{id}":
     get:
@@ -257,10 +198,6 @@ paths:
                 $ref: "#/components/schemas/Device"
         "404":
           description: Devices not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
     put:
       tags:
@@ -291,10 +228,6 @@ paths:
                 $ref: "#/components/schemas/Device"
         "404":
           description: Devices not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
     delete:
       tags:
@@ -325,10 +258,6 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Not found device to delete
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
   "/devices/model/{id}":
     get:
@@ -360,10 +289,6 @@ paths:
                 $ref: "#/components/schemas/Devices"
         "404":
           description: Devices not found with this model :id
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
     delete:
       tags:
@@ -394,10 +319,6 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Not found device to delete
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
   /logs:
     get:
@@ -413,21 +334,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Logs"
-              example:
-                $ref: "#/components/schemas/Logs/example"
         "404":
           description: No found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
         "500":
           description: Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Logs
     put:
       tags:
@@ -477,10 +387,6 @@ paths:
                 $ref: "#/components/schemas/Log"
         "404":
           description: Id Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Logs
     post:
       tags:
@@ -505,18 +411,8 @@ paths:
                 $ref: "#/components/schemas/Log/example"
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description: Error log not created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              example:
-                $ref: "#/components/responses/500"
       x-swagger-router-controller: Logs
     delete:
       tags:
@@ -526,17 +422,9 @@ paths:
       operationId: logAllDelete
       responses:
         "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Confirmation"
+          description: Success log deleted
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Log"
       x-swagger-router-controller: Logs
   "/logs/{id}":
     get:
@@ -562,16 +450,10 @@ paths:
       responses:
         "200":
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Confirmation"
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+        "500":
+          description: Server error
       x-swagger-router-controller: Logs
   "/logs/component/{component}":
     get:
@@ -603,16 +485,8 @@ paths:
                 $ref: "#/components/schemas/Logs"
         "400":
           description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "404":
           description: Error log requested component not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Logs
     delete:
       tags:
@@ -643,16 +517,8 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "400":
           description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Logs
   "/logs/device/{id}":
     get:
@@ -684,10 +550,7 @@ paths:
                 $ref: "#/components/schemas/Log"
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+
       x-swagger-router-controller: Logs
     delete:
       tags:
@@ -718,16 +581,8 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "400":
           description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Logs
   "/logs/connection/{id}":
     get:
@@ -759,16 +614,8 @@ paths:
                 $ref: "#/components/schemas/Log"
         "400":
           description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "404":
           description: Error logs not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Logs
     delete:
       tags:
@@ -799,16 +646,8 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "400":
           description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Logs
   "/logs/attributes/{id}":
     get:
@@ -840,10 +679,6 @@ paths:
                 $ref: "#/components/schemas/Logs"
         "400":
           description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Logs
   "/logs/model/{id}":
     get:
@@ -875,22 +710,10 @@ paths:
                 $ref: "#/components/schemas/Logs"
         "404":
           description: Not found. Indicates that the request has no logs.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "406":
           description: Not Acceptable. Indicates that the request has no logs.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description: Server side error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Logs
     delete:
       tags:
@@ -980,10 +803,6 @@ paths:
       responses:
         "200":
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Confirmation"
         "404":
           description: Error log not found
           content:
@@ -992,10 +811,6 @@ paths:
                 $ref: "#/components/schemas/Log"
         "406":
           description: Not Acceptable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Logs
   /connections:
     get:
@@ -1035,18 +850,8 @@ paths:
                 $ref: "#/components/schemas/Connection/example"
         "404":
           description: Not found connection data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description: Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              example:
-                $ref: "#/components/schemas/Error/example"
       x-swagger-router-controller: Connections
     post:
       tags:
@@ -1071,20 +876,8 @@ paths:
                 $ref: "#/components/schemas/Connection/example"
         "404":
           description: Not found connection data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              example:
-                $ref: "#/components/responses/404"
         "500":
           description: Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              example:
-                $ref: "#/components/responses/500"
       x-swagger-router-controller: Connections
     delete:
       tags:
@@ -1101,20 +894,8 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Not found connection to delete
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              example:
-                $ref: "#/components/responses/404"
         "500":
           description: Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              example:
-                $ref: "#/components/responses/500"
       x-swagger-router-controller: Connections
   "/connections/{id}":
     get:
@@ -1182,18 +963,8 @@ paths:
                 $ref: "#/components/schemas/Connection/example"
         "404":
           description: Not found connection data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description: Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              example:
-                $ref: "#/components/responses/500"
       x-swagger-router-controller: Connections
     delete:
       tags:
@@ -1224,10 +995,6 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Connections"
       x-swagger-router-controller: Connections
   "/connections/from/{id}":
     get:
@@ -1287,10 +1054,6 @@ paths:
                 $ref: "#/components/schemas/Connections"
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Connections"
       x-swagger-router-controller: Connections
   "/connections/to/{id}":
     get:
@@ -1346,10 +1109,6 @@ paths:
           description: OK
         "404":
           description: Error log not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Connections"
       x-swagger-router-controller: Connections
   "/connections/from/{idFrom}/to/{idTo}":
     get:
@@ -1452,18 +1211,9 @@ paths:
                 $ref: "#/components/schemas/AttributesDictionaries"
         "400":
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
     put:
       tags:
@@ -1486,18 +1236,9 @@ paths:
                 $ref: "#/components/schemas/AttributesDictionary"
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
     post:
       tags:
@@ -1522,18 +1263,9 @@ paths:
                 $ref: "#/components/schemas/AttributesDictionary/example"
         "400":
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
     delete:
       tags:
@@ -1550,18 +1282,9 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
   /attributesDictionary/models:
     get:
@@ -1581,19 +1304,10 @@ paths:
                 $ref: "#/components/schemas/AttributesDictionaries"
         "400":
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-      x-swagger-router-controller: attributesDictionary
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
+        x-swagger-router-controller: attributesDictionary
   /attributesDictionary/devices:
     get:
       tags:
@@ -1612,18 +1326,9 @@ paths:
                 $ref: "#/components/schemas/AttributesDictionaries"
         "400":
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it from  fulfilling the request.
       x-swagger-router-controller: attributesDictionary
   /attributesDictionary/connections:
     get:
@@ -1643,18 +1348,9 @@ paths:
                 $ref: "#/components/schemas/AttributesDictionaries"
         "400":
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it from  fulfilling the request.
       x-swagger-router-controller: attributesDictionary
   /models:
     get:
@@ -1674,18 +1370,9 @@ paths:
                 $ref: "#/components/schemas/Models/example"
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Models
     put:
       tags:
@@ -1708,18 +1395,9 @@ paths:
                 $ref: "#/components/schemas/Model"
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Models
     post:
       tags:
@@ -1742,18 +1420,9 @@ paths:
                 $ref: "#/components/schemas/Model"
         "400":
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Models
     delete:
       tags:
@@ -1768,12 +1437,7 @@ paths:
           description: Not found
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Models
   "/models/{id}":
     get:
@@ -1869,16 +1533,8 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description: Unexpected server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Models
   /floors:
     get:
@@ -1891,7 +1547,7 @@ paths:
         "200":
           description: OK
         "404":
-          description: Not Found
+          description: Not found
       x-swagger-router-controller: Floors
     put:
       tags:
@@ -1910,18 +1566,9 @@ paths:
           description: OK. Indicates that the request has succeeded.
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: Floors
     post:
       tags:
@@ -1940,18 +1587,10 @@ paths:
           description: OK. Indicates that the request has succeeded.
         "400":
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Floors
     delete:
       tags:
@@ -1964,18 +1603,9 @@ paths:
           description: OK. Indicates that the request has succeeded.
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Floors
   "/floors/{id}":
     get:
@@ -2006,7 +1636,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/Floor"
       x-swagger-router-controller: Floors
-
   /users:
     get:
       tags:
@@ -2022,11 +1651,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Users"
         "404":
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          description: Not found
       x-swagger-router-controller: Users
     put:
       tags:
@@ -2049,18 +1674,9 @@ paths:
                 $ref: "#/components/schemas/User"
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: Users
     post:
       tags:
@@ -2083,18 +1699,10 @@ paths:
                 $ref: "#/components/schemas/User"
         "400":
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: Users
     delete:
       tags:
@@ -2111,18 +1719,9 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: Users
   "/users/{id}":
     get:
@@ -2154,10 +1753,6 @@ paths:
                 $ref: "#/components/schemas/User"
         "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Users
     post:
       tags:
@@ -2194,18 +1789,9 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "400":
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         "500":
           description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: Users
 components:
   schemas:
@@ -2541,14 +2127,8 @@ components:
             value: "1999"
     Devices:
       type: array
-      description: Array of Devices
       items:
-        $ref: "#/components/schemas/Device"
-      oneOf:
-        - minItems: 0
-          maxItems: 0
-        - minItems: 1
-          maxItems: 10
+        $ref: '#/components/schemas/Device'
     Connection:
       required:
         - _id
@@ -2586,10 +2166,10 @@ components:
           x-42c-format: "o:uuid"
       description: Single Connection between two devices deviceIdFrom to deviceIdTo
       example:
-        _id: 6566ed4ace63d42b25fbba19
-        name: device-A1
-        deviceIdFrom: 6566ed4ace63d42b25fbba19
-        deviceIdTo: 6566ed4ace63d42b25fbba19
+        type: array
+        description: Array of Devices
+        items:
+          $ref: "#/components/schemas/Device/example"
     Connections:
       type: array
       description: Array of Connections
@@ -2633,17 +2213,17 @@ components:
           type: string
       description: Universal error message from database
       example:
-        errorNum: "404"
+        errorNum: "xxx"
         message: Error example app not work...
     Confirmation:
       type: string
       properties:
         message:
           type: string
-      description: Universal error message from database
+      description: Universal confitmation message from database
       example:
-        errorNum: "404"
-        message: Error example app not work...
+        errorNum: "200"
+        message: Succeed
     Log:
       required:
         - _id
@@ -2698,10 +2278,8 @@ components:
           }
     Logs:
       type: array
-      description: Array of log entries
       items:
         $ref: "#/components/schemas/Log"
-
       example:
         - _id: "666f1f958237b346e54f2cd0"
           date: "2023/06/17 15:37:58.44"
@@ -2754,62 +2332,26 @@ components:
       description: OK. Indicates that the request has succeeded.
     "400":
       description: Bad request.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
     "401":
       description: Authorization information is missing or invalid.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
     "404":
       description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
     "405":
       description:
         Method Not Allowed. The request HTTP method is known by the server but has been disabled and cannot be used
         for that resource.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
     "500":
       description:
         Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
         the request.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
     "501":
       description: Not Implemented. The HTTP method is not supported by the server and cannot be handled.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
     "502":
       description:
         Bad getaway. The server got an invalid response while working as a gateway to get the response needed to
         handle the request.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
     "503":
       description: Service Unavailable. The server is not ready to handle the request.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
     "504":
       description:
         Gateway Timeout. The server is acting as a gateway and cannot get a response in time for a request.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"

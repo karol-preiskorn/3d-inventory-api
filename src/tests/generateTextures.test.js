@@ -4,15 +4,14 @@
 * @version 0.0.1
 * @requires perlin-noise
 * @requires files
-* @see
-* @todo
 **/
+
+import * as perlin from 'perlin-noise'
 
 import { beforeAll, describe, it } from 'mocha'
 
 import { createCanvas } from 'canvas'
 import { deleteFilesInDirectory } from '../utils/files'
-import perlin from 'perlin-noise'
 import { writeFileSync } from 'fs'
 
 describe('Generate textures', () => {
@@ -85,16 +84,19 @@ function generateColorfulTexture(width, height, tileSize, filename) {
   writeFileSync(filename, buffer)
 }
 
+
 /**
- * Generates a natural texture based on Perlin noise and saves it as a PNG file.
- * @param {number} width - The width of the texture in pixels.
- * @param {number} height - The height of the texture in pixels.
+ * Generates a natural texture using Perlin noise and saves it as a PNG file.
+ *
+ * @param {number} width - The width of the texture.
+ * @param {number} height - The height of the texture.
  * @param {string} filename - The name of the file to save the texture as.
  */
-function generateNaturalTexture(width, height, filename) {
+function generateNaturalTexture(width, height, scale, filename) {
   const canvas = createCanvas(width, height)
   const ctx = canvas.getContext('2d')
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+
+  /** @type {number[]} */
   const noise = perlin.generatePerlinNoise(width, height, {
     octaveCount: 6,
     amplitude: 0.1,
@@ -104,8 +106,8 @@ function generateNaturalTexture(width, height, filename) {
   // Draw the pattern on the canvas based on the Perlin noise
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const value = noise && noise[x * height + y] || 0
+
+      const value = noise?.[x * height + y] || 0
       const color = Math.floor((value + 1) * 128)
       ctx.fillStyle = `rgb(${color}, ${color}, ${color})`
       ctx.fillRect(x, y, 1, 1)
@@ -120,7 +122,7 @@ function generateNaturalTexture(width, height, filename) {
 /**
  * Test case for generating natural textures.
  */
-it('should create 6 files with natural textures', async () => {
+it('should create 6 files with natural textures', () => {
   // Set the dimensions of your texture and the Perlin noise scale
   const textureWidth = 500
   const textureHeight = 500

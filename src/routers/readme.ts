@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
+ 
 /**
  * @description Render README.md in express
  * @module routers

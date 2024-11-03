@@ -5,13 +5,14 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { Db, MongoClient, ObjectId, OptionalId } from 'mongodb'
+import { formatDate } from 'date-fns';
+import { Db, MongoClient, ObjectId, OptionalId } from 'mongodb';
 
-import { Logs } from '../routers/logs'
-import { faker } from '@faker-js/faker'
-import { formatDate } from 'date-fns'
+import { faker } from '@faker-js/faker';
+
+import { Logs } from '../routers/logs';
 
 describe('prepare test data', () => {
   let connection: MongoClient | undefined
@@ -19,7 +20,7 @@ describe('prepare test data', () => {
   let mockLog: OptionalId<Logs>
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI || '', {})
+    connection = await MongoClient.connect(process.env.ATLAS_URI ?? '', {})
     db = connection.db(process.env.DBNAME)
   })
 

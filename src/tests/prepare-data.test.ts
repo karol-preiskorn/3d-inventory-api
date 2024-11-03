@@ -5,9 +5,11 @@
  * @version     2023-12-26 C2RLO - Initial
  */
 
-import { faker } from '@faker-js/faker'
-import '../utils/loadEnvironment'
-import { Db, MongoClient } from 'mongodb'
+import '../utils/loadEnvironment';
+
+import { Db, MongoClient } from 'mongodb';
+
+import { faker } from '@faker-js/faker';
 
 describe('prepare test data', () => {
   let connection: MongoClient
@@ -17,7 +19,7 @@ describe('prepare test data', () => {
   let insertedLog
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI || '', {})
+    connection = await MongoClient.connect(process.env.ATLAS_URI ?? '', {})
     db = connection.db(process.env.DBNAME)
   })
 
