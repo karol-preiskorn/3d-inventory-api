@@ -42,12 +42,10 @@ try {
     morgan(
       function (tokens: morgan.TokenIndexer<express.Request, express.Response>, req: express.Request, res: express.Response): string {
         return [
-          //tokens.date(req, res, 'iso'),
+          tokens.date(req, res, 'iso'),
           tokens.method(req, res),
           tokens.url(req, res),
           tokens.status(req, res),
-          tokens.res(req, res, 'content-length'),
-          '-',
           tokens['response-time'](req, res),
           'ms',
         ].join(' ')
