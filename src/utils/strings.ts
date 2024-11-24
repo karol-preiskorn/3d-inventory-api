@@ -2,7 +2,6 @@
  * @file /utils/strings.js
  * @module /utils
  * @description This file contains utility functions for working with strings.
- * @version 2024-02-01 C2RLO - Initial
  */
 
 /**

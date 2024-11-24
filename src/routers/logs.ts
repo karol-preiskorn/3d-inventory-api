@@ -9,11 +9,13 @@ import '../utils/loadEnvironment';
 
 import { format } from 'date-fns';
 import express, { RequestHandler } from 'express';
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import {
+    Collection, Db, Document, Filter, FindCursor, InsertOneResult, ObjectId, WithId
+} from 'mongodb';
 
 import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
 import { logger } from '../utils/logger';
-import { capitalize } from '../utils/strings';
+import { capitalize, capitalizeFirstLetter } from '../utils/strings';
 
 export interface Logs {
   _id: ObjectId
@@ -59,15 +61,25 @@ router.get('/component/:component', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-
+  let component
   if (req.params.component.length === 0) {
-    res.status(400).send('Not provide component name')
+    res.status(400).send(`Not provide component name: ${component} not in [ Device | Model | Connection | User | Attribute Dictionary ].`)
     return
+  } else {
+    component = req.params.component
+    logger.info(`GET /logs/component/${req.params.component} - component: ${component}`)
+    if (component !== 'Device' && component !== 'Model' && component !== 'Connection' && component !== 'User' && component !== 'Attribute Dictionary') {
+      res.status(400).json({ message: `Not provide available component name: ${component} not in [ Device | Model | Connection | User | Attribute Dictionary ].`})
+      return
+    }
   }
 
-  const query: { component: string } = { component: capitalize(req.params.component) }
-  // logger.info(`GET /logs/component/${req.params.component} - query: ${JSON.stringify(query)}`)
-  const result = await collection.find(query).sort({ date: -1 }).toArray()
+  const query: Filter<Document> = { component: component } as Filter<Document>
+
+  logger.info(`GET /logs/component/${req.params.component} - Get all log for component. Query: ${JSON.stringify(query)}`)
+
+  const result: WithId<Document>[] = await collection.find(query).sort({ date: -1 }).toArray()
+
   if (result.length === 0) {
     res.status(404).json({ message: `GET /logs/component/${req.params.component} - Not found any logs for component.` })
     logger.warn(`GET /logs/component/${req.params.component}, query: ${JSON.stringify(query)} - 404 not found any component for objectId.`)
@@ -77,6 +89,7 @@ router.get('/component/:component', (async (req, res) => {
   }
   await connectionClose(client)
 }) as RequestHandler)
+
 
 router.get('/model/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
@@ -123,6 +136,7 @@ router.get('/object/:id', (async (req, res) => {
   await connectionClose(client)
 }) as RequestHandler)
 
+
 router.post('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
@@ -140,6 +154,7 @@ router.post('/', (async (req, res) => {
   }
   await connectionClose(client)
 }) as RequestHandler)
+
 
 router.delete('/:id', (async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) }

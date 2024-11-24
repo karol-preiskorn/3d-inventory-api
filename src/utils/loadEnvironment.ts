@@ -1,12 +1,8 @@
 /**
- * File:        /loadEnvironment.js
- * Description: Environment variables
- *
- * Date        By     Comments
- * ----------  -----  ------------------------------
- * 2023-12-29  C2RLO  Initial
+ * @file loadEnvironment.js
+ * @module loadEnvironment
  */
 
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
 dotenv.config()

@@ -1,13 +1,11 @@
 /**
- * @description: log information to console and files
- * @version 2024-01-30 C2RLO - Add rotate files
- * @version 2023-12-22 C2RLO - Add parent-module as label
- * @version 2023-12-02 C2RLO - Initial add parent-module
+ * @description: log information to console and files.
+ * @module: utils
  */
 
-import 'winston-daily-rotate-file'
+import 'winston-daily-rotate-file';
 
-import { createLogger, format, transports } from 'winston'
+import { createLogger, format, transports } from 'winston';
 
 const { combine, timestamp, printf, colorize } = format
 const myFormat = printf(({ level, message, timestamp }) => {
