@@ -1,18 +1,16 @@
 /**
  * @file /routers/attributesDictionary.js
- * @module /routers
  * @description attributesDictionary router
- * @version 2024-03-11 C2RLO - fix status/send problem
- * @version 2024-01-30 C2RLO - Initial
+ * @module routers
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
+import express, { RequestHandler } from 'express';
+import { Collection, Db, ObjectId, WithoutId } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
-import { AttributesDictionary } from '../routers/attributesDictionary'
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
+import { AttributesDictionary } from '../routers/attributesDictionary';
 
 export interface AttributesTypes {
   _id: ObjectId

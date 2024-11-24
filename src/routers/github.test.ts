@@ -1,15 +1,16 @@
 /**
  * Test case for getting GitHub issues.
- *
+ * @module routers
  * @remarks
  * This test case verifies that the API endpoint for retrieving GitHub issues is functioning correctly.
  *
  * @returns {Promise<void>} A promise that resolves when the test case is complete.
  */
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import app from '../index'
-import request from 'supertest'
+import request from 'supertest';
+
+import app from '../index';
 
 describe('GitHub API', () => {
   it('should get GitHub issues', async () => {

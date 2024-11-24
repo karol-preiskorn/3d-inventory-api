@@ -1207,19 +1207,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AttributesDictionaries"
-              example:
-                $ref: "#/components/schemas/AttributesDictionaries"
         "400":
           description: Bad request.
+        "404":
+          description: Not found.
         "500":
-          description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
+          description: Unexpected server error.
       x-swagger-router-controller: attributesDictionary
     put:
       tags:
         - attributesDictionary
-      summary: Update new attributesDictionary
-      description: Create attributesDictionary between two devices. Two id and attributes from attributes.
+      summary: Update attributesDictionary
       operationId: attributesDictionaryPut
       requestBody:
         content:
@@ -1229,16 +1227,13 @@ paths:
         required: true
       responses:
         "200":
-          description: OK. Indicates that the request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AttributesDictionary"
+          description: OK. Indicates that the update request has succeeded.
+        "400":
+          description: Bad request.
         "404":
-          description: Not found
+          description: Not found.
         "500":
-          description:
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
     post:
       tags:
@@ -1285,6 +1280,107 @@ paths:
         "500":
           description:
             Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
+      x-swagger-router-controller: attributesDictionary
+  /attributesDictionary/:id:
+    get:
+      tags:
+        - attributesDictionary
+      summary: Get information attribute type.
+      operationId: attributesDictionaryGetId
+      parameters:
+        - name: id
+          in: path
+          description: ID of attributesDictionary to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: "65c2bbf4e6e6d4ea3d398765"
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttributesDictionary"
+        "400":
+          description: Bad request.
+        "404":
+          description: Not found.
+        "500":
+          description: Unexpected server error.
+      x-swagger-router-controller: attributesDictionary
+    put:
+      tags:
+        - attributesDictionary
+      summary: Update attributesDictionary
+      operationId: attributesDictionaryPutId
+      parameters:
+        - name: id
+          in: path
+          description: ID of attributesDictionary to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: "65c2bbf4e6e6d4ea3d398765"
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttributesDictionary"
+        required: true
+      responses:
+        "200":
+          description: OK.
+        "400":
+          description: Bad request.
+        "404":
+          description: Not found.
+        "500":
+          description: Unexpected server error.
+      x-swagger-router-controller: attributesDictionary
+    delete:
+      tags:
+        - attributesDictionary
+      summary: Delete all attributesDictionary
+      description: Create Attributes between two devices. Two id and attributes from attributes.
+      operationId: attributesDictionaryDeleteId
+      parameters:
+        - name: id
+          in: path
+          description: ID of attributesDictionary to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: "6566ed4ace63d42b25fbba19"
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: "o:uuid"
+      responses:
+        "200":
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Confirmation"
+        "404":
+          description: Not found
+        "500":
+          description: Unexpected server error.
       x-swagger-router-controller: attributesDictionary
   /attributesDictionary/models:
     get:
@@ -2013,14 +2109,15 @@ components:
             - Number
             - Integer
             - Object
-        category:
+        units:
           type: string
-          description: Category of attributes
+          description: Units of attribute
       example:
         _id: 653e10ecd6025afb66017c65
         component: Devices
         key: "power"
         type: "Number"
+        units: "W"
     AttributesDictionaries:
       type: array
       description: List of Attribute Dictionary
@@ -2029,8 +2126,9 @@ components:
     Attribute:
       required:
         - _id
+        - component
         - key
-        - value
+        - type
       type: object
       properties:
         _id:
@@ -2042,12 +2140,12 @@ components:
           type: string
         key:
           type: string
-        value:
+        type:
           type: string
       example:
         _id: 6566ed4ace63d42b25fbba19
         key: "power"
-        value: "2W"
+        type: "2W"
     Attributes:
       type: array
       description: List of attributes

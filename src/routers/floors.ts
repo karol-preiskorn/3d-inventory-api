@@ -1,9 +1,7 @@
 /**
  * @file /routers/floors.js
- * @module /routers
+ * @module routers
  * @description floors router
- * @version 2024-04-05 C2RLO - Convert to typescript
- * @version 2024-02-13 C2RLO - init
  */
 
 import '../utils/loadEnvironment';

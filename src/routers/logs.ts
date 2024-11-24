@@ -1,6 +1,6 @@
 /**
  * @description This file contains the router for handling log-related API endpoints.
- * @module /routers
+ * @module routers
  * @description This file contains the router for handling log-related API endpoints.
  * @version 2024-01-27 C2RLO - Initial
  */

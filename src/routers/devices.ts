@@ -1,19 +1,18 @@
 /**
  * @file: devices.ts
- * @todo: Add the wraping with function for better documentation
  * @description: Routers for devices CRUD operations.
- * @module: /routers/devices
+ * @module: routers
  * @public
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
+import express, { RequestHandler } from 'express';
+import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
-import { CreateLog } from '../services/logs'
-import { logger } from '../utils/logger'
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
+import { CreateLog } from '../services/logs';
+import { logger } from '../utils/logger';
 
 export interface Device {
   _id: string

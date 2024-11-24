@@ -1,17 +1,16 @@
 /**
  * @file /routers/components.js
- * @module /routers
  * @description This file contains the router for component configurations.
- * @version 2024-03-29 C2RLO - Initial
+ * @module /routers
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import express, { RequestHandler } from 'express'
-import sanitize from 'mongo-sanitize'
-import { Collection, Db, ObjectId } from 'mongodb'
+import express, { RequestHandler } from 'express';
+import sanitize from 'mongo-sanitize';
+import { Collection, Db, ObjectId } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
 
 export interface Components {
   _id: ObjectId

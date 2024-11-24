@@ -183,3 +183,19 @@ content-type: application/json
 GET https://api.github.com/repos/karol-preiskorn/3d-inventory-angular-ui/issues HTTP/1.1
 content-type: application/json
 X-GitHub-Api-Version: 2022-11-28
+
+
+### ATTRIBUTES DICTIONARY
+GET http://localhost:8080/attributesDictionary/65c2bbf4e6e6d4ea3d398765
+content-type: application/json
+
+### ATTRIBUTES DICTIONARY PUT
+PUT http://localhost:8080/attributesDictionary/65c2bbf4e6e6d4ea3d398765 HTTP/1.1
+content-type: application/json
+
+{
+  "component": "connection",
+  "type": "Object",
+  "name": "Hard drive Blue Chair",
+  "units": "Type"
+}

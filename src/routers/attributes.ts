@@ -1,8 +1,7 @@
 /**
  * @file /routers/logs copy.js
  * @description attributes.js, is a module that sets up routes for a server using the Express.js framework. It's designed to interact with a MongoDB database, specifically with a collection named 'attributes'.
- * @version 2024-03-06 C2RLO - add _id to schema
- * @version 2024-01-30 C2RLO - Initial
+ * @module routers
  */
 
 import '../utils/loadEnvironment';

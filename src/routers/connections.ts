@@ -1,17 +1,16 @@
 /**
  * @file /routers/connections.js
- * @module /routers
+ * @module routers
  * @description connections router for the API
- * @version 2024-01-25 C2RLO - add new way to connect to DB
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import express, { RequestHandler } from 'express'
-import sanitize from 'mongo-sanitize'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import express, { RequestHandler } from 'express';
+import sanitize from 'mongo-sanitize';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils'
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
 
 interface Connection {
   _id: ObjectId

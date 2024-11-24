@@ -1,4 +1,5 @@
 /**
+ * @module routers
  * @remarks This file contains the router for accessing the GitHub issues API
  * endpoint. It defines a GET route for retrieving GitHub issues and sets the
  * necessary headers for authentication.
