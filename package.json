@@ -153,7 +153,7 @@
     "tsx": "^4.19.2",
     "typedoc": "^0.26.11",
     "typedoc-plugin-coverage": "^3.3.0",
-    "typedoc-plugin-mdn-links": "^4.0.1",
+    "typedoc-plugin-mdn-links": "^4.0.2",
     "typedoc-plugin-merge-modules": "^6.0.3",
     "typedoc-plugin-missing-exports": "^3.0.2",
     "typescript": "^5.6.3",
