@@ -101,7 +101,7 @@
     "passport": "0.7.0",
     "passport-local": "1.0.0",
     "perlin-noise": "^0.0.1",
-    "prettier": "3.3.3",
+    "prettier": "3.4.1",
     "pretty-format": "^29.7.0",
     "regenerator-runtime": "^0.14.1",
     "rotating-file-stream": "^3.2.5",
