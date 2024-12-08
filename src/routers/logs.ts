@@ -13,9 +13,9 @@ import {
     Collection, Db, Document, Filter, FindCursor, InsertOneResult, ObjectId, WithId
 } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
-import { logger } from '../utils/logger';
-import { capitalize, capitalizeFirstLetter } from '../utils/strings';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js';
+import { logger } from '../utils/logger.js';
+import { capitalize, capitalizeFirstLetter } from '../utils/strings.js';
 
 export interface Logs {
   _id: ObjectId
@@ -45,7 +45,7 @@ router.get('/', (async (req: express.Request, res: express.Response): Promise<vo
 router.get('/:id', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
+  const collection: Collection<Document> = db.collection(collectionName)
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(400)
     return
@@ -60,7 +60,7 @@ router.get('/:id', (async (req, res) => {
 router.get('/component/:component', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
+  const collection: Collection<Document> = db.collection(collectionName)
   let component
   if (req.params.component.length === 0) {
     res.status(400).send(`Not provide component name: ${component} not in [ Device | Model | Connection | User | Attribute Dictionary ].`)

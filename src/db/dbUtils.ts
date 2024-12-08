@@ -2,15 +2,11 @@
  * @resume Connect to Mongo Atlas DB.
  * @module db/conn
  * @description This module exports a MongoDB client and a database connection.
- * @version 2024-01-27 C2RLO - add exit(1) on error
- * @version 2024-01-25 C2RLO - Add connectionClose()
- * @version 2024-01-13 C2RLO - Fix async error
- * @version 2023-12-29 C2RLO - Initial
  */
 
 import { MongoClient } from 'mongodb';
 
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 const uri = process.env.ATLAS_URI ?? ''
 

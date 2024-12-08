@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
 import { Observable, of } from 'rxjs';
 
-import { connectToCluster, connectToDb } from '../db/dbUtils';
+import { connectToCluster, connectToDb } from '../db/dbUtils.js';
 
 /**
  * Represents a log entry.

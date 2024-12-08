@@ -6,13 +6,15 @@
  * @alpha 3d-inventory API
  */
 
-import './utils/loadEnvironment';
+import './utils/loadEnvironment.js';
 
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import csurf from 'csurf';
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import * as OpenApiValidator from 'express-openapi-validator';
+import session from 'express-session';
 import fs from 'fs';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -20,20 +22,38 @@ import morganBody from 'morgan-body';
 import swaggerUi, { JsonObject } from 'swagger-ui-express';
 import YAML from 'yaml';
 
-import attributes from './routers/attributes';
-import attributesDictionary from './routers/attributesDictionary';
-import connections from './routers/connections';
-import devices from './routers/devices';
-import floors from './routers/floors';
-import logs from './routers/logs';
-import models from './routers/models';
-import readme from './routers/readme';
-import { logger } from './utils/logger';
+import attributes from './routers/attributes.js';
+import attributesDictionary from './routers/attributesDictionary.js';
+import connections from './routers/connections.js';
+import devices from './routers/devices.js';
+import floors from './routers/floors.js';
+import logs from './routers/logs.js';
+import models from './routers/models.js';
+import readme from './routers/readme.js';
+import { logger } from './utils/logger.js';
 
 const PORT = process.env.PORT ?? 8080
+const HOST = process.env.HOST ?? 'localhost'
+const COOKIE_EXPIRESIN = process.env.COOKIE_EXPIRESIN ?? '3600000'
 const yamlFilename = process.env.API_YAML_FILE ?? 'src/api/openapi.yaml'
 
 const app = express()
+app.use(csurf());
+app.use(cookieParser())
+const sessionConfig = session({
+  secret: process.env.SESSION_SECRET ?? 'default_secret',
+  resave: false,
+  saveUninitialized: false,
+  name: 'sessid',
+  cookie: {
+    maxAge: parseInt(COOKIE_EXPIRESIN), // Used for expiration time.
+    sameSite: 'strict', // Cookies will only be sent in a first-party context. 'lax' is default value for third-parties.
+    httpOnly: true, // Mitigate the risk of a client side script accessing the cookie.
+    domain: HOST, // Used to compare against the domain of the server in which the URL is being requested.
+    secure: true,
+  },
+})
+app.use(sessionConfig)
 app.use(helmet())
 app.use(cookieParser())
 
@@ -60,7 +80,7 @@ try {
 app.use(cors())
 
 app.use(function (_, res: Response, next: NextFunction) {
-  res.header('Access-Control-Allow-Origin', `http://localhost:${PORT}`)
+  res.header('Access-Control-Allow-Origin', `http://${HOST}:${PORT}`)
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   next()
@@ -103,7 +123,7 @@ try {
   const file = fs.readFileSync(yamlFilename, 'utf8')
   const swaggerDocument = YAML.parse(file) as JsonObject
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-  logger.info(`Open SwaggerUI in http://localhost:${PORT}/`)
+  logger.info(`Open SwaggerUI in http://${HOST}:${PORT}/`)
 } catch (e) {
   if (typeof e === 'string') {
     logger.warn(e.toUpperCase())
@@ -145,7 +165,7 @@ app.use(errorHandler)
 
 // Create the server instance using createServer function
 const server = app.listen(PORT, () => {
-  logger.info(`Server is running on http://localhost:${PORT}`)
+  logger.info(`Server is running on http://${HOST}:${PORT}`)
 }) // Start the server
 
 app.use((err: Error, req: Request, res: Response) => {
@@ -167,5 +187,7 @@ process.on('SIGTERM', () => {
     logger.debug('HTTP server closed')
   })
 })
+
+export default server
 
 export default server

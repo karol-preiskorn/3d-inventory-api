@@ -9,9 +9,8 @@ import '../utils/loadEnvironment';
 import express, { RequestHandler } from 'express';
 import { Collection, Db, Document, Filter, ObjectId, WithoutId } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
-import { CreateLog } from '../services/logs';
-import { logger } from '../utils/logger';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js';
+import { logger } from '../utils/logger.js';
 
 export interface AttributesDictionary {
   _id: ObjectId | null
@@ -102,7 +101,7 @@ router.put('/:id', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  
+
   let result
 
   try {

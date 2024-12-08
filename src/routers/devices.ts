@@ -10,9 +10,9 @@ import '../utils/loadEnvironment';
 import express, { RequestHandler } from 'express';
 import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
-import { CreateLog } from '../services/logs';
-import { logger } from '../utils/logger';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js';
+import { CreateLog } from '../services/logs.js';
+import { logger } from '../utils/logger.js';
 
 export interface Device {
   _id: string
@@ -151,7 +151,7 @@ router.post('/', (async (req, res) => {
   const result: InsertOneResult<Document> = await collection.insertOne(newDocument)
   if (!result?.insertedId) {
     logger.error('POST /devices - Device not created with id:', JSON.stringify(newDocument))
-    resultLog = await CreateLog('', newDocument, 'Create', 'Device')
+    await CreateLog('', newDocument, 'Create', 'Device')
     res.status(500).send('POST /devices - Device not created')
   } else {
     logger.info(`POST /devices - device created successfully with id: ${result.insertedId.toString()}, ${JSON.stringify(newDocument)}`)

@@ -45,7 +45,7 @@ describe('GET /devices', () => {
 })
 
 describe('Database Connection', () => {
-  it('should connect to the database', async (done) => {
+  it('should connect to the database', async () => {
     const client = await connectToCluster()
     const db: Db = connectToDb(client)
     const collection: Collection<Device> = db.collection<Device>('devices')
@@ -62,8 +62,6 @@ describe('Database Connection', () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.send).toHaveBeenCalledWith(results)
     }
-
-    done()
   })
 })
 
@@ -94,7 +92,10 @@ describe('POST /devices', () => {
   })
 })
 
-const app = 'http://localhost:8080'
+
+const PORT = process.env.PORT ?? 8080
+const HOST = process.env.HOST ?? 'localhost'
+const app = `http://${HOST}:${PORT}`
 
 describe('GET /devices', () => {
   it('GET /devices => array of devices', async () => {

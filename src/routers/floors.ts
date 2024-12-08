@@ -10,7 +10,7 @@ import express, { RequestHandler } from 'express';
 import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb';
 import sanitize from 'sanitize-html';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js';
 
 interface Floor {
   _id: ObjectId

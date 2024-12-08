@@ -1,23 +1,30 @@
-/* Visit https://aka.ms/tsconfig to read more about this file */ {
+/* Visit https://aka.ms/tsconfig to read more about this file */{
   "$schema": "https://json.schemastore.org/tsconfig",
-  "version": "23.0.0", // Specify the version of the schema
-  "compileOnSave": true, // Compile the project on save
+  "compileOnSave": true, // Automatically compile the project when files are saved
   "compilerOptions": {
     "allowJs": true, // Allow JavaScript files to be compiled
-    "declaration": true, /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
-    "declarationMap": true, /* Create sourcemaps for d.ts files. */
-    "esModuleInterop": true, // Enable interoperability between CommonJS and ES Modules via creation of default exports
+    "declaration": true, /* Generate declaration files. */
+    "declarationMap": true, /* Generate source maps for declaration files. */
+    "esModuleInterop": true, // Enable ES module interoperability
     "experimentalDecorators": true, // Enable support for experimental decorators
-    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
-    "moduleDetection": "auto", /* Control what method is used to detect module-format JS files. */
+    "forceConsistentCasingInFileNames": true /* Enforce consistent casing in file names. */,
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "module": "commonjs",
+    "moduleDetection": "auto", /* Automatically detect module format. */
+    "moduleResolution": "node",
     "outDir": "./dist" /* Specify an output folder for all emitted files. */,
-    "pretty": true, // Output prettified code
-    "removeComments": false, // Keep comments in the output
-    "rootDir": "./" /* Specify the root folder within your source files. */,
+    "pretty": true, // Pretty-print output
+    "removeComments": true, // Keep comments in the output
+    "rootDir": "./" /* Specify the root directory of source files. */,
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-    "sourceMap": true /* Create source map files for emitted JavaScript files. */,
+    "sourceMap": true /* Generate source maps. */,
     "strict": true /* Enable all strict type-checking options. */,
-    "module": "CommonJS", /* Specify the module code generation method. */
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
     "target": "ES6",
     "types": [
       "node",
@@ -27,13 +34,14 @@
   "display": "node", /* Specify the environment for the TypeScript language service. */
   "exclude": [
     "node_modules",
-    "**/*.test.ts"
+    "src/**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts" // Exclude test files
   ],
   "include": [
-    "src/**/*.ts", // Include TypeScript files
-    "src/**/*.js", // Include JavaScript files
-    "tests/**/*.(t|j)s", // Include test files
-    "jest.config.ts", // Include Jest configuration file
-    "eslint.config.js" // Include ESLint configuration file
-  ]
+    "src/**/*", // Include TypeScript files
+    "src/tests/**/*.ts", // Include test files
+    "jest.config.ts" // Include Jest configuration file
+  ],
+  "version": "1.0.0" // Specify the version of the schema
 }

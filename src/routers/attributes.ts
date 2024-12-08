@@ -4,12 +4,12 @@
  * @module routers
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment.js';
 
 import express, { RequestHandler } from 'express';
 import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js';
 
 export interface Attributes {
   _id: ObjectId

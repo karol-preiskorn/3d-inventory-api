@@ -4,7 +4,7 @@
  * @version 2024-02-03 C2RLO - Initial
  */
 
-import { valueAttributeCategory, components } from '../utils/types'
+import { components, valueAttributeCategory } from '../utils/types.js';
 
 /**
  * Filtered components object.

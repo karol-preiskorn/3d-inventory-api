@@ -6,7 +6,7 @@
 import figlet, { Fonts } from 'figlet';
 import fs from 'fs/promises';
 
-import { logger } from './logger';
+import { logger } from './logger.js';
 
 let fontLoaded = false
 

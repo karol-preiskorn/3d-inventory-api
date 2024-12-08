@@ -11,8 +11,8 @@ import {
     Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter
 } from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils';
-import { logger } from '../utils/logger';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js';
+import { logger } from '../utils/logger.js';
 
 export interface Dimension {
   width: number
