@@ -4,13 +4,13 @@
  * @description connections router for the API
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import express, { RequestHandler } from 'express';
-import sanitize from 'mongo-sanitize';
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import express, { RequestHandler } from 'express'
+import sanitize from 'mongo-sanitize'
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
 
 interface Connection {
   _id: ObjectId
@@ -57,8 +57,8 @@ router.put('/:id', (async (req, res) => {
     $set: {
       name: c.name,
       deviceIdFrom: c.deviceIdFrom,
-      deviceIdTo: c.deviceIdTo,
-    },
+      deviceIdTo: c.deviceIdTo
+    }
   }
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
@@ -106,7 +106,7 @@ router.get('/from/:idFrom/to/:idTo', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const query = {
     deviceIdFrom: new ObjectId(req.params.idFrom),
-    deviceIdTo: new ObjectId(req.params.idTo),
+    deviceIdTo: new ObjectId(req.params.idTo)
   }
   const result = await collection.findOne(query)
   if (!result) res.status(404).json('Not found')
@@ -180,7 +180,7 @@ router.delete('/from/:idFrom/to/:idTo', (async (req, res) => {
   }
   const query = {
     deviceIdFrom: new ObjectId(req.params.idFrom),
-    deviceIdTo: new ObjectId(req.params.idTo),
+    deviceIdTo: new ObjectId(req.params.idTo)
   }
   const client = await connectToCluster()
   const db: Db = connectToDb(client)

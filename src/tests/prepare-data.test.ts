@@ -5,11 +5,11 @@
  * @version     2023-12-26 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import { Db, MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb'
 
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker'
 
 describe('prepare test data', () => {
   let connection: MongoClient
@@ -61,15 +61,15 @@ describe('prepare test data', () => {
           dimension: {
             width: faker.number.int({ min: 1, max: 10 }),
             height: faker.number.int({ min: 1, max: 10 }),
-            depth: faker.number.int({ min: 1, max: 10 }),
+            depth: faker.number.int({ min: 1, max: 10 })
           },
           texture: {
             front: '/assets/r710-2.5-nobezel__29341.png',
             back: '/assets/r710-2.5-nobezel__29341.png',
             side: '/assets/r710-2.5-nobezel__29341.png',
             top: '/assets/r710-2.5-nobezel__29341.png',
-            botom: '/assets/r710-2.5-nobezel__29341.png',
-          },
+            botom: '/assets/r710-2.5-nobezel__29341.png'
+          }
         }
         await model.insertOne(mockModel)
         insertedModel = await model.findOne(mockModel)
@@ -84,7 +84,7 @@ describe('prepare test data', () => {
           objectId: insertedModel ? insertedModel._id : null,
           operation: 'Create',
           component: 'Model',
-          message: mockModel,
+          message: mockModel
         }
 
         await logs.insertOne(mockLog)
@@ -99,8 +99,8 @@ describe('prepare test data', () => {
             position: {
               x: faker.number.int({ min: 1, max: 100 }),
               y: faker.number.int({ min: 1, max: 100 }),
-              h: faker.number.int({ min: 1, max: 10 }),
-            },
+              h: faker.number.int({ min: 1, max: 10 })
+            }
           }
           await device.insertOne(mockDevice)
           const insertedDevice = await device.findOne(mockDevice)
@@ -119,16 +119,16 @@ describe('prepare test data', () => {
               dimension: {
                 width: 0,
                 height: 0,
-                depth: 0,
+                depth: 0
               },
               texture: {
                 front: '',
                 back: '',
                 side: '',
                 top: '',
-                botom: '',
-              },
-            },
+                botom: ''
+              }
+            }
           }
           await logs.insertOne(mockLog)
           insertedLog = await logs.findOne(mockLog)

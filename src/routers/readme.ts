@@ -1,4 +1,3 @@
- 
 /**
  * @description Render README.md in express
  * @module routers
@@ -6,10 +5,10 @@
  * @version 2024-01-07 C2RLO - Initial
  */
 
-import express from 'express';
-import fs from 'fs';
-import Markdown from 'markdown-it';
-import { promisify } from 'util';
+import express from 'express'
+import fs from 'fs'
+import Markdown from 'markdown-it'
+import { promisify } from 'util'
 
 const router: express.Router = express.Router()
 const readFileAsync = promisify(fs.readFile)
@@ -20,7 +19,8 @@ router.get('/', async (_req, res): Promise<void> => {
   try {
     const data = await readFileAsync(path, 'utf8')
     res.status(200).send(md.render(data))
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     res.status(404).json({ message: `File ${path}: ${(err as Error).message}` })
   }
 })

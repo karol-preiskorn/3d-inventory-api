@@ -1,18 +1,18 @@
-import csurf from 'csurf';
+import csurf from 'csurf'
 /**
  * @description This file is used to test the README.md file rendering
  * @module tests
  * @version 2024-01-27 C2RLO - Initial
  */
-import express from 'express';
-import helmet from 'helmet';
-import request from 'supertest';
+import express from 'express'
+import helmet from 'helmet'
+import request from 'supertest'
 
-import router from '../routers/readme';
+import router from '../routers/readme'
 
 const app = express()
 app.use(helmet())
-app.use(csurf());
+app.use(csurf())
 app.use('/', router as express.RequestHandler)
 
 describe('GET /', () => {
@@ -22,7 +22,8 @@ describe('GET /', () => {
       expect(response.status).toBe(200)
       expect(response.text).toContain('<h1>Sample README</h1>') // Replace with the expected content of your README.md
       done()
-    } catch (err) {
+    }
+    catch (err) {
       done(err)
     }
   })
@@ -38,6 +39,6 @@ describe('GET /', () => {
         expect(response.text).toContain('File ./../assets/README.md: File not found')
         done()
       })
-      .catch((err) => done(err))
+      .catch(err => done(err))
   })
 })

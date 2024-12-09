@@ -11,7 +11,8 @@ export async function getError(call: () => Promise<unknown>): Promise<unknown> {
     await call()
 
     throw new NoErrorThrownError()
-  } catch (error) {
+  }
+  catch (error) {
     return error
   }
 }

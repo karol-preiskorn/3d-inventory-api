@@ -8,12 +8,15 @@
 
 ARG NODE_VERSION=23.3.0
 
-FROM node:${NODE_VERSION}-alpine
+FROM node:lts
 
 # Use production node environment by default.
-ENV NODE_ENV production
-
-RUN apk add --no-cache g++ make py3-pip python3 cairo-dev pango-dev jpeg-dev giflib-dev
+ENV NODE_ENV=production
+ENV PATH="/usr/src/app/node_modules/.bin:$PATH"
+RUN apt update && \
+	apt install -y g++ make && \
+	apt clean && \
+	rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
@@ -29,7 +32,6 @@ WORKDIR /usr/src/app
 # Run the application as a non-root user.
 COPY package.json package-lock.json ./
 RUN npm install
-USER node
 
 # Copy the rest of the source files into the image.
 COPY . .
@@ -49,6 +51,4 @@ RUN PATH="/usr/src/app/node_modules/.bin:$PATH" \
 && NODE_PATH="$NODE_PATH:$(npm root -g)" \
 && export NODE_PATH
 
-# CMD ["npm", "start"]
-
-CMD ["npx", "ts-node", "src/index.ts"]
+CMD ["npm", "start"]

@@ -4,12 +4,12 @@
  * @module routers
  */
 
-import '../utils/loadEnvironment.js';
+import '../utils/loadEnvironment.js'
 
-import express, { RequestHandler } from 'express';
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import express, { RequestHandler } from 'express'
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
 
 export interface Attributes {
   _id: ObjectId
@@ -31,7 +31,8 @@ router.get('/', (async (req, res) => {
   const results: object[] = await collection.find({}).limit(10).toArray()
   if (!results) {
     res.status(404).send('Not found')
-  } else {
+  }
+  else {
     res.status(200).json(results)
   }
   await connectionClose(client)
@@ -62,7 +63,8 @@ router.get('/model/:id', (async (req, res) => {
   const result = await collection.find(query).toArray()
   if (!result) {
     res.sendStatus(404)
-  } else {
+  }
+  else {
     res.status(200).json(result)
   }
   await connectionClose(client)
@@ -79,7 +81,8 @@ router.get('/device/:id', (async (req, res) => {
   const result = await collection.find(query).toArray()
   if (!result) {
     res.sendStatus(404)
-  } else {
+  }
+  else {
     res.status(200).json(result)
   }
   await connectionClose(client)
@@ -96,7 +99,8 @@ router.get('/connection/:id', (async (req, res) => {
   const result = await collection.find(query).toArray()
   if (!result) {
     res.sendStatus(404)
-  } else {
+  }
+  else {
     res.status(200).json(result)
   }
   await connectionClose(client)
@@ -124,7 +128,8 @@ router.delete('/:id', (async (req, res) => {
   const result = await collection.deleteOne(query)
   if (!result) {
     res.status(404).send('Not found models to delete')
-  } else {
+  }
+  else {
     res.status(200).json(result)
   }
   await connectionClose(client)
@@ -138,7 +143,8 @@ router.delete('/', (async (req, res) => {
   const result = await collection.deleteMany(query)
   if (!result) {
     res.status(404).send('Not found models to delete')
-  } else {
+  }
+  else {
     res.status(200).json(result)
   }
   await connectionClose(client)
@@ -155,7 +161,8 @@ router.delete('/model/:id', (async (req, res) => {
   const result = await collection.deleteMany(query)
   if (!result) {
     res.status(404).send('Not found models to delete')
-  } else {
+  }
+  else {
     res.status(200).json(result)
   }
   await connectionClose(client)

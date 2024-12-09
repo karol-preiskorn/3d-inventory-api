@@ -1,14 +1,14 @@
-import csurf from 'csurf';
-import dotenv from 'dotenv';
-import express from 'express';
-import helmet from 'helmet';
-import { Collection, Db, MongoClient } from 'mongodb';
-import request from 'supertest';
+import csurf from 'csurf'
+import dotenv from 'dotenv'
+import express from 'express'
+import helmet from 'helmet'
+import { Collection, Db, MongoClient } from 'mongodb'
+import request from 'supertest'
 
-import { expect, jest } from '@jest/globals';
+import { expect, jest } from '@jest/globals'
 
-import { logger } from '../utils/logger';
-import router from './devices';
+import { logger } from '../utils/logger'
+import router from './devices'
 
 dotenv.config()
 
@@ -18,7 +18,7 @@ jest.mock('../utils/logger')
 const app = express()
 app.use(express.json())
 app.use(helmet())
-app.use(csurf());
+app.use(csurf())
 app.use('/devices', router)
 
 describe('PUT /devices/:id/attributes', () => {
@@ -26,7 +26,7 @@ describe('PUT /devices/:id/attributes', () => {
   let db: Db
   interface Device {
     _id: string
-    attributes: { key: string; value: string }[]
+    attributes: { key: string, value: string }[]
   }
 
   let collection: Collection<Device>
@@ -46,7 +46,7 @@ describe('PUT /devices/:id/attributes', () => {
       matchedCount: 0,
       modifiedCount: 0,
       upsertedCount: 0,
-      upsertedId: null,
+      upsertedId: null
     })
   })
 
@@ -69,7 +69,7 @@ describe('PUT /devices/:id/attributes', () => {
       matchedCount: 0,
       modifiedCount: 0,
       upsertedCount: 0,
-      upsertedId: null,
+      upsertedId: null
     })
 
     const response = await request(app).put('/devices/66af8c766f87d90fa87bb982/attributes').send({ attribute: 'value' })
@@ -83,7 +83,7 @@ describe('PUT /devices/:id/attributes', () => {
       matchedCount: 1,
       modifiedCount: 1,
       upsertedCount: 0,
-      upsertedId: null,
+      upsertedId: null
     })
 
     const response = await request(app)

@@ -1,44 +1,41 @@
-// @ts-check
+import globals from 'globals'
+import pluginJs from '@eslint/js'
+import stylistic from '@stylistic/eslint-plugin'
+import tseslint from 'typescript-eslint'
 
-import * as tsParser from '@typescript-eslint/parser'
-import * as tseslint from '@typescript-eslint/eslint-plugin'
-
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-import markdown from '@eslint/markdown'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
+/** @type {import('eslint').Linter.Config[]} */
 export default [
+  // https://eslint.org/docs/latest/use/configure/ignore
   {
-    languageOptions: {
-      parser: tsParser,
-      parserOptions: {
-        project: './tsconfig.json',
-        tsconfigRootDir: __dirname,
-        sourceType: 'module',
-      },
-    },
-    plugins: {
-      '@typescript-eslint': tseslint,
-    },
-    rules: {
-      ...tseslint.configs.recommended.rules,
-      ...tseslint.configs['recommended-requiring-type-checking'].rules,
-      ...tseslint.configs.strict.rules,
-      ...tseslint.configs.stylistic.rules,
-      ...tseslint.configs['stylistic-type-checked'].rules,
-      '@typescript-eslint/no-unsafe-call': 'error',
-      '@typescript-eslint/no-unused-vars': 'error',
-    },
-    ignores: ['coverage/**', 'docs/**', 'node_modules/**', 'dist/**', '*.config.js', '*.config.mjs', 'gcs/**', 'src/tests/**/*.test.js'],
+    files: ['**/*.{js,mjs,cjs,ts}'],
+    ignores: [
+      'node_modules', 'coverage', 'dist', 'gcs/*'
+    ]
   },
   {
-    files: ['**/*.md'],
-    plugins: {
-      markdown,
-    },
-    processor: 'markdown/markdown',
+    files: ['**/*.js'],
+    languageOptions: { sourceType: 'commonjs' },
+    ignores: [
+      'node_modules', 'coverage', 'dist', 'gcs/*'
+    ]
   },
+  {
+    languageOptions: { globals: globals.browser }
+  },
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
+  stylistic.configs['disable-legacy'],
+  stylistic.configs.customize({
+    indent: 2,
+    quotes: 'single',
+    semi: false,
+    commaDangle: 'never',
+
+    jsx: true
+  }),
+  {
+    ignores: [
+      'node_modules', 'coverage', 'dist', 'gcs/*', 'src/tests/generateTextures.test.ts'
+    ]
+  }
 ]

@@ -4,12 +4,12 @@
  * @version 2024-02-01 C2RLO - Add test for post device
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import { MongoClient } from 'mongodb';
-import request, { Response } from 'supertest';
+import { MongoClient } from 'mongodb'
+import request, { Response } from 'supertest'
 
-import app from '../index';
+import app from '../index'
 
 describe('GET /logs/object/:id', () => {
   let connection: MongoClient
@@ -32,9 +32,9 @@ describe('GET /logs/object/:id', () => {
           _id: expect.any(String) as string,
           name: expect.any(String) as string,
           deviceIdTo: expect.any(String) as string,
-          deviceIdFrom: expect.any(String) as string,
-        }),
-      ]),
+          deviceIdFrom: expect.any(String) as string
+        })
+      ])
     )
   })
 })

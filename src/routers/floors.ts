@@ -4,13 +4,13 @@
  * @description floors router
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import express, { RequestHandler } from 'express';
-import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb';
-import sanitize from 'sanitize-html';
+import express, { RequestHandler } from 'express'
+import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
+import sanitize from 'sanitize-html'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
 
 interface Floor {
   _id: ObjectId
@@ -56,12 +56,12 @@ router.get('/', (async (req: express.Request, res: express.Response) => {
           street: sanitize(floor.address.street),
           city: sanitize(floor.address.city),
           country: sanitize(floor.address.country),
-          postcode: sanitize(floor.address.postcode),
+          postcode: sanitize(floor.address.postcode)
         },
         dimension: floor.dimension.map((dim: Dimension) => ({
           ...dim,
-          description: sanitize(dim.description),
-        })),
+          description: sanitize(dim.description)
+        }))
       }
     })
     res.status(200).json(sanitizedResults)
@@ -118,12 +118,12 @@ router.post('/', (async (req, res) => {
       street: sanitize(typeof insertedDocument.address.street === 'string' ? insertedDocument.address.street : ''),
       city: sanitize(typeof insertedDocument.address.city === 'string' ? insertedDocument.address.city : ''),
       country: sanitize(typeof insertedDocument.address.country === 'string' ? insertedDocument.address.country : ''),
-      postcode: sanitize(typeof insertedDocument.address.postcode === 'string' ? insertedDocument.address.postcode : ''),
+      postcode: sanitize(typeof insertedDocument.address.postcode === 'string' ? insertedDocument.address.postcode : '')
     },
     dimension: insertedDocument.dimension.map((dim: Dimension) => ({
       ...dim,
-      description: sanitize(typeof dim.description === 'string' ? dim.description : ''),
-    })),
+      description: sanitize(typeof dim.description === 'string' ? dim.description : '')
+    }))
   }
   res.status(200).json(sanitizedResult)
   await connectionClose(client)
@@ -162,8 +162,8 @@ router.delete('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
-  const sanitizedResult = sanitize(JSON.stringify(result));
-  res.status(200).send(JSON.parse(sanitizedResult));
+  const sanitizedResult = sanitize(JSON.stringify(result))
+  res.status(200).send(JSON.parse(sanitizedResult))
   await connectionClose(client)
 }) as RequestHandler)
 

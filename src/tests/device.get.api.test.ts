@@ -10,9 +10,9 @@
  * @version 2024-01-03  C2RLO  Initial
  */
 
-import request from 'supertest';
+import request from 'supertest'
 
-import app from '../index';
+import app from '../index'
 
 describe('GET /devices', () => {
   afterAll(function () {
@@ -31,10 +31,10 @@ describe('GET /devices', () => {
           position: {
             x: expect.any(Number) as number,
             y: expect.any(Number) as number,
-            h: expect.any(Number) as number,
-          },
-        }),
-      ]),
+            h: expect.any(Number) as number
+          }
+        })
+      ])
     )
 
     const responseGetId = await request(app)
@@ -50,10 +50,10 @@ describe('GET /devices', () => {
           position: {
             x: expect.any(Number) as number,
             y: expect.any(Number) as number,
-            h: expect.any(Number) as number,
-          },
-        }),
-      ]),
+            h: expect.any(Number) as number
+          }
+        })
+      ])
     )
   })
 })

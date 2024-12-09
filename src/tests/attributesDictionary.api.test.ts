@@ -18,9 +18,9 @@ describe('GET /logs', () => {
           date: expect.any(String) as string,
           objectId: expect.any(String) as string,
           component: expect.any(String) as string,
-          message: expect.any(Object) as object,
-        }),
-      ]),
+          message: expect.any(Object) as object
+        })
+      ])
     )
   })
 

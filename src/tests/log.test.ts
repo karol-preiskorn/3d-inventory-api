@@ -5,14 +5,14 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import { formatDate } from 'date-fns';
-import { Db, MongoClient, ObjectId, OptionalId } from 'mongodb';
+import { formatDate } from 'date-fns'
+import { Db, MongoClient, ObjectId, OptionalId } from 'mongodb'
 
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker'
 
-import { Logs } from '../routers/logs';
+import { Logs } from '../routers/logs'
 
 describe('prepare test data', () => {
   let connection: MongoClient | undefined
@@ -47,17 +47,17 @@ describe('prepare test data', () => {
           dimension: {
             width: faker.number.int({ min: 1, max: 10 }),
             height: faker.number.int({ min: 1, max: 10 }),
-            depth: faker.number.int({ min: 1, max: 10 }),
+            depth: faker.number.int({ min: 1, max: 10 })
           },
           texture: {
             front: '/assets/r710-2.5-nobezel__29341.png',
             back: '/assets/r710-2.5-nobezel__29341.png',
             side: '/assets/r710-2.5-nobezel__29341.png',
             top: '/assets/r710-2.5-nobezel__29341.png',
-            botom: '/assets/r710-2.5-nobezel__29341.png',
+            botom: '/assets/r710-2.5-nobezel__29341.png'
           },
           type: 'string',
-          category: 'string',
+          category: 'string'
         }
 
         const formattedDate: string = formatDate(new Date(), 'yyyy-MM-dd')
@@ -66,7 +66,7 @@ describe('prepare test data', () => {
           objectId: new ObjectId('659a4400672627600b093713').toString(),
           operation: 'Create',
           component: 'Model',
-          message: JSON.stringify(mockModel),
+          message: JSON.stringify(mockModel)
         } as OptionalId<Logs>
 
         await logs.insertOne(mockLog)

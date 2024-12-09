@@ -3,10 +3,10 @@
  * endpoint. It defines a GET route for retrieving GitHub issues and sets the
  * necessary headers for authentication.
  */
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import axios from 'axios';
-import express from 'express';
+import axios from 'axios'
+import express from 'express'
 
 const router = express.Router()
 /**
@@ -19,11 +19,12 @@ router.get('/github-issues', async (req: express.Request, res: express.Response,
   try {
     const response = await axios.get(githubIssuesUrl, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
+        Authorization: `Bearer ${authToken}`
+      }
     })
     res.json(response.data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 })

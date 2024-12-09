@@ -7,15 +7,15 @@
  * @version: 2024-01-03  C2RLO  Initial
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import { Collection, Db, ObjectId } from 'mongodb';
-import request from 'supertest';
+import { Collection, Db, ObjectId } from 'mongodb'
+import request from 'supertest'
 
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker'
 
-import { connectToCluster, connectToDb } from '../db/dbUtils';
-import { Device } from '../routers/devices';
+import { connectToCluster, connectToDb } from '../db/dbUtils'
+import { Device } from '../routers/devices'
 
 describe('GET /devices', () => {
   it('GET /devices => array of devices', async () => {
@@ -24,7 +24,8 @@ describe('GET /devices', () => {
 
     if (devices.length === 0) {
       console.log('No devices found')
-    } else {
+    }
+    else {
       console.log('Device found')
       expect(devices).toEqual(
         expect.arrayContaining([
@@ -35,10 +36,10 @@ describe('GET /devices', () => {
             position: {
               x: expect.any(Number) as number,
               y: expect.any(Number) as number,
-              h: expect.any(Number) as number,
-            },
-          }),
-        ]),
+              h: expect.any(Number) as number
+            }
+          })
+        ])
       )
     }
   })
@@ -53,12 +54,13 @@ describe('Database Connection', () => {
 
     if (!results) {
       // Simulate response for testing
-      const res: { status: jest.Mock; send: jest.Mock } = { status: jest.fn().mockReturnThis(), send: jest.fn() }
+      const res: { status: jest.Mock, send: jest.Mock } = { status: jest.fn().mockReturnThis(), send: jest.fn() }
       expect(res.status).toHaveBeenCalledWith(404)
       expect(res.send).toHaveBeenCalledWith('Not found')
-    } else {
+    }
+    else {
       // Simulate response for testing
-      const res: { status: jest.Mock; send: jest.Mock } = { status: jest.fn().mockReturnThis(), send: jest.fn() }
+      const res: { status: jest.Mock, send: jest.Mock } = { status: jest.fn().mockReturnThis(), send: jest.fn() }
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.send).toHaveBeenCalledWith(results)
     }
@@ -73,8 +75,8 @@ describe('POST /devices', () => {
       position: {
         x: faker.number.int({ min: 1, max: 10 }),
         y: faker.number.int({ min: 1, max: 10 }),
-        h: faker.number.int({ min: 1, max: 10 }),
-      },
+        h: faker.number.int({ min: 1, max: 10 })
+      }
     }
 
     const response = await request(app).post('/devices').send(device).set('Accept', 'application/json; charset=utf-8').expect(201)
@@ -86,12 +88,11 @@ describe('POST /devices', () => {
         _id: expect.any(String) as ObjectId,
         name: device.name,
         modelId: device.modelId,
-        position: device.position,
-      }),
+        position: device.position
+      })
     )
   })
 })
-
 
 const PORT = process.env.PORT ?? 8080
 const HOST = process.env.HOST ?? 'localhost'
@@ -103,7 +104,8 @@ describe('GET /devices', () => {
 
     if (Array.isArray(response.body) && response.body.length === 0) {
       console.log('No devices found')
-    } else if (typeof response.body === 'object' && response.body !== null) {
+    }
+    else if (typeof response.body === 'object' && response.body !== null) {
       console.log('Device found')
       expect.objectContaining({
         _id: expect.any(String) as ObjectId,
@@ -112,10 +114,11 @@ describe('GET /devices', () => {
         position: {
           x: expect.any(Number) as number,
           y: expect.any(Number) as number,
-          h: expect.any(Number) as number,
-        },
+          h: expect.any(Number) as number
+        }
       })
-    } else {
+    }
+    else {
       console.log('Devices found')
       expect(response.body).toEqual(
         expect.arrayContaining([
@@ -126,10 +129,10 @@ describe('GET /devices', () => {
             position: {
               x: expect.any(Number) as number,
               y: expect.any(Number) as number,
-              h: expect.any(Number) as number,
-            },
-          }),
-        ]),
+              h: expect.any(Number) as number
+            }
+          })
+        ])
       )
     }
 
@@ -156,9 +159,9 @@ describe('GET /devices', () => {
         position: {
           x: expect.any(Number) as number,
           y: expect.any(Number) as number,
-          h: expect.any(Number) as number,
-        },
-      }),
+          h: expect.any(Number) as number
+        }
+      })
     )
   })
 
@@ -187,8 +190,8 @@ describe('GET /devices', () => {
         position: {
           x: faker.number.int({ min: 1, max: 10 }),
           y: faker.number.int({ min: 1, max: 10 }),
-          h: faker.number.int({ min: 1, max: 10 }),
-        },
+          h: faker.number.int({ min: 1, max: 10 })
+        }
       })
       .expect(200)
 

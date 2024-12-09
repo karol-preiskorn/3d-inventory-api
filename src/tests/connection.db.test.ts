@@ -5,9 +5,9 @@
  * @version 2024-01-14 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import { Db, MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb'
 
 describe('ConnectToDatabase Mongo Atlas', () => {
   let connection: MongoClient
@@ -20,7 +20,8 @@ describe('ConnectToDatabase Mongo Atlas', () => {
     try {
       connection = await MongoClient.connect(process.env.ATLAS_URI, {})
       db = connection.db(process.env.DBNAME)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error connecting to the database:', error)
     }
   })

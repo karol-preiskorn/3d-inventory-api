@@ -25,7 +25,7 @@ describe('ConnectToDatabase Mongo Atlas', () => {
     const deleteUser = await users.deleteOne({ _id: new ObjectId('some-user-id') })
     expect(deleteUser).toEqual({
       acknowledged: true,
-      deletedCount: 1,
+      deletedCount: 1
     })
   })
 

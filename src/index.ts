@@ -38,24 +38,9 @@ const COOKIE_EXPIRESIN = process.env.COOKIE_EXPIRESIN ?? '3600000'
 const yamlFilename = process.env.API_YAML_FILE ?? 'src/api/openapi.yaml'
 
 const app = express()
-app.use(csurf());
 app.use(cookieParser())
-const sessionConfig = session({
-  secret: process.env.SESSION_SECRET ?? 'default_secret',
-  resave: false,
-  saveUninitialized: false,
-  name: 'sessid',
-  cookie: {
-    maxAge: parseInt(COOKIE_EXPIRESIN), // Used for expiration time.
-    sameSite: 'strict', // Cookies will only be sent in a first-party context. 'lax' is default value for third-parties.
-    httpOnly: true, // Mitigate the risk of a client side script accessing the cookie.
-    domain: HOST, // Used to compare against the domain of the server in which the URL is being requested.
-    secure: true,
-  },
-})
-app.use(sessionConfig)
 app.use(helmet())
-app.use(cookieParser())
+app.use(csurf({ cookie: true }))
 
 try {
   app.use(
@@ -67,13 +52,14 @@ try {
           tokens.url(req, res),
           tokens.status(req, res),
           tokens['response-time'](req, res),
-          'ms',
+          'ms'
         ].join(' ')
       },
-      { stream: { write: (message: string) => logger.info(message.trim()) } as unknown as NodeJS.WritableStream },
-    ),
+      { stream: { write: (message: string) => logger.info(message.trim()) } as unknown as NodeJS.WritableStream }
+    )
   )
-} catch (error) {
+}
+catch (error) {
   logger.error(`[morgan] ${String(error)}`)
 }
 
@@ -90,7 +76,7 @@ app.use(express.json())
 app.use(bodyParser.json())
 
 morganBody(app, {
-  noColors: true,
+  noColors: true
 })
 
 app.use(express.urlencoded({ extended: false }))
@@ -108,7 +94,7 @@ app.use('/floors', floors)
 fs.open(yamlFilename, 'r', (err: NodeJS.ErrnoException | null) => {
   if (err) {
     if (err.code === 'ENOENT') {
-      logger.error("File Doesn't Exist")
+      logger.error('File Doesn\'t Exist')
       return
     }
     if (err.code === 'EACCES') {
@@ -124,12 +110,15 @@ try {
   const swaggerDocument = YAML.parse(file) as JsonObject
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
   logger.info(`Open SwaggerUI in http://${HOST}:${PORT}/`)
-} catch (e) {
+}
+catch (e) {
   if (typeof e === 'string') {
     logger.warn(e.toUpperCase())
-  } else if (e instanceof Error) {
+  }
+  else if (e instanceof Error) {
     logger.error('[Open SwaggerUI] Exception ' + e.message + ', open: ' + encodeURI('https://stackoverflow.com/search?q=[js]' + e.message))
-  } else {
+  }
+  else {
     logger.error('Unknown error occurred')
   }
 }
@@ -140,11 +129,12 @@ try {
     OpenApiValidator.middleware({
       apiSpec: yamlFilename,
       validateRequests: true,
-      validateResponses: true,
-    }),
+      validateResponses: true
+    })
   )
   // logger.info("OpenApiValidator started")
-} catch (error) {
+}
+catch (error) {
   logger.error(`OpenApiValidator: ${String(error)}`)
 }
 
@@ -157,7 +147,7 @@ const errorHandler: ErrorRequestHandler = (err: CustomError, req: Request, res: 
   logger.error(err)
   res.status(err.status ?? 500).json({
     message: err.message,
-    errors: Array.isArray(err.errors) || (typeof err.errors === 'object' && err.errors !== null) ? (err.errors as Record<string, unknown>) : undefined,
+    errors: Array.isArray(err.errors) || (typeof err.errors === 'object' && err.errors !== null) ? (err.errors as Record<string, unknown>) : undefined
   })
 }
 
@@ -176,7 +166,8 @@ app.use((err: Error, req: Request, res: Response) => {
 server.on('error', (err: Error) => {
   if (err instanceof Error && err.message.includes('EADDRINUSE')) {
     logger.error('Error: address already in use')
-  } else {
+  }
+  else {
     logger.error(`[listen] ${String(err)}`)
   }
 }) // Error handling
@@ -188,6 +179,5 @@ process.on('SIGTERM', () => {
   })
 })
 
-export default server
 
 export default server

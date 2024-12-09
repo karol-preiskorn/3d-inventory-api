@@ -4,15 +4,15 @@
  * @version 2023-12-29  C2RLO - Initial
  **/
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import express, { RequestHandler } from 'express';
+import express, { RequestHandler } from 'express'
 import {
-    Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter
-} from 'mongodb';
+  Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter
+} from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js';
-import { logger } from '../utils/logger.js';
+import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
+import { logger } from '../utils/logger.js'
 
 export interface Dimension {
   width: number
@@ -43,7 +43,8 @@ router.get('/', (async (req, res) => {
   if (!results) {
     logger.warn('GET /models - not found')
     res.status(404).send('Not found')
-  } else {
+  }
+  else {
     logger.info('GET /models - oki return ' + results.length + ' models')
     res.status(200).json(results)
   }
@@ -77,16 +78,16 @@ router.put('/:id', (async (req, res) => {
       dimension: {
         width: b.dimension.width,
         height: b.dimension.height,
-        depth: b.dimension.depth,
+        depth: b.dimension.depth
       },
       texture: {
         front: b.texture.front,
         back: b.texture.back,
         side: b.texture.side,
         top: b.texture.top,
-        botom: b.texture.botom,
-      },
-    },
+        botom: b.texture.botom
+      }
+    }
   }
   const client = await connectToCluster()
   const db: Db = connectToDb(client)

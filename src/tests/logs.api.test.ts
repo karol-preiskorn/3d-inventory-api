@@ -1,6 +1,6 @@
-import request from 'supertest';
+import request from 'supertest'
 
-import app from '../index';
+import app from '../index'
 
 describe('GET /logs', () => {
   let response: request.Response
@@ -22,9 +22,9 @@ describe('GET /logs', () => {
           objectId: expect.any(String) as string,
           operation: expect.any(String) as string,
           component: expect.any(String) as string,
-          message: expect.any(Object) as object,
-        }),
-      ]),
+          message: expect.any(Object) as object
+        })
+      ])
     )
     // console.log('response.body: ' + JSON.stringify(response.body));
   })

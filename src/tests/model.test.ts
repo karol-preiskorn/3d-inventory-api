@@ -6,11 +6,11 @@
  * @version 2023-10-29  C2RLO  Init
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import { Db, MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb'
 
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker'
 
 describe('create 3 models', () => {
   let connection: MongoClient
@@ -39,15 +39,15 @@ describe('create 3 models', () => {
         dimension: {
           width: faker.number.int({ min: 1, max: 10 }),
           height: faker.number.int({ min: 1, max: 10 }),
-          depth: faker.number.int({ min: 1, max: 10 }),
+          depth: faker.number.int({ min: 1, max: 10 })
         },
         texture: {
           front: '/assets/texture/r710-2.5-nobezel__29341.png',
           back: '/assets/texture/r710-2.5-nobezel__29341.png',
           side: '/assets/texture/r710-2.5-nobezel__29341.png',
           top: '/assets/texture/r710-2.5-nobezel__29341.png',
-          bottom: '/assets/texture/r710-2.5-nobezel__29341.png',
-        },
+          bottom: '/assets/texture/r710-2.5-nobezel__29341.png'
+        }
         // type: faker.helpers.arrayElement(attributesTypesData).name,
       }
       await models.insertOne(mockModel)

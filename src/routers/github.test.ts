@@ -6,11 +6,11 @@
  *
  * @returns {Promise<void>} A promise that resolves when the test case is complete.
  */
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import request from 'supertest';
+import request from 'supertest'
 
-import app from '../index';
+import app from '../index'
 
 describe('GitHub API', () => {
   it('should get GitHub issues', async () => {

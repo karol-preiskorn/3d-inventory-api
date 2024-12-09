@@ -4,11 +4,11 @@
  * @version 2024-10-29 C2RLO - Init
  */
 
-import '../utils/loadEnvironment';
+import '../utils/loadEnvironment'
 
-import { Db, MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb'
 
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker'
 
 describe('create 10 connections', () => {
   let connection: MongoClient
@@ -40,7 +40,7 @@ describe('create 10 connections', () => {
       mockConnection = {
         name: faker.color.human() + ' ' + faker.commerce.product(),
         deviceIdTo: to,
-        deviceIdFrom: from,
+        deviceIdFrom: from
       }
       await connections.insertOne(mockConnection)
       insertedConnection = await connections.findOne(mockConnection)

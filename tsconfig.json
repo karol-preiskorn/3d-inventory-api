@@ -1,47 +1,23 @@
-/* Visit https://aka.ms/tsconfig to read more about this file */{
+/* Visit https://aka.ms/tsconfig to read more about this file */ {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "compileOnSave": true, // Automatically compile the project when files are saved
   "compilerOptions": {
-    "allowJs": true, // Allow JavaScript files to be compiled
-    "declaration": true, /* Generate declaration files. */
-    "declarationMap": true, /* Generate source maps for declaration files. */
-    "esModuleInterop": true, // Enable ES module interoperability
-    "experimentalDecorators": true, // Enable support for experimental decorators
-    "forceConsistentCasingInFileNames": true /* Enforce consistent casing in file names. */,
-    "lib": [
-      "es6",
-      "dom"
-    ],
-    "module": "commonjs",
-    "moduleDetection": "auto", /* Automatically detect module format. */
-    "moduleResolution": "node",
-    "outDir": "./dist" /* Specify an output folder for all emitted files. */,
-    "pretty": true, // Pretty-print output
-    "removeComments": true, // Keep comments in the output
-    "rootDir": "./" /* Specify the root directory of source files. */,
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-    "sourceMap": true /* Generate source maps. */,
-    "strict": true /* Enable all strict type-checking options. */,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": true,
-    "target": "ES6",
-    "types": [
-      "node",
-      "jest"
-    ]
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2020",
+    "baseUrl": "src",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "outDir": "dist"
   },
+  "include": [
+    "src/**/*"
+  ],
   "display": "node", /* Specify the environment for the TypeScript language service. */
   "exclude": [
     "node_modules",
     "src/**/*.test.ts",
     "**/*.spec.ts",
     "**/*.test.ts" // Exclude test files
-  ],
-  "include": [
-    "src/**/*", // Include TypeScript files
-    "src/tests/**/*.ts", // Include test files
-    "jest.config.ts" // Include Jest configuration file
-  ],
-  "version": "1.0.0" // Specify the version of the schema
+  ]
 }

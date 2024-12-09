@@ -8,7 +8,7 @@ const config = {
   testTimeout: 6000,
   fakeTimers: {
     doNotFake: ['nextTick'],
-    timerLimit: 6000,
+    timerLimit: 6000
   },
   bail: 1,
   verbose: true,
@@ -21,8 +21,8 @@ const config = {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: -10,
-    },
+      statements: -10
+    }
   },
   testEnvironment: 'node',
   projects: [
@@ -30,27 +30,27 @@ const config = {
       displayName: 'prettier',
       clearMocks: true,
       globals: {
-        __DEV__: true,
+        __DEV__: true
       },
       preset: 'jest-runner-prettier',
       runner: 'prettier',
       testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/logs/', '<rootDir>/coverage/'],
       transform: {},
       moduleFileExtensions: ['js', 'ts', 'css', 'less', 'scss', 'html', 'json', 'graphql', 'md', 'yaml'],
-      testMatch: ['**/*', '**/*.ts', '**/*.css', '**/*.less', '**/*.scss', '**/*.html', '**/*.json', '**/*.graphql', '**/*.md', '**/*.yaml'],
+      testMatch: ['**/*', '**/*.ts', '**/*.css', '**/*.less', '**/*.scss', '**/*.html', '**/*.json', '**/*.graphql', '**/*.md', '**/*.yaml']
     },
     {
       displayName: 'ts-jest',
       clearMocks: false,
       globals: {
-        __DEV__: true,
+        __DEV__: true
       },
       moduleFileExtensions: ['js', 'ts', 'yaml', 'json'],
       preset: 'ts-jest',
       testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/dist/', '<rootDir>/logs/', '<rootDir>/coverage/'],
       testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(mjs?|cjs?|js?|tsx?|ts?)$',
-      transform: {},
-    },
-  ],
+      transform: {}
+    }
+  ]
 }
 export default config
