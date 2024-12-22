@@ -6,19 +6,18 @@
 
 # Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
-ARG NODE_VERSION=23.3.0
-
 FROM node:lts
 
 # Use production node environment by default.
 ENV NODE_ENV=production
 ENV PATH="/usr/src/app/node_modules/.bin:$PATH"
 RUN apt update && \
-	apt install -y g++ make && \
+	apt install -y g++ make vim && \
 	apt clean && \
 	rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/src/app
+
+WORKDIR /usr/src/3d-inventory-api
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
@@ -37,10 +36,10 @@ RUN npm install
 COPY . .
 
 # Expose the port that the application listens on.
-EXPOSE 3000
+EXPOSE 8080:8081
 
 # Run the application.
-RUN PATH="/usr/src/app/node_modules/.bin:$PATH" \
+RUN PATH="/usr/src/3d-inventory-api/node_modules/.bin:$PATH" \
 && export PATH \
 && npm_config_python=/usr/bin/python3 \
 && export npm_config_python \
@@ -50,5 +49,7 @@ RUN PATH="/usr/src/app/node_modules/.bin:$PATH" \
 && export PATH \
 && NODE_PATH="$NODE_PATH:$(npm root -g)" \
 && export NODE_PATH
+
+HEALTHCHECK CMD ["curl", "--fail", "http://localhost:8080"]
 
 CMD ["npm", "start"]
