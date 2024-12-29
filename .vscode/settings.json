@@ -15,5 +15,8 @@
   ],
   "gitlens.ai.experimental.vscode.model": "copilot:gpt-4o",
   "search.useIgnoreFiles": true,
-  "search.useParentIgnoreFiles": true
+  "search.useParentIgnoreFiles": true,
+  "files.exclude": {
+    "logseq/*": true
+  }
 }

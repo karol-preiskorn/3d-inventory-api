@@ -14,7 +14,7 @@
 
 ## Purposes
 
-Create REST API for [✨3d-inventory✨](https://github.com/users/karol-preiskorn/3d-inventory-angular-ui) application connected to Mongo Atlas — solution that allows you to build a spatial and database representation of yours datacenters.
+Create REST [[API]] for [✨3d-inventory✨](https://github.com/users/karol-preiskorn/3d-inventory-angular-ui) application connected to [[Mongo]] Atlas — solution that allows you to build a spatial and database representation of yours datacenters.
 
 ## Architecture
 
@@ -22,28 +22,28 @@ Create REST API for [✨3d-inventory✨](https://github.com/users/karol-preiskor
 
 ## Features
 
-- RESTful API endpoints for managing datacenter inventory
+- RESTful [[API]] endpoints for managing datacenter inventory
 - Integration with MongoDB Atlas
 - Secure and scalable architecture
 
 ### MEAN stack
 
-- `MongoDB` is a `NoSQL` database that stores data in a flexible, `JSON`-like format.
+- `MongoDB` is a `NoSQL` database that stores data in `JSON` format.
 - `Express.js` is a web application framework for Node.js that simplifies the process of building web servers and APIs.
-- `RxJs` [Reactive Extensions Library for JavaScript](https://rxjs.dev/).
-- `Node.js` is a `JavaScript` runtime that allows you to run 1JavaScript1 code on the server-side.
+- [[RxJs]] - [Reactive Extensions Library for JavaScript](https://rxjs.dev/).
+- [[NodeJS]] is a `JavaScript` runtime that allows you to run code on the server-side.
 
 ## Data Model
 
-![Data Model](/assets/3d-inventory-data-model.png)
+![Data Model](https://github.com/karol-preiskorn/3d-inventory-mongo-api/blob/main/src/assets/3d-inventory.png)
 
 ## API documentation
 
-[Swagger](https://app.swaggerhub.com/apis/karol-preiskorn/3d-inventory-rest-api/0.0.6#/) API definition.
+[Swagger](https://app.swaggerhub.com/apis/karol-preiskorn/3d-inventory-rest-api/0.0.6#/) [[API]] definition.
 
 ## Getting Started
 
-To get started with the 3D Inventory Mongo API, follow the instructions below:
+To get started with the 3D Inventory Mongo [[API]], follow the instructions below:
 
 ```bash
 git clone https://github.com/karol-preiskorn/3d-inventory-mongo-api.git
