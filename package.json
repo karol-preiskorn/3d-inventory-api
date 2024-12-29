@@ -85,8 +85,13 @@
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
     "date-fns": "^4.1.0",
+<<<<<<< HEAD
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+=======
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+>>>>>>> parent of 14e2a73 (chore(deps): bump the npm_and_yarn group with 2 updates)
     "express-openapi-validator": "^5.3.9",
     "express-session": "^1.18.1",
     "figlet": "^1.8.0",
