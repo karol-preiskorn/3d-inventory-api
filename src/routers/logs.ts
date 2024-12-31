@@ -5,14 +5,12 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment'
+import { format } from 'date-fns';
+import express, { RequestHandler } from 'express';
+import { Collection, Db, Document, Filter, InsertOneResult, ObjectId, WithId } from 'mongodb';
 
-import { format } from 'date-fns'
-import express, { RequestHandler } from 'express'
-import { Collection, Db, Document, Filter, InsertOneResult, ObjectId, WithId } from 'mongodb'
-
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
-import { logger } from '../utils/logger.js'
+import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
+import { logger } from '../utils/logger.js';
 
 export interface Logs {
   _id: ObjectId

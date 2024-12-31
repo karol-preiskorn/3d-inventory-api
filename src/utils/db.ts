@@ -4,11 +4,12 @@
  * @description This module exports a MongoDB client and a database connection.
  */
 
-import { MongoClient } from 'mongodb'
+import { MongoClient } from 'mongodb';
 
-import { logger } from '../utils/logger.js'
+import config from '../utils/config.js';
+import { logger } from './logger.js';
 
-const uri = process.env.ATLAS_URI ?? ''
+const uri = config.ATLAS_URI
 
 /**
  * Connects to the MongoDB Atlas cluster.
@@ -37,12 +38,12 @@ export async function connectToCluster(): Promise<MongoClient> {
 export function connectToDb(client: MongoClient) {
   let db
   try {
-    db = client.db(process.env.DBNAME)
-    // logger.info(`Successfully connected to Atlas DB ${process.env.DBNAME}`)
+    db = client.db(config.DBNAME)
+    // logger.info(`Successfully connected to Atlas DB ${config.DBNAME}`)
     return db
   }
   catch (e) {
-    logger.error(`Connection to Atlas DB failed ${process.env.DBNAME}: ${e as string}`)
+    logger.error(`Connection to Atlas DB failed ${config.DBNAME}: ${e as string}`)
     process.exit(1)
   }
 }

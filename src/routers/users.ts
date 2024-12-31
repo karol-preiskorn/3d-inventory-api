@@ -4,13 +4,11 @@
  * @module routers
  */
 
-import '../utils/loadEnvironment'
+import express, { RequestHandler } from 'express';
+import sanitize from 'mongo-sanitize';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
 
-import express, { RequestHandler } from 'express'
-import sanitize from 'mongo-sanitize'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
+import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
 
 export interface User {
   _id: ObjectId

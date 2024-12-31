@@ -4,11 +4,11 @@
  * @version 2024-08-04 C2RLO - Initial
  **/
 
-import { format } from 'date-fns'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-import { Observable, of } from 'rxjs'
+import { format } from 'date-fns';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import { Observable, of } from 'rxjs';
 
-import { connectToCluster, connectToDb } from '../db/dbUtils.js'
+import { connectToCluster, connectToDb } from '../utils/db.js';
 
 /**
  * Represents a log entry.

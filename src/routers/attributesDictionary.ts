@@ -4,13 +4,11 @@
  * @description attributesDictionary router
  **/
 
-import '../utils/loadEnvironment'
+import express, { RequestHandler } from 'express';
+import { Collection, Db, Document, Filter, ObjectId, WithoutId } from 'mongodb';
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, Document, Filter, ObjectId, WithoutId } from 'mongodb'
-
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
-import { logger } from '../utils/logger.js'
+import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
+import { logger } from '../utils/logger.js';
 
 export interface AttributesDictionary {
   _id: ObjectId | null

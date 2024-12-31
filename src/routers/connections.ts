@@ -4,13 +4,11 @@
  * @description connections router for the API
  */
 
-import '../utils/loadEnvironment'
+import express, { RequestHandler } from 'express';
+import sanitize from 'mongo-sanitize';
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
 
-import express, { RequestHandler } from 'express'
-import sanitize from 'mongo-sanitize'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
-
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
+import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
 
 interface Connection {
   _id: ObjectId

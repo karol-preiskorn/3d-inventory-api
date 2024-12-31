@@ -4,15 +4,13 @@
  * @version 2023-12-29  C2RLO - Initial
  **/
 
-import '../utils/loadEnvironment'
-
-import express, { RequestHandler } from 'express'
+import express, { RequestHandler } from 'express';
 import {
-  Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter
-} from 'mongodb'
+    Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter
+} from 'mongodb';
 
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
-import { logger } from '../utils/logger.js'
+import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
+import { logger } from '../utils/logger.js';
 
 export interface Dimension {
   width: number

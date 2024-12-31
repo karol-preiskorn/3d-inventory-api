@@ -4,13 +4,11 @@
  * @module routers
  */
 
-import '../utils/loadEnvironment'
+import express, { RequestHandler } from 'express';
+import { Collection, Db, ObjectId, WithoutId } from 'mongodb';
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
-
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
-import { AttributesDictionary } from '../routers/attributesDictionary.js'
+import { AttributesDictionary } from '../routers/attributesDictionary.js';
+import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
 
 export interface AttributesTypes {
   _id: ObjectId

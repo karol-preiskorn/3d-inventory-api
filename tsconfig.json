@@ -1,23 +1,36 @@
-/* Visit https://aka.ms/tsconfig to read more about this file */ {
-  "$schema": "https://json.schemastore.org/tsconfig",
+{
   "compilerOptions": {
+    "target": "ES6",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "target": "ES2020",
-    "baseUrl": "src",
-    "noImplicitAny": true,
-    "sourceMap": true,
+    "allowJs": true,
+    "declaration": true,
+    "declarationMap": true,
     "esModuleInterop": true,
-    "outDir": "dist"
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleDetection": "auto",
+    "outDir": "./dist",
+    "pretty": true,
+    "removeComments": false,
+    "rootDir": "./",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "types": [
+      "node",
+      "jest"
+    ]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "display": "node", /* Specify the environment for the TypeScript language service. */
   "exclude": [
     "node_modules",
-    "src/**/*.test.ts",
-    "**/*.spec.ts",
-    "**/*.test.ts" // Exclude test files
+    "**/*.test.ts"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js",
+    "tests/**/*.(t|j)s",
+    "jest.config.ts",
+    "eslint.config.js"
   ]
 }

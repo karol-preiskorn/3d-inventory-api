@@ -6,7 +6,7 @@
  * @alpha 3d-inventory API
  */
 
-import './utils/loadEnvironment.js';
+import './utils/config.js';
 
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -14,7 +14,6 @@ import cors from 'cors';
 import csurf from 'csurf';
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import * as OpenApiValidator from 'express-openapi-validator';
-import session from 'express-session';
 import fs from 'fs';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -109,7 +108,7 @@ try {
   const file = fs.readFileSync(yamlFilename, 'utf8')
   const swaggerDocument = YAML.parse(file) as JsonObject
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-  logger.info(`Open SwaggerUI in http://${HOST}:${PORT}/`)
+  //logger.info(`Open SwaggerUI in http://${HOST}:${PORT}/`)
 }
 catch (e) {
   if (typeof e === 'string') {
@@ -155,7 +154,7 @@ app.use(errorHandler)
 
 // Create the server instance using createServer function
 const server = app.listen(PORT, () => {
-  logger.info(`Server is running on http://${HOST}:${PORT}`)
+  logger.info(`3d-inventory-mongo-api Server is running on http://${HOST}:${PORT}`)
 }) // Start the server
 
 app.use((err: Error, req: Request, res: Response) => {
@@ -178,6 +177,5 @@ process.on('SIGTERM', () => {
     logger.debug('HTTP server closed')
   })
 })
-
 
 export default server

@@ -5,14 +5,12 @@
  * @public
  */
 
-import '../utils/loadEnvironment'
+import express, { RequestHandler } from 'express';
+import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb';
 
-import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
-
-import { connectionClose, connectToCluster, connectToDb } from '../db/dbUtils.js'
-import { CreateLog } from '../services/logs.js'
-import { logger } from '../utils/logger.js'
+import { CreateLog } from '../services/logs.js';
+import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
+import { logger } from '../utils/logger.js';
 
 export interface Device {
   _id: string
@@ -31,7 +29,7 @@ export interface Attribute {
   value: string
 }
 
-export interface position {
+export interface Position {
   x: number
   y: number
   h: number
@@ -97,7 +95,7 @@ router.put('/:id', (async (req, res) => {
     $set: {
       name: (req.body as { name: string }).name,
       modelId: (req.body as { modelId: string }).modelId,
-      position: (req.body as { position: position }).position,
+      position: (req.body as { position: Position }).position,
       attributes: (req.body as { attributes: [Attribute] }).attributes
     }
   }
@@ -174,7 +172,7 @@ router.patch('/position/:id', (async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) }
   const updates: UpdateFilter<Document>[] = [
     {
-      $push: { position: req.body as position }
+      $push: { position: req.body as Position }
     }
   ]
   const client = await connectToCluster()
