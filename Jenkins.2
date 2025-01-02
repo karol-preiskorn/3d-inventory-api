@@ -1,0 +1,31 @@
+#!groovy
+
+def scmvars
+def image
+
+node {
+    stage('clone') {
+        // enabled by project type "Pipeline script from SCM"
+        scmvars = checkout(scm)
+        echo "git details: ${scmvars}"
+    }
+    stage('env') {
+        // Jenkins provides no environment variable view
+        sh 'printenv|sort'
+    }
+    stage('build') {
+        // arg 1 is the image name and tag
+        // arg 2 is docker build command line
+        image = docker.build("com.mycompany.myproject/my-image:${env.BUILD_ID}",
+              " --build-arg commit=${scmvars.GIT_COMMIT}"
+            + " --build-arg http_proxy=${env.http_proxy}"
+            + " --build-arg https_proxy=${env.https_proxy}"
+            + " --build-arg no_proxy=${env.no_proxy}"
+            + ' path/to/dir/with/Dockerfile')
+    }
+    stage('push') {
+        docker.withRegistry('https://registry.mycompany.com:8100', 'jenkins-registry-credential-id') {
+            image.push()
+        }
+    }
+}

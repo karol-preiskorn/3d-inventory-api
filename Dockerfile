@@ -16,7 +16,6 @@ RUN apt update && \
 	apt clean && \
 	rm -rf /var/lib/apt/lists/*
 
-
 WORKDIR /usr/src/3d-inventory-api
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
@@ -36,7 +35,7 @@ RUN npm install
 COPY . .
 
 # Expose the port that the application listens on.
-EXPOSE 8081:8080
+EXPOSE 8082:8080
 
 # Run the application.
 RUN PATH="/usr/src/3d-inventory-api/node_modules/.bin:$PATH" \

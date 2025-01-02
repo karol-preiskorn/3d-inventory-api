@@ -1,0 +1,31 @@
+#!groovy
+
+node {
+    stage('Clone repository') {
+        // Missing Credentials can be added via UI
+        // Look at the bottom of the box for a link called "Pipeline-Syntax"
+        // If you don't have much Jenkins experience,
+        // there you can generate pipelines with a few Dropdowns and Textboxes
+        git credentialsId: 'git', url: '<your git url>'
+    }
+
+    stage('Build image') {
+        // If you have multiple Dockerfiles in your Project, use this:
+        // app = docker.build("my-ubuntu-base", "-f Dockerfile.base .")
+
+        app = docker.build("my-ubuntu-base")
+    }
+
+    stage('Test image') {
+        app.inside {
+            sh 'echo "Tests passed"'
+        }
+    }
+
+    stage('Push image') {
+        docker.withRegistry('http://registry.local:5000') {
+            app.push("18.04-${env.BUILD_NUMBER}")
+            app.push("latest")
+        }
+    }
+}
