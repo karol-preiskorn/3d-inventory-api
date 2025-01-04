@@ -1,0 +1,41 @@
+pipeline {
+  agent {
+    docker { image 'node:lts' }
+  }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitHubAT', url: 'git@github.com:karol-preiskorn/3d-inventory-mongo-api.git']]])
+      }
+    }
+    stage('Install') {
+      steps {
+        configFileProvider([configFile(fileId: 'f84ab092-0708-4f01-94af-e170d5d89098', targetLocation: '.')]) {
+          sh 'cat .npmrc'
+        }
+        sh 'npm ci'
+      }
+    }
+    stage('Clean') {
+      steps {
+        sh 'ls node_modules/.bin'
+        sh 'npm run clean'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'npm run build'
+      }
+    }
+    stage('Docs') {
+      steps {
+        sh 'npm run doc'
+      }
+    }
+    stage('Run') {
+      steps {
+        sh 'node dist/index.js'
+      }
+    }
+  }
+}
