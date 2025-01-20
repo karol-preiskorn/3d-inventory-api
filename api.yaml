@@ -6,18 +6,18 @@ info:
     representation of all types of warehouses and server rooms.
 
     ### Modules
-    - [Devices](http://localhost:8080/api/#/devices)
-    - [Logs](http://localhost:8080/api/#/logs)
-    - [Models](http://localhost:8080/api/#/models)
-    - [Connection](http://localhost:8080/api/#/connection)
-    - [AttributesDictionary](http://localhost:8080/api/#/attributesdictionary)
-    - [Floors](http://localhost:8080/api/#/floors)
+    - [Devices](http://localhost:3001/api/#/devices)
+    - [Logs](http://localhost:3001/api/#/logs)
+    - [Models](http://localhost:3001/api/#/models)
+    - [Connection](http://localhost:3001/api/#/connection)
+    - [AttributesDictionary](http://localhost:3001/api/#/attributesdictionary)
+    - [Floors](http://localhost:3001/api/#/floors)
   contact:
     name: 3d-inventory
     url: "https://github.com/karol-preiskorn/3d-inventory-mongo-api/discussions"
-  version: 0.0.8
+  version: 0.0.9
 servers:
-  - url: "http://localhost:8080"
+  - url: "http://localhost:3001"
     description: Localhost
 tags:
   - name: logs

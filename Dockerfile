@@ -1,22 +1,15 @@
 # syntax=docker/dockerfile:1
 
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
-
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
-
 FROM node:lts
 
-# Use production node environment by default.
-ENV NODE_ENV=production
-ENV PATH="/usr/src/app/node_modules/.bin:$PATH"
+WORKDIR /usr/src/3d-inventory-api
+
+ENV PATH="/usr/src/3d-inventory-api/node_modules/.bin:$PATH"
+
 RUN apt update && \
 	apt install -y g++ make vim && \
 	apt clean && \
 	rm -rf /var/lib/apt/lists/*
-
-WORKDIR /usr/src/3d-inventory-api
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
@@ -32,10 +25,9 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 # Copy the rest of the source files into the image.
-COPY . .
-
-# Expose the port that the application listens on.
-EXPOSE 8082:8080
+COPY dist /usr/src/3d-inventory-api/
+COPY .env /usr/src/3d-inventory-api/
+COPY api.yaml /usr/src/3d-inventory-api/
 
 # Run the application.
 RUN PATH="/usr/src/3d-inventory-api/node_modules/.bin:$PATH" \
@@ -49,6 +41,6 @@ RUN PATH="/usr/src/3d-inventory-api/node_modules/.bin:$PATH" \
 && NODE_PATH="$NODE_PATH:$(npm root -g)" \
 && export NODE_PATH
 
-HEALTHCHECK CMD ["curl", "--fail", "http://localhost:8080"]
+EXPOSE 3001:3000
 
-CMD ["npm", "start"]
+CMD ["node", "src/index.js"]

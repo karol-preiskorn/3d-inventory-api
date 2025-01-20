@@ -35,14 +35,14 @@ interface Config {
   COOKIE_EXPIRESIN: number
 }
 
-// Loading process.env as ENV interface
+// Loading process.env as ENV interface if not set use environment varialbles
 
 const getConfig = (): ENV => {
   return {
     ATLAS_URI: process.env.ATLAS_URI,
-    DBNAME: process.env.DBNAME,
-    API_YAML_FILE: process.env.API_YAML_FILE,
-    HOST: process.env.HOST,
+    DBNAME: process.env.DBNAME ? String(process.env.DBNAME) : '3d-inventory',
+    API_YAML_FILE: process.env.API_YAML_FILE ? String(process.env.API_YAML_FILE) : 'src/api/openapi.yaml',
+    HOST: process.env.HOST ? String(process.env.HOST) : 'localhost',
     PORT: process.env.PORT ? Number(process.env.PORT) : 3000,
     COOKIE_EXPIRESIN: process.env.COOKIE_EXPIRESIN ? Number(process.env.COOKIE_EXPIRESIN) : 3600
   }

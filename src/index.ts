@@ -3,7 +3,6 @@
  * @version 2024-03-31 C2RLO - transform to typescript
  * @version 2023-12-29 C2RLO - Initial
  * @public
- * @alpha 3d-inventory API
  */
 
 import './utils/config.js';
@@ -16,6 +15,7 @@ import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'e
 import * as OpenApiValidator from 'express-openapi-validator';
 import fs from 'fs';
 import helmet from 'helmet';
+import methodOverride from 'method-override';
 import morgan from 'morgan';
 import morganBody from 'morgan-body';
 import swaggerUi, { JsonObject } from 'swagger-ui-express';
@@ -31,35 +31,25 @@ import models from './routers/models.js';
 import readme from './routers/readme.js';
 import { logger } from './utils/logger.js';
 
-const PORT = process.env.PORT ?? 8080
+const PORT = process.env.PORT ?? 3000
 const HOST = process.env.HOST ?? 'localhost'
 const COOKIE_EXPIRESIN = process.env.COOKIE_EXPIRESIN ?? '3600000'
-const yamlFilename = process.env.API_YAML_FILE ?? 'src/api/openapi.yaml'
+const yamlFilename = process.env.API_YAML_FILE ?? 'api.yaml'
 
 const app = express()
+
 app.use(cookieParser())
 app.use(helmet())
 app.use(csurf({ cookie: true }))
 
 try {
   app.use(
-    morgan(
-      function (tokens: morgan.TokenIndexer<express.Request, express.Response>, req: express.Request, res: express.Response): string {
-        return [
-          tokens.date(req, res, 'iso'),
-          tokens.method(req, res),
-          tokens.url(req, res),
-          tokens.status(req, res),
-          tokens['response-time'](req, res),
-          'ms'
-        ].join(' ')
-      },
-      { stream: { write: (message: string) => logger.info(message.trim()) } as unknown as NodeJS.WritableStream }
-    )
+    morgan(':method :url :status :res[content-length] - :response-time ms', {
+      stream: { write: (message: string) => { logger.info(message.trim()); return true; } }
+    })
   )
-}
-catch (error) {
-  logger.error(`[morgan] ${String(error)}`)
+} catch (error) {
+  logger.error(`Error login in morgan: ${String(error)}`)
 }
 
 app.use(cors())
@@ -72,10 +62,22 @@ app.use(function (_, res: Response, next: NextFunction) {
 })
 
 app.use(express.json())
-app.use(bodyParser.json())
+app.use(bodyParser.json()) // must parse body before morganBody as body will be logged
 
 morganBody(app, {
-  noColors: true
+  noColors: false,
+  logReqDateTime: false,
+  //dateTimeFormat: 'clf',
+  logReqUserAgent: false,
+  logIP: false,
+  
+  theme: 'darkened',
+  stream: {
+    write: (message: string) => {
+      logger.info(message.trim())
+      return true
+    }
+  }
 })
 
 app.use(express.urlencoded({ extended: false }))
@@ -93,11 +95,11 @@ app.use('/floors', floors)
 fs.open(yamlFilename, 'r', (err: NodeJS.ErrnoException | null) => {
   if (err) {
     if (err.code === 'ENOENT') {
-      logger.error('File Doesn\'t Exist')
+      logger.error("File doesn' exist")
       return
     }
     if (err.code === 'EACCES') {
-      logger.error('No Permission')
+      logger.error('No permission')
       return
     }
     logger.error('Unknown Error')
@@ -108,17 +110,13 @@ try {
   const file = fs.readFileSync(yamlFilename, 'utf8')
   const swaggerDocument = YAML.parse(file) as JsonObject
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-  //logger.info(`Open SwaggerUI in http://${HOST}:${PORT}/`)
-}
-catch (e) {
+} catch (e) {
   if (typeof e === 'string') {
     logger.warn(e.toUpperCase())
-  }
-  else if (e instanceof Error) {
-    logger.error('[Open SwaggerUI] Exception ' + e.message + ', open: ' + encodeURI('https://stackoverflow.com/search?q=[js]' + e.message))
-  }
-  else {
-    logger.error('Unknown error occurred')
+  } else if (e instanceof Error) {
+    logger.error('Open swaggerUI exception: ' + e.message)
+  } else {
+    logger.error('Unknown error occurred.')
   }
 }
 
@@ -131,9 +129,7 @@ try {
       validateResponses: true
     })
   )
-  // logger.info("OpenApiValidator started")
-}
-catch (error) {
+} catch (error) {
   logger.error(`OpenApiValidator: ${String(error)}`)
 }
 
@@ -142,7 +138,7 @@ interface CustomError extends Error {
   errors?: unknown
 }
 
-const errorHandler: ErrorRequestHandler = (err: CustomError, req: Request, res: Response) => {
+const errorHandler: ErrorRequestHandler = (err: CustomError, req: Request, res: Response, next) => {
   logger.error(err)
   res.status(err.status ?? 500).json({
     message: err.message,
@@ -150,29 +146,45 @@ const errorHandler: ErrorRequestHandler = (err: CustomError, req: Request, res: 
   })
 }
 
+interface ClientError extends Error {
+  status?: number
+}
+
+interface ClientRequest extends Request {
+  xhr: boolean
+}
+
+function clientErrorHandler(err: ClientError, req: ClientRequest, res: Response, next: NextFunction): void {
+  if (req.xhr) {
+    res.status(500).send({ error: 'Something failed!' })
+  } else {
+    next(err)
+  }
+}
+
+app.use(methodOverride())
+app.use(clientErrorHandler)
 app.use(errorHandler)
 
-// Create the server instance using createServer function
 const server = app.listen(PORT, () => {
-  logger.info(`3d-inventory-mongo-api Server is running on http://${HOST}:${PORT}`)
-}) // Start the server
+  logger.info(`3d-inventory-mongo-api server on http://${HOST}:${PORT}`)
+})
 
 app.use((err: Error, req: Request, res: Response) => {
   logger.error(err)
   res.status(500).send('Internal Server Error')
-}) // Error handling
+})
 
 server.on('error', (err: Error) => {
   if (err instanceof Error && err.message.includes('EADDRINUSE')) {
-    logger.error('Error: address already in use')
+    logger.error(`Adress http://${HOST}:${PORT} already in use.`)
+  } else {
+    logger.error(`Error listen on adress http://${HOST}:${PORT}: ${String(err)}`)
   }
-  else {
-    logger.error(`[listen] ${String(err)}`)
-  }
-}) // Error handling
+})
 
 process.on('SIGTERM', () => {
-  logger.debug('SIGTERM signal received: closing HTTP server')
+  logger.debug('SIGTERM signal received: closing HTTP server.')
   server.close(() => {
     logger.debug('HTTP server closed')
   })

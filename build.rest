@@ -1,0 +1,10 @@
+### build
+
+GET http://c2rlo.myqnapcloud.com:8081/buildWithParameters?token=VnVsUERJRVh1WWxmcnBVY1dCaDBROUR4R0duOHVUeUNvMjV4JTltJGRjSU82ZG8zWVMlM0ZaODNMY2ZEQEA4 HTTP/1.1
+content-type: application/json
+
+{
+  "crumbRequestField": "Jenkins-Crumb",
+  "Authorization": "Basic base64_encoded_credentials",
+  "Jenkins-Crumb": "VnVsUERJRVh1WWxmcnBVY1dCaDBROUR4R0duOHVUeUNvMjV4JTltJGRjSU82ZG8zWVMlM0ZaODNMY2ZEQEA4"
+}
