@@ -3,20 +3,20 @@ version: '3.8'
 services:
   app:
     build: .
-    command: npm start
+    command: node src/index.js
     ports:
-      - "3000:3000"
+      - "3001:3001"
     env_file:
       - .env
 
-  mongo:
-    image: mongo:4.4
-    ports:
-      - 27017:27017
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+  # mongo:
+  #   image: mongo:4.4
+  #   ports:
+  #     - 27017:27017
+  #   restart: always
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: example
 
 #   mongo-express:
 #     image: mongo-express

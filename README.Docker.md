@@ -20,13 +20,13 @@ cp api.yaml .env dist/src && node dist/src/index.js
 
 First, build your image, e.g.:
 
-```docker
+```bash
 docker build -t 3d-inventory-api .
 ```
 
 Then, push it to your registry, e.g.
 
-```docker
+```bash
 docker image push docker.io/kpreiskorn/3d-inventory-mongo-api:latest
 ```
 

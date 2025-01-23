@@ -31,7 +31,7 @@ import models from './routers/models.js';
 import readme from './routers/readme.js';
 import { logger } from './utils/logger.js';
 
-const PORT = process.env.PORT ?? 3000
+const PORT = process.env.PORT ?? 3001
 const HOST = process.env.HOST ?? 'localhost'
 const COOKIE_EXPIRESIN = process.env.COOKIE_EXPIRESIN ?? '3600000'
 const yamlFilename = process.env.API_YAML_FILE ?? 'api.yaml'
@@ -70,7 +70,7 @@ morganBody(app, {
   //dateTimeFormat: 'clf',
   logReqUserAgent: false,
   logIP: false,
-  
+
   theme: 'darkened',
   stream: {
     write: (message: string) => {
@@ -167,7 +167,7 @@ app.use(clientErrorHandler)
 app.use(errorHandler)
 
 const server = app.listen(PORT, () => {
-  logger.info(`3d-inventory-mongo-api server on http://${HOST}:${PORT}`)
+  logger.info(`3d-inventory-mongo-api server on http://${HOST}:${PORT} mongo db: ${process.env.DBNAME} `)
 })
 
 app.use((err: Error, req: Request, res: Response) => {

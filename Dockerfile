@@ -41,6 +41,6 @@ RUN PATH="/usr/src/3d-inventory-api/node_modules/.bin:$PATH" \
 && NODE_PATH="$NODE_PATH:$(npm root -g)" \
 && export NODE_PATH
 
-EXPOSE 3001:3000
+EXPOSE 3001:3001
 
-CMD ["node", "src/index.js"]
+# CMD ["node", "src/index.js"]
