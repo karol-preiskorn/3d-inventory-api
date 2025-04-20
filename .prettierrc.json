@@ -3,7 +3,7 @@
   "bracketSpacing": true,
   "overrides": [
     {
-      "files": "*.test.js",
+      "files": "*.test.ts",
       "options": {
         "semi": false
       }

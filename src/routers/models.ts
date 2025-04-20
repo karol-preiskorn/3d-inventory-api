@@ -10,7 +10,9 @@ import {
 } from 'mongodb';
 
 import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
-import { logger } from '../utils/logger.js';
+import log from '../utils/logger.js';
+
+const logger = log('models')
 
 export interface Dimension {
   width: number

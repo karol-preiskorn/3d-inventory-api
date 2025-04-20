@@ -21,21 +21,27 @@ export const logger = winston.createLogger({
       datePattern: 'YYYYMMDD',
       maxFiles: '14d',
       format: winston.format.combine(
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), // Add timestamp
         winston.format((info) => {
-          info.moduleName = info.moduleName || 'default'; // Add default moduleName if not present
+          info.moduleName = info.moduleName ?? 'default'; // Add default moduleName if not present
+          info.level = info.level.toUpperCase(); // Convert level to uppercase
+          info.message = (info.message as string).trim(); // Trim whitespace from message
           return info;
         })(),
         winston.format.printf(options => {
-          return `[${options.moduleName}] ${options.level}: ${options.message}$`;
+          return `${options.timestamp} [${options.moduleName}] ${options.level}: ${options.message}`;
         })
       )
     }),
     new winston.transports.Console({
       level: 'debug',
       handleExceptions: true,
-      format: winston.format.printf(options => {
-        return `[${options.moduleName}] ${options.level}: ${options.message}`;
-      })
+      format: winston.format.combine(
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), // Add timestamp
+        winston.format.printf(options => {
+          return `${options.timestamp} [${options.moduleName}] ${options.level.toUpperCase()}: ${options.message}`;
+        })
+      )
     })
   ]
 });

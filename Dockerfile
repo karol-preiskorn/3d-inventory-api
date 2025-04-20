@@ -21,7 +21,9 @@ RUN npm run build
 FROM node:lts-slim
 RUN apt update && \
     apt upgrade -y && \
-    apt install curl -y
+    apt install curl -y && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 WORKDIR /usr/src/3d-inventory-api
 COPY --from=builder /usr/src/3d-inventory-api/dist ./dist
 COPY --from=builder /usr/src/3d-inventory-api/node_modules ./node_modules

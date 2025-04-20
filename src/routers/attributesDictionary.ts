@@ -8,7 +8,9 @@ import express, { RequestHandler } from 'express';
 import { Collection, Db, Document, Filter, ObjectId, WithoutId } from 'mongodb';
 
 import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
-import { logger } from '../utils/logger.js';
+import log from '../utils/logger.js';
+
+const logger = log('attributesDictionary')
 
 export interface AttributesDictionary {
   _id: ObjectId | null

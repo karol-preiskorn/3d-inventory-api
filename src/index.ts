@@ -5,31 +5,34 @@
  * @public
  */
 
-import './utils/config.js';
+import './utils/config.js'
 
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import csurf from 'csurf';
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import * as OpenApiValidator from 'express-openapi-validator';
-import fs from 'fs';
-import helmet from 'helmet';
-import methodOverride from 'method-override';
-import morgan from 'morgan';
-import morganBody from 'morgan-body';
-import swaggerUi, { JsonObject } from 'swagger-ui-express';
-import YAML from 'yaml';
+import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import csurf from 'csurf'
+import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
+import * as OpenApiValidator from 'express-openapi-validator'
+import figlet from 'figlet'
+import fs from 'fs'
+import helmet from 'helmet'
+import methodOverride from 'method-override'
+import morgan from 'morgan'
+import morganBody from 'morgan-body'
+import swaggerUi, { JsonObject } from 'swagger-ui-express'
+import YAML from 'yaml'
 
-import attributes from './routers/attributes.js';
-import attributesDictionary from './routers/attributesDictionary.js';
-import connections from './routers/connections.js';
-import devices from './routers/devices.js';
-import floors from './routers/floors.js';
-import logs from './routers/logs.js';
-import models from './routers/models.js';
-import readme from './routers/readme.js';
-import { logger } from './utils/logger.js';
+import attributes from './routers/attributes.js'
+import attributesDictionary from './routers/attributesDictionary.js'
+import connections from './routers/connections.js'
+import devices from './routers/devices.js'
+import floors from './routers/floors.js'
+import logs from './routers/logs.js'
+import models from './routers/models.js'
+import readme from './routers/readme.js'
+import log from './utils/logger.js'
+
+const logger = log('index')
 
 const PORT = process.env.PORT ?? 3001
 const HOST = process.env.HOST ?? 'localhost'
@@ -46,7 +49,12 @@ app.use(csurf({ cookie: true }))
 try {
   app.use(
     morgan(':method :url :status :res[content-length] - :response-time ms', {
-      stream: { write: (message: string) => { logger.info(message.trim()); return true; } }
+      stream: {
+        write: (message: string) => {
+          logger.info(message.trim())
+          return true
+        }
+      }
     })
   )
 } catch (error) {
@@ -168,7 +176,17 @@ app.use(clientErrorHandler)
 app.use(errorHandler)
 
 const server = app.listen(PORT, () => {
-  logger.info(`3d-inventory-mongo-api server on http://${HOST}:${PORT} mongo db: ${process.env.DBNAME} `)
+  logger.info(
+    '\n' +
+      figlet.textSync('3d-inventory-mongo-api', {
+        font: 'miniwi',
+        horizontalLayout: 'default',
+        verticalLayout: 'default',
+        width: 160,
+        whitespaceBreak: true
+      })
+  )
+  logger.info(`server on http://${HOST}:${PORT} | MongoDb: ${process.env.DBNAME} `)
 })
 
 app.use((err: Error, req: Request, res: Response) => {

@@ -1,9 +1,8 @@
 import globals from 'globals'
 import pluginJs from '@eslint/js'
-import stylistic from '@stylistic/eslint-plugin'
-import tseslint from 'typescript-eslint'
+import tseslint from '@typescript-eslint/eslint-plugin'
 
-/** @type {import('eslint').Linter.Config[]} */
+/** @type {import('eslint').Linter.Config} */
 export default [
   // https://eslint.org/docs/latest/use/configure/ignore
   {
@@ -20,19 +19,22 @@ export default [
     ]
   },
   {
-    languageOptions: { globals: globals.browser }
+    languageOptions: {
+      globals: globals.browser,
+      parser: '@typescript-eslint/parser',
+      ecmaVersion: 2021,
+  {
+    // Include recommended TypeScript ESLint rules for better type safety and linting
+    ...tseslint.configs.recommended,
+    rules: {
+      'indent': ['error', 2],
+      'quotes': ['error', 'single'],
+      'semi': ['error', 'never'],
+      'comma-dangle': ['error', 'never']
+    }
   },
+  // Including recommended configuration from @eslint/js for general best practices
   pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  stylistic.configs['disable-legacy'],
-  stylistic.configs.customize({
-    indent: 2,
-    quotes: 'single',
-    semi: false,
-    commaDangle: 'never',
-
-    jsx: true
-  }),
   {
     ignores: [
       'node_modules', 'coverage', 'dist', 'gcs/*', 'src/tests/generateTextures.test.ts'

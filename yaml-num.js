@@ -2,7 +2,7 @@ import { dump, load } from 'js-yaml'
 import { readFileSync, writeFileSync } from 'fs'
 
 // Path to the YAML file
-const filePath = '/home/karol/GitHub/3d-inventory-mongo-api/api.yaml'
+const filePath = './api.yaml'
 
 // Read the YAML file
 const fileContent = readFileSync(filePath, 'utf8')
@@ -25,4 +25,4 @@ const updatedYamlContent = dump(yamlData)
 // Write the updated content back to the file
 writeFileSync(filePath, updatedYamlContent, 'utf8')
 
-console.log('Version number updated successfully!')
+console.log('Version api.yaml number updated successfully: ', yamlData.info.version)

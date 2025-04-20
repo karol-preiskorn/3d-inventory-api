@@ -7,7 +7,9 @@
 import { MongoClient } from 'mongodb';
 
 import config from '../utils/config.js';
-import { logger } from './logger.js';
+import log from '../utils/logger.js';
+
+const logger = log('db')
 
 const uri = config.ATLAS_URI
 
@@ -23,8 +25,7 @@ export async function connectToCluster(): Promise<MongoClient> {
     connect = await client.connect()
     // logger.info('Successfully connected to Atlas cluster')
     return connect
-  }
-  catch (error) {
+  } catch (error) {
     logger.error(`Connection to Atlas cluster failed: ${error as string}`)
     process.exit(1)
   }
@@ -41,8 +42,7 @@ export function connectToDb(client: MongoClient) {
     db = client.db(config.DBNAME)
     // logger.info(`Successfully connected to Atlas DB ${config.DBNAME}`)
     return db
-  }
-  catch (e) {
+  } catch (e) {
     logger.error(`Connection to Atlas DB failed ${config.DBNAME}: ${e as string}`)
     process.exit(1)
   }
@@ -57,8 +57,7 @@ export async function connectionClose(connection: MongoClient): Promise<void> {
   try {
     await connection.close()
     // logger.info('Successfully closed the connection.')
-  }
-  catch (error) {
+  } catch (error) {
     logger.error('Failed to close the connection!', error)
   }
 }

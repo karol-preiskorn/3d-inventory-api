@@ -10,7 +10,9 @@ import express, { RequestHandler } from 'express';
 import { Collection, Db, Document, Filter, InsertOneResult, ObjectId, WithId } from 'mongodb';
 
 import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
-import { logger } from '../utils/logger.js';
+import log from '../utils/logger.js';
+
+const logger = log('logs')
 
 export interface Logs {
   _id: ObjectId

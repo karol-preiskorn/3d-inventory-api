@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.54.0",
+  "version": "0.55.0",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -20,7 +20,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "prestart": "npm run cp && npm version patch --no-git-tag-version",
+    "prestart": "npm version patch --no-git-tag-version && npm run api-version",
     "api-extractor": "tsc && api-extractor run --local --verbose",
     "prebuild": "npm version patch --no-git-tag-version",
     "build": "tsc && cp api.yaml .env dist/src",
@@ -43,13 +43,14 @@
     "openapi:format": "npx openapi-format api/openapi.yaml --output api/openapi-formatted.yaml",
     "prepare:husky": "husky install",
     "prettier": "prettier --check .",
-    "start": "tsx src/index.ts",
+    "start": "tsx watch src/index.ts",
     "swagger:editor": "podman run -d -p 80:8080 -v ${PWD}:/tmp -e SWAGGER_FILE=/tmp/api/openapi.yaml swaggerapi/swagger-editor",
     "swagger:generate": "java -jar api/target/jars/swagger-codegen-cli.jar generate -i api/openapi.yaml -l nodejs-server -o src",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "unused:check": "npx npm-check",
-    "upgrade": "npm-check-updates -u && npm update"
+    "upgrade": "npm-check-updates -u && npm update",
+    "api-version": "node ./yaml-num.js"
   },
   "husky": {
     "hooks": {

@@ -10,7 +10,9 @@ import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } f
 
 import { CreateLog } from '../services/logs.js';
 import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
-import { logger } from '../utils/logger.js';
+import log from '../utils/logger.js';
+
+const logger = log('devices')
 
 export interface Device {
   _id: string

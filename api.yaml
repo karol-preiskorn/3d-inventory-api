@@ -2,24 +2,25 @@ openapi: 3.0.3
 info:
   title: API for project 3d-inventory
   description: >-
-    REST API for **3d-inventory**. Project is a simple solution that allows you to build a spatial and database
-    representation of all types of warehouses and server rooms.
+    REST API for **3d-inventory**. Project is a simple solution that allows you
+    to build a spatial and database representation of all types of warehouses
+    and server rooms.
 
     ### Modules
 
-    - [Devices](http://localhost:3001/api/#/devices)
-    - [Logs](http://localhost:3001/api/#/logs)
-    - [Models](http://localhost:3001/api/#/models)
-    - [Connection](http://localhost:3001/api/#/connection)
-    - [AttributesDictionary](http://localhost:3001/api/#/attributesdictionary)
-    - [Floors](http://localhost:3001/api/#/floors)
+    - [Devices](http://localhost:3001/api/#/devices) -
+    [Logs](http://localhost:3001/api/#/logs) -
+    [Models](http://localhost:3001/api/#/models) -
+    [Connection](http://localhost:3001/api/#/connection) -
+    [AttributesDictionary](http://localhost:3001/api/#/attributesdictionary) -
+    [Floors](http://localhost:3001/api/#/floors)
   contact:
-    name: 3d-inventory
-    url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/discussions
-  version: 0.53.1
+    name: 3d-inventory-mongo-api
+    url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/
+  version: 0.53.5
 servers:
   - url: http://localhost:3001
-    description: Localhost
+    description: localhost
 tags:
   - name: logs
     description: Operation on Logs
