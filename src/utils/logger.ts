@@ -1,57 +1,45 @@
 /**
- * @description: log information to console and files.
+ * @description: Logs information to console and files using Winston.
+ *               The logger includes two transports: a DailyRotateFile transport
+ *               for saving logs to files with a date-based naming pattern, and a
+ *               Console transport for outputting logs to the console. Both transports
+ *               handle exceptions, and the logs are formatted to include a module name
+ *               and a custom message format.
  * @module: utils
  */
 
-import 'winston-daily-rotate-file'
+import 'winston-daily-rotate-file';
 
-import { createLogger, format, transports } from 'winston'
+import winston from 'winston';
 
-const { combine, timestamp, printf, colorize } = format
-const myFormat = printf(({ level, message, timestamp }: { level: string, message: unknown, timestamp?: string }) => {
-  let parentModuleInfo = ''
-  if (process.env.PARENT_MODULE) {
-    parentModuleInfo = ` parent-module: ${process.env.PARENT_MODULE}`
-  }
-  return `${timestamp} ${level}: ${message}${parentModuleInfo}`
-})
-
-export const logger = createLogger({
+export const logger = winston.createLogger({
   transports: [
-    new transports.DailyRotateFile({
+    new winston.transports.DailyRotateFile({
       level: 'debug',
       handleExceptions: true,
       filename: 'logs/%DATE%.log',
       datePattern: 'YYYYMMDD',
-      maxFiles: '1d',
-      format: combine(
-        format.splat(),
-        timestamp({
-          format: 'YYYY-MM-DD HH:mm:ss'
-        }),
-        myFormat
+      maxFiles: '14d',
+      format: winston.format.combine(
+        winston.format((info) => {
+          info.moduleName = info.moduleName || 'default'; // Add default moduleName if not present
+          return info;
+        })(),
+        winston.format.printf(options => {
+          return `[${options.moduleName}] ${options.level}: ${options.message}$`;
+        })
       )
     }),
-    new transports.Console({
+    new winston.transports.Console({
       level: 'debug',
       handleExceptions: true,
-      format: combine(
-        format.splat(),
-        colorize(),
-        timestamp({
-          format: 'YYYY-MM-DD HH:mm:ss'
-        }),
-        myFormat
-      )
+      format: winston.format.printf(options => {
+        return `[${options.moduleName}] ${options.level}: ${options.message}`;
+      })
     })
   ]
-})
+});
 
-export const stream = {
-  write: function (message: string) {
-    message = message.substring(0, message.lastIndexOf('\n')).replace('\n', '')
-    logger.info(message)
-  }
+export default function (name: any) {
+  return logger.child({ moduleName: name });
 }
-
-export default logger

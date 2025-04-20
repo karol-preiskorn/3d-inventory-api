@@ -34,6 +34,7 @@ import { logger } from './utils/logger.js';
 const PORT = process.env.PORT ?? 3001
 const HOST = process.env.HOST ?? 'localhost'
 const COOKIE_EXPIRESIN = process.env.COOKIE_EXPIRESIN ?? '3600000'
+
 const yamlFilename = process.env.API_YAML_FILE ?? 'api.yaml'
 
 const app = express()
