@@ -4,9 +4,8 @@ import tseslint from '@typescript-eslint/eslint-plugin'
 
 /** @type {import('eslint').Linter.Config} */
 export default [
-  // https://eslint.org/docs/latest/use/configure/ignore
   {
-    files: ['**/*.{js,mjs,cjs,ts}'],
+    files: ['**/*.{js,ts}'],
     ignores: [
       'node_modules', 'coverage', 'dist', 'gcs/*'
     ]
@@ -22,8 +21,8 @@ export default [
     languageOptions: {
       globals: globals.browser,
       parser: '@typescript-eslint/parser',
-      ecmaVersion: 2021,
-  {
+      ecmaVersion: 2021
+    },
     // Include recommended TypeScript ESLint rules for better type safety and linting
     ...tseslint.configs.recommended,
     rules: {

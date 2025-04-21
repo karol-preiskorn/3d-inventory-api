@@ -3,16 +3,11 @@
  * @description load environment variables and sanitize them
  */
 
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-// Convert import.meta.url to __dirname
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+import dotenv from 'dotenv'
+import path from 'path'
 
 // Parsing the env file.
-dotenv.config({ path: path.resolve('.env') })
+dotenv.config({ path: path.resolve('./.env') })
 
 // Interface to load env variables. Note these variables can possibly be undefined
 // as someone could skip these variables or not setup a .env file at all
@@ -35,7 +30,7 @@ interface Config {
   COOKIE_EXPIRESIN: number
 }
 
-// Loading process.env as ENV interface if not set use environment varialbles
+// Loading process.env as ENV interface if not set use environment variables
 
 const getConfig = (): ENV => {
   return {
@@ -55,7 +50,7 @@ const getConfig = (): ENV => {
 const getSanitizedConfig = (config: ENV): Config => {
   for (const [key, value] of Object.entries(config)) {
     if (value === undefined) {
-      throw new Error(`Missing key ${key} in environment variables from ${path.resolve(__dirname, '.env')}.`)
+      throw new Error(`Missing key ${key} in environment variables from .env`)
     }
   }
   return config as Config

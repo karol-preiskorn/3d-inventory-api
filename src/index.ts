@@ -5,40 +5,46 @@
  * @public
  */
 
-import './utils/config.js'
+import './utils/config.js';
 
-import bodyParser from 'body-parser'
-import cookieParser from 'cookie-parser'
-import cors from 'cors'
-import csurf from 'csurf'
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
-import * as OpenApiValidator from 'express-openapi-validator'
-import figlet from 'figlet'
-import fs from 'fs'
-import helmet from 'helmet'
-import methodOverride from 'method-override'
-import morgan from 'morgan'
-import morganBody from 'morgan-body'
-import swaggerUi, { JsonObject } from 'swagger-ui-express'
-import YAML from 'yaml'
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import csurf from 'csurf';
+import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import * as OpenApiValidator from 'express-openapi-validator';
+import figlet from 'figlet';
+import fs from 'fs';
+import helmet from 'helmet';
+import https from 'https';
+import methodOverride from 'method-override';
+import morgan from 'morgan';
+import morganBody from 'morgan-body';
+import swaggerUi, { JsonObject } from 'swagger-ui-express';
+import YAML from 'yaml';
 
-import attributes from './routers/attributes.js'
-import attributesDictionary from './routers/attributesDictionary.js'
-import connections from './routers/connections.js'
-import devices from './routers/devices.js'
-import floors from './routers/floors.js'
-import logs from './routers/logs.js'
-import models from './routers/models.js'
-import readme from './routers/readme.js'
-import log from './utils/logger.js'
+import attributes from './routers/attributes.js';
+import attributesDictionary from './routers/attributesDictionary.js';
+import connections from './routers/connections.js';
+import devices from './routers/devices.js';
+import floors from './routers/floors.js';
+import logs from './routers/logs.js';
+import models from './routers/models.js';
+import readme from './routers/readme.js';
+import log from './utils/logger.js';
 
 const logger = log('index')
 
-const PORT = process.env.PORT ?? 3001
+const PORT = Number(process.env.PORT) || 3001
 const HOST = process.env.HOST ?? 'localhost'
 const COOKIE_EXPIRESIN = process.env.COOKIE_EXPIRESIN ?? '3600000'
 
-const yamlFilename = process.env.API_YAML_FILE ?? 'api.yaml'
+const httpsOptions = {
+  key: fs.readFileSync('./cert/server.key'),
+  cert: fs.readFileSync('./cert/server.crt')
+}
+
+const yamlFilename = process.env.API_YAML_FILE ?? './dist/src/api.yaml'
 
 const app = express()
 
@@ -112,6 +118,8 @@ fs.open(yamlFilename, 'r', (err: NodeJS.ErrnoException | null) => {
       return
     }
     logger.error('Unknown Error')
+  } else {
+    logger.info(`File api.yaml opened successfully from ${yamlFilename}`)
   }
 })
 
@@ -119,6 +127,7 @@ try {
   const file = fs.readFileSync(yamlFilename, 'utf8')
   const swaggerDocument = YAML.parse(file) as JsonObject
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+  logger.info(`swaggerDocument api.yaml served successfully load ${JSON.stringify(swaggerDocument).length} bytes`)
 } catch (e) {
   if (typeof e === 'string') {
     logger.warn(e.toUpperCase())
@@ -138,6 +147,7 @@ try {
       validateResponses: true
     })
   )
+  logger.info(`OpenApiValidator api.yaml served successfully from ${yamlFilename}`)
 } catch (error) {
   logger.error(`OpenApiValidator: ${String(error)}`)
 }
@@ -165,8 +175,10 @@ interface ClientRequest extends Request {
 
 function clientErrorHandler(err: ClientError, req: ClientRequest, res: Response, next: NextFunction): void {
   if (req.xhr) {
+    logger.error(err)
     res.status(500).send({ error: 'Something failed!' })
   } else {
+    logger.error(err)
     next(err)
   }
 }
@@ -175,18 +187,20 @@ app.use(methodOverride())
 app.use(clientErrorHandler)
 app.use(errorHandler)
 
-const server = app.listen(PORT, () => {
+const httpsServer = https.createServer(httpsOptions, app)
+
+const server = app.listen(Number(PORT), HOST, () => {
   logger.info(
     '\n' +
       figlet.textSync('3d-inventory-mongo-api', {
-        font: 'miniwi',
+        font: 'Mini',
         horizontalLayout: 'default',
         verticalLayout: 'default',
         width: 160,
         whitespaceBreak: true
       })
   )
-  logger.info(`server on http://${HOST}:${PORT} | MongoDb: ${process.env.DBNAME} `)
+  logger.info(`server on https://${HOST}:${PORT} docker: https://172.17.0.2:${PORT} | MongoDb: ${process.env.DBNAME} `)
 })
 
 app.use((err: Error, req: Request, res: Response) => {

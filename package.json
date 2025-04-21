@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.55.0",
+  "version": "0.56.0",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -23,7 +23,7 @@
     "prestart": "npm version patch --no-git-tag-version && npm run api-version",
     "api-extractor": "tsc && api-extractor run --local --verbose",
     "prebuild": "npm version patch --no-git-tag-version",
-    "build": "tsc && cp api.yaml .env dist/src",
+    "build": "tsc && cp api.yaml .env dist && rm -rf dist/src/assets && cp -r src/assets dist/src",
     "build:run": "node dist/src/index.js",
     "build:clean": "tsc --build --clean",
     "clean": "rimraf docs coverage logs dist",
@@ -38,7 +38,7 @@
     "docker:push": "docker image push docker.io/kpreiskorn/3d-inventory-mongo-api:latest",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
-    "kill-port": "npx cross-port-killer 4200 8080",
+    "kill-port": "npx cross-port-killer 4200 8080 3001",
     "maven:update": "cd api && mvn versions:use-latest-versions",
     "openapi:format": "npx openapi-format api/openapi.yaml --output api/openapi-formatted.yaml",
     "prepare:husky": "husky install",
