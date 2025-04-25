@@ -1,7 +1,5 @@
 /**
  * @description API 3d-inventory. Project is a simple solution that allows you to build a spatial and database representation of all types of warehouses and server rooms.
- * @version 2024-03-31 C2RLO - transform to typescript
- * @version 2023-12-29 C2RLO - Initial
  * @public
  */
 
@@ -37,14 +35,13 @@ const logger = log('index')
 
 const PORT = Number(process.env.PORT) || 3001
 const HOST = process.env.HOST ?? 'localhost'
-const COOKIE_EXPIRESIN = process.env.COOKIE_EXPIRESIN ?? '3600000'
 
 const httpsOptions = {
   key: fs.readFileSync('./cert/server.key'),
   cert: fs.readFileSync('./cert/server.crt')
 }
 
-const yamlFilename = process.env.API_YAML_FILE ?? './dist/src/api.yaml'
+const yamlFilename = process.env.API_YAML_FILE ?? './api.yaml'
 
 const app = express()
 
@@ -70,7 +67,8 @@ try {
 app.use(cors())
 
 app.use(function (_, res: Response, next: NextFunction) {
-  res.header('Access-Control-Allow-Origin', `http://${HOST}:${PORT}`)
+  res.header('Access-Control-Allow-Origin', `https://${HOST}:${PORT}`)
+  res.header('Access-Control-Allow-Origin', `https:/172.17.0.2:${PORT}`)
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   next()
@@ -110,7 +108,7 @@ app.use('/floors', floors)
 fs.open(yamlFilename, 'r', (err: NodeJS.ErrnoException | null) => {
   if (err) {
     if (err.code === 'ENOENT') {
-      logger.error("File doesn' exist")
+      logger.error("File doesn't exist")
       return
     }
     if (err.code === 'EACCES') {
@@ -157,7 +155,7 @@ interface CustomError extends Error {
   errors?: unknown
 }
 
-const errorHandler: ErrorRequestHandler = (err: CustomError, req: Request, res: Response, next) => {
+const errorHandler: ErrorRequestHandler = (err: CustomError, _: Request, res: Response, __: NextFunction) => {
   logger.error(err)
   res.status(err.status ?? 500).json({
     message: err.message,
@@ -187,9 +185,11 @@ app.use(methodOverride())
 app.use(clientErrorHandler)
 app.use(errorHandler)
 
+//
+// httpsServer
+//
 const httpsServer = https.createServer(httpsOptions, app)
-
-const server = app.listen(Number(PORT), HOST, () => {
+const server = httpsServer.listen(Number(PORT), HOST, () => {
   logger.info(
     '\n' +
       figlet.textSync('3d-inventory-mongo-api', {
@@ -200,26 +200,27 @@ const server = app.listen(Number(PORT), HOST, () => {
         whitespaceBreak: true
       })
   )
-  logger.info(`server on https://${HOST}:${PORT} docker: https://172.17.0.2:${PORT} | MongoDb: ${process.env.DBNAME} `)
+  logger.info(`Server on https://${HOST}:${PORT} | Docker: https://172.17.0.2:${PORT}`)
+  logger.info(`Atlas MongoDb: https://cloud.mongodb.com/v2/6488bf6ff7acab10310111b5#/overview ${process.env.DBNAME}`)
 })
 
-app.use((err: Error, req: Request, res: Response) => {
+app.use((err: Error, _: Request, res: Response) => {
   logger.error(err)
   res.status(500).send('Internal Server Error')
 })
 
 server.on('error', (err: Error) => {
   if (err instanceof Error && err.message.includes('EADDRINUSE')) {
-    logger.error(`Adress http://${HOST}:${PORT} already in use.`)
+    logger.error(`Adress https://${HOST}:${PORT} already in use.`)
   } else {
-    logger.error(`Error listen on adress http://${HOST}:${PORT}: ${String(err)}`)
+    logger.error(`Error listen on adress https://${HOST}:${PORT}: ${String(err)}`)
   }
 })
 
 process.on('SIGTERM', () => {
-  logger.debug('SIGTERM signal received: closing HTTP server.')
+  logger.debug('SIGTERM signal received: closing HTTPS server.')
   server.close(() => {
-    logger.debug('HTTP server closed')
+    logger.debug('HTTPS server closed')
   })
 })
 

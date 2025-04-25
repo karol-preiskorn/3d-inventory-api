@@ -5,7 +5,7 @@
     "laxTestingModeEnabled": false,
     "logLevel": "info",
     "logDestination": "stdout+platform",
-    "logMaxFileSize": 2147483648,
+    "logMaxFileSize": 104857600, // Reduced to 100MB to mitigate performance and disk space issues
     "requestHeaderNameRequestId": "x-scan-request-id",
     "requestHeaderNameScenarioId": "x-scan-scenario-id",
     "requestFlowrate": 100,

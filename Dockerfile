@@ -8,9 +8,9 @@
 # Stage 1: Build
 FROM node:lts as builder
 RUN apt update && \
-    apt install -y g++ make && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+  apt install -y g++ make && \
+  apt clean && \
+  rm -rf /var/lib/apt/lists/*
 WORKDIR /usr/src/3d-inventory-api
 COPY package.json package-lock.json ./
 RUN npm install
@@ -20,12 +20,15 @@ RUN npm run build
 # Stage 2: Runtime
 FROM node:lts-slim
 RUN apt update && \
-    apt upgrade -y && \
-    apt install curl -y && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+  apt upgrade -y && \
+  apt install curl iproute2 vim -y && \
+  apt clean && \
+  rm -rf /var/lib/apt/lists/*
 WORKDIR /usr/src/3d-inventory-api
 COPY --from=builder /usr/src/3d-inventory-api/dist ./dist
 COPY --from=builder /usr/src/3d-inventory-api/node_modules ./node_modules
 COPY .env api.yaml ./
+# Ensure the cert directory exists in the build context before copying
+COPY cert ./cert
+EXPOSE 3001
 CMD ["node", "dist/src/index.js"]
