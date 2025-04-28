@@ -166,14 +166,14 @@ content-type: application/json
 PUT https://localhost:8080/models/65b67f8bf42bf190aca7029b HTTPS/1.1
 content-type: application/json
 
-{ "id": "65b67f8bf42bf190aca7029b", "name": "Mode 1", "dimension": { "width": "0", "height": "0", "depth": "0" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "botom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
+{ "id": "65b67f8bf42bf190aca7029b", "name": "Mode 1", "dimension": { "width": "0", "height": "0", "depth": "0" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "bottom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
 
 
 ### create model
 POST https://localhost:8080/models HTTPS/1.1
 content-type: application/json
 
-{ "name": "Mode 4", "dimension": { "width": "5", "height": "8", "depth": "1" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "botom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
+{ "name": "Mode 4", "dimension": { "width": "5", "height": "8", "depth": "1" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "bottom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
 
 ### get componet
 GET https://localhost:8080/components HTTPS/1.1

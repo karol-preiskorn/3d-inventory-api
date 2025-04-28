@@ -66,11 +66,21 @@ try {
 
 app.use(cors())
 
-app.use(function (_, res: Response, next: NextFunction) {
-  res.header('Access-Control-Allow-Origin', `https://${HOST}:${PORT}`)
-  res.header('Access-Control-Allow-Origin', `https:/172.17.0.2:${PORT}`)
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const allowedOrigins = [`https://${HOST}:${PORT}`, 'https://172.17.0.2:3001', 'https://cluster0.htgjako.mongodb.net']
+  const origin = req.headers.origin
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin)
+  }
+
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  next()
+})
+
+app.use((_, res: Response, next: NextFunction) => {
+  res.header('Content-Security-Policy', "default-src 'self'; connect-src *; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';")
   next()
 })
 
