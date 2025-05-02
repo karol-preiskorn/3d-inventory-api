@@ -47,7 +47,7 @@ describe('test create attributesDictionary', () => {
             back: '/assets/r710-2.5-nobezel__29341.png',
             side: '/assets/r710-2.5-nobezel__29341.png',
             top: '/assets/r710-2.5-nobezel__29341.png',
-            botom: '/assets/r710-2.5-nobezel__29341.png'
+            bottom: '/assets/r710-2.5-nobezel__29341.png'
           },
           category: valueAttributeCategory[Math.floor(Math.random() * valueAttributeCategory.length)].name
         }

@@ -24,7 +24,7 @@ export interface Texture {
   back: string
   side: string
   top: string
-  botom: string
+  bottom: string
 }
 export interface Model {
   name: string
@@ -85,7 +85,7 @@ router.put('/:id', (async (req, res) => {
         back: b.texture.back,
         side: b.texture.side,
         top: b.texture.top,
-        botom: b.texture.botom
+        bottom: b.texture.bottom
       }
     }
   }

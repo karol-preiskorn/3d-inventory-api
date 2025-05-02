@@ -54,7 +54,7 @@ describe('prepare test data', () => {
             back: '/assets/r710-2.5-nobezel__29341.png',
             side: '/assets/r710-2.5-nobezel__29341.png',
             top: '/assets/r710-2.5-nobezel__29341.png',
-            botom: '/assets/r710-2.5-nobezel__29341.png'
+            bottom: '/assets/r710-2.5-nobezel__29341.png'
           },
           type: 'string',
           category: 'string'

@@ -8,19 +8,21 @@ info:
 
     ### Modules
 
-    - [Devices](http://localhost:3001/api/#/devices) -
-    [Logs](http://localhost:3001/api/#/logs) -
-    [Models](http://localhost:3001/api/#/models) -
-    [Connection](http://localhost:3001/api/#/connection) -
-    [AttributesDictionary](http://localhost:3001/api/#/attributesdictionary) -
-    [Floors](http://localhost:3001/api/#/floors)
+    [Devices](https://localhost:3001/api/#/devices) -
+    [Logs](https://localhost:3001/api/#/logs) -
+    [Models](https://localhost:3001/api/#/models) -
+    [Connection](https://localhost:3001/api/#/connection) -
+    [AttributesDictionary](https://localhost:3001/api/#/attributesdictionary) -
+    [Floors](https://localhost:3001/api/#/floors)
   contact:
     name: 3d-inventory-mongo-api
     url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/
-  version: 0.53.5
+  version: 0.53.20
 servers:
-  - url: http://localhost:3001
+  - url: https://localhost:3001
     description: localhost
+  - url: https://172.17.0.2:3001
+    description: local docker
 tags:
   - name: logs
     description: Operation on Logs
@@ -2474,7 +2476,7 @@ components:
       description: Not found
     '405':
       description: >-
-        Method Not Allowed. The request HTTP method is known by the server but
+        Method Not Allowed. The request HTTPS method is known by the server but
         has been disabled and cannot be used for that resource.
     '500':
       description: >-
@@ -2482,7 +2484,7 @@ components:
         that prevented it from fulfilling the request.
     '501':
       description: >-
-        Not Implemented. The HTTP method is not supported by the server and
+        Not Implemented. The HTTPS method is not supported by the server and
         cannot be handled.
     '502':
       description: >-

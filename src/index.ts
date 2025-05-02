@@ -1,44 +1,47 @@
 /**
  * @description API 3d-inventory. Project is a simple solution that allows you to build a spatial and database representation of all types of warehouses and server rooms.
- * @version 2024-03-31 C2RLO - transform to typescript
- * @version 2023-12-29 C2RLO - Initial
  * @public
  */
 
-import './utils/config.js'
+import './utils/config.js';
 
-import bodyParser from 'body-parser'
-import cookieParser from 'cookie-parser'
-import cors from 'cors'
-import csurf from 'csurf'
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
-import * as OpenApiValidator from 'express-openapi-validator'
-import figlet from 'figlet'
-import fs from 'fs'
-import helmet from 'helmet'
-import methodOverride from 'method-override'
-import morgan from 'morgan'
-import morganBody from 'morgan-body'
-import swaggerUi, { JsonObject } from 'swagger-ui-express'
-import YAML from 'yaml'
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import csurf from 'csurf';
+import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import * as OpenApiValidator from 'express-openapi-validator';
+import figlet from 'figlet';
+import fs from 'fs';
+import helmet from 'helmet';
+import https from 'https';
+import methodOverride from 'method-override';
+import morgan from 'morgan';
+import morganBody from 'morgan-body';
+import swaggerUi, { JsonObject } from 'swagger-ui-express';
+import YAML from 'yaml';
 
-import attributes from './routers/attributes.js'
-import attributesDictionary from './routers/attributesDictionary.js'
-import connections from './routers/connections.js'
-import devices from './routers/devices.js'
-import floors from './routers/floors.js'
-import logs from './routers/logs.js'
-import models from './routers/models.js'
-import readme from './routers/readme.js'
-import log from './utils/logger.js'
+import attributes from './routers/attributes.js';
+import attributesDictionary from './routers/attributesDictionary.js';
+import connections from './routers/connections.js';
+import devices from './routers/devices.js';
+import floors from './routers/floors.js';
+import logs from './routers/logs.js';
+import models from './routers/models.js';
+import readme from './routers/readme.js';
+import log from './utils/logger.js';
 
 const logger = log('index')
 
-const PORT = process.env.PORT ?? 3001
+const PORT = Number(process.env.PORT) || 3001
 const HOST = process.env.HOST ?? 'localhost'
-const COOKIE_EXPIRESIN = process.env.COOKIE_EXPIRESIN ?? '3600000'
 
-const yamlFilename = process.env.API_YAML_FILE ?? 'api.yaml'
+const httpsOptions = {
+  key: fs.readFileSync('./cert/server.key'),
+  cert: fs.readFileSync('./cert/server.crt')
+}
+
+const yamlFilename = process.env.API_YAML_FILE ?? './api.yaml'
 
 const app = express()
 
@@ -63,10 +66,21 @@ try {
 
 app.use(cors())
 
-app.use(function (_, res: Response, next: NextFunction) {
-  res.header('Access-Control-Allow-Origin', `http://${HOST}:${PORT}`)
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const allowedOrigins = [`https://${HOST}:${PORT}`, 'https://172.17.0.2:3001', 'https://cluster0.htgjako.mongodb.net']
+  const origin = req.headers.origin
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin)
+  }
+
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  next()
+})
+
+app.use((_, res: Response, next: NextFunction) => {
+  res.header('Content-Security-Policy', "default-src 'self'; connect-src *; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';")
   next()
 })
 
@@ -104,7 +118,7 @@ app.use('/floors', floors)
 fs.open(yamlFilename, 'r', (err: NodeJS.ErrnoException | null) => {
   if (err) {
     if (err.code === 'ENOENT') {
-      logger.error("File doesn' exist")
+      logger.error("File doesn't exist")
       return
     }
     if (err.code === 'EACCES') {
@@ -112,6 +126,8 @@ fs.open(yamlFilename, 'r', (err: NodeJS.ErrnoException | null) => {
       return
     }
     logger.error('Unknown Error')
+  } else {
+    logger.info(`File api.yaml opened successfully from ${yamlFilename}`)
   }
 })
 
@@ -119,6 +135,7 @@ try {
   const file = fs.readFileSync(yamlFilename, 'utf8')
   const swaggerDocument = YAML.parse(file) as JsonObject
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+  logger.info(`swaggerDocument api.yaml served successfully load ${JSON.stringify(swaggerDocument).length} bytes`)
 } catch (e) {
   if (typeof e === 'string') {
     logger.warn(e.toUpperCase())
@@ -138,6 +155,7 @@ try {
       validateResponses: true
     })
   )
+  logger.info(`OpenApiValidator api.yaml served successfully from ${yamlFilename}`)
 } catch (error) {
   logger.error(`OpenApiValidator: ${String(error)}`)
 }
@@ -147,7 +165,7 @@ interface CustomError extends Error {
   errors?: unknown
 }
 
-const errorHandler: ErrorRequestHandler = (err: CustomError, req: Request, res: Response, next) => {
+const errorHandler: ErrorRequestHandler = (err: CustomError, _: Request, res: Response, __: NextFunction) => {
   logger.error(err)
   res.status(err.status ?? 500).json({
     message: err.message,
@@ -165,8 +183,10 @@ interface ClientRequest extends Request {
 
 function clientErrorHandler(err: ClientError, req: ClientRequest, res: Response, next: NextFunction): void {
   if (req.xhr) {
+    logger.error(err)
     res.status(500).send({ error: 'Something failed!' })
   } else {
+    logger.error(err)
     next(err)
   }
 }
@@ -175,37 +195,42 @@ app.use(methodOverride())
 app.use(clientErrorHandler)
 app.use(errorHandler)
 
-const server = app.listen(PORT, () => {
+//
+// httpsServer
+//
+const httpsServer = https.createServer(httpsOptions, app)
+const server = httpsServer.listen(Number(PORT), HOST, () => {
   logger.info(
     '\n' +
       figlet.textSync('3d-inventory-mongo-api', {
-        font: 'miniwi',
+        font: 'Mini',
         horizontalLayout: 'default',
         verticalLayout: 'default',
         width: 160,
         whitespaceBreak: true
       })
   )
-  logger.info(`server on http://${HOST}:${PORT} | MongoDb: ${process.env.DBNAME} `)
+  logger.info(`Server on https://${HOST}:${PORT} | Docker: https://172.17.0.2:${PORT}`)
+  logger.info(`Atlas MongoDb: https://cloud.mongodb.com/v2/6488bf6ff7acab10310111b5#/overview ${process.env.DBNAME}`)
 })
 
-app.use((err: Error, req: Request, res: Response) => {
+app.use((err: Error, _: Request, res: Response) => {
   logger.error(err)
   res.status(500).send('Internal Server Error')
 })
 
 server.on('error', (err: Error) => {
   if (err instanceof Error && err.message.includes('EADDRINUSE')) {
-    logger.error(`Adress http://${HOST}:${PORT} already in use.`)
+    logger.error(`Adress https://${HOST}:${PORT} already in use.`)
   } else {
-    logger.error(`Error listen on adress http://${HOST}:${PORT}: ${String(err)}`)
+    logger.error(`Error listen on adress https://${HOST}:${PORT}: ${String(err)}`)
   }
 })
 
 process.on('SIGTERM', () => {
-  logger.debug('SIGTERM signal received: closing HTTP server.')
+  logger.debug('SIGTERM signal received: closing HTTPS server.')
   server.close(() => {
-    logger.debug('HTTP server closed')
+    logger.debug('HTTPS server closed')
   })
 })
 

@@ -7,15 +7,15 @@
  * @version: 2024-01-03  C2RLO  Initial
  */
 
-import '../utils/loadEnvironment'
+import '../utils/loadEnvironment';
 
-import { Collection, Db, ObjectId } from 'mongodb'
-import request from 'supertest'
+import { Collection, Db, ObjectId } from 'mongodb';
+import request from 'supertest';
 
-import { faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker';
 
-import { connectToCluster, connectToDb } from '../db/dbUtils'
-import { Device } from '../routers/devices'
+import { connectToCluster, connectToDb } from '../db/dbUtils';
+import { Device } from '../routers/devices';
 
 describe('GET /devices', () => {
   it('GET /devices => array of devices', async () => {
@@ -96,7 +96,7 @@ describe('POST /devices', () => {
 
 const PORT = process.env.PORT ?? 8080
 const HOST = process.env.HOST ?? 'localhost'
-const app = `http://${HOST}:${PORT}`
+const app = `https://${HOST}:${PORT}`
 
 describe('GET /devices', () => {
   it('GET /devices => array of devices', async () => {
