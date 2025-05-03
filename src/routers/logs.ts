@@ -65,10 +65,10 @@ router.get('/component/:component', (async (req, res) => {
   } else {
     component = req.params.component
     logger.info(`GET /logs/component/${req.params.component} - component: ${component}`)
-    const validComponents = ['devices', 'floors', 'models', 'connections', 'users', 'attribute_dictionary'];
+    const validComponents = ['attributes', 'devices', 'floors', 'models', 'connections', 'users', 'attribute_dictionary']
     if (!validComponents.includes(component)) {
       res.status(400).json({
-        message: `Not provide available component name: ${component} not in [ devices | floors |  models | connections | users | attribute_dictionary ].`
+        message: `Not provide available component name: ${component} not in [ attributes | devices | floors |  models | connections | users | attribute_dictionary ].`
       })
       return
     }
@@ -79,7 +79,8 @@ router.get('/component/:component', (async (req, res) => {
     devices: 'Device',
     models: 'Model',
     users: 'User',
-    floors: 'Floor'
+    floors: 'Floor',
+    attributes: 'Attribute'
   }
   component = componentMapping[component] || component
 

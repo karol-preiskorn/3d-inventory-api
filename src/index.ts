@@ -3,33 +3,33 @@
  * @public
  */
 
-import './utils/config.js';
+import './utils/config.js'
 
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import csurf from 'csurf';
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import * as OpenApiValidator from 'express-openapi-validator';
-import figlet from 'figlet';
-import fs from 'fs';
-import helmet from 'helmet';
-import https from 'https';
-import methodOverride from 'method-override';
-import morgan from 'morgan';
-import morganBody from 'morgan-body';
-import swaggerUi, { JsonObject } from 'swagger-ui-express';
-import YAML from 'yaml';
+import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import csurf from 'csurf'
+import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
+import * as OpenApiValidator from 'express-openapi-validator'
+import figlet from 'figlet'
+import fs from 'fs'
+import helmet from 'helmet'
+import https from 'https'
+import methodOverride from 'method-override'
+import morgan from 'morgan'
+import morganBody from 'morgan-body'
+import swaggerUi, { JsonObject } from 'swagger-ui-express'
+import YAML from 'yaml'
 
-import attributes from './routers/attributes.js';
-import attributesDictionary from './routers/attributesDictionary.js';
-import connections from './routers/connections.js';
-import devices from './routers/devices.js';
-import floors from './routers/floors.js';
-import logs from './routers/logs.js';
-import models from './routers/models.js';
-import readme from './routers/readme.js';
-import log from './utils/logger.js';
+import attributes from './routers/attributes.js'
+import attributesDictionary from './routers/attributesDictionary.js'
+import connections from './routers/connections.js'
+import devices from './routers/devices.js'
+import floors from './routers/floors.js'
+import logs from './routers/logs.js'
+import models from './routers/models.js'
+import readme from './routers/readme.js'
+import log from './utils/logger.js'
 
 const logger = log('index')
 
@@ -47,7 +47,7 @@ const app = express()
 
 app.use(cookieParser())
 app.use(helmet())
-app.use(csurf({ cookie: true }))
+//app.use(csurf({ cookie: true }))
 
 try {
   app.use(
