@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.59.0",
+  "version": "0.60.0",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -36,6 +36,7 @@
     "docker:run": "docker run -p 3001:3001 3d-inventory-api",
     "docker:compose": "docker compose up --build",
     "docker:push": "docker image push docker.io/kpreiskorn/3d-inventory-mongo-api:latest",
+    "docker:rerun": "docker stop 3d-inventory-api && docker rm 3d-inventory-api && docker rmi 3d-inventory-api && docker build -t 3d-inventory-api . && docker run -p 3001:3001 3d-inventory-api",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
     "kill-port": "npx cross-port-killer 4200 8080 3001",

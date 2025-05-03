@@ -5,12 +5,12 @@
  * @version 2024-01-27 C2RLO - Initial
  */
 
-import { format } from 'date-fns';
-import express, { RequestHandler } from 'express';
-import { Collection, Db, Document, Filter, InsertOneResult, ObjectId, WithId } from 'mongodb';
+import { format } from 'date-fns'
+import express, { RequestHandler } from 'express'
+import { Collection, Db, Document, Filter, InsertOneResult, ObjectId, WithId } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
-import log from '../utils/logger.js';
+import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js'
+import log from '../utils/logger.js'
 
 const logger = log('logs')
 
@@ -33,8 +33,7 @@ router.get('/', (async (req: express.Request, res: express.Response): Promise<vo
   const results: object[] = await collection.find({}).sort({ date: -1 }).limit(200).toArray()
   if (!results) {
     res.sendStatus(404)
-  }
-  else {
+  } else {
     res.status(200).json(results)
   }
   await connectionClose(client)
@@ -63,15 +62,26 @@ router.get('/component/:component', (async (req, res) => {
   if (req.params.component.length === 0) {
     res.status(400).send(`Not provide component name: ${component} not in [ Device | Model | Connection | User | Attribute Dictionary ].`)
     return
-  }
-  else {
+  } else {
     component = req.params.component
     logger.info(`GET /logs/component/${req.params.component} - component: ${component}`)
-    if (component !== 'Device' && component !== 'Model' && component !== 'Connection' && component !== 'User' && component !== 'Attribute Dictionary') {
-      res.status(400).json({ message: `Not provide available component name: ${component} not in [ Device | Model | Connection | User | Attribute Dictionary ].` })
+    const validComponents = ['devices', 'floors', 'models', 'connections', 'users', 'attribute_dictionary'];
+    if (!validComponents.includes(component)) {
+      res.status(400).json({
+        message: `Not provide available component name: ${component} not in [ devices | floors |  models | connections | users | attribute_dictionary ].`
+      })
       return
     }
   }
+  const componentMapping: { [key: string]: string } = {
+    connections: 'Connection',
+    attribute_dictionary: 'AttributeDictionary',
+    devices: 'Device',
+    models: 'Model',
+    users: 'User',
+    floors: 'Floor'
+  }
+  component = componentMapping[component] || component
 
   const query: Filter<Document> = { component: component } as Filter<Document>
 
@@ -82,8 +92,7 @@ router.get('/component/:component', (async (req, res) => {
   if (result.length === 0) {
     res.status(404).json({ message: `GET /logs/component/${req.params.component} - Not found any logs for component.` })
     logger.warn(`GET /logs/component/${req.params.component}, query: ${JSON.stringify(query)} - 404 not found any component for objectId.`)
-  }
-  else {
+  } else {
     res.status(200).json(result)
     logger.info(`GET /logs/component/${req.params.component}, query: ${JSON.stringify(query)}`)
   }
@@ -107,8 +116,7 @@ router.get('/model/:id', (async (req, res) => {
   if (!result) {
     res.sendStatus(404)
     logger.warn(`GET /logs/model/${req.params.id}, query: ${JSON.stringify(query)} - 404 not found any model for objectId.`)
-  }
-  else {
+  } else {
     res.status(200).json(result)
     logger.info(`GET /logs/model/${req.params.id}, query: ${JSON.stringify(query)}`)
   }
@@ -129,8 +137,7 @@ router.get('/object/:id', (async (req, res) => {
   if (result.length === 0) {
     logger.warn(`GET /logs/object/${req.params.id}, query: ${JSON.stringify(query)} - 404 not found any logs for objectId.`)
     res.status(404).json(result)
-  }
-  else {
+  } else {
     res.status(200).json(result)
     logger.info(`GET /logs/object/${req.params.id}, query: ${JSON.stringify(query)}`)
   }
@@ -147,8 +154,7 @@ router.post('/', (async (req, res) => {
   if (!results) {
     res.status(404).send('Not create log')
     logger.warn(`POST /logs/, query: ${JSON.stringify(newDocument)} not created.`)
-  }
-  else {
+  } else {
     const insertedDocument = await collection.findOne({ _id: results.insertedId })
     res.status(200).json(insertedDocument)
     logger.info(`POST /logs/, query: ${JSON.stringify(newDocument)} created.`)
