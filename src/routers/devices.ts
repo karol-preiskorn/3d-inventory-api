@@ -5,12 +5,12 @@
  * @public
  */
 
-import express, { RequestHandler } from 'express';
-import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb';
+import express, { RequestHandler } from 'express'
+import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
 
-import { CreateLog } from '../services/logs.js';
-import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
-import log from '../utils/logger.js';
+import { CreateLog } from '../services/logs.js'
+import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js'
+import log from '../utils/logger.js'
 
 const logger = log('devices')
 
@@ -51,12 +51,11 @@ router.get('/', (async (_req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const results: object[] = await collection.find({}).limit(10).toArray()
+  const results: object[] = await collection.find({}).limit(1000).toArray()
   if (!results) {
     logger.warn('GET /devices - not found')
     res.status(404).send('Not found')
-  }
-  else {
+  } else {
     logger.info(`GET /devices - oki return ${results.length} devices ${JSON.stringify(results)}`)
     res.status(200).json(results)
   }
@@ -77,8 +76,7 @@ router.get('/:id', (async (req, res) => {
   if (!result) {
     logger.warn(`GET /devices/${req.params.id} - not found device`)
     res.status(404).send('Not found')
-  }
-  else {
+  } else {
     logger.info(`GET /devices/${req.params.id} - oki, device: ${JSON.stringify(result)}`)
     res.status(200).json(result)
   }
@@ -107,8 +105,7 @@ router.put('/:id', (async (req, res) => {
   let result
   try {
     result = await collection.updateOne(query, updates)
-  }
-  catch (error: unknown) {
+  } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     logger.error(`PUT /devices/${req.params.id} - error updating device: ${errorMessage}`)
     res.status(500).send('Internal Server Error')
@@ -117,8 +114,7 @@ router.put('/:id', (async (req, res) => {
   if (result.modifiedCount === 0) {
     logger.error(`PUT /devices/${req.params.id} - not found devices to update`)
     res.status(404).send('Not found devices to update')
-  }
-  else {
+  } else {
     const updatedDevice = await collection.findOne(query)
     logger.info(`PUT /devices/${req.params.id} - oki updated ${result.modifiedCount} devices`)
     res.status(200).json(updatedDevice)
@@ -150,6 +146,13 @@ router.post('/', (async (req, res) => {
   const db: Db = connectToDb(client)
   let resultLog = {}
   const collection: Collection = db.collection(collectionName)
+  logger.error('POST /devices - body:', JSON.stringify(req.body))
+  if (!req.body || Object.keys(req.body).length === 0) {
+    logger.error('POST /devices - No data provided')
+    res.status(400).send('POST /devices - No data provided')
+    await connectionClose(client)
+    return
+  }
   const newDocument: OptionalId<Document> & { date: Date } = req.body as OptionalId<Document> & { date: Date }
   newDocument.date = new Date()
   const result: InsertOneResult<Document> = await collection.insertOne(newDocument)
@@ -157,8 +160,7 @@ router.post('/', (async (req, res) => {
     logger.error('POST /devices - Device not created with id:', JSON.stringify(newDocument))
     await CreateLog('', newDocument, 'Create', 'Device')
     res.status(500).send('POST /devices - Device not created')
-  }
-  else {
+  } else {
     logger.info(`POST /devices - device created successfully with id: ${result.insertedId.toString()}, ${JSON.stringify(newDocument)}`)
     resultLog = await CreateLog(result.insertedId.toString(), newDocument, 'Create', 'Device')
     res.status(200).json(resultLog)
@@ -183,8 +185,7 @@ router.patch('/position/:id', (async (req, res) => {
   let result
   try {
     result = await collection.updateOne(query, updates)
-  }
-  catch (error) {
+  } catch (error) {
     logger.error(`PATCH /devices/position/${req.params.id} - error updating position: ${(error as Error).message}`)
     res.status(500).send('Internal Server Error')
     await connectionClose(client)
@@ -193,8 +194,7 @@ router.patch('/position/:id', (async (req, res) => {
   if (!result || result.modifiedCount === 0) {
     logger.error(`PATCH /devices/position/${req.params.id} - no position updated`)
     res.status(404).send('No position updated')
-  }
-  else {
+  } else {
     logger.info(`PATCH /devices/position/${req.params.id} - position updated successfully`)
     res.status(200).json(result)
   }
@@ -213,8 +213,7 @@ router.delete('/:id', (async (req, res) => {
   if (!result) {
     logger.error(`POST /devices/${req.params.id} - Device not created`)
     res.status(500).json({ error: `POST /devices/${req.params.id} - Device not created` })
-  }
-  else {
+  } else {
     logger.info(`POST /devices/${req.params.id} - device created successfully.`)
     res.status(200).json(result)
   }
