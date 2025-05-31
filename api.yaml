@@ -14,7 +14,7 @@ info:
   contact:
     name: 3d-inventory-mongo-api
     url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/
-  version: 0.53.21
+  version: 0.53.23
 servers:
   - url: https://localhost:3001
     description: localhost
@@ -25,12 +25,12 @@ tags:
     description: Operation on Logs
   - name: devices
     description: >-
-      Basic object _3d-inventory_ device and operation on devices API. Represent by position blok x, y, z with
-      devices parameters.
+      Basic object _3d-inventory_ device and operation on devices API. Represent by position blok x, y, z with devices
+      parameters.
   - name: models
     description: >-
-      Models of devices API. Represent by blok dimension x, y, h with block images on every side and model types
-      and parameters.
+      Models of devices API. Represent by blok dimension x, y, h with block images on every side and model types and
+      parameters.
   - name: connections
     description: Connections between devices API
   - name: attributes
@@ -46,6 +46,226 @@ tags:
   - name: components
     description: Components API.
 paths:
+  /attributes:
+    get:
+      tags:
+        - attributes
+      summary: Get all attributes
+      description: >-
+        Retrieve a list of all attributes. You can apply optional query parameters such as `key` to filter attributes by
+        their key or `type` to filter by their type.
+      operationId: getAllAttributes
+      responses:
+        "200":
+          description: A list of attributes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attributes"
+        "404":
+          description: Not found.
+        "406":
+          description: Not Acceptable
+        "429":
+          description: Too Many Requests
+        "500":
+          description: Unexpected server error
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Attributes
+    put:
+      tags:
+        - attributes
+      summary: Update an existing attribute
+      description: Update the details of an existing attribute.
+      operationId: updateAttribute
+      parameters:
+        - name: id
+          in: path
+          description: ID of the attribute to update
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: o:uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Attribute"
+      responses:
+        "200":
+          description: Attribute updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attribute"
+        "404":
+          description: Attribute update data is inconsistent.
+        "406":
+          description: Not Acceptable
+        "429":
+          description: Too Many Requests
+        "500":
+          description: Unexpected server error
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Attributes
+    post:
+      tags:
+        - attributes
+      summary: Create a new attribute
+      description: Create a new attribute.
+      operationId: createAttribute
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Attribute"
+      responses:
+        "200":
+          description: Attribute created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attribute"
+        "400":
+          description: Bad request.
+        "500":
+          description: Unexpected server error
+      x-swagger-router-controller: Attributes
+    delete:
+      tags:
+        - attributes
+      summary: Delete all attributes
+      description: Remove all attributes from the inventory.
+      operationId: deleteAllAttributes
+      responses:
+        "200":
+          description: All attributes deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Confirmation"
+        "404":
+          description: No attributes found to delete
+      x-swagger-router-controller: Attributes
+  /attributes/{id}:
+    get:
+      tags:
+        - attributes
+      summary: Get attribute by ID
+      description: Retrieve a single attribute by its ID.
+      operationId: getAttributeById
+      parameters:
+        - name: id
+          in: path
+          description: ID of attribute to fetch
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: o:uuid
+      responses:
+        "200":
+          description: Attribute found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attribute"
+        "404":
+          description: Attribute not found
+        "406":
+          description: Not Acceptable
+        "429":
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Attributes
+    put:
+      tags:
+        - attributes
+      summary: Update attribute by ID
+      description: Update a specific attribute by its ID.
+      operationId: updateAttributeById
+      parameters:
+        - name: id
+          in: path
+          description: ID of attribute to update
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: o:uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Attribute"
+      responses:
+        "200":
+          description: Attribute updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attribute"
+        "404":
+          description: Attribute not found
+        "406":
+          description: Not Acceptable
+        "429":
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Attributes
+    delete:
+      tags:
+        - attributes
+      summary: Delete attribute by ID
+      description: Delete a specific attribute by its ID.
+      operationId: deleteAttributeById
+      parameters:
+        - name: id
+          in: path
+          description: ID of attribute to delete
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: o:uuid
+      responses:
+        "200":
+          description: Attribute deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Confirmation"
+        "404":
+          description: Attribute not found
+      x-swagger-router-controller: Attributes
   /github/issues:
     get:
       responses:
@@ -102,8 +322,14 @@ paths:
                 $ref: "#/components/schemas/Devices"
         "404":
           description: No devices found.
+        "406":
+          description: Not Acceptable
+        "429":
+          description: Too Many Requests
         "500":
           description: Unexpected server error
+        default:
+          description: Unexpected error
       x-swagger-router-controller: Devices
     put:
       tags:
@@ -111,12 +337,6 @@ paths:
       summary: Update an existing device
       description: Update the details of an existing device.
       operationId: updateDevice
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Device"
       responses:
         "200":
           description: Device updated successfully
@@ -126,33 +346,14 @@ paths:
                 $ref: "#/components/schemas/Device"
         "404":
           description: Device update data is inconsistent.
+        "406":
+          description: Not Acceptable
+        "429":
+          description: Too Many Requests
         "500":
           description: Unexpected server error
-      x-swagger-router-controller: Devices
-    post:
-      tags:
-        - devices
-      summary: Create a new device
-      description: Add a new device to the inventory.
-      operationId: createDevice
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Device"
-      responses:
-        "200":
-          description: Device created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Confirmation"
-        "422":
-          description: >-
-            UNPROCESSABLE ENTITY = Request matched and met syntactic contract but validation failed
-        "500":
-          description: Error creating device
+        default:
+          description: Unexpected error
       x-swagger-router-controller: Devices
     delete:
       tags:
@@ -180,14 +381,14 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of device to fetch
+          description: ID of d
           required: true
           style: simple
           explode: false
           schema:
             type: string
-            example: 6566ed4ace63d42b25fbba19
             pattern: ^[0-9A-Fa-f]{24}$
+            example: 6566ed4ace63d42b25fbba19
             minLength: 24
             maxLength: 24
             x-42c-format: o:uuid
@@ -200,6 +401,12 @@ paths:
                 $ref: "#/components/schemas/Device"
         "404":
           description: Devices not found
+        "406":
+          description: Not Acceptable
+        "429":
+          description: Too Many Requests
+        default:
+          description: Unexpected error
       x-swagger-router-controller: Devices
     put:
       tags:
@@ -230,6 +437,28 @@ paths:
                 $ref: "#/components/schemas/Device"
         "404":
           description: Devices not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "406":
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "429":
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
       x-swagger-router-controller: Devices
     delete:
       tags:
@@ -291,6 +520,12 @@ paths:
                 $ref: "#/components/schemas/Devices"
         "404":
           description: Devices not found with this model :id
+        "406":
+          description: Not Acceptable
+        "429":
+          description: Too Many Requests
+        default:
+          description: Unexpected error
       x-swagger-router-controller: Devices
     delete:
       tags:
@@ -712,7 +947,8 @@ paths:
         "404":
           description: Not found. Indicates that the request has no logs.
         "406":
-          description: Not Acceptable. Indicates that the requested content type is not acceptable.
+          description: >-
+            Not Acceptable. Indicates that the requested content type is not acceptable.
         "500":
           description: Server side error.
       x-swagger-router-controller: Logs
@@ -850,7 +1086,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Connections"
               example:
-                $ref: "#/components/schemas/Connection/example"
+                $ref: "#/components/schemas/Connections/example"
         "404":
           description: Not found connection data
         "500":
@@ -1241,8 +1477,8 @@ paths:
           description: Not found.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
       x-swagger-router-controller: attributesDictionary
     post:
       tags:
@@ -1269,14 +1505,14 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
       x-swagger-router-controller: attributesDictionary
     delete:
       tags:
         - attributesDictionary
       summary: Delete all attributesDictionary
-      description: >-
+      description: |-
         Delete a specific attribute in the attributes dictionary by ID. '200':
           description: OK. Indicates that the request has succeeded.
       responses:
@@ -1286,10 +1522,10 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
       x-swagger-router-controller: attributesDictionary
-  /attributesDictionary/:id:
+  /attributesDictionary/{id}:
     get:
       tags:
         - attributesDictionary
@@ -1390,7 +1626,7 @@ paths:
           description: Not found
         "500":
           description: Unexpected server error.
-      x-swagger-router-controller: attributesDictionary
+        x-swagger-router-controller: attributesDictionary
   /attributesDictionary/models:
     get:
       tags:
@@ -1411,9 +1647,9 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
-        x-swagger-router-controller: attributesDictionary
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
+      x-swagger-router-controller: attributesDictionary
   /attributesDictionary/devices:
     get:
       tags:
@@ -1434,8 +1670,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            from  fulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from  fulfilling
+            the request.
       x-swagger-router-controller: attributesDictionary
   /attributesDictionary/connections:
     get:
@@ -1457,8 +1693,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            from  fulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from  fulfilling
+            the request.
       x-swagger-router-controller: attributesDictionary
   /models:
     get:
@@ -1480,8 +1716,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
       x-swagger-router-controller: Models
     put:
       tags:
@@ -1506,8 +1742,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
       x-swagger-router-controller: Models
     post:
       tags:
@@ -1532,8 +1768,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
       x-swagger-router-controller: Models
     delete:
       tags:
@@ -1548,8 +1784,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
       x-swagger-router-controller: Models
   /models/{id}:
     get:
@@ -1680,8 +1916,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
       x-swagger-router-controller: Floors
     post:
       tags:
@@ -1702,8 +1938,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
       x-swagger-router-controller: Floors
     delete:
       tags:
@@ -1718,8 +1954,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
       x-swagger-router-controller: Floors
   /floors/{id}:
     get:
@@ -1732,6 +1968,7 @@ paths:
         - name: id
           in: path
           description: ID of floor to fetch
+          required: true
           style: simple
           explode: false
           schema:
@@ -1741,7 +1978,6 @@ paths:
             minLength: 24
             maxLength: 24
             x-42c-format: o:uuid
-          required: true
       responses:
         "200":
           description: OK
@@ -1790,8 +2026,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
       x-swagger-router-controller: Users
     post:
       tags:
@@ -1816,8 +2052,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
       x-swagger-router-controller: Users
     delete:
       tags:
@@ -1836,8 +2072,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
       x-swagger-router-controller: Users
   /users/{id}:
     get:
@@ -1907,8 +2143,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
       x-swagger-router-controller: Users
 components:
   schemas:
@@ -1946,6 +2182,7 @@ components:
     Users:
       type: array
       description: Array of User
+      maxItems: 1000
       items:
         $ref: "#/components/schemas/User"
     Floor:
@@ -1980,10 +2217,10 @@ components:
           h: 6
           x_pos: 76
           y_pos: 70
-          h_pos: 23
     Floors:
       type: array
       description: Array of Floor
+      maxItems: 1000
       items:
         $ref: "#/components/schemas/Floor"
     Dimension:
@@ -2087,11 +2324,10 @@ components:
           side: /assets/r710-2.5-nobezel__29341.png
           top: /assets/r710-2.5-nobezel__29341.png
           bottom: /assets/r710-2.5-nobezel__29341.png
-        type: CoolAir
-        category: Facility
     Models:
       type: array
       description: Array of Models
+      maxItems: 1000
       example:
         type: array
         items:
@@ -2101,9 +2337,10 @@ components:
     AttributesDictionary:
       required:
         - _id
-        - component
-        - key
+        - name
+        - componentName
         - type
+        - unit
       type: object
       properties:
         _id:
@@ -2113,15 +2350,17 @@ components:
           minLength: 24
           maxLength: 24
           x-42c-format: o:uuid
-        component:
+        componentName:
           type: string
           enum:
             - Devices
             - Models
             - Connections
             - Floors
-        key:
+        name:
           type: string
+          pattern: ^[a-zA-Z0-9_\-]{1,64}$
+          maxLength: 64
           description: Name of attribute
         type:
           type: string
@@ -2131,26 +2370,30 @@ components:
             - Number
             - Integer
             - Object
-        units:
+        unit:
           type: string
           description: Units of attribute
+      additionalProperties: false
       example:
         _id: 653e10ecd6025afb66017c65
-        component: Devices
-        key: power
-        type: Number
-        units: W
+        componentName: Devices
+        name: power
+        type: String
+        unit: W
     AttributesDictionaries:
       type: array
       description: List of Attribute Dictionary
+      maxItems: 1000
       items:
         $ref: "#/components/schemas/AttributesDictionary"
     Attribute:
+      description: >-
+        Attribute is a key-value pair that can be associated with a device, model, or connection.
+      x-42c-format: o:attribute
       required:
         - _id
-        - component
-        - key
-        - type
+        - name
+        - value
       type: object
       properties:
         _id:
@@ -2160,26 +2403,51 @@ components:
           maxLength: 24
           x-42c-format: o:uuid
           type: string
-        key:
+        attributesDictionaryId:
           type: string
-        type:
+        connectionId:
+          type: string
+        deviceId:
+          type: string
+        modelId:
+          type: string
+        name:
+          type: string
+        value:
           type: string
       example:
-        _id: 6566ed4ace63d42b25fbba19
-        key: power
-        type: 2W
+        _id: 653e10ecd6025afb66017c65
+        attributesDictionaryId: 653e10ecd6025afb66017c65
+        connectionId: 653e10ecd6025afb66017c70
+        deviceId: 653e10ecd6025afb66017c71
+        modelId: 653e10ecd6025afb66017c72
+        name: power
+        value: 3W
     Attributes:
       type: array
       description: List of attributes
+      maxItems: 1000
       example:
         - _id: 653e10ecd6025afb66017c65
-          key: power
+          attributesDictionaryId: 653e10ecd6025afb66017c65
+          connectionId: 653e10ecd6025afb66017c70
+          deviceId: 653e10ecd6025afb66017c71
+          modelId: 653e10ecd6025afb66017c72
+          name: power
           value: 3W
         - _id: 653e10ecd6025afb66017c66
-          key: color
+          attributesDictionaryId: 653e10ecd6025afb66017c66
+          connectionId: 653e10ecd6025afb66017c73
+          deviceId: 653e10ecd6025afb66017c74
+          modelId: 653e10ecd6025afb66017c75
+          name: color
           value: black
         - _id: 653e10ecd6025afb66017c67
-          key: year
+          attributesDictionaryId: 653e10ecd6025afb66017c67
+          connectionId: 653e10ecd6025afb66017c76
+          deviceId: 653e10ecd6025afb66017c77
+          modelId: 653e10ecd6025afb66017c78
+          name: year
           value: "1999"
       items:
         $ref: "#/components/schemas/Attribute"
@@ -2199,6 +2467,7 @@ components:
         h:
           type: number
           description: Height
+      additionalProperties: false
       description: Position device on the floor
     Device:
       required:
@@ -2218,10 +2487,10 @@ components:
           description: Device name
         modelId:
           example: 6566ed4ace63d42b25fbba19
+          type: string
           pattern: ^[0-9A-Fa-f]{24}$
           minLength: 24
           maxLength: 24
-          x-42c-format: o:uuid
         position:
           $ref: "#/components/schemas/Position"
         attributes:
@@ -2240,13 +2509,9 @@ components:
             key: power
             value: 3W
           - _id: 653e10ecd6025afb66017c66
-            key: color
-            value: black
-          - _id: 653e10ecd6025afb66017c67
-            key: year
-            value: "1999"
     Devices:
       type: array
+      maxItems: 1000
       items:
         $ref: "#/components/schemas/Device"
     Connection:
@@ -2283,18 +2548,32 @@ components:
           minLength: 24
           maxLength: 24
           x-42c-format: o:uuid
-      description: Single Connection between two devices deviceIdFrom to deviceIdTo
       example:
-        type: array
-        description: Array of Devices
-        items:
-          $ref: "#/components/schemas/Device/example"
+        _id: 6566ed4ace63d42b25fbba19
+        name: Connection 1
+        deviceIdFrom: 6566ed4ace63d42b25fbba19
+        deviceIdTo: 6566ed4ace63d42b25fbba20
     Connections:
       type: array
       description: Array of Connections
+      maxItems: 1000
       items:
         $ref: "#/components/schemas/Connection"
+      example:
+        - _id: 6566ed4ace63d42b25fbba19
+          name: Connection 1
+          deviceIdFrom: 6566ed4ace63d42b25fbba19
+          deviceIdTo: 6566ed4ace63d42b25fbba20
+        - _id: 6566ed4ace63d42b25fbba21
+          name: Connection 2
+          deviceIdFrom: 6566ed4ace63d42b25fbba22
+          deviceIdTo: 6566ed4ace63d42b25fbba23
     Component:
+      required:
+        - _id
+        - component
+        - collection
+        - attributes
       type: object
       properties:
         _id:
@@ -2311,16 +2590,15 @@ components:
           type: string
           maxLength: 20
         attributes:
-          type: boolean
-      description: Component object
-      example:
-        _id: 653e10ecd6025afb66017c65
-        component: Attribute
-        collection: attributes
-        attributes: false
+          type: array
+          description: List of attributes
+          maxItems: 1000
+          items:
+            $ref: "#/components/schemas/Attribute"
     Components:
       type: array
       description: Array of Components
+      maxItems: 1000
       items:
         $ref: "#/components/schemas/Component"
     Error:
@@ -2335,13 +2613,13 @@ components:
         errorNum: xxx
         message: Error example app not work...
     Confirmation:
-      type: string
+      type: object
       properties:
         message:
           type: string
+      additionalProperties: false
       description: Universal confirmation message from database
       example:
-        errorNum: "200"
         message: Succeed
     Log:
       required:
@@ -2390,18 +2668,12 @@ components:
         component: Device
         message:
           name: Mouse pink-rabbit
-          modelId:
-            $oid: 65b5fef688299af6cbc6ccf4
-          position:
-            x: 59
-            "y": 4
-            h: 9
-          _id:
-            $oid: 65b5fef788299af6cbc6ccfa
     Logs:
       type: array
+      maxItems: 1000
       items:
         $ref: "#/components/schemas/Log"
+      additionalProperties: false
       example:
         - _id: 666f1f958237b346e54f2cd0
           date: 2023/06/17 15:37:58.44
@@ -2420,6 +2692,12 @@ components:
           object: 6566ed4ace63d42b25fbba19
           operation: Update
           component: Device
+          message: Message in log
+        - _id: 666f1f958237b346e54f2cd0
+          date: 2022/01/17 11:37:58.44
+          object: 6566ed4ace63d42b25fbba19
+          operation: Update
+          component: Model
           message: Message in log
     FloorAddress:
       type: object
@@ -2460,19 +2738,19 @@ components:
       description: Not found
     "405":
       description: >-
-        Method Not Allowed. The request HTTPS method is known by the server but has been disabled and cannot be
-        used for that resource.
+        Method Not Allowed. The request HTTPS method is known by the server but has been disabled and cannot be used for
+        that resource.
     "500":
       description: >-
-        Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-        the request.
+        Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the
+        request.
     "501":
       description: >-
         Not Implemented. The HTTPS method is not supported by the server and cannot be handled.
     "502":
       description: >-
-        Bad getaway. The server got an invalid response while working as a gateway to get the response needed to
-        handle the request.
+        Bad getaway. The server got an invalid response while working as a gateway to get the response needed to handle
+        the request.
     "503":
       description: Service Unavailable. The server is not ready to handle the request.
     "504":

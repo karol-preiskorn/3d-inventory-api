@@ -4,11 +4,11 @@
  * @module routers
  */
 
-import express, { RequestHandler } from 'express';
-import sanitize from 'mongo-sanitize';
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import express, { RequestHandler } from 'express'
+import sanitize from 'mongo-sanitize'
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
 
 export interface User {
   _id: ObjectId
@@ -31,12 +31,11 @@ router.get('/', (async (req, res) => {
   const results: object[] = await collection.find({}).limit(10).toArray()
   if (!results) {
     res.status(404).send('Not found')
-  }
-  else {
+  } else {
     const sanitizedResults = sanitize(results)
     res.status(200).json(sanitizedResults)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/:id', (async (req, res) => {
@@ -50,7 +49,7 @@ router.get('/:id', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.sendStatus(404)
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/model/:id', (async (req, res) => {
@@ -68,7 +67,7 @@ router.get('/model/:id', (async (req, res) => {
     res.status(200).json(sanitizedResult)
     res.status(200).json(result)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/user/:id', (async (req, res) => {
@@ -82,11 +81,10 @@ router.get('/user/:id', (async (req, res) => {
   const result = await collection.find(query).toArray()
   if (!result) {
     res.sendStatus(404)
-  }
-  else {
+  } else {
     res.status(200).json(result)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/rights/:name', (async (req, res) => {
@@ -100,11 +98,10 @@ router.get('/rights/:name', (async (req, res) => {
   const result = await collection.find(query).toArray()
   if (!result) {
     res.sendStatus(404)
-  }
-  else {
+  } else {
     res.status(200).json(result)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.post('/', (async (req, res) => {
@@ -115,7 +112,7 @@ router.post('/', (async (req, res) => {
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   if (!results) res.sendStatus(404)
   else res.status(200).json(results)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/:id', (async (req, res) => {
@@ -129,11 +126,10 @@ router.delete('/:id', (async (req, res) => {
   const result = await collection.deleteOne(query)
   if (!result) {
     res.status(404).send('Not found models to delete')
-  }
-  else {
+  } else {
     res.status(200).json(result)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/', (async (req, res) => {
@@ -144,11 +140,10 @@ router.delete('/', (async (req, res) => {
   const result = await collection.deleteMany(query)
   if (!result) {
     res.status(404).send('Not found models to delete')
-  }
-  else {
+  } else {
     res.status(200).json(result)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/user/:id/right/:name', (async (req, res) => {
@@ -162,11 +157,10 @@ router.delete('/user/:id/right/:name', (async (req, res) => {
   const result = await collection.deleteMany(query)
   if (!result) {
     res.status(404).send('Not found models to delete')
-  }
-  else {
+  } else {
     res.status(200).json(result)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 export default router

@@ -4,21 +4,20 @@
  * @description attributesDictionary router
  **/
 
-import express, { RequestHandler } from 'express';
-import { Collection, Db, Document, Filter, ObjectId, WithoutId } from 'mongodb';
+import express, { RequestHandler } from 'express'
+import { Collection, Db, Document, Filter, ObjectId, WithoutId } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
-import log from '../utils/logger.js';
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
+import log from '../utils/logger.js'
 
 const logger = log('attributesDictionary')
 
 export interface AttributesDictionary {
   _id: ObjectId | null
-  category: string
-  component: string
+  componentName: string
   name: string
   type: string
-  units: string
+  unit: string
 }
 
 const collectionName = 'attributesDictionary'
@@ -28,30 +27,38 @@ router.get('/', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const results: object[] = await collection.find({}).limit(10).toArray()
+  const results: object[] = await collection.find({}).limit(1000).toArray()
   if (!results) {
     res.status(404).send('Not found')
-  }
-  else {
+  } else {
     res.status(200).json(results)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
+    return
   }
   const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-  const query = { _id: new ObjectId(req.params.id) }
-  const result = await collection.findOne(query)
-  if (!result) {
-    res.status(404).json({ message: 'Not found' })
+  try {
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const query = { _id: new ObjectId(req.params.id) }
+    const result = await collection.findOne(query)
+    if (!result) {
+      res.status(404).json({ message: 'Not found' })
+    } else {
+      res.status(200).json(result)
+    }
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    logger.error(`GET /${collectionName}/${req.params.id} - error: ${errorMessage}`)
+    res.status(500).json({ message: 'Internal Server Error' })
+  } finally {
+    await closeConnection(client)
   }
-  else res.status(200).json(result)
-  await connectionClose(client)
 }) as RequestHandler)
 
 router.get('/model/:id', (async (req, res) => {
@@ -65,7 +72,7 @@ router.get('/model/:id', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).json({ message: 'Not found' })
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.post('/', (async (req, res) => {
@@ -75,52 +82,53 @@ router.post('/', (async (req, res) => {
   const newDocument = req.body as WithoutId<AttributesDictionary>
   const results = await collection.insertOne(newDocument)
   res.status(201).json({ _id: results.insertedId })
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.put('/:id', (async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    logger.error(`PUT /${collectionName}/${req.params.id} - wrong _id`)
-    res.sendStatus(400)
-    return
+  const { id } = req.params
+  if (!ObjectId.isValid(id)) {
+    logger.error(`PUT /${collectionName}/${id} - invalid _id`)
+    return res.sendStatus(400)
   }
-  const filter: Filter<Document> = { _id: new ObjectId(req.params.id) }
 
-  const updates: Document = {
-    $set: {
-      component: (req.body as { component: string }).component,
-      type: (req.body as { type: string }).type,
-      name: (req.body as { name: string }).name,
-      units: (req.body as { units: string }).units
-    }
+  const filter: Filter<Document> = { _id: new ObjectId(id) }
+  const { componentName, type, name, unit } = req.body as Partial<AttributesDictionary>
+
+  // Only update provided fields
+  const updateFields: Partial<AttributesDictionary> = {}
+  if (componentName !== undefined) updateFields.componentName = componentName
+  if (type !== undefined) updateFields.type = type
+  if (name !== undefined) updateFields.name = name
+  if (unit !== undefined) updateFields.unit = unit
+
+  if (Object.keys(updateFields).length === 0) {
+    logger.warn(`PUT /${collectionName}/${id} - no fields to update`)
+    return res.status(400).json({ message: 'No fields to update' })
   }
+
+  const updates = { $set: updateFields }
 
   const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-
-  let result
-
   try {
-    result = await collection.updateOne(filter, updates)
-  }
-  catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    logger.error(
-      `PUT /${collectionName}/${req.params.id} - query: ${JSON.stringify(filter)}, body: ${JSON.stringify(req.body)} - error updating: ${errorMessage}`
-    )
-    res.status(500).send('Internal Server Error')
-    return
-  }
-  if (result.modifiedCount === 0) {
-    logger.warn(`PUT /${collectionName}/${req.params.id} - query: ${JSON.stringify(filter)} not found _id to update. Result ${JSON.stringify(result)}`)
-    res.status(404).json({ message: `Not found ${JSON.stringify(filter)} in ${collectionName} to update. Result ${JSON.stringify(result)}.` })
-  }
-  else {
-    logger.info(`PUT /${collectionName}/${req.params.id} - oki updated result: ${JSON.stringify(result)}.`)
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const result = await collection.updateOne(filter, updates)
+
+    if (result.matchedCount === 0) {
+      logger.warn(`PUT /${collectionName}/${id} - not found`)
+      return res.status(404).json({ message: 'Not found' })
+    }
+
+    logger.info(`PUT /${collectionName}/${id} - updated`)
     res.status(200).json(result)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    logger.error(`PUT /${collectionName}/${id} - error: ${errorMessage}`)
+    res.status(500).json({ message: 'Internal Server Error' })
+  } finally {
+    await closeConnection(client)
   }
-  await connectionClose(client)
 }) as RequestHandler)
 
 router.delete('/:id', (async (req, res) => {
@@ -133,7 +141,7 @@ router.delete('/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/', (async (req, res) => {
@@ -143,7 +151,7 @@ router.delete('/', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/model/:id', (async (req, res) => {
@@ -156,7 +164,7 @@ router.delete('/model/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 export default router

@@ -9,7 +9,7 @@ import express, { RequestHandler } from 'express'
 import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
 
 import { CreateLog } from '../services/logs.js'
-import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
 import log from '../utils/logger.js'
 
 const logger = log('devices')
@@ -59,7 +59,7 @@ router.get('/', (async (_req, res) => {
     logger.info(`GET /devices - oki return ${results.length} devices ${JSON.stringify(results)}`)
     res.status(200).json(results)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/:id', (async (req, res) => {
@@ -80,7 +80,7 @@ router.get('/:id', (async (req, res) => {
     logger.info(`GET /devices/${req.params.id} - oki, device: ${JSON.stringify(result)}`)
     res.status(200).json(result)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.put('/:id', (async (req, res) => {
@@ -119,7 +119,7 @@ router.put('/:id', (async (req, res) => {
     logger.info(`PUT /devices/${req.params.id} - oki updated ${result.modifiedCount} devices`)
     res.status(200).json(updatedDevice)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/model/:id', (async (req, res) => {
@@ -138,7 +138,7 @@ router.get('/model/:id', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).end()
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.post('/', (async (req, res) => {
@@ -150,7 +150,7 @@ router.post('/', (async (req, res) => {
   if (!req.body || Object.keys(req.body).length === 0) {
     logger.error('POST /devices - No data provided')
     res.status(400).send('POST /devices - No data provided')
-    await connectionClose(client)
+    await closeConnection(client)
     return
   }
   const newDocument: OptionalId<Document> & { date: Date } = req.body as OptionalId<Document> & { date: Date }
@@ -165,7 +165,7 @@ router.post('/', (async (req, res) => {
     resultLog = await CreateLog(result.insertedId.toString(), newDocument, 'Create', 'Device')
     res.status(200).json(resultLog)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.patch('/position/:id', (async (req, res) => {
@@ -188,7 +188,7 @@ router.patch('/position/:id', (async (req, res) => {
   } catch (error) {
     logger.error(`PATCH /devices/position/${req.params.id} - error updating position: ${(error as Error).message}`)
     res.status(500).send('Internal Server Error')
-    await connectionClose(client)
+    await closeConnection(client)
     return
   }
   if (!result || result.modifiedCount === 0) {
@@ -198,7 +198,7 @@ router.patch('/position/:id', (async (req, res) => {
     logger.info(`PATCH /devices/position/${req.params.id} - position updated successfully`)
     res.status(200).json(result)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/:id', (async (req, res) => {
@@ -217,7 +217,7 @@ router.delete('/:id', (async (req, res) => {
     logger.info(`POST /devices/${req.params.id} - device created successfully.`)
     res.status(200).json(result)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/', (async (_req, res) => {
@@ -228,7 +228,7 @@ router.delete('/', (async (_req, res) => {
   const result = await collection.deleteMany(query)
   const sanitizedResult = result
   res.status(200).json(sanitizedResult)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/model/:id', (async (req, res) => {
@@ -241,7 +241,7 @@ router.delete('/model/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 export default router

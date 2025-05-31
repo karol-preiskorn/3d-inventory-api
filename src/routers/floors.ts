@@ -4,11 +4,11 @@
  * @description floors router
  */
 
-import express, { RequestHandler } from 'express';
-import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb';
-import sanitize from 'sanitize-html';
+import express, { RequestHandler } from 'express'
+import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
+import sanitize from 'sanitize-html'
 
-import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
 
 interface Floor {
   _id: ObjectId
@@ -64,7 +64,7 @@ router.get('/', (async (req: express.Request, res: express.Response) => {
     })
     res.status(200).json(sanitizedResults)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/:id', (async (req, res) => {
@@ -78,7 +78,7 @@ router.get('/:id', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).json({ message: 'Not found' })
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/model/:id', (async (req, res) => {
@@ -92,7 +92,7 @@ router.get('/model/:id', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).json({ message: 'Not found' })
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.post('/', (async (req, res) => {
@@ -104,7 +104,7 @@ router.post('/', (async (req, res) => {
   const insertedDocument = (await collection.findOne({ _id: result.insertedId })) as Floor
   if (!insertedDocument) {
     res.status(404).send('Inserted document not found')
-    await connectionClose(client)
+    await closeConnection(client)
     return
   }
 
@@ -124,7 +124,7 @@ router.post('/', (async (req, res) => {
     }))
   }
   res.status(200).json(sanitizedResult)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.patch('/dimension/:id', (async (req, res) => {
@@ -138,7 +138,7 @@ router.patch('/dimension/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/:id', (async (req, res) => {
@@ -151,7 +151,7 @@ router.delete('/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/', (async (req, res) => {
@@ -162,7 +162,7 @@ router.delete('/', (async (req, res) => {
   const result = await collection.deleteMany(query)
   const sanitizedResult = sanitize(JSON.stringify(result))
   res.status(200).send(JSON.parse(sanitizedResult))
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/model/:id', (async (req, res) => {
@@ -175,7 +175,7 @@ router.delete('/model/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 export default router

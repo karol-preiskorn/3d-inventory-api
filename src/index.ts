@@ -67,7 +67,13 @@ try {
 app.use(cors())
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  const allowedOrigins = [`https://${HOST}:${PORT}`, 'https://172.17.0.2:3001', 'https://cluster0.htgjako.mongodb.net']
+  const allowedOrigins = [
+    `https://${HOST}:${PORT}`,
+    'https://172.17.0.2:3001',
+    'https://cluster0.htgjako.mongodb.net',
+    'https://localhost:3000',
+    'https://localhost:3001'
+  ]
   const origin = req.headers.origin
 
   if (origin && allowedOrigins.includes(origin)) {

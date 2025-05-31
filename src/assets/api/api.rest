@@ -1,14 +1,18 @@
 ﻿# TODO: fix device POST with seting from body
 # TODO: fix device GET
 
+# @Url = https://172.17.0.2:3001
+@Url = https://localhost:3001
+
+
 ### get all devices
 
-GET https://localhost:8080/devices HTTPS/1.1
+GET {{Url}}/devices HTTPS/1.1
 content-type: application/json
 
 ### get request selected devices
 
-GET https://localhost:8080/devices HTTPS/1.1
+GET {{Url}}/devices HTTPS/1.1
 content-type: application/json
 
 {
@@ -20,7 +24,7 @@ content-type: application/json
 
 ### post device
 
-POST https://localhost:8080/devices HTTPS/1.1
+POST {{Url}}/devices HTTPS/1.1
 content-type: application/json
 
 {
@@ -45,7 +49,7 @@ content-type: application/json
 
 ### put device
 
-PUT https://localhost:8080/devices HTTPS/1.1
+PUT {{Url}}/devices HTTPS/1.1
 content-type: application/json
 
 {
@@ -56,7 +60,7 @@ content-type: application/json
 
 ### get request selected context
 
-GET https://localhost:8080/devices HTTPS/1.1
+GET {{Url}}/devices HTTPS/1.1
 content-type: application/json
 
 {
@@ -65,19 +69,19 @@ content-type: application/json
 
 
 
-### get specyfic device: 66af8c766f87d90fa87bb982
+### get specific device: 66af8c766f87d90fa87bb982
 
-https://localhost:8080/devices/66af8c766f87d90fa87bb982 HTTPS/1.1
+{{Url}}/devices/66af8c766f87d90fa87bb982 HTTPS/1.1
 content-type: application/json
 
 ### get logs
 
-GET https://localhost:8080/logs HTTPS/1.1
+GET {{Url}}/logs HTTPS/1.1
 content-type: application/json
 
 ### get request selected context
 
-POST https://localhost:8080/logs HTTPS/1.1
+POST {{Url}}/logs HTTPS/1.1
 content-type: application/json
 
 {
@@ -89,13 +93,13 @@ content-type: application/json
 
 ### get logs
 
-GET https://localhost:8080/logs/65f15b8b56931f757dfb1936 HTTPS/1.1
+GET {{Url}}/logs/65f15b8b56931f757dfb1936 HTTPS/1.1
 content-type: application/json
 
 
 ###
 
-PUT https://localhost:8080/logs HTTPS/1.1
+PUT {{Url}}/logs HTTPS/1.1
 content-type: application/json
 
 {
@@ -104,12 +108,12 @@ content-type: application/json
 
 ### get logs for components
 
-GET https://localhost:8080/logs/component/devices HTTPS/1.1
+GET {{Url}}/logs/component/devices HTTPS/1.1
 content-type: application/json
 
 ###
 
-PUT https://localhost:8080/devices/65b67f8bf42bf190aca7029d HTTPS/1.1
+PUT {{Url}}/devices/65b67f8bf42bf190aca7029d HTTPS/1.1
 content-type: application/json
 
 {
@@ -124,28 +128,28 @@ content-type: application/json
 
 ###
 
-GET https://localhost:8080/devices/65b67f8bf42bf190aca7029d HTTPS/1.1
+GET {{Url}}/devices/65b67f8bf42bf190aca7029d HTTPS/1.1
 content-type: application/json
 
 ###
 
-GET https://localhost:8080/models HTTPS/1.1
+GET {{Url}}/models HTTPS/1.1
 content-type: application/json
 
 
 ### connections
 
-GET https://localhost:8080/connections HTTPS/1.1
+GET {{Url}}/connections HTTPS/1.1
 content-type: application/json
 
 ### connections logs
 
-GET https://localhost:8080/logs/component/connections HTTPS/1.1
+GET {{Url}}/logs/component/connections HTTPS/1.1
 content-type: application/json
 
 ### connection update
 
-PUT https://localhost:8080/connections/65cbd0f7fb3ea819dbcdbfb4 HTTPS/1.1
+PUT {{Url}}/connections/65cbd0f7fb3ea819dbcdbfb4 HTTPS/1.1
 content-type: application/json
 
 {
@@ -155,28 +159,28 @@ content-type: application/json
 }
 
 ### get all model
-GET https://localhost:8080/models HTTPS/1.1
+GET {{Url}}/models HTTPS/1.1
 content-type: application/json
 
 ### get model
-GET https://localhost:8080/models/65b67f8bf42bf190aca7029b HTTPS/1.1
+GET {{Url}}/models/65b67f8bf42bf190aca7029b HTTPS/1.1
 content-type: application/json
 
 ### update model
-PUT https://localhost:8080/models/65b67f8bf42bf190aca7029b HTTPS/1.1
+PUT {{Url}}/models/65b67f8bf42bf190aca7029b HTTPS/1.1
 content-type: application/json
 
 { "id": "65b67f8bf42bf190aca7029b", "name": "Mode 1", "dimension": { "width": "0", "height": "0", "depth": "0" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "bottom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
 
 
 ### create model
-POST https://localhost:8080/models HTTPS/1.1
+POST {{Url}}/models HTTPS/1.1
 content-type: application/json
 
 { "name": "Mode 4", "dimension": { "width": "5", "height": "8", "depth": "1" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "bottom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
 
 ### get componet
-GET https://localhost:8080/components HTTPS/1.1
+GET {{Url}}/components HTTPS/1.1
 content-type: application/json
 
 ### get github issues
@@ -186,11 +190,11 @@ X-GitHub-Api-Version: 2022-11-28
 
 
 ### ATTRIBUTES DICTIONARY
-GET https://localhost:8080/attributesDictionary/674209f981bfc47a07217dfd
+GET {{Url}}/attributesDictionary/674209f981bfc47a07217dfd
 content-type: application/json
 
 ### ATTRIBUTES DICTIONARY PUT
-PUT https://localhost:8080/attributesDictionary/674209f981bfc47a07217dfd HTTPS/1.1
+PUT {{Url}}/attributesDictionary/674209f981bfc47a07217dfd HTTPS/1.1
 content-type: application/json
 
 {
@@ -199,3 +203,22 @@ content-type: application/json
   "name": "Hard drive Blue Chair",
   "units": "Type"
 }
+
+### Attributes PUT
+
+PUT {{Url}}/attributes/65c2bbf4e6e6d4ea3d39875d HTTPS/1.1
+content-type: application/json
+
+{
+  "_id": "65c2bbf4e6e6d4ea3d39875d",
+  "attributeDictionaryId": "674209f981bfc47a07217dfd",
+  "connectionId": "",
+  "deviceId": "66c217c7165fc0a329627089",
+  "modelId": "",
+  "value": "Handcrafted"
+}
+
+### Attributes GET
+
+GET {{Url}}/attributes/65c2bbf4e6e6d4ea3d39875d HTTPS/1.1
+content-type: application/json

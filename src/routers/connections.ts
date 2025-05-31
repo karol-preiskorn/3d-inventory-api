@@ -4,11 +4,11 @@
  * @description connections router for the API
  */
 
-import express, { RequestHandler } from 'express';
-import sanitize from 'mongo-sanitize';
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb';
+import express, { RequestHandler } from 'express'
+import sanitize from 'mongo-sanitize'
+import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js';
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
 
 interface Connection {
   _id: ObjectId
@@ -28,7 +28,7 @@ router.get('/', (async (_req, res) => {
   res.set('Content-Type', 'application/json; charset=utf-8')
   if (!results) res.status(404).send('Not found any connection')
   else res.status(200).send(JSON.stringify(results))
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/:id', (async (req, res) => {
@@ -42,7 +42,7 @@ router.get('/:id', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).end()
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.put('/:id', (async (req, res) => {
@@ -64,7 +64,7 @@ router.put('/:id', (async (req, res) => {
   const result = await collection.updateOne(query, updates)
   res.status(200).json(sanitize(result)).send('Not found devices to update')
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/from/:id', (async (req, res) => {
@@ -78,7 +78,7 @@ router.get('/from/:id', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).end()
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/to/:id', (async (req, res) => {
@@ -92,7 +92,7 @@ router.get('/to/:id', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).json({ error: 'Not found' })
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/from/:idFrom/to/:idTo', (async (req, res) => {
@@ -109,7 +109,7 @@ router.get('/from/:idFrom/to/:idTo', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).json('Not found')
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.post('/', (async (req, res) => {
@@ -119,7 +119,7 @@ router.post('/', (async (req, res) => {
   const newDocument: Connection = req.body as Connection
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   res.status(200).json(results)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/:id', (async (req, res) => {
@@ -132,7 +132,7 @@ router.delete('/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/', (async (req, res) => {
@@ -142,7 +142,7 @@ router.delete('/', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/from/:id', (async (req, res) => {
@@ -155,7 +155,7 @@ router.delete('/from/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/to/:id', (async (req, res) => {
@@ -168,7 +168,7 @@ router.delete('/to/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 // delete all devices with specific :id model
@@ -185,7 +185,7 @@ router.delete('/from/:idFrom/to/:idTo', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 export default router

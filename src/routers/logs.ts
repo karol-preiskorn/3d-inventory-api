@@ -9,7 +9,7 @@ import { format } from 'date-fns'
 import express, { RequestHandler } from 'express'
 import { Collection, Db, Document, Filter, InsertOneResult, ObjectId, WithId } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
 import log from '../utils/logger.js'
 
 const logger = log('logs')
@@ -36,7 +36,7 @@ router.get('/', (async (req: express.Request, res: express.Response): Promise<vo
   } else {
     res.status(200).json(results)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/:id', (async (req, res) => {
@@ -51,37 +51,48 @@ router.get('/:id', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).send('Not found')
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/component/:component', (async (req, res) => {
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection<Document> = db.collection(collectionName)
+  const validComponents = ['attributes', 'devices', 'floors', 'models', 'connections', 'users', 'attributesDictionary']
+  const validComponentsString = validComponents.map((c, i) => `${i + 1}. ${c}`).join(', ')
   let component
   if (req.params.component.length === 0) {
-    res.status(400).send(`Not provide component name: ${component} not in [ Device | Model | Connection | User | Attribute Dictionary ].`)
+    logger.error(`GET /logs/component/${req.params.component} - Not provide any component name. Valid are: [ ${validComponentsString} ].`)
+    res.status(400).json({
+      message: `Not provide any component name. Valid components are: [ ${validComponentsString} ].`
+    })
     return
   } else {
     component = req.params.component
-    logger.info(`GET /logs/component/${req.params.component} - component: ${component}`)
-    const validComponents = ['attributes', 'devices', 'floors', 'models', 'connections', 'users', 'attribute_dictionary']
+    logger.info(`GET /logs/component/${req.params.component} - Get all log for component: ${component}.`)
+
     if (!validComponents.includes(component)) {
-      res.status(400).json({
-        message: `Not provide available component name: ${component} not in [ attributes | devices | floors |  models | connections | users | attribute_dictionary ].`
+      res.status(401).json({
+        message: `Not provide available component name: ${component} not in [ ${validComponentsString} ].`
       })
       return
     }
   }
+
+  // Map the component name to the corresponding string
+  // This is to ensure that the component names are consistent with the database schema collection
+  // This mapping is useful for standardizing the component names used in the API
+  // and to handle any potential discrepancies in naming conventions.
   const componentMapping: { [key: string]: string } = {
-    connections: 'Connection',
-    attribute_dictionary: 'AttributeDictionary',
-    devices: 'Device',
-    models: 'Model',
-    users: 'User',
-    floors: 'Floor',
-    attributes: 'Attribute'
+    connections: 'connections',
+    attributesDictionary: 'attributesDictionary',
+    devices: 'devices',
+    models: 'models',
+    users: 'users',
+    floors: 'floors',
+    attributes: 'attributes'
   }
+
   component = componentMapping[component] || component
 
   const query: Filter<Document> = { component: component } as Filter<Document>
@@ -97,7 +108,7 @@ router.get('/component/:component', (async (req, res) => {
     res.status(200).json(result)
     logger.info(`GET /logs/component/${req.params.component}, query: ${JSON.stringify(query)}`)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/model/:id', (async (req, res) => {
@@ -121,7 +132,7 @@ router.get('/model/:id', (async (req, res) => {
     res.status(200).json(result)
     logger.info(`GET /logs/model/${req.params.id}, query: ${JSON.stringify(query)}`)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/object/:id', (async (req, res) => {
@@ -142,7 +153,7 @@ router.get('/object/:id', (async (req, res) => {
     res.status(200).json(result)
     logger.info(`GET /logs/object/${req.params.id}, query: ${JSON.stringify(query)}`)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.post('/', (async (req, res) => {
@@ -160,7 +171,7 @@ router.post('/', (async (req, res) => {
     res.status(200).json(insertedDocument)
     logger.info(`POST /logs/, query: ${JSON.stringify(newDocument)} created.`)
   }
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/:id', (async (req, res) => {
@@ -170,7 +181,7 @@ router.delete('/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/', (async (req, res) => {
@@ -180,7 +191,7 @@ router.delete('/', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteMany(query)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 export default router

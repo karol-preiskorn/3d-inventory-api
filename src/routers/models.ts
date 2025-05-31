@@ -7,7 +7,7 @@
 import express, { RequestHandler } from 'express'
 import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
 
-import { connectionClose, connectToCluster, connectToDb } from '../utils/db.js'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
 import log from '../utils/logger.js'
 
 const logger = log('models')
@@ -54,7 +54,7 @@ router.get('/', (async (req, res) => {
   }
   if (client) {
     try {
-      await connectionClose(client)
+      await closeConnection(client)
     } catch (error) {
       logger.error('Error closing the database connection:', error)
     }
@@ -83,7 +83,7 @@ router.get('/:id', (async (req, res) => {
   const result = await collection.findOne(query)
   if (!result) res.status(404).end()
   else res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 /**
@@ -127,7 +127,7 @@ router.put('/:id', (async (req, res) => {
   const result = await collection.updateOne(query, updates)
   if (!result) res.status(404).send('Not found models to update')
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.post('/', (async (req, res) => {
@@ -137,7 +137,7 @@ router.post('/', (async (req, res) => {
   const newDocument: OptionalId<Document> = req.body as OptionalId<Document>
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
   res.status(200).json(results)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 router.patch('/dimension/:id', (async (req, res) => {
@@ -152,7 +152,7 @@ router.patch('/dimension/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 /**
@@ -177,7 +177,7 @@ router.patch('/texture/:id', (async (req, res) => {
   const collection: Collection = db.collection(collectionName)
   const result = await collection.updateOne(query, updates)
   res.status(200).json(result)
-  await connectionClose(client)
+  await closeConnection(client)
 }) as RequestHandler)
 
 /**
@@ -214,7 +214,7 @@ router.delete('/:id', (async (req, res) => {
   } finally {
     if (client) {
       try {
-        await connectionClose(client)
+        await closeConnection(client)
       } catch (error) {
         logger.error('Error closing the database connection:', error)
       }
@@ -256,7 +256,7 @@ router.delete('/', (async (req, res) => {
     logger.error('DELETE /models - Error deleting documents:', error)
     res.status(500).send('Internal Server Error')
   } finally {
-    await connectionClose(client)
+    await closeConnection(client)
   }
 }) as RequestHandler)
 
