@@ -23,16 +23,25 @@ const collectionName = 'attributes'
 const router: express.Router = express.Router()
 
 router.get('/', (async (_req, res) => {
-  const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-  const results: object[] = await collection.find({}).limit(100).toArray()
-  if (!results) {
-    res.status(404).send('Not found any attributes')
-  } else {
-    res.status(200).json(results)
+  let client
+  try {
+    client = await connectToCluster()
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const results: object[] = await collection.find({}).limit(100).toArray()
+    if (!results) {
+      res.status(404).send('Not found any attributes')
+    } else {
+      res.status(200).json(results)
+    }
+  } catch (error) {
+    console.error('Error fetching attributes:', error)
+    res.status(500).send('Internal server error while fetching attributes')
+  } finally {
+    if (client) {
+      await closeConnection(client)
+    }
   }
-  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/:id', (async (req, res) => {

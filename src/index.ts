@@ -99,7 +99,6 @@ morganBody(app, {
   //dateTimeFormat: 'clf',
   logReqUserAgent: false,
   logIP: false,
-
   theme: 'darkened',
   stream: {
     write: (message: string) => {
@@ -124,14 +123,14 @@ app.use('/floors', floors)
 fs.open(yamlFilename, 'r', (err: NodeJS.ErrnoException | null) => {
   if (err) {
     if (err.code === 'ENOENT') {
-      logger.error("File doesn't exist")
+      logger.error(`File ${yamlFilename} doesn't exist`)
       return
     }
     if (err.code === 'EACCES') {
-      logger.error('No permission')
+      logger.error(`No permission to file ${yamlFilename}`)
       return
     }
-    logger.error('Unknown Error')
+    logger.error('Unknown Error during open api.yaml: ' + err.message)
   } else {
     logger.info(`File api.yaml opened successfully from ${yamlFilename}`)
   }

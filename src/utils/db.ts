@@ -40,7 +40,6 @@ export function connectToDb(client: MongoClient): Db {
   if (!config.DBNAME || typeof config.DBNAME !== 'string') {
     throw new Error('Invalid or undefined DBNAME in configuration.')
   }
-  logger.error(`Connection to Atlas DB failed. Database Name: ${config.DBNAME}. Error: ${error}`)
   try {
     const db = client.db(config.DBNAME)
     logger.info(`Successfully connected to Atlas DB ${config.DBNAME}`)
