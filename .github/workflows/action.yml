@@ -1,19 +1,29 @@
-name: "Configure GitHub Pages"
+name: 'Configure GitHub Pages'
+description: 'Composite action to configure GitHub Pages with Nuxt'
 
-on: [push] # This workflow will run whenever code is pushed to the repository
+inputs:
+  static_site_generator:
+    description: 'The static site generator to use'
+    required: true
+  token:
+    description: 'GitHub token'
+    required: true
+  enablement:
+    description: 'Enablement flag'
+    required: false
+    default: 'false'
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run your action
-        id: my_step # Give the step an id
-        uses: ./
-        with:
-          static_site_generator: "nuxt"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          enablement: "false"
-      - name: Use outputs
-        run: echo "The base URL is ${{ steps.my_step.outputs.base_url }}"
+outputs:
+  base_url:
+    description: 'The base URL for the deployed site'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Run your action logic
+      id: my_step
+      run: |
+        echo "Running with ${{ inputs.static_site_generator }}"
+        echo "base_url=https://example.com" >> $GITHUB_OUTPUT
