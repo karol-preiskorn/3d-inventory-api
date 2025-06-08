@@ -55,60 +55,45 @@ router.get('/:id', (async (req, res) => {
 }) as RequestHandler)
 
 router.get('/component/:component', (async (req, res) => {
-  const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection<Document> = db.collection(collectionName)
   const validComponents = ['attributes', 'devices', 'floors', 'models', 'connections', 'users', 'attributesDictionary']
-  const validComponentsString = validComponents.map((c, i) => `${i + 1}. ${c}`).join(', ')
-  let component
-  if (req.params.component.length === 0) {
-    logger.error(`GET /logs/component/${req.params.component} - Not provide any component name. Valid are: [ ${validComponentsString} ].`)
+  const component = req.params.component
+  const validComponentsString = validComponents.join(', ')
+
+  if (!component) {
+    logger.error('GET /logs/component/ - No component name provided.')
     res.status(400).json({
-      message: `Not provide any component name. Valid components are: [ ${validComponentsString} ].`
+      message: `Component name is required. Valid components are: [${validComponentsString}].`
     })
     return
-  } else {
-    component = req.params.component
-    logger.info(`GET /logs/component/${req.params.component} - Get all log for component: ${component}.`)
+  }
 
-    if (!validComponents.includes(component)) {
-      res.status(401).json({
-        message: `Not provide available component name: ${component} not in [ ${validComponentsString} ].`
-      })
-      return
+  if (!validComponents.includes(component)) {
+    logger.warn(`GET /logs/component/${component} - Invalid component: ${component}. Valid components are: [${validComponentsString}].`)
+    res.status(400).json({
+      message: `Invalid component: ${component}. Valid components are: [${validComponentsString}].`
+    })
+    return
+  }
+
+  const client = await connectToCluster()
+  try {
+    const db: Db = connectToDb(client)
+    const collection: Collection<Document> = db.collection(collectionName)
+    const query: Filter<Document> = { component: component }
+    logger.info(`GET /logs/component/${component} - Query: ${JSON.stringify(query)}`)
+    const result = await collection.find(query).sort({ date: -1 }).toArray()
+    if (!result.length) {
+      logger.warn(`GET /logs/component/${component} - No logs found.`)
+      res.status(404).json({ message: `No logs found for component: ${component}.` })
+    } else {
+      res.status(200).json(result)
     }
+  } catch (error) {
+    logger.error(`GET /logs/component/${component} - Error: ${error}`)
+    res.status(500).json({ message: 'Internal server error.' })
+  } finally {
+    await closeConnection(client)
   }
-
-  // Map the component name to the corresponding string
-  // This is to ensure that the component names are consistent with the database schema collection
-  // This mapping is useful for standardizing the component names used in the API
-  // and to handle any potential discrepancies in naming conventions.
-  const componentMapping: { [key: string]: string } = {
-    connections: 'connections',
-    attributesDictionary: 'attributesDictionary',
-    devices: 'devices',
-    models: 'models',
-    users: 'users',
-    floors: 'floors',
-    attributes: 'attributes'
-  }
-
-  component = componentMapping[component] || component
-
-  const query: Filter<Document> = { component: component } as Filter<Document>
-
-  logger.info(`GET /logs/component/${req.params.component} - Get all log for component. Query: ${JSON.stringify(query)}`)
-
-  const result: WithId<Document>[] = await collection.find(query).sort({ date: -1 }).toArray()
-
-  if (result.length === 0) {
-    res.status(404).json({ message: `GET /logs/component/${req.params.component} - Not found any logs for component.` })
-    logger.warn(`GET /logs/component/${req.params.component}, query: ${JSON.stringify(query)} - 404 not found any component for objectId.`)
-  } else {
-    res.status(200).json(result)
-    logger.info(`GET /logs/component/${req.params.component}, query: ${JSON.stringify(query)}`)
-  }
-  await closeConnection(client)
 }) as RequestHandler)
 
 router.get('/model/:id', (async (req, res) => {
@@ -158,20 +143,28 @@ router.get('/object/:id', (async (req, res) => {
 
 router.post('/', (async (req, res) => {
   const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-  const newDocument: Logs = req.body as Logs
-  newDocument.date = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
-  const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
-  if (!results) {
-    res.status(404).send('Not create log')
-    logger.warn(`POST /logs/, query: ${JSON.stringify(newDocument)} not created.`)
-  } else {
+  try {
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const newDocument: Logs = req.body as Logs
+    newDocument.date = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+
+    const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
+    if (!results.acknowledged) {
+      logger.warn(`POST /logs/ - Log not created. Data: ${JSON.stringify(newDocument)}`)
+      res.status(500).json({ message: 'Failed to create log.' })
+      return
+    }
+
     const insertedDocument = await collection.findOne({ _id: results.insertedId })
-    res.status(200).json(insertedDocument)
-    logger.info(`POST /logs/, query: ${JSON.stringify(newDocument)} created.`)
+    logger.info(`POST /logs/ - Log created. Data: ${JSON.stringify(newDocument)}`)
+    res.status(201).json(insertedDocument)
+  } catch (error) {
+    logger.error(`POST /logs/ - Error: ${error}`)
+    res.status(500).json({ message: 'Internal server error.' })
+  } finally {
+    await closeConnection(client)
   }
-  await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/:id', (async (req, res) => {

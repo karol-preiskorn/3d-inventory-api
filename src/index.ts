@@ -30,6 +30,9 @@ import logs from './routers/logs.js'
 import models from './routers/models.js'
 import readme from './routers/readme.js'
 import log from './utils/logger.js'
+import os, { EOL } from 'node:os'
+
+const newline = os.EOL
 
 const logger = log('index')
 
@@ -110,7 +113,10 @@ morganBody(app, {
 
 app.use(express.urlencoded({ extended: false }))
 
+app.use(methodOverride())
+
 // Load the api routes
+// Register API routers
 app.use('/readme', readme)
 app.use('/logs', logs)
 app.use('/devices', devices)
@@ -119,6 +125,12 @@ app.use('/attributes', attributes)
 app.use('/attributesDictionary', attributesDictionary)
 app.use('/connections', connections)
 app.use('/floors', floors)
+
+// 404 handler for unmatched routes
+app.use((req: Request, res: Response) => {
+  logger.warn(`404 Not Found: ${req.method} ${req.originalUrl}`)
+  res.status(404).json({ message: 'Endpoint not found' })
+})
 
 fs.open(yamlFilename, 'r', (err: NodeJS.ErrnoException | null) => {
   if (err) {
@@ -178,35 +190,33 @@ const errorHandler: ErrorRequestHandler = (err: CustomError, _: Request, res: Re
   })
 }
 
-interface ClientError extends Error {
-  status?: number
-}
-
-interface ClientRequest extends Request {
-  xhr: boolean
-}
-
-function clientErrorHandler(err: ClientError, req: ClientRequest, res: Response, next: NextFunction): void {
-  if (req.xhr) {
+function xhrClientErrorHandler(err: Error, req: Request & { xhr?: boolean }, res: Response, next: NextFunction): void {
+  if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
     logger.error(err)
-    res.status(500).send({ error: 'Something failed!' })
+    res.status(500).json({
+      message: 'Something failed!'
+      // Pass the error to the next middleware for centralized error handling
+    })
+    next(err)
   } else {
-    logger.error(err)
     next(err)
   }
 }
 
-app.use(methodOverride())
-app.use(clientErrorHandler)
-app.use(errorHandler)
+app.use(xhrClientErrorHandler)
+app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
+  logger.error(`Unhandled error: ${err.message}. Stack: ${err.stack}`)
+  next(err)
+})
 
 //
 // httpsServer
 //
+const nl = '\n'
 const httpsServer = https.createServer(httpsOptions, app)
 const server = httpsServer.listen(Number(PORT), HOST, () => {
   logger.info(
-    '\n' +
+    `${nl}` +
       figlet.textSync('3d-inventory-mongo-api', {
         font: 'Mini',
         horizontalLayout: 'default',
@@ -215,21 +225,12 @@ const server = httpsServer.listen(Number(PORT), HOST, () => {
         whitespaceBreak: true
       })
   )
-  logger.info(`Server on https://${HOST}:${PORT} | Docker: https://172.17.0.2:${PORT}`)
-  logger.info(`Atlas MongoDb: https://cloud.mongodb.com/v2/6488bf6ff7acab10310111b5#/overview ${process.env.DBNAME}`)
-})
-
-app.use((err: Error, _: Request, res: Response) => {
-  logger.error(err)
-  res.status(500).send('Internal Server Error')
+  logger.info(`Server on https://${HOST}:${PORT}`)
+  logger.info(`Atlas MongoDb: https://cloud.mongodb.com/v2/6488bf6ff7acab10310111b5#/overview db: ${process.env.DBNAME}`)
 })
 
 server.on('error', (err: Error) => {
-  if (err instanceof Error && err.message.includes('EADDRINUSE')) {
-    logger.error(`Adress https://${HOST}:${PORT} already in use.`)
-  } else {
-    logger.error(`Error listen on adress https://${HOST}:${PORT}: ${String(err)}`)
-  }
+  logger.error(`Error listen on adress https://${HOST}:${PORT}: ${String(err)}`)
 })
 
 process.on('SIGTERM', () => {

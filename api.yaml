@@ -287,25 +287,6 @@ paths:
       description: List all issues.
       operationId: githubIssuesGet
       x-swagger-router-controller: github
-  /components:
-    get:
-      tags:
-        - components
-      summary: Get all components
-      description: List all components.
-      operationId: componentsGet
-      responses:
-        "200":
-          description: List of components
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Components"
-        "404":
-          description: Components not found
-        "500":
-          description: Unexpected server error
-      x-swagger-router-controller: Components
   /devices:
     get:
       tags:
@@ -316,10 +297,6 @@ paths:
       responses:
         "200":
           description: A list of devices
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Devices"
         "404":
           description: No devices found.
         "406":
@@ -889,7 +866,7 @@ paths:
     get:
       tags:
         - logs
-      summary: Get attributes logs
+      summary: Get one attributes logs
       description: Get specific attribute logs.
       operationId: logAttributesGet
       parameters:

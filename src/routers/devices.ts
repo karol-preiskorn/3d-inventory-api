@@ -62,6 +62,21 @@ router.get('/', (async (_req, res) => {
   await closeConnection(client)
 }) as RequestHandler)
 
+
+router.get('/', (async (req, res) => {
+  const client = await connectToCluster()
+  const db: Db = connectToDb(client)
+  const collection: Collection = db.collection(collectionName)
+  const results: object[] = await collection.find({}).limit(1000).toArray()
+  if (!results) {
+    res.status(404).send('Not found')
+  } else {
+    res.status(200).json(results)
+  }
+  await closeConnection(client)
+}) as RequestHandler)
+
+
 router.get('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     logger.error(`GET /devices/${req.params.id} - wrong id`)

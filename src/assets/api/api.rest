@@ -1,18 +1,68 @@
-﻿# TODO: fix device POST with seting from body
-# TODO: fix device GET
+﻿# @Url = https://172.17.0.2:3001
+@Url = https://172.17.0.2:3001
+@UrlLocal = https://localhost:3001
 
-# @Url = https://172.17.0.2:3001
-@Url = https://localhost:3001
+### ATTRIBUTES DICTIONARY
+GET {{Url}}/attributesDictionary
+content-type: application/json
 
+### ATTRIBUTES DICTIONARY
+GET {{Url}}/attributesDictionary/674209f981bfc47a07217dfd
+content-type: application/json
+
+### ATTRIBUTES DICTIONARY PUT
+PUT {{Url}}/attributesDictionary/674209f981bfc47a07217dfd
+content-type: application/json
+
+{
+  "component": "connection",
+  "type": "Object",
+  "name": "Hard drive Blue Chair",
+  "units": "Type"
+}
+
+### Attributes PUT
+PUT {{Url}}/attributes/65c2bbf4e6e6d4ea3d39875d
+content-type: application/json
+
+{
+  "_id": "65c2bbf4e6e6d4ea3d39875d",
+  "attributeDictionaryId": "674209f981bfc47a07217dfd",
+  "connectionId": "",
+  "deviceId": "66c217c7165fc0a329627089",
+  "modelId": "",
+  "value": "Handcrafted"
+}
+
+### Attributes GET
+GET {{Url}}/attributes
+content-type: application/json
+
+### Attributes GET
+GET {{Url}}/attributes/65c2bbf4e6e6d4ea3d39875d
+content-type: application/json
+
+
+### connections
+GET {{Url}}/connections
+content-type: application/json
+
+### connection update
+PUT {{Url}}/connections/65cbd0f7fb3ea819dbcdbfb4
+content-type: application/json
+
+{
+ "name": "turquoise Device",
+ "deviceIdTo": "65b67f8cf42bf190aca702a9",
+ "deviceIdFrom": "65b67f8df42bf190aca702ad"
+}
 
 ### get all devices
-
-GET {{Url}}/devices HTTPS/1.1
+GET {{Url}}/devices
 content-type: application/json
 
 ### get request selected devices
-
-GET {{Url}}/devices HTTPS/1.1
+GET {{Url}}/devices
 content-type: application/json
 
 {
@@ -23,8 +73,7 @@ content-type: application/json
 }
 
 ### post device
-
-POST {{Url}}/devices HTTPS/1.1
+POST {{Url}}/devices
 content-type: application/json
 
 {
@@ -48,19 +97,15 @@ content-type: application/json
 }
 
 ### put device
-
-PUT {{Url}}/devices HTTPS/1.1
+PUT {{Url}}/devices
 content-type: application/json
 
 {
     "device_id": "sample3",
-
 }
 
-
 ### get request selected context
-
-GET {{Url}}/devices HTTPS/1.1
+GET {{Url}}/devices
 content-type: application/json
 
 {
@@ -68,20 +113,50 @@ content-type: application/json
 }
 
 
-
-### get specific device: 66af8c766f87d90fa87bb982
-
-{{Url}}/devices/66af8c766f87d90fa87bb982 HTTPS/1.1
+### update device
+PUT {{Url}}/devices/66f194a97daf5ff819e1492d
 content-type: application/json
+
+{
+    "name": "Gloves Device-3",
+    "modelId": "683185eb26844932fb3a8d4c",
+    "position": {
+        "x": 22,
+        "y": 10,
+        "h": 0
+    }
+}
+
+### get device by id
+GET {{Url}}/devices/65b67f8bf42bf190aca7029d
+content-type: application/json
+
+### get all model
+GET {{Url}}/models
+content-type: application/json
+
+### get model
+GET {{Url}}/models/65b67f8bf42bf190aca7029b
+content-type: application/json
+
+### update model
+PUT {{Url}}/models/65b67f8bf42bf190aca7029b
+content-type: application/json
+
+{ "id": "65b67f8bf42bf190aca7029b", "name": "Mode 1", "dimension": { "width": "0", "height": "0", "depth": "0" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "bottom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
+
+### create model
+POST {{Url}}/models
+content-type: application/json
+
+{ "name": "Mode 4", "dimension": { "width": "5", "height": "8", "depth": "1" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "bottom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
 
 ### get logs
-
-GET {{Url}}/logs HTTPS/1.1
+GET {{Url}}/logs
 content-type: application/json
 
-### get request selected context
-
-POST {{Url}}/logs HTTPS/1.1
+### get request selected context (logs)
+POST {{Url}}/logs
 content-type: application/json
 
 {
@@ -91,15 +166,12 @@ content-type: application/json
  "message": "{\"_id\":\"65b67f8bf42bf190aca7029d\",\"name\":\"Gloves pink-cow\",\"modelId\":\"65b67f8bf42bf190aca7029b\",\"position\":{\"x\":43,\"y\":86,\"h\":\"0\"}}"
 }
 
-### get logs
-
-GET {{Url}}/logs/65f15b8b56931f757dfb1936 HTTPS/1.1
+### get log by id
+GET {{Url}}/logs/65f15b8b56931f757dfb1936
 content-type: application/json
 
-
-###
-
-PUT {{Url}}/logs HTTPS/1.1
+### update log
+PUT {{Url}}/logs
 content-type: application/json
 
 {
@@ -107,118 +179,18 @@ content-type: application/json
 }
 
 ### get logs for components
-
-GET {{Url}}/logs/component/devices HTTPS/1.1
+GET {{Url}}/logs/component/devices
 content-type: application/json
 
-###
-
-PUT {{Url}}/devices/65b67f8bf42bf190aca7029d HTTPS/1.1
-content-type: application/json
-
-{
-    "name": "Gloves aaa",
-    "modelId": "65b67f8bf42bf190aca7029b",
-    "position": {
-        "x": 43,
-        "y": 86,
-        "h": 1222
-    }
-}
-
-###
-
-GET {{Url}}/devices/65b67f8bf42bf190aca7029d HTTPS/1.1
-content-type: application/json
-
-###
-
-GET {{Url}}/models HTTPS/1.1
-content-type: application/json
-
-
-### connections
-
-GET {{Url}}/connections HTTPS/1.1
+### Logs components
+GET {{UrlLocal}}/logs/component/attributes
 content-type: application/json
 
 ### connections logs
-
-GET {{Url}}/logs/component/connections HTTPS/1.1
-content-type: application/json
-
-### connection update
-
-PUT {{Url}}/connections/65cbd0f7fb3ea819dbcdbfb4 HTTPS/1.1
-content-type: application/json
-
-{
- "name": "turquoise Device",
- "deviceIdTo": "65b67f8cf42bf190aca702a9",
- "deviceIdFrom": "65b67f8df42bf190aca702ad"
-}
-
-### get all model
-GET {{Url}}/models HTTPS/1.1
-content-type: application/json
-
-### get model
-GET {{Url}}/models/65b67f8bf42bf190aca7029b HTTPS/1.1
-content-type: application/json
-
-### update model
-PUT {{Url}}/models/65b67f8bf42bf190aca7029b HTTPS/1.1
-content-type: application/json
-
-{ "id": "65b67f8bf42bf190aca7029b", "name": "Mode 1", "dimension": { "width": "0", "height": "0", "depth": "0" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "bottom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
-
-
-### create model
-POST {{Url}}/models HTTPS/1.1
-content-type: application/json
-
-{ "name": "Mode 4", "dimension": { "width": "5", "height": "8", "depth": "1" }, "texture": { "front": "/assets/r710-2.5-nobezel__29341.png", "back": "/assets/r710-2.5-nobezel__29341.png", "side": "/assets/r710-2.5-nobezel__29341.png", "top": "/assets/r710-2.5-nobezel__29341.png", "bottom": "/assets/r710-2.5-nobezel__29341.png" }, "type": "Power", "category": "Site" }
-
-### get componet
-GET {{Url}}/components HTTPS/1.1
+GET {{Url}}/logs/component/connections
 content-type: application/json
 
 ### get github issues
-GET https://api.github.com/repos/karol-preiskorn/3d-inventory-angular-ui/issues HTTPS/1.1
+GET https://api.github.com/repos/karol-preiskorn/3d-inventory-angular-ui/issues
 content-type: application/json
 X-GitHub-Api-Version: 2022-11-28
-
-
-### ATTRIBUTES DICTIONARY
-GET {{Url}}/attributesDictionary/674209f981bfc47a07217dfd
-content-type: application/json
-
-### ATTRIBUTES DICTIONARY PUT
-PUT {{Url}}/attributesDictionary/674209f981bfc47a07217dfd HTTPS/1.1
-content-type: application/json
-
-{
-  "component": "connection",
-  "type": "Object",
-  "name": "Hard drive Blue Chair",
-  "units": "Type"
-}
-
-### Attributes PUT
-
-PUT {{Url}}/attributes/65c2bbf4e6e6d4ea3d39875d HTTPS/1.1
-content-type: application/json
-
-{
-  "_id": "65c2bbf4e6e6d4ea3d39875d",
-  "attributeDictionaryId": "674209f981bfc47a07217dfd",
-  "connectionId": "",
-  "deviceId": "66c217c7165fc0a329627089",
-  "modelId": "",
-  "value": "Handcrafted"
-}
-
-### Attributes GET
-
-GET {{Url}}/attributes/65c2bbf4e6e6d4ea3d39875d HTTPS/1.1
-content-type: application/json
