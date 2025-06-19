@@ -70,6 +70,7 @@ router.get('/', (async (req: express.Request, res: express.Response) => {
 router.get('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
+    return
   }
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
@@ -84,11 +85,13 @@ router.get('/:id', (async (req, res) => {
 router.get('/model/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
+    return
   }
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
   const collection: Collection = db.collection(collectionName)
-  const query = { modelId: new ObjectId(req.params.id) }
+  const sanitizedModelId = sanitize(req.params.id)
+  const query = { modelId: new ObjectId(sanitizedModelId) }
   const result = await collection.findOne(query)
   if (!result) res.status(404).json({ message: 'Not found' })
   else res.status(200).json(result)
@@ -142,27 +145,52 @@ router.patch('/dimension/:id', (async (req, res) => {
 }) as RequestHandler)
 
 router.delete('/:id', (async (req, res) => {
+  // Validate the provided ID to ensure it is a valid ObjectId
   if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
+    res.sendStatus(404) // Respond with 404 if the ID is invalid
+    return
   }
+
+  // Create a query object to find the document by its ID
   const query = { _id: new ObjectId(req.params.id) }
+
+  // Connect to the MongoDB cluster
   const client = await connectToCluster()
   const db: Db = connectToDb(client)
+
+  // Access the collection and attempt to delete the document
   const collection: Collection = db.collection(collectionName)
   const result = await collection.deleteOne(query)
-  res.status(200).json(result)
+
+  // Check if a document was deleted and respond accordingly
+  if (result.deletedCount === 0) {
+    res.status(404).json({ message: 'Document not found' }) // No document found to delete
+  } else {
+    res.status(200).json(result) // Successfully deleted the document
+  }
+
+  // Close the database connection
   await closeConnection(client)
 }) as RequestHandler)
 
 router.delete('/', (async (req, res) => {
-  const query = {}
-  const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-  const result = await collection.deleteMany(query)
-  const sanitizedResult = sanitize(JSON.stringify(result))
-  res.status(200).send(JSON.parse(sanitizedResult))
-  await closeConnection(client)
+  if (req.query.confirm !== 'true') {
+    res.status(400).json({ message: 'Confirmation required. Add ?confirm=true to proceed.' })
+    return
+  }
+
+  let client: ReturnType<typeof connectToCluster> | null = null
+  try {
+    const client = await connectToCluster()
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const result = await collection.deleteMany({})
+    res.status(200).json(result)
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting documents', error: (error as Error).message })
+  } finally {
+    if (client) await closeConnection(client)
+  }
 }) as RequestHandler)
 
 router.delete('/model/:id', (async (req, res) => {

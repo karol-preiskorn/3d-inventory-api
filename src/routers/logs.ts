@@ -39,21 +39,6 @@ router.get('/', (async (req: express.Request, res: express.Response): Promise<vo
   await closeConnection(client)
 }) as RequestHandler)
 
-router.get('/:id', (async (req, res) => {
-  const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection<Document> = db.collection(collectionName)
-  if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(400)
-    return
-  }
-  const query = { _id: new ObjectId(req.params.id) }
-  const result = await collection.findOne(query)
-  if (!result) res.status(404).send('Not found')
-  else res.status(200).json(result)
-  await closeConnection(client)
-}) as RequestHandler)
-
 router.get('/component/:component', (async (req, res) => {
   const validComponents = ['attributes', 'devices', 'floors', 'models', 'connections', 'users', 'attributesDictionary']
   const component = req.params.component
@@ -120,25 +105,37 @@ router.get('/model/:id', (async (req, res) => {
   await closeConnection(client)
 }) as RequestHandler)
 
-router.get('/object/:id', (async (req, res) => {
-  const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-  if (!ObjectId.isValid(req.params.id)) {
-    logger.error(`GET /logs/object/${req.params.id} Invalid Id`)
-    res.status(400).send('Invalid ID')
+router.get('/:id', (async (req, res) => {
+  const { id } = req.params
+
+  if (!id) {
+    logger.error('GET /logs/:id - No ID provided.')
+    res.status(400).json({ message: 'ID is required.' })
     return
   }
-  const query = { objectId: req.params.id }
-  const result = await collection.find(query).sort({ date: -1 }).toArray()
-  if (result.length === 0) {
-    logger.warn(`GET /logs/object/${req.params.id}, query: ${JSON.stringify(query)} - 404 not found any logs for objectId.`)
-    res.status(404).json(result)
-  } else {
-    res.status(200).json(result)
-    logger.info(`GET /logs/object/${req.params.id}, query: ${JSON.stringify(query)}`)
+
+  const client = await connectToCluster()
+  try {
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+
+    const query = { objectId: id }
+    logger.info(`GET /logs/${id} - Query: ${JSON.stringify(query)}`)
+
+    const result = await collection.find(query).sort({ date: -1 }).toArray()
+
+    if (!result.length) {
+      logger.warn(`GET /logs/${id} - No logs found for objectId.`)
+      res.status(404).json({ message: `No logs found for objectId: ${id}.` })
+    } else {
+      res.status(200).json(result)
+    }
+  } catch (error) {
+    logger.error(`GET /logs/${id} - Error: ${error}`)
+    res.status(500).json({ message: 'Internal server error.' })
+  } finally {
+    await closeConnection(client)
   }
-  await closeConnection(client)
 }) as RequestHandler)
 
 router.post('/', (async (req, res) => {
@@ -148,6 +145,24 @@ router.post('/', (async (req, res) => {
     const collection: Collection = db.collection(collectionName)
     const newDocument: Logs = req.body as Logs
     newDocument.date = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+
+    if (!newDocument.objectId || !newDocument.operation || !newDocument.component || !newDocument.message) {
+      logger.error(`POST /logs/ - Missing required fields in request body: ${JSON.stringify(newDocument)}`)
+      const requiredFields = ['objectId', 'operation', 'component', 'message']
+      const missingFields = requiredFields.filter((field) => !newDocument[field as keyof Logs])
+      res.status(400).json({
+        message: `Missing required fields in request body: ${missingFields.join(', ')}`
+      })
+      return
+    }
+
+    if (!['attributes', 'devices', 'floors', 'models', 'connections', 'users', 'attributesDictionary'].includes(newDocument.component)) {
+      logger.error(`POST /logs/ - Invalid component: ${newDocument.component}`)
+      res.status(400).json({
+        message: `Invalid component attribute: ${newDocument.component}. Valid components are: [attributes, devices, floors, models, connections, users, attributesDictionary].`
+      })
+      return
+    }
 
     const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
     if (!results.acknowledged) {

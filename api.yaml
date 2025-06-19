@@ -1962,6 +1962,80 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Floor"
+        "404":
+          description: Not found
+        "500":
+          description: >-
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
+      x-swagger-router-controller: Floors
+    delete:
+      tags:
+        - floors
+      summary: Delete the single floor :id
+      description: Delete single floor
+      operationId: floorIdDelete
+      parameters:
+        - name: id
+          in: path
+          description: ID of floor to delete
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: o:uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Floor"
+        "404":
+          description: Not found
+        "500":
+          description: >-
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
+      x-swagger-router-controller: Floors
+    put:
+      tags:
+        - floors
+      summary: Update the single floor :id
+      description: Update single floor
+      operationId: floorIdPut
+      parameters:
+        - name: id
+          in: path
+          description: ID of floor to update
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6566ed4ace63d42b25fbba19
+            pattern: ^[0-9A-Fa-f]{24}$
+            minLength: 24
+            maxLength: 24
+            x-42c-format: o:uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Floor"
+        "404":
+          description: Not found
+        "500":
+          description: >-
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
       x-swagger-router-controller: Floors
   /users:
     get:
