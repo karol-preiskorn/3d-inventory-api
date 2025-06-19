@@ -31,8 +31,8 @@ This Node.js-based API uses MongoDB as its primary database and serves inventory
 
 ### MEAN stack
 
-- `MongoDB` is a `NoSQL` database that stores data in `JSON` format.
-- `Express.js` is a web application framework for Node.js that simplifies the process of building web servers and APIs.
+- [MongoDB](https://www.mongodb.com/) is a `NoSQL` database that stores data in `JSON` format.
+- [Express.js](https://expressjs.com/) is a web application framework for Node.js that simplifies the process of building web servers and APIs.
 - [RxJs](https://rxjs.dev/) - Reactive Extensions Library for JavaScript.
 - [NodeJS](https://nodejs.org/en) is a `JavaScript` runtime that allows you to run code on the server-side.
 
@@ -42,11 +42,11 @@ This Node.js-based API uses MongoDB as its primary database and serves inventory
 
 ## API documentation
 
-[Swagger](https://app.swaggerhub.com/apis/karol-preiskorn/3d-inventory-rest-api/0.0.6#/) [[API]] definition.
+[Swagger](https://app.swaggerhub.com/apis/karol-preiskorn/3d-inventory-rest-api/0.0.6#/) API definition.
 
 ## Getting Started
 
-To get started with the 3D Inventory Mongo [[API]], follow the instructions below:
+To get started with the 3D Inventory Mongo API, follow the instructions below:
 
 ```bash
 git clone https://github.com/karol-preiskorn/3d-inventory-mongo-api.git
