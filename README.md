@@ -33,8 +33,8 @@ This Node.js-based API uses MongoDB as its primary database and serves inventory
 
 - `MongoDB` is a `NoSQL` database that stores data in `JSON` format.
 - `Express.js` is a web application framework for Node.js that simplifies the process of building web servers and APIs.
-- [[RxJs]] - [Reactive Extensions Library for JavaScript](https://rxjs.dev/).
-- [[NodeJS]] is a `JavaScript` runtime that allows you to run code on the server-side.
+- [RxJs](https://rxjs.dev/) - Reactive Extensions Library for JavaScript.
+- [NodeJS](https://nodejs.org/en) is a `JavaScript` runtime that allows you to run code on the server-side.
 
 ## Data Model
 
