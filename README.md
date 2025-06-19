@@ -57,4 +57,4 @@ npm start
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [Creative Commons Legal Code](https://github.com/karol-preiskorn/3d-inventory-mongo-api/blob/main/LICENSE).
