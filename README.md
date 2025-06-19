@@ -32,13 +32,46 @@ This Node.js-based API uses MongoDB as its primary database and serves inventory
 - [RxJs](https://rxjs.dev/) - Reactive Extensions Library for JavaScript.
 - [NodeJS](https://nodejs.org/en) is a `JavaScript` runtime that allows you to run code on the server-side.
 
-## Data Model
-
-![Data Model](https://github.com/karol-preiskorn/3d-inventory-mongo-api/blob/main/src/assets/3d-inventory.png)
-
 ## API documentation
 
 [Swagger](https://swagger.io/) API definition.
+
+## 📚 API Endpoints
+
+| Endpoint                        | Method | Description                                      |
+|----------------------------------|--------|--------------------------------------------------|
+| `/devices`                      | GET    | Get all devices                                  |
+| `/devices`                      | POST   | Create a new device                              |
+| `/devices/{id}`                 | GET    | Get device by ID                                 |
+| `/devices/{id}`                 | PUT    | Update device by ID                              |
+| `/devices/{id}`                 | DELETE | Delete device by ID                              |
+| `/models`                       | GET    | Get all models                                   |
+| `/models`                       | POST   | Create a new model                               |
+| `/models/{id}`                  | GET    | Get model by ID                                  |
+| `/models/{id}`                  | PUT    | Update model by ID                               |
+| `/models/{id}`                  | DELETE | Delete model by ID                               |
+| `/connections`                  | GET    | Get all connections                              |
+| `/connections`                  | POST   | Create a new connection                          |
+| `/connections/{id}`             | GET    | Get connection by ID                             |
+| `/connections/{id}`             | PUT    | Update connection by ID                          |
+| `/connections/{id}`             | DELETE | Delete connection by ID                          |
+| `/logs`                         | GET    | Get all logs                                     |
+| `/logs/{id}`                    | GET    | Get log by ID                                    |
+| `/attributes`                   | GET    | Get all attributes                               |
+| `/attributes`                   | POST   | Create a new attribute                           |
+| `/attributes/{id}`              | GET    | Get attribute by ID                              |
+| `/attributes/{id}`              | PUT    | Update attribute by ID                           |
+| `/attributes/{id}`              | DELETE | Delete attribute by ID                           |
+| `/attributesDictionary`         | GET    | Get all attribute dictionary entries             |
+| `/attributesDictionary`         | POST   | Create a new attribute dictionary entry          |
+| `/attributesDictionary/{id}`    | GET    | Get attribute dictionary entry by ID             |
+| `/attributesDictionary/{id}`    | PUT    | Update attribute dictionary entry by ID          |
+| `/attributesDictionary/{id}`    | DELETE | Delete attribute dictionary entry by ID          |
+| `/floors`                       | GET    | Get all floors                                   |
+| `/floors`                       | POST   | Create a new floor                               |
+| `/floors/{id}`                  | GET    | Get floor by ID                                  |
+| `/floors/{id}`                  | PUT    | Update floor by ID                               |
+| `/floors/{id}`                  | DELETE | Delete floor by ID                               |
 
 ## Getting Started
 
