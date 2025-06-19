@@ -24,6 +24,7 @@ This Node.js-based API uses MongoDB as its primary database and serves inventory
     🧩 Modular structure using Express.js
     🔐 Secure API endpoints with basic validation
     🔄 Designed to support 3D spatial UI representation in real-time
+Pozdrawiam,lub
 
 ### MEAN stack
 
@@ -32,11 +33,9 @@ This Node.js-based API uses MongoDB as its primary database and serves inventory
 - [RxJs](https://rxjs.dev/) - Reactive Extensions Library for JavaScript.
 - [NodeJS](https://nodejs.org/en) is a `JavaScript` runtime that allows you to run code on the server-side.
 
-## API documentation
+## 📚 API Endpoints
 
 [Swagger](https://swagger.io/) API definition.
-
-## 📚 API Endpoints
 
 | Endpoint                        | Method | Description                                      |
 |----------------------------------|--------|--------------------------------------------------|
