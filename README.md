@@ -42,7 +42,7 @@ This Node.js-based API uses MongoDB as its primary database and serves inventory
 
 ## API documentation
 
-[Swagger](https://app.swaggerhub.com/apis/karol-preiskorn/3d-inventory-rest-api/0.0.6#/) API definition.
+[Swagger](https://swagger.io/) API definition.
 
 ## Getting Started
 
