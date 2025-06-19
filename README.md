@@ -25,10 +25,6 @@ This Node.js-based API uses MongoDB as its primary database and serves inventory
     🔐 Secure API endpoints with basic validation
     🔄 Designed to support 3D spatial UI representation in real-time
 
-## Architecture
-
-![Architecture ✨3d-inventory✨ Mongo API](https://github.com/karol-preiskorn/3d-inventory-mongo-api/blob/main/src/assets/architecture.drawio.png)
-
 ### MEAN stack
 
 - [MongoDB](https://www.mongodb.com/) is a `NoSQL` database that stores data in `JSON` format.
