@@ -11,7 +11,7 @@ import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
 
 export interface Attributes {
   _id: ObjectId
-  attributesDictionaryId: ObjectId | null
+  attributeDictionaryId: ObjectId | null
   connectionId: ObjectId | null
   deviceId: ObjectId | null
   modelId: ObjectId | null
@@ -122,26 +122,45 @@ router.get('/connection/:id', (async (req, res) => {
 router.put('/:id', (async (req, res) => {
   const { id } = req.params
   if (!ObjectId.isValid(id)) {
-    return res.sendStatus(400)
+    return res.status(400).send('Invalid attribute ID')
   }
 
-  const client = await connectToCluster()
+  // Remove _id from req.body if present
+  const updateBody = { ...req.body }
+  if ('_id' in updateBody) {
+    delete updateBody._id
+  }
+
+  const updates = {
+    $set: {
+      attributeDictionaryId: req.body.attributeDictionaryId || null,
+      connectionId: req.body.connectionId || null,
+      deviceId: req.body.deviceId || null,
+      modelId: req.body.modelId || null,
+      name: req.body.name,
+      value: req.body.value
+    }
+  }
+  const query = { _id: new ObjectId(id) }
+
+  let client
   try {
+    client = await connectToCluster()
     const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
-    const query = { _id: new ObjectId(id) }
-    const update = { $set: req.body }
-    const result = await collection.updateOne(query, update)
-
+    const result = await collection.updateOne(query, updates)
     if (result.matchedCount === 0) {
-      res.status(404).send(`Attribute ${id} not found`)
-    } else {
-      res.status(200).json({ updatedCount: result.modifiedCount })
+      return res.status(404).send(`Attribute ${id} not found`)
     }
+    res.status(200).json({ updatedCount: result.modifiedCount })
   } catch (error) {
-    res.status(500).send('Internal server error')
+    console.error('Error updating attribute:', error)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    res.status(500).send('Internal server error during update attributes: ' + errorMessage)
   } finally {
-    await closeConnection(client)
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }) as RequestHandler)
 

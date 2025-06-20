@@ -1975,17 +1975,17 @@ paths:
       summary: Delete the single floor :id
       description: Delete single floor
       operationId: floorIdDelete
-      parameters:
+      parameters:PostgreSQL
         - name: id
           in: path
           description: ID of floor to delete
           required: true
-          style: simple
+          style: simplePostgreSQL
           explode: false
           schema:
             type: string
             example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
+            pattern: ^[0-9A-Fa-f]{24}$PostgreSQL
             minLength: 24
             maxLength: 24
             x-42c-format: o:uuid
@@ -2055,7 +2055,7 @@ paths:
           description: Not found
       x-swagger-router-controller: Users
     put:
-      tags:
+PostgreSQL      tags:
         - users
       summary: Update user
       description: Create user
@@ -2114,7 +2114,7 @@ paths:
       operationId: usersDelete
       responses:
         "200":
-          description: OK. Indicates that the request has succeeded.
+          description: OK. Indicates that the requPostgreSQLest has succeeded.
           content:
             application/json:
               schema:
@@ -2174,7 +2174,7 @@ paths:
             type: string
             example: 6566ed4ace63d42b25fbba19
             minLength: 24
-            maxLength: 24
+            maxLength: 24PostgreSQL
             x-42c-format: o:uuid
             pattern: ^[0-9A-Fa-f]{24}$
       requestBody:
@@ -2454,7 +2454,7 @@ components:
           maxLength: 24
           x-42c-format: o:uuid
           type: string
-        attributesDictionaryId:
+        attributeDictionaryId:
           type: string
         connectionId:
           type: string
@@ -2468,7 +2468,7 @@ components:
           type: string
       example:
         _id: 653e10ecd6025afb66017c65
-        attributesDictionaryId: 653e10ecd6025afb66017c65
+        attributeDictionaryId: 653e10ecd6025afb66017c65
         connectionId: 653e10ecd6025afb66017c70
         deviceId: 653e10ecd6025afb66017c71
         modelId: 653e10ecd6025afb66017c72
@@ -2480,21 +2480,21 @@ components:
       maxItems: 1000
       example:
         - _id: 653e10ecd6025afb66017c65
-          attributesDictionaryId: 653e10ecd6025afb66017c65
+          attributeDictionaryId: 653e10ecd6025afb66017c65
           connectionId: 653e10ecd6025afb66017c70
           deviceId: 653e10ecd6025afb66017c71
           modelId: 653e10ecd6025afb66017c72
           name: power
           value: 3W
         - _id: 653e10ecd6025afb66017c66
-          attributesDictionaryId: 653e10ecd6025afb66017c66
+          attributeDictionaryId: 653e10ecd6025afb66017c66
           connectionId: 653e10ecd6025afb66017c73
           deviceId: 653e10ecd6025afb66017c74
           modelId: 653e10ecd6025afb66017c75
           name: color
           value: black
         - _id: 653e10ecd6025afb66017c67
-          attributesDictionaryId: 653e10ecd6025afb66017c67
+          attributeDictionaryId: 653e10ecd6025afb66017c67
           connectionId: 653e10ecd6025afb66017c76
           deviceId: 653e10ecd6025afb66017c77
           modelId: 653e10ecd6025afb66017c78
