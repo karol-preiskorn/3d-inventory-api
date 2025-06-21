@@ -7,8 +7,8 @@
 import express, { RequestHandler } from 'express'
 import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
 
-import { AttributesDictionary } from '../routers/attributesDictionary.js'
-import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
+import { AttributesDictionary } from '../routers/attributesDictionary'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 
 export interface AttributesTypes {
   _id: ObjectId

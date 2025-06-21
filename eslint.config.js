@@ -1,8 +1,7 @@
 import globals from 'globals'
-import pluginJs from '@eslint/js'
 import tseslint from '@typescript-eslint/eslint-plugin'
 
-/** @type {import('eslint').Linter.Config} */
+// ESLint flat config format (ESM export)
 export default [
   {
     files: ['**/*.{js,ts}'],
@@ -18,25 +17,20 @@ export default [
     ]
   },
   {
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
     languageOptions: {
       globals: globals.browser,
-      parser: '@typescript-eslint/parser',
+      parser: await import('@typescript-eslint/parser'),
       ecmaVersion: 2021
     },
-    // Include recommended TypeScript ESLint rules for better type safety and linting
-    ...tseslint.configs.recommended,
     rules: {
+      ...tseslint.configs.recommended.rules,
       'indent': ['error', 2],
       'quotes': ['error', 'single'],
       'semi': ['error', 'never'],
       'comma-dangle': ['error', 'never']
     }
-  },
-  // Including recommended configuration from @eslint/js for general best practices
-  pluginJs.configs.recommended,
-  {
-    ignores: [
-      'node_modules', 'coverage', 'dist', 'gcs/*', 'src/tests/generateTextures.test.ts'
-    ]
   }
 ]

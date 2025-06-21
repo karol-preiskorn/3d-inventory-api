@@ -8,7 +8,7 @@ import express, { RequestHandler } from 'express'
 import { Collection, Db, ObjectId, UpdateFilter } from 'mongodb'
 import sanitize from 'sanitize-html'
 
-import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 
 interface Floor {
   _id: ObjectId

@@ -2,6 +2,11 @@
 @Url = https://172.17.0.2:3001
 @UrlLocal = https://localhost:3001
 
+
+### GH
+GET {{Url}}/github/issues
+content-type: application/json
+
 ### ATTRIBUTES DICTIONARY
 GET {{Url}}/attributesDictionary
 content-type: application/json

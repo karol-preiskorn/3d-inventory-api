@@ -8,9 +8,9 @@
 import express, { RequestHandler } from 'express'
 import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
 
-import { CreateLog } from '../services/logs.js'
-import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
-import log from '../utils/logger.js'
+import { CreateLog } from '../services/logs'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
+import log from '../utils/logger'
 
 const logger = log('devices')
 

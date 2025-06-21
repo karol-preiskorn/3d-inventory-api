@@ -1,11 +1,10 @@
-
 !.vscode/*.code-snippets
 !.vscode/extensions.json
 !.vscode/launch.json
 !.vscode/settings.json
 !.vscode/tasks.json
 .92ed10cc980e98503850e47148b86420cc328706-audit.json
-# .env
+.env
 .vscode/*
 .vscode/branch-timer.json
 build

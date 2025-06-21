@@ -3,13 +3,12 @@
  * @public
  */
 
-import './utils/config.js'
+import './utils/config'
 
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import csurf from 'csurf'
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import * as OpenApiValidator from 'express-openapi-validator'
 import figlet from 'figlet'
 import fs from 'fs'
@@ -21,18 +20,16 @@ import morganBody from 'morgan-body'
 import swaggerUi, { JsonObject } from 'swagger-ui-express'
 import YAML from 'yaml'
 
-import attributes from './routers/attributes.js'
-import attributesDictionary from './routers/attributesDictionary.js'
-import connections from './routers/connections.js'
-import devices from './routers/devices.js'
-import floors from './routers/floors.js'
-import logs from './routers/logs.js'
-import models from './routers/models.js'
-import readme from './routers/readme.js'
-import log from './utils/logger.js'
-import os, { EOL } from 'node:os'
-
-const newline = os.EOL
+import attributes from './routers/attributes'
+import attributesDictionary from './routers/attributesDictionary'
+import connections from './routers/connections'
+import devices from './routers/devices'
+import floors from './routers/floors'
+import github from './routers/github'
+import logs from './routers/logs'
+import models from './routers/models'
+import readme from './routers/readme'
+import log from './utils/logger'
 
 const logger = log('index')
 
@@ -115,7 +112,6 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use(methodOverride())
 
-// Load the api routes
 // Register API routers
 app.use('/readme', readme)
 app.use('/logs', logs)
@@ -125,6 +121,7 @@ app.use('/attributes', attributes)
 app.use('/attributesDictionary', attributesDictionary)
 app.use('/connections', connections)
 app.use('/floors', floors)
+app.use('/github', github)
 
 // 404 handler for unmatched routes
 app.use((req: Request, res: Response) => {
@@ -175,19 +172,6 @@ try {
   logger.info(`OpenApiValidator api.yaml served successfully from ${yamlFilename}`)
 } catch (error) {
   logger.error(`OpenApiValidator: ${String(error)}`)
-}
-
-interface CustomError extends Error {
-  status?: number
-  errors?: unknown
-}
-
-const errorHandler: ErrorRequestHandler = (err: CustomError, _: Request, res: Response, __: NextFunction) => {
-  logger.error(err)
-  res.status(err.status ?? 500).json({
-    message: err.message,
-    errors: Array.isArray(err.errors) || (typeof err.errors === 'object' && err.errors !== null) ? (err.errors as Record<string, unknown>) : undefined
-  })
 }
 
 function xhrClientErrorHandler(err: Error, req: Request & { xhr?: boolean }, res: Response, next: NextFunction): void {

@@ -1,15 +1,8 @@
-/**
- * Test case for getting GitHub issues.
- * @module routers
- * @remarks
- * This test case verifies that the API endpoint for retrieving GitHub issues is functioning correctly.
- *
- * @returns {Promise<void>} A promise that resolves when the test case is complete.
- */
-import '../utils/loadEnvironment'
+import dotenv from 'dotenv'
+import path from 'path'
+dotenv.config({ path: path.resolve('./.env') })
 
 import request from 'supertest'
-
 import app from '../index'
 
 describe('GitHub API', () => {
@@ -17,9 +10,13 @@ describe('GitHub API', () => {
     const response = await request(app).get('/github/issues')
 
     expect(response.status).toBe(200)
-    expect(response.body).toBeDefined()
-
-    console.log('response.body: ' + JSON.stringify(response, null, ' '))
-    // expect(response.body).toEqual(issues)
+    expect(Array.isArray(response.body)).toBe(true)
+    expect(response.body.length).toBeGreaterThanOrEqual(0)
+    // Optionally, check structure of an issue if array is not empty
+    if (response.body.length > 0) {
+      expect(response.body[0]).toHaveProperty('id')
+      expect(response.body[0]).toHaveProperty('title')
+    }
   })
 })
+

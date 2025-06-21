@@ -7,10 +7,10 @@
 
 import { format } from 'date-fns'
 import express, { RequestHandler } from 'express'
-import { Collection, Db, Document, Filter, InsertOneResult, ObjectId, WithId } from 'mongodb'
+import { Collection, Db, Document, Filter, InsertOneResult, ObjectId } from 'mongodb'
 
-import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
-import log from '../utils/logger.js'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
+import log from '../utils/logger'
 
 const logger = log('logs')
 

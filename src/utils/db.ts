@@ -6,8 +6,8 @@
 
 import type { Db } from 'mongodb'
 import { MongoClient } from 'mongodb'
-import config from '../utils/config.js'
-import log from '../utils/logger.js'
+import config from '../utils/config'
+import log from '../utils/logger'
 
 const logger = log('db')
 

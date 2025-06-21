@@ -46,6 +46,25 @@ tags:
   - name: components
     description: Components API.
 paths:
+  /github/issues:
+    get:
+      tags:
+        - github
+      summary: Get all issues for GitHub
+      description: List all issues.
+      operationId: githubIssuesGet
+      responses:
+        "200":
+          description: List of issues
+        "404":
+          description: Issues not found
+        "406":
+          description: Not Acceptable
+        "500":
+          description: Unexpected server error
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: github
   /attributes:
     get:
       tags:
@@ -266,27 +285,6 @@ paths:
         "404":
           description: Attribute not found
       x-swagger-router-controller: Attributes
-  /github/issues:
-    get:
-      responses:
-        "200":
-          description: List all issues.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Confirmation"
-        "404":
-          description: Issues not found
-        "406":
-          description: Not Acceptable
-        "500":
-          description: Unexpected server error
-      tags:
-        - github
-      summary: Get all issues for GitHub
-      description: List all issues.
-      operationId: githubIssuesGet
-      x-swagger-router-controller: github
   /devices:
     get:
       tags:
@@ -1975,17 +1973,17 @@ paths:
       summary: Delete the single floor :id
       description: Delete single floor
       operationId: floorIdDelete
-      parameters:PostgreSQL
+      parameters:
         - name: id
           in: path
           description: ID of floor to delete
           required: true
-          style: simplePostgreSQL
+          style: simple
           explode: false
           schema:
             type: string
             example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$PostgreSQL
+            pattern: ^[0-9A-Fa-f]{24}$
             minLength: 24
             maxLength: 24
             x-42c-format: o:uuid
@@ -2055,7 +2053,7 @@ paths:
           description: Not found
       x-swagger-router-controller: Users
     put:
-PostgreSQL      tags:
+      tags:
         - users
       summary: Update user
       description: Create user
@@ -2114,7 +2112,7 @@ PostgreSQL      tags:
       operationId: usersDelete
       responses:
         "200":
-          description: OK. Indicates that the requPostgreSQLest has succeeded.
+          description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
@@ -2174,7 +2172,7 @@ PostgreSQL      tags:
             type: string
             example: 6566ed4ace63d42b25fbba19
             minLength: 24
-            maxLength: 24PostgreSQL
+            maxLength: 24
             x-42c-format: o:uuid
             pattern: ^[0-9A-Fa-f]{24}$
       requestBody:

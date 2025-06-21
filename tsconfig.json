@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "allowJs": true,
+    "target": "ES2020", // or "ES2019" or "ESNext" for even newer features
+    "module": "CommonJS", // Jest works best with CommonJS modules
+    "moduleResolution": "node", // Standard Node.js module resolution
+    "allowJs": false,
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
@@ -29,7 +29,8 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.js",
-    "tests/**/*.(t|j)s",
+    "tests/**/*.ts",
+    "tests/**/*.js",
     "eslint.config.js"
   ]
 }

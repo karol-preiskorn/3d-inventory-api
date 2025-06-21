@@ -7,8 +7,8 @@
 import express, { RequestHandler } from 'express'
 import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb'
 
-import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
-import log from '../utils/logger.js'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
+import log from '../utils/logger'
 
 const logger = log('models')
 

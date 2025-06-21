@@ -8,7 +8,7 @@ import express, { RequestHandler } from 'express'
 import sanitize from 'mongo-sanitize'
 import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
 
-import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 
 interface Connection {
   _id: ObjectId

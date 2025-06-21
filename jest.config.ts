@@ -4,11 +4,12 @@
  * @type {import('jest').Config}
  */
 
-const config = {
-  testTimeout: 6000,
+const config: import('jest').Config = {
+  testTimeout: 3000,
+  rootDir: '.',
   fakeTimers: {
     doNotFake: ['nextTick'],
-    timerLimit: 6000
+    timerLimit: 3000
   },
   bail: 1,
   verbose: true,
@@ -25,23 +26,12 @@ const config = {
     }
   },
   testEnvironment: 'node',
+  roots: ['<rootDir>'],
+  moduleDirectories: ['node_modules', '<rootDir>/src'],
   projects: [
     {
-      displayName: 'prettier',
-      clearMocks: true,
-      globals: {
-        __DEV__: true
-      },
-      preset: 'jest-runner-prettier',
-      runner: 'prettier',
-      testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/logs/', '<rootDir>/coverage/'],
-      transform: {},
-      moduleFileExtensions: ['js', 'ts', 'css', 'less', 'scss', 'html', 'json', 'graphql', 'md', 'yaml'],
-      testMatch: ['**/*', '**/*.ts', '**/*.css', '**/*.less', '**/*.scss', '**/*.html', '**/*.json', '**/*.graphql', '**/*.md', '**/*.yaml']
-    },
-    {
       displayName: 'ts-jest',
-      clearMocks: false,
+      clearMocks: true,
       globals: {
         __DEV__: true
       },
@@ -49,7 +39,9 @@ const config = {
       preset: 'ts-jest',
       testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/dist/', '<rootDir>/logs/', '<rootDir>/coverage/'],
       testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(mjs?|cjs?|js?|tsx?|ts?)$',
-      transform: {}
+      transform: {
+        '^.+\\.(ts|tsx)$': 'ts-jest'
+      }
     }
   ]
 }

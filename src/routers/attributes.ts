@@ -5,9 +5,9 @@
  */
 
 import express, { RequestHandler } from 'express'
-import { Collection, Db, InsertOneResult, ObjectId } from 'mongodb'
+import { Collection, Db, ObjectId } from 'mongodb'
 
-import { closeConnection, connectToCluster, connectToDb } from '../utils/db.js'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 
 export interface Attributes {
   _id: ObjectId
@@ -62,7 +62,7 @@ router.get('/:id', (async (req, res) => {
       res.status(200).json(result)
     }
   } catch (error) {
-    res.status(500).send('Internal server error')
+    res.status(500).send('Internal server error' + (error instanceof Error ? error.message : String(error)))
   } finally {
     await closeConnection(client)
   }
