@@ -15,7 +15,6 @@ export interface Attributes {
   connectionId: ObjectId | null
   deviceId: ObjectId | null
   modelId: ObjectId | null
-  name: string
   value: string
 }
 
@@ -137,7 +136,6 @@ router.put('/:id', (async (req, res) => {
       connectionId: req.body.connectionId || null,
       deviceId: req.body.deviceId || null,
       modelId: req.body.modelId || null,
-      name: req.body.name,
       value: req.body.value
     }
   }
@@ -157,6 +155,55 @@ router.put('/:id', (async (req, res) => {
     console.error('Error updating attribute:', error)
     const errorMessage = error instanceof Error ? error.message : String(error)
     res.status(500).send('Internal server error during update attributes: ' + errorMessage)
+  } finally {
+    if (client) {
+      await closeConnection(client)
+    }
+  }
+}) as RequestHandler)
+
+router.post('/', (async (req, res) => {
+  let client
+  try {
+    client = await connectToCluster()
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const { attributeDictionaryId, connectionId, deviceId, modelId, value } = req.body
+    if (
+      !value ||
+      typeof value !== 'string' ||
+      !attributeDictionaryId ||
+      typeof attributeDictionaryId !== 'string' ||
+      (!connectionId && !deviceId && !modelId)
+    ) {
+      return res
+        .status(400)
+        .json({ error: 'Missing or invalid "value", "attributeDictionaryId", or at least one of "connectionId", "deviceId", "modelId" must be provided' })
+    }
+    if (!ObjectId.isValid(attributeDictionaryId)) {
+      return res.status(400).json({ error: '"attributeDictionaryId" must be a valid ObjectId string' })
+    }
+    // Helper to validate and convert ObjectId fields
+    function toObjectIdOrNull(id: unknown): ObjectId | null {
+      return typeof id === 'string' && ObjectId.isValid(id) ? new ObjectId(id) : null
+    }
+    const newAttribute: Omit<Attributes, '_id'> = {
+      attributeDictionaryId: new ObjectId(attributeDictionaryId),
+      connectionId: toObjectIdOrNull(connectionId),
+      deviceId: toObjectIdOrNull(deviceId),
+      modelId: toObjectIdOrNull(modelId),
+      value
+    }
+    const result = await collection.insertOne(newAttribute)
+    const createdAttribute = { _id: result.insertedId, ...newAttribute }
+    if (result.acknowledged) {
+      res.status(201).json(createdAttribute)
+    } else {
+      res.status(500).send('Failed to create attribute')
+    }
+  } catch (error) {
+    console.error('Error creating attribute:', error)
+    res.status(500).send('Internal server error during attribute creation')
   } finally {
     if (client) {
       await closeConnection(client)

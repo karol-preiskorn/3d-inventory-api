@@ -47,7 +47,6 @@ const app = express()
 
 app.use(cookieParser())
 app.use(helmet())
-//app.use(csurf({ cookie: true }))
 
 try {
   app.use(

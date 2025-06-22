@@ -2,6 +2,32 @@
 @Url = https://172.17.0.2:3001
 @UrlLocal = https://localhost:3001
 
+### floor update
+
+PUT {{Url}}/floors/68580d052231cca640b7430e
+content-type: application/json
+
+{
+  "_id": "68580d052231cca640b7430e",
+"name": "QWERTY123",
+  "address": {
+    "street": "Smith Street 3030",
+    "city": "Bednarhaven",
+    "country": "Mali",
+    "postcode": "01320"
+  },
+  "dimension": [
+    {
+      "description": "Douglas, Sanford and Langosh - empower global communities",
+      "x": "27",
+      "y": "13",
+      "h": "5",
+      "xPos": "52",
+      "yPos": "71",
+      "hPos": "76"
+    }
+  ]
+}
 
 ### GH
 GET {{Url}}/github/issues

@@ -18,7 +18,7 @@ export default [
   },
   {
     plugins: {
-      '@typescript-eslint': tseslint,
+      '@typescript-eslint': tseslint
     },
     languageOptions: {
       globals: globals.browser,
@@ -30,7 +30,11 @@ export default [
       'indent': ['error', 2],
       'quotes': ['error', 'single'],
       'semi': ['error', 'never'],
-      'comma-dangle': ['error', 'never']
+      'comma-dangle': ['error', 'never'],
+      'padding-line-between-statements': [
+        'error',
+        { 'blankLine': 'always', 'prev': 'function', 'next': 'function' }
+      ]
     }
   }
 ]

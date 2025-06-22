@@ -1,4 +1,3 @@
-import csurf from 'csurf'
 import dotenv from 'dotenv'
 import express from 'express'
 import helmet from 'helmet'
@@ -18,7 +17,6 @@ jest.mock('../utils/logger')
 const app = express()
 app.use(express.json())
 app.use(helmet())
-app.use(csurf())
 app.use('/devices', router)
 
 describe('PUT /devices/:id/attributes', () => {

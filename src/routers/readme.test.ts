@@ -1,4 +1,3 @@
-import csurf from 'csurf'
 /**
  * @description This file is used to test the README.md file rendering
  * @module tests
@@ -12,7 +11,6 @@ import router from '../routers/readme'
 
 const app = express()
 app.use(helmet())
-app.use(csurf())
 app.use('/', router as express.RequestHandler)
 
 describe('GET /', () => {

@@ -14,6 +14,16 @@ import log from '../utils/logger'
 
 const logger = log('logs')
 
+const VALID_COMPONENTS = [
+  'attributes',
+  'devices',
+  'floors',
+  'models',
+  'connections',
+  'users',
+  'attributesDictionary'
+]
+
 export interface Logs {
   _id: ObjectId
   objectId: string
@@ -40,9 +50,8 @@ router.get('/', (async (req: express.Request, res: express.Response): Promise<vo
 }) as RequestHandler)
 
 router.get('/component/:component', (async (req, res) => {
-  const validComponents = ['attributes', 'devices', 'floors', 'models', 'connections', 'users', 'attributesDictionary']
   const component = req.params.component
-  const validComponentsString = validComponents.join(', ')
+  const validComponentsString = VALID_COMPONENTS.join(', ')
 
   if (!component) {
     logger.error('GET /logs/component/ - No component name provided.')
@@ -52,7 +61,7 @@ router.get('/component/:component', (async (req, res) => {
     return
   }
 
-  if (!validComponents.includes(component)) {
+  if (!VALID_COMPONENTS.includes(component)) {
     logger.warn(`GET /logs/component/${component} - Invalid component: ${component}. Valid components are: [${validComponentsString}].`)
     res.status(400).json({
       message: `Invalid component: ${component}. Valid components are: [${validComponentsString}].`
@@ -138,6 +147,8 @@ router.get('/:id', (async (req, res) => {
   }
 }) as RequestHandler)
 
+const requiredLogFields: (keyof Logs)[] = ['objectId', 'operation', 'component', 'message']
+
 router.post('/', (async (req, res) => {
   const client = await connectToCluster()
   try {
@@ -145,35 +156,30 @@ router.post('/', (async (req, res) => {
     const collection: Collection = db.collection(collectionName)
     const newDocument: Logs = req.body as Logs
     newDocument.date = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
-
-    if (!newDocument.objectId || !newDocument.operation || !newDocument.component || !newDocument.message) {
+    const missingFields = requiredLogFields.filter((field) => !newDocument[field])
+    if (missingFields.length > 0) {
       logger.error(`POST /logs/ - Missing required fields in request body: ${JSON.stringify(newDocument)}`)
-      const requiredFields = ['objectId', 'operation', 'component', 'message']
-      const missingFields = requiredFields.filter((field) => !newDocument[field as keyof Logs])
       res.status(400).json({
         message: `Missing required fields in request body: ${missingFields.join(', ')}`
       })
       return
     }
-
-    if (!['attributes', 'devices', 'floors', 'models', 'connections', 'users', 'attributesDictionary'].includes(newDocument.component)) {
+    if (!VALID_COMPONENTS.includes(newDocument.component)) {
       logger.error(`POST /logs/ - Invalid component: ${newDocument.component}`)
       res.status(400).json({
-        message: `Invalid component attribute: ${newDocument.component}. Valid components are: [attributes, devices, floors, models, connections, users, attributesDictionary].`
+        message: `Invalid component value: ${newDocument.component}. Valid components are: [${VALID_COMPONENTS.join(', ')}].`
       })
       return
-    }
 
+    }
     const results: InsertOneResult<Document> = await collection.insertOne(newDocument)
     if (!results.acknowledged) {
-      logger.warn(`POST /logs/ - Log not created. Data: ${JSON.stringify(newDocument)}`)
+      logger.error(`POST /logs/ - Log not created. Data: ${JSON.stringify(newDocument)}`)
       res.status(500).json({ message: 'Failed to create log.' })
       return
     }
-
-    const insertedDocument = await collection.findOne({ _id: results.insertedId })
     logger.info(`POST /logs/ - Log created. Data: ${JSON.stringify(newDocument)}`)
-    res.status(201).json(insertedDocument)
+    res.status(201).json(newDocument)
   } catch (error) {
     logger.error(`POST /logs/ - Error: ${error}`)
     res.status(500).json({ message: 'Internal server error.' })

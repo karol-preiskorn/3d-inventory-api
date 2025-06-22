@@ -1,6 +1,6 @@
 {
-  "bracketSameLine": false,
   "bracketSpacing": true,
+  // Override disables semicolons for test files for consistency with test style guidelines.
   "overrides": [
     {
       "files": "*.test.ts",
@@ -9,7 +9,6 @@
       }
     }
   ],
-  "semi": false,
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "none"

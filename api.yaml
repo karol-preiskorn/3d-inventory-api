@@ -140,7 +140,7 @@ paths:
       tags:
         - attributes
       summary: Create a new attribute
-      description: Create a new attribute.
+      description: Create a new attribute. Provide attribute details in the request body.
       operationId: createAttribute
       requestBody:
         required: true
@@ -2262,7 +2262,7 @@ components:
         dimension:
           description: Koss, Powlowski and Sipes - leverage out-of-the-box schemas
           x: 54
-          "y": 58
+          y: 58
           h: 6
           x_pos: 76
           y_pos: 70
@@ -2441,7 +2441,7 @@ components:
       x-42c-format: o:attribute
       required:
         - _id
-        - name
+        - attributeDictionaryId
         - value
       type: object
       properties:
@@ -2460,8 +2460,6 @@ components:
           type: string
         modelId:
           type: string
-        name:
-          type: string
         value:
           type: string
       example:
@@ -2470,7 +2468,6 @@ components:
         connectionId: 653e10ecd6025afb66017c70
         deviceId: 653e10ecd6025afb66017c71
         modelId: 653e10ecd6025afb66017c72
-        name: power
         value: 3W
     Attributes:
       type: array

@@ -17,6 +17,8 @@ interface Floor {
   dimension: Dimension[]
 }
 
+type NewFloor = Omit<Floor, '_id'>
+
 interface Address {
   street: string
   city: string
@@ -99,49 +101,125 @@ router.get('/model/:id', (async (req, res) => {
 }) as RequestHandler)
 
 router.post('/', (async (req, res) => {
-  const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-  const newDocument: Floor = req.body as Floor
-  const result = await collection.insertOne(newDocument)
-  const insertedDocument = (await collection.findOne({ _id: result.insertedId })) as Floor
-  if (!insertedDocument) {
-    res.status(404).send('Inserted document not found')
-    await closeConnection(client)
-    return
+  const { name, address, dimension } = req.body
+  if (
+    typeof name !== 'string' ||
+    !address ||
+    typeof address.street !== 'string' ||
+    typeof address.city !== 'string' ||
+    typeof address.country !== 'string' ||
+    typeof address.postcode !== 'string' ||
+    !Array.isArray(dimension) ||
+    !dimension.every(
+      (dim: Dimension) =>
+        typeof dim.description === 'string' &&
+        typeof dim.x === 'number' &&
+        typeof dim.y === 'number' &&
+        typeof dim.h === 'number' &&
+        typeof dim.xPos === 'number' &&
+        typeof dim.yPos === 'number' &&
+        typeof dim.hPos === 'number'
+    )
+  ) {
+    console.error({ message: 'Invalid input data' })
   }
-
-  const sanitizedResult = {
-    ...insertedDocument,
-    name: sanitize(typeof insertedDocument.name === 'string' ? insertedDocument.name : ''),
+  const sanitizedDocument: NewFloor = {
+    name: sanitize(name),
     address: {
-      ...insertedDocument.address,
-      street: sanitize(typeof insertedDocument.address.street === 'string' ? insertedDocument.address.street : ''),
-      city: sanitize(typeof insertedDocument.address.city === 'string' ? insertedDocument.address.city : ''),
-      country: sanitize(typeof insertedDocument.address.country === 'string' ? insertedDocument.address.country : ''),
-      postcode: sanitize(typeof insertedDocument.address.postcode === 'string' ? insertedDocument.address.postcode : '')
+      street: sanitize(address.street),
+      city: sanitize(address.city),
+      country: sanitize(address.country),
+      postcode: sanitize(address.postcode)
     },
-    dimension: insertedDocument.dimension.map((dim: Dimension) => ({
-      ...dim,
-      description: sanitize(typeof dim.description === 'string' ? dim.description : '')
+    dimension: dimension.map((dim: Dimension) => ({
+      description: sanitize(dim.description),
+      x: dim.x,
+      y: dim.y,
+      h: dim.h,
+      xPos: dim.xPos,
+      yPos: dim.yPos,
+      hPos: dim.hPos
     }))
   }
-  res.status(200).json(sanitizedResult)
-  await closeConnection(client)
+  let client: import('mongodb').MongoClient | null = null
+  try {
+    client = await connectToCluster()
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const result = await collection.insertOne(sanitizedDocument)
+    if (!result.acknowledged) {
+      res.status(500).json({ message: 'Failed to insert document' })
+      return
+    }
+    const insertedDocument = { _id: result.insertedId, ...sanitizedDocument }
+    console.log(`Inserted document with ID: ${result.insertedId}`)
+    console.log(`Inserted document: ${JSON.stringify(insertedDocument)}`)
+    res.status(201).json(insertedDocument)
+  } catch (error) {
+    res.status(500).json({ message: 'Error inserting document', error: (error as Error).message })
+  } finally {
+    if (client) await closeConnection(client)
+  }
+}) as RequestHandler)
+
+router.put('/:id', (async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.sendStatus(404)
+    return
+  }
+  const query = { _id: new ObjectId(req.params.id) }
+  const sanitizedDocument: NewFloor = {
+    name: sanitize(req.body.name),
+    address: {
+      street: sanitize(req.body.address.street),
+      city: sanitize(req.body.address.city),
+      country: sanitize(req.body.address.country),
+      postcode: sanitize(req.body.address.postcode)
+    },
+    dimension: req.body.dimension.map((dim: Dimension) => ({
+      description: sanitize(dim.description),
+      x: dim.x,
+      y: dim.y,
+      h: dim.h,
+      xPos: dim.xPos,
+      yPos: dim.yPos,
+      hPos: dim.hPos
+    }))
+  }
+  const updates: UpdateFilter<Document>[] = [{ $set: sanitizedDocument }]
+  const client = await connectToCluster()
+  try {
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const result = await collection.updateOne(query, updates)
+    if (result.modifiedCount === 0) {
+      res.status(404).json({ message: 'Document not found or no changes made' })
+    } else {
+      res.status(200).json({ message: 'Document updated successfully', result })
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating document', error: (error as Error).message })
+  } finally {
+    await closeConnection(client)
+  }
 }) as RequestHandler)
 
 router.patch('/dimension/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404)
+    return
   }
   const query = { _id: new ObjectId(req.params.id) }
   const updates: UpdateFilter<Document>[] = [{ $push: { dimension: req.body as Dimension } }]
   const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection(collectionName)
-  const result = await collection.updateOne(query, updates)
-  res.status(200).json(result)
-  await closeConnection(client)
+  try {
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const result = await collection.updateOne(query, updates)
+    res.status(200).json(result)
+  } finally {
+    await closeConnection(client)
+  }
 }) as RequestHandler)
 
 router.delete('/:id', (async (req, res) => {
