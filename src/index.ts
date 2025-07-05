@@ -69,6 +69,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   const allowedOrigins = [
     `https://${HOST}:${PORT}`,
     'https://172.17.0.2:3001',
+    'https://172.17.0.3:3001',
     'https://cluster0.htgjako.mongodb.net',
     'https://localhost:3000',
     'https://localhost:3001'
@@ -84,8 +85,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next()
 })
 
-app.use((_, res: Response, next: NextFunction) => {
-  res.header('Content-Security-Policy', "default-src 'self'; connect-src *; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';")
+app.use((_req, res: Response, next: NextFunction) => {
+  res.header('Content-Security-Policy', "default-src 'self'; connect-src *; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;")
   next()
 })
 
@@ -122,23 +123,15 @@ app.use('/connections', connections)
 app.use('/floors', floors)
 app.use('/github', github)
 
-// 404 handler for unmatched routes
-app.use((req: Request, res: Response) => {
-  logger.warn(`404 Not Found: ${req.method} ${req.originalUrl}`)
-  res.status(404).json({ message: 'Endpoint not found' })
-})
-
-fs.open(yamlFilename, 'r', (err: NodeJS.ErrnoException | null) => {
+fs.access(yamlFilename, fs.constants.R_OK, (err: NodeJS.ErrnoException | null) => {
   if (err) {
     if (err.code === 'ENOENT') {
-      logger.error(`File ${yamlFilename} doesn't exist`)
-      return
-    }
-    if (err.code === 'EACCES') {
+      logger.warn(`File not found: ${yamlFilename}`)
+    } else if (err.code === 'EACCES') {
       logger.error(`No permission to file ${yamlFilename}`)
-      return
+    } else {
+      logger.error('Unknown Error during access api.yaml: ' + err.message)
     }
-    logger.error('Unknown Error during open api.yaml: ' + err.message)
   } else {
     logger.info(`File api.yaml opened successfully from ${yamlFilename}`)
   }
@@ -173,20 +166,32 @@ try {
   logger.error(`OpenApiValidator: ${String(error)}`)
 }
 
-function xhrClientErrorHandler(err: Error, req: Request & { xhr?: boolean }, res: Response, next: NextFunction): void {
+// Error-related middleware (404 and error handlers) grouped together for clarity
+
+app.use((req: Request, res: Response) => {
+  logger.warn(`404 Not Found: ${req.method} ${req.originalUrl}`)
+  res.status(404).json({
+    message: 'Endpoint not found',
+    error: 'Not Found',
+    status: 404
+  })
+})
+
+// XHR client error handler
+function xhrClientErrorHandler(err: Error, req: Request, res: Response, next: NextFunction): void {
   if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
     logger.error(err)
     res.status(500).json({
       message: 'Something failed!'
-      // Pass the error to the next middleware for centralized error handling
     })
     next(err)
   } else {
     next(err)
   }
 }
-
 app.use(xhrClientErrorHandler)
+
+// General error handler
 app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
   logger.error(`Unhandled error: ${err.message}. Stack: ${err.stack}`)
   next(err)
@@ -213,13 +218,14 @@ const server = httpsServer.listen(Number(PORT), HOST, () => {
 })
 
 server.on('error', (err: Error) => {
-  logger.error(`Error listen on adress https://${HOST}:${PORT}: ${String(err)}`)
+  logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}`)
 })
 
 process.on('SIGTERM', () => {
-  logger.debug('SIGTERM signal received: closing HTTPS server.')
+  logger.info('SIGTERM signal received: closing HTTPS server.')
   server.close(() => {
     logger.debug('HTTPS server closed')
+    process.exit(0)
   })
 })
 
