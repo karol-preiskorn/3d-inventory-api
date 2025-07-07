@@ -2,7 +2,7 @@ import globals from 'globals'
 import tseslint from '@typescript-eslint/eslint-plugin'
 
 // ESLint flat config format (ESM export)
-export default [
+export default async () => [
   {
     files: ['**/*.{js,ts}'],
     ignores: [
@@ -22,14 +22,14 @@ export default [
     },
     languageOptions: {
       globals: globals.browser,
-      parser: await import('@typescript-eslint/parser'),
+      parser: (await import('@typescript-eslint/parser')).default,
       ecmaVersion: 2021
     },
     rules: {
       ...tseslint.configs.recommended.rules,
       'indent': ['error', 2],
       'quotes': ['error', 'single'],
-      'semi': ['error', 'never'],
+      'semi': ['error', 'always'],
       'comma-dangle': ['error', 'never'],
       'padding-line-between-statements': [
         'error',

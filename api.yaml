@@ -1113,6 +1113,21 @@ paths:
         "500":
           description: Error
       x-swagger-router-controller: Connections
+  /connections/devices:
+    get:
+      tags:
+        - connections
+      summary: Get information about one Connection and its devices.
+      description: Get all list Connection with information about devices and their attributes
+      operationId: connectionGetAndDevices
+      responses:
+        "200":
+          description: Success get connection between devices
+        "404":
+          description: Not found connection data
+        "500":
+          description: Error
+      x-swagger-router-controller: Connections
   /connections/{id}:
     get:
       tags:

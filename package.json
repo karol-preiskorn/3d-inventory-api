@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.83.0",
+  "version": "0.87.0",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -30,7 +30,7 @@
     "cp": "cpy README.md src/assets --flat",
     "doc": "npx typedoc",
     "docker:build": "npm run minor && docker build -t 3d-inventory-api . && docker tag 3d-inventory-api docker.io/kpreiskorn/3d-inventory-api:latest",
-    "docker:compile": "npm run minor && ./remove_build_run.sh",
+    "docker:compile": "npm run minor && ./build.sh",
     "docker:compose": "docker compose up --build",
     "docker:tag": "docker tag kpreiskorn/3d-inventory-api ghcr.io/karol-preiskorn/3d-inventory-api:latest",
     "docker:push": "docker push ghcr.io/karol-preiskorn/3d-inventory-api:latest",
