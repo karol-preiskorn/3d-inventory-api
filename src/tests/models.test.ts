@@ -9,7 +9,7 @@ import '../utils/loadEnvironment'
 import { Db, MongoClient } from 'mongodb'
 import request, { Response } from 'supertest'
 
-import app from '../index'
+import app from '../main'
 
 describe('GET /models', () => {
   let connection: MongoClient
@@ -46,17 +46,17 @@ describe('GET /models', () => {
           dimension: {
             depth: expect.any(Number) as number,
             height: expect.any(Number) as number,
-            width: expect.any(Number) as number
+            width: expect.any(Number) as number,
           },
           texture: {
             back: expect.any(String) as string,
             bottom: expect.any(String) as string,
             front: expect.any(String) as string,
             side: expect.any(String) as string,
-            top: expect.any(String) as string
-          }
-        })
-      ])
+            top: expect.any(String) as string,
+          },
+        }),
+      ]),
     )
 
     // Assuming the response body is an array of objects with an _id property
@@ -80,13 +80,13 @@ describe('GET /models', () => {
           dimension: {
             width: expect.any(Number) as number,
             height: expect.any(Number) as number,
-            depth: expect.any(Number) as number
+            depth: expect.any(Number) as number,
           },
           texture: {
             front: expect.any(String) as string,
-            back: expect.any(String) as string
-          }
-        })
+            back: expect.any(String) as string,
+          },
+        }),
       )
     }
   })

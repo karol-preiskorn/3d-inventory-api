@@ -12,7 +12,7 @@
 
 import request from 'supertest'
 
-import app from '../index'
+import app from '../main'
 
 describe('GET /devices', () => {
   afterAll(function () {
@@ -31,10 +31,10 @@ describe('GET /devices', () => {
           position: {
             x: expect.any(Number) as number,
             y: expect.any(Number) as number,
-            h: expect.any(Number) as number
-          }
-        })
-      ])
+            h: expect.any(Number) as number,
+          },
+        }),
+      ]),
     )
 
     const responseGetId = await request(app)
@@ -50,10 +50,10 @@ describe('GET /devices', () => {
           position: {
             x: expect.any(Number) as number,
             y: expect.any(Number) as number,
-            h: expect.any(Number) as number
-          }
-        })
-      ])
+            h: expect.any(Number) as number,
+          },
+        }),
+      ]),
     )
   })
 })

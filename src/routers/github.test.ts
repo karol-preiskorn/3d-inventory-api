@@ -3,7 +3,7 @@ import path from 'path'
 dotenv.config({ path: path.resolve('./.env') })
 
 import request from 'supertest'
-import app from '../index'
+import app from '../main'
 
 describe('GitHub API', () => {
   it('should get GitHub issues', async () => {
@@ -19,4 +19,3 @@ describe('GitHub API', () => {
     }
   })
 })
-

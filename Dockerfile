@@ -29,5 +29,5 @@ COPY --from=builder /usr/src/3d-inventory-api/node_modules ./node_modules
 COPY .env api.yaml ./
 RUN mkdir -p cert
 COPY cert ./cert
-CMD ["node", "dist/src/index.js"]
+CMD ["node", "dist/src/main.js"]
 EXPOSE 3001
