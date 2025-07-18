@@ -27,7 +27,13 @@ WORKDIR /usr/src/3d-inventory-api
 COPY --from=builder /usr/src/3d-inventory-api/dist ./dist
 COPY --from=builder /usr/src/3d-inventory-api/node_modules ./node_modules
 COPY .env api.yaml ./
+
 RUN mkdir -p cert
 COPY cert ./cert
+
+# Don't hardcode the port - let Cloud Run set it
+ENV NODE_ENV=production
+ENV HOST=0.0.0.0
+
 CMD ["node", "dist/src/main.js"]
-EXPOSE 3001
+EXPOSE 8080

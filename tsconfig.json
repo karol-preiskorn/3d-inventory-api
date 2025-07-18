@@ -1,36 +1,38 @@
 {
   "compilerOptions": {
-    "target": "ES2020", // or "ES2019" or "ESNext" for even newer features
-    "module": "CommonJS", // Jest works best with CommonJS modules
-    "moduleResolution": "node", // Standard Node.js module resolution
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "allowJs": false,
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
     "moduleDetection": "auto",
     "outDir": "./dist",
     "pretty": true,
     "removeComments": false,
-    "rootDir": "./",
+    "rootDir": "./src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
+    "noImplicitAny": true,
     "types": [
       "node",
       "jest"
-    ]
+    ],
+    "lib": [
+      "ES2020"
+    ],
+    "resolveJsonModule": true
   },
   "exclude": [
     "node_modules",
-    "**/*.test.ts"
+    "tests"
   ],
   "include": [
-    "src/**/*.ts",
-    "src/**/*.js",
-    "tests/**/*.ts",
-    "tests/**/*.js",
-    "eslint.config.js"
+    "src/**/*.ts"
   ]
 }

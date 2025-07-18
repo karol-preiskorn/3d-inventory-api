@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.96.10",
+  "version": "0.96.16",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -61,6 +61,7 @@
     ]
   },
   "dependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@jest/globals": "^30.0.4",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",

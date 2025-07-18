@@ -1,5 +1,5 @@
 import express, { RequestHandler } from 'express';
-import { Collection, Db, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb';
+import { Collection, Db, Document, InsertOneResult, ObjectId, OptionalId, UpdateFilter } from 'mongodb';
 
 import { CreateLog } from '../services/logs';
 import { closeConnection, connectToCluster, connectToDb } from '../utils/db';
@@ -181,7 +181,7 @@ router.patch('/position/:id', validateObjectId, (async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) };
   const updates: UpdateFilter<Document>[] = [
     {
-      $push: { position: req.body as Position },
+      $set: { position: req.body as Position },
     },
   ];
   const client = await connectToCluster();

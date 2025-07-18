@@ -34,7 +34,7 @@ import log from './utils/logger';
 const logger = log('index');
 
 const PORT = Number(process.env.PORT) || 3001;
-const HOST = process.env.HOST ?? 'localhost';
+const HOST = process.env.HOST || '0.0.0.0';
 
 const httpsOptions = {
   key: fs.readFileSync('./cert/server.key'),

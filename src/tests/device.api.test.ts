@@ -14,7 +14,7 @@ import request from 'supertest'
 
 import { faker } from '@faker-js/faker'
 
-import { connectToCluster, connectToDb } from '../db/dbUtils'
+import { connectToCluster, connectToDb } from '../utils/db'
 import { Device } from '../routers/devices'
 
 describe('GET /devices', () => {
@@ -35,10 +35,10 @@ describe('GET /devices', () => {
             position: {
               x: expect.any(Number) as number,
               y: expect.any(Number) as number,
-              h: expect.any(Number) as number
-            }
-          })
-        ])
+              h: expect.any(Number) as number,
+            },
+          }),
+        ]),
       )
     }
   })
@@ -73,8 +73,8 @@ describe('POST /devices', () => {
       position: {
         x: faker.number.int({ min: 1, max: 10 }),
         y: faker.number.int({ min: 1, max: 10 }),
-        h: faker.number.int({ min: 1, max: 10 })
-      }
+        h: faker.number.int({ min: 1, max: 10 }),
+      },
     }
 
     const response = await request(app).post('/devices').send(device).set('Accept', 'application/json; charset=utf-8').expect(201)
@@ -86,8 +86,8 @@ describe('POST /devices', () => {
         _id: expect.any(String) as ObjectId,
         name: device.name,
         modelId: device.modelId,
-        position: device.position
-      })
+        position: device.position,
+      }),
     )
   })
 })
@@ -111,8 +111,8 @@ describe('GET /devices', () => {
         position: {
           x: expect.any(Number) as number,
           y: expect.any(Number) as number,
-          h: expect.any(Number) as number
-        }
+          h: expect.any(Number) as number,
+        },
       })
     } else {
       console.log('Devices found')
@@ -125,10 +125,10 @@ describe('GET /devices', () => {
             position: {
               x: expect.any(Number) as number,
               y: expect.any(Number) as number,
-              h: expect.any(Number) as number
-            }
-          })
-        ])
+              h: expect.any(Number) as number,
+            },
+          }),
+        ]),
       )
     }
 
@@ -155,9 +155,9 @@ describe('GET /devices', () => {
         position: {
           x: expect.any(Number) as number,
           y: expect.any(Number) as number,
-          h: expect.any(Number) as number
-        }
-      })
+          h: expect.any(Number) as number,
+        },
+      }),
     )
   })
 
@@ -186,8 +186,8 @@ describe('GET /devices', () => {
         position: {
           x: faker.number.int({ min: 1, max: 10 }),
           y: faker.number.int({ min: 1, max: 10 }),
-          h: faker.number.int({ min: 1, max: 10 })
-        }
+          h: faker.number.int({ min: 1, max: 10 }),
+        },
       })
       .expect(200)
 

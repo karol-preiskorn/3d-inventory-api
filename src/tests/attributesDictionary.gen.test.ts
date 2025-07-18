@@ -40,23 +40,23 @@ describe('test create attributesDictionary', () => {
           dimension: {
             width: faker.number.int({ min: 1, max: 10 }),
             height: faker.number.int({ min: 1, max: 10 }),
-            depth: faker.number.int({ min: 1, max: 10 })
+            depth: faker.number.int({ min: 1, max: 10 }),
           },
           texture: {
             front: '/assets/r710-2.5-nobezel__29341.png',
             back: '/assets/r710-2.5-nobezel__29341.png',
             side: '/assets/r710-2.5-nobezel__29341.png',
             top: '/assets/r710-2.5-nobezel__29341.png',
-            bottom: '/assets/r710-2.5-nobezel__29341.png'
+            bottom: '/assets/r710-2.5-nobezel__29341.png',
           },
-          category: valueAttributeCategory[Math.floor(Math.random() * valueAttributeCategory.length)].name
+          category: valueAttributeCategory[Math.floor(Math.random() * valueAttributeCategory.length)].name,
         }
         mockLog = {
           date: formattedDate,
           objectId: new ObjectId('659a4400672627600b093713'),
           operation: 'Create',
           component: 'Model',
-          message: mockModel
+          message: mockModel,
         }
 
         await logs.insertOne(mockLog)

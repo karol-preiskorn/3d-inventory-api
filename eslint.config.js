@@ -18,7 +18,7 @@ export default async () => [
   },
   {
     plugins: {
-      '@typescript-eslint': tseslint
+      '@typescript-eslint': tseslint.default
     },
     languageOptions: {
       globals: globals.browser,
@@ -29,7 +29,7 @@ export default async () => [
       ...tseslint.configs.recommended.rules,
       'indent': ['error', 2],
       'quotes': ['error', 'single'],
-      'semi': ['error', 'always'],
+      'semi': ['error', 'never'],
       'comma-dangle': ['error', 'never'],
       'padding-line-between-statements': [
         'error',

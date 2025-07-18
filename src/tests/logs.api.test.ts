@@ -1,6 +1,10 @@
 import request from 'supertest'
 
-import app from '../index'
+// Make sure the correct path to the Express app is used.
+// For example, if your app is exported from '../app', update the import as follows:
+import app from '../main'
+// If the file is actually at '../index.ts', ensure it is compiled or use the correct extension if needed:
+// import app from '../index.ts'
 
 describe('GET /logs', () => {
   let response: request.Response
@@ -22,9 +26,9 @@ describe('GET /logs', () => {
           objectId: expect.any(String) as string,
           operation: expect.any(String) as string,
           component: expect.any(String) as string,
-          message: expect.any(Object) as object
-        })
-      ])
+          message: expect.any(Object) as object,
+        }),
+      ]),
     )
     // console.log('response.body: ' + JSON.stringify(response.body));
   })

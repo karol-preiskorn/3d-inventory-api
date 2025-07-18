@@ -12,7 +12,7 @@ import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb'
 
 import { faker } from '@faker-js/faker'
 
-import { connectToCluster, connectToDb } from '../db/dbUtils'
+import { connectToCluster, connectToDb } from '../utils/db'
 import { User } from '../routers/users'
 
 describe('Test Mongo Atlas DB users', () => {
@@ -38,7 +38,7 @@ describe('Test Mongo Atlas DB users', () => {
       password: faker.internet.password({ length: 10 }),
       permissions: faker.helpers.arrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
       token: faker.internet.password({ length: 50 }),
-      _id: new ObjectId()
+      _id: new ObjectId(),
     }
     await users.insertOne(mockUser)
     const insertedUser = await users.findOne(mockUser)
@@ -63,7 +63,7 @@ describe('Test Mongo Atlas DB users', () => {
         email: faker.internet.email(),
         password: faker.internet.password({ length: 10 }),
         rights: faker.helpers.arrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
-        token: faker.internet.password({ length: 50 })
+        token: faker.internet.password({ length: 50 }),
       }
       await users.insertOne(mockUser)
       const insertedUser = await users.findOne(mockUser)
