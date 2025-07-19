@@ -3,8 +3,6 @@
  * @public
  */
 
-import './utils/config';
-
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -29,12 +27,14 @@ import github from './routers/github';
 import logs from './routers/logs';
 import models from './routers/models';
 import readme from './routers/readme';
+
+import config from './utils/config';
 import log from './utils/logger';
 
 const logger = log('index');
 
-const PORT = Number(process.env.PORT) || 3001;
-const HOST = process.env.HOST || '0.0.0.0';
+const PORT = config.PORT;
+const HOST = config.HOST;
 
 const httpsOptions = {
   key: fs.readFileSync('./cert/server.key'),
@@ -74,7 +74,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     'https://172.20.0.3:3001',
     'https://cluster0.htgjako.mongodb.net',
     'https://localhost:3000',
-    'https://localhost:3001',
+    'https://localhost:8080',
+    'https://0.0.0.0:8080',
   ];
   const origin = req.headers.origin;
 
@@ -224,6 +225,16 @@ const server = httpsServer.listen(Number(PORT), HOST, () => {
 
 server.on('error', (err: Error) => {
   logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}`);
+});
+
+server.on('error', (e) => {
+  if (typeof (e as any).code === 'string' && (e as any).code === 'EADDRINUSE') {
+    console.error('Address in use, retrying...');
+    setTimeout(() => {
+      server.close();
+      server.listen(PORT, HOST);
+    }, 2000);
+  }
 });
 
 process.on('SIGTERM', () => {

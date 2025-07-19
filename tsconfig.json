@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ESNext",
+    "module": "CommonJS", // Use CommonJS for Node.js
     "moduleResolution": "node",
     "allowJs": false,
     "declaration": true,
@@ -30,7 +30,13 @@
   },
   "exclude": [
     "node_modules",
-    "tests"
+    "tests",
+    "dist",
+    "coverage",
+    "build",
+    "scripts",
+    "src/__tests__",
+    "src/__mocks__"
   ],
   "include": [
     "src/**/*.ts"

@@ -1,9 +1,5 @@
-# syntax=docker/dockerfile:1
-
 # Dockerfile for 3D Inventory API
 # This Dockerfile uses a multi-stage build to create a lightweight image for the API.
-# The first stage builds the application using Node.js, and the second stage runs the built application in a smaller image.
-# The final image is based on the slim version of Node.js to reduce the size and attack surface.
 
 # Stage 1: Build
 FROM node:lts-slim AS builder
@@ -32,8 +28,7 @@ RUN mkdir -p cert
 COPY cert ./cert
 
 # Don't hardcode the port - let Cloud Run set it
-ENV NODE_ENV=production
-ENV HOST=0.0.0.0
-
-CMD ["node", "dist/src/main.js"]
-EXPOSE 8080
+# ENV PORT=8080
+# ENV HOST=0.0.0.0
+#CMD ["ls", "./dist/main.js"]
+CMD ["node", "./dist/main.js"]

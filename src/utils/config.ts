@@ -1,63 +1,67 @@
 /**
  * @file config.ts
- * @description load environment variables and sanitize them
+ * @description Loads and validates environment variables.
+ *              This module is responsible for loading environment variables
+ *              from a .env file and providing a configuration object to the
+ *              rest of the application.
  */
 
 import dotenv from 'dotenv';
 import path from 'path';
 
-// Parsing the env file.
 dotenv.config({ path: path.resolve('./.env') });
 
-// Interface to load env variables. Note these variables can possibly be undefined
-// as someone could skip these variables or not setup a .env file at all
+type EnvVars = {
+  ATLAS_URI?: string;
+  DBNAME?: string;
+  API_YAML_FILE?: string;
+  HOST?: string;
+  PORT?: string;
+  COOKIE_EXPIRESIN?: string;
+};
 
-interface ENV {
-  ATLAS_URI: string | undefined;
-  DBNAME: string | undefined;
-  API_YAML_FILE: string | undefined;
-  HOST: string | undefined;
-  PORT: number;
-  COOKIE_EXPIRESIN: number;
-}
-
-interface Config {
+type Config = {
   ATLAS_URI: string;
   DBNAME: string;
   API_YAML_FILE: string;
   HOST: string;
   PORT: number;
   COOKIE_EXPIRESIN: number;
-}
+};
 
-// Loading process.env as ENV interface if not set use environment variables
+const DEFAULTS = {
+  DBNAME: '3d-inventory',
+  API_YAML_FILE: 'src/api/openapi.yaml',
+  HOST: 'localhost',
+  PORT: 8080,
+  COOKIE_EXPIRESIN: 3600,
+};
 
-const getConfig = (): ENV => {
+function loadEnv(): EnvVars {
   return {
     ATLAS_URI: process.env.ATLAS_URI,
-    DBNAME: process.env.DBNAME ? String(process.env.DBNAME) : '3d-inventory',
-    API_YAML_FILE: process.env.API_YAML_FILE ? String(process.env.API_YAML_FILE) : 'src/api/openapi.yaml',
-    HOST: process.env.HOST ? String(process.env.HOST) : 'localhost',
-    PORT: process.env.PORT ? Number(process.env.PORT) : 3001,
-    COOKIE_EXPIRESIN: process.env.COOKIE_EXPIRESIN ? Number(process.env.COOKIE_EXPIRESIN) : 3600,
+    DBNAME: process.env.DBNAME,
+    API_YAML_FILE: process.env.API_YAML_FILE,
+    HOST: process.env.HOST,
+    PORT: process.env.PORT,
+    COOKIE_EXPIRESIN: process.env.COOKIE_EXPIRESIN,
   };
-};
+}
 
-// Throwing an Error if any field was undefined we don't want our app to run if it can't connect to DB and ensure
-// that these fields are accessible. If all is good return it as Config which just removes the undefined from
-// our type definition.
-
-const getSanitizedConfig = (config: ENV): Config => {
-  for (const [key, value] of Object.entries(config)) {
-    if (value === undefined) {
-      throw new Error(`Missing key ${key} in environment variables from .env`);
-    }
+function sanitizeEnv(env: EnvVars): Config {
+  if (!env.ATLAS_URI) {
+    throw new Error('Missing required environment variable: ATLAS_URI');
   }
-  return config as Config;
-};
+  return {
+    ATLAS_URI: env.ATLAS_URI,
+    DBNAME: env.DBNAME || DEFAULTS.DBNAME,
+    API_YAML_FILE: env.API_YAML_FILE || DEFAULTS.API_YAML_FILE,
+    HOST: env.HOST || DEFAULTS.HOST,
+    PORT: env.PORT ? Number(env.PORT) : DEFAULTS.PORT,
+    COOKIE_EXPIRESIN: env.COOKIE_EXPIRESIN ? Number(env.COOKIE_EXPIRESIN) : DEFAULTS.COOKIE_EXPIRESIN,
+  };
+}
 
-const configRaw = getConfig();
-
-const config = getSanitizedConfig(configRaw);
+const config = sanitizeEnv(loadEnv());
 
 export default config;
