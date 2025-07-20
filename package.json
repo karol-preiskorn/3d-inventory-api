@@ -34,7 +34,7 @@
     "cp": "cpy README.md src/assets --flat",
     "doc": "npx typedoc",
     "docker:build": "npm run version:patch && ./build.sh",
-    "docker:run": "docker rm -f 3d-inventory-api 2>/dev/null && docker build -t 3d-inventory-api . && docker run -p 8080:8080 -e PORT=8080 3d-inventory-api",
+    "docker:run": "docker rm -f 3d-inventory-api && docker build -t 3d-inventory-api . && docker run -p 8080:8080 -e PORT=8080 3d-inventory-api",
     "docker:test": "docker run --rm -p 8080:8080 -e PORT=8080 3d-inventory-api",
     "gcp:deploy": "docker compose up --build",
     "gcp:logs": "gcloud logs read d-inventory-api --project=d-inventory-406007 --limit=50",
