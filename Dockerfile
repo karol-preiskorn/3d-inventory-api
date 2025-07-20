@@ -41,13 +41,13 @@ COPY cert ./cert
 # ENV PORT=8080
 
 # Create non-root user for security
-RUN groupadd -r appuser && useradd -r -g appuser appuser
-RUN chown -R appuser:appuser /usr/src/3d-inventory-api
-USER appuser
+# RUN groupadd -r appuser && useradd -r -g appuser appuser
+# RUN chown -R appuser:appuser /usr/src/3d-inventory-api
+# USER appuser
 
 # Health check for Cloud Run
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://$HOST:$PORT/health || exit 1
+  CMD curl -f --max-time 10 -k https://0.0.0.0:8080/health || exit 1
 
 # Cloud Run will set PORT dynamically
 EXPOSE 8080

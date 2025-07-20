@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.96.36",
+  "version": "0.96.45",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -37,7 +37,7 @@
     "docker:run": "docker rm -f 3d-inventory-api && docker build -t 3d-inventory-api . && docker run -p 8080:8080 -e PORT=8080 3d-inventory-api",
     "docker:test": "docker run --rm -p 8080:8080 -e PORT=8080 3d-inventory-api",
     "gcp:deploy": "docker compose up --build",
-    "gcp:logs": "gcloud logs read d-inventory-api --project=d-inventory-406007 --limit=50",
+    "gcp:logs": "gcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=d-inventory-api\" --project=d-inventory-406007 --limit=50",
     "kill-port": "npx cross-port-killer 3001",
     "lint": "eslint src",
     "maven:update": "cd api && mvn versions:use-latest-versions",

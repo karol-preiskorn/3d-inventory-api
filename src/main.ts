@@ -30,11 +30,16 @@ import readme from './routers/readme';
 
 import config from './utils/config';
 import log from './utils/logger';
+import type { Server as HttpServer } from 'http';
+import type { Server as HttpsServer } from 'https';
 
 const logger = log('index');
 
 const PORT = config.PORT;
 const HOST = config.HOST;
+
+// Cloud Run configuration - use HTTP instead of HTTPS
+const isCloudRun = process.env.NODE_ENV === 'production' && process.env.PORT;
 
 const httpsOptions = {
   key: fs.readFileSync('./cert/server.key'),
@@ -68,14 +73,12 @@ app.use(cors());
 app.use((req: Request, res: Response, next: NextFunction) => {
   const allowedOrigins = [
     `https://${HOST}:${PORT}`,
-    'https://172.17.0.2:3001',
-    'https://172.17.0.3:3001',
-    'https://172.20.0.2:3001',
-    'https://172.20.0.3:3001',
+    'https://172.17.0.*:3001',
+    'https://172.20.0.*:3001',
     'https://cluster0.htgjako.mongodb.net',
     'https://localhost:3000',
     'https://localhost:8080',
-    'https://0.0.0.0:8080',
+    'https://d-inventory-api-*.run.app',
   ];
   const origin = req.headers.origin;
 
@@ -214,46 +217,72 @@ app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
   next(err);
 });
 
-process.on('SIGINT', () => {
-  logger.info('SIGINT signal received: closing HTTPS server.');
-  server.close(() => {
-    logger.debug('HTTPS server closed');
-    process.exit(0);
-  });
-});
-
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM signal received: closing HTTPS server.');
-  server.close(() => {
-    logger.debug('HTTPS server closed');
-    process.exit(0);
-  });
-});
-
-//
-// httpsServer
-//
-const nl = '\n';
-const httpsServer = https.createServer(httpsOptions, app);
-const server = httpsServer;
-
+// Start the server
 // Register error handler before listen
-server.on('error', (err: Error) => {
-  logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`);
-});
-server.listen(Number(PORT), HOST, () => {
-  logger.info(
-    `${nl}` +
-      figlet.textSync('3d-inventory-mongo-api', {
+let server: HttpServer | HttpsServer;
+
+if (process.env.NODE_ENV === 'production') {
+  server = app.listen(Number(PORT), '0.0.0.0', () => {
+    logger.info(
+      figlet.textSync('3d-inventory-mongo-api GCP', {
         font: 'Mini',
         horizontalLayout: 'default',
         verticalLayout: 'default',
         width: 160,
         whitespaceBreak: true,
       }),
-  );
-  logger.info(`Server on https://${HOST}:${PORT}`);
-  logger.info(`Atlas MongoDb: https://cloud.mongodb.com/v2/6488bf6ff7acab10310111b5#/overview db: ${process.env.DBNAME}`);
-});
+    );
+    logger.info(`Server on GCP http://0.0.0.0:${PORT}`);
+  });
 
+  // Update signal handlers for HTTP server
+  process.on('SIGINT', () => {
+    logger.info('SIGINT signal received: closing HTTP server.');
+    server.close(() => {
+      logger.debug('HTTP server closed');
+      process.exit(0);
+    });
+  });
+
+  process.on('SIGTERM', () => {
+    logger.info('SIGTERM signal received: closing HTTP server.');
+    server.close(() => {
+      logger.debug('HTTP server closed');
+      process.exit(0);
+    });
+  });
+} else {
+  server = https.createServer(httpsOptions, app);
+  server.on('error', (err: Error) => {
+    logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`);
+  });
+  server.listen(Number(PORT), HOST, () => {
+    logger.info(
+      figlet.textSync('3d-inventory-mongo-api DEV', {
+        font: 'Mini',
+        horizontalLayout: 'default',
+        verticalLayout: 'default',
+        width: 160,
+        whitespaceBreak: true,
+      }),
+    );
+    logger.info(`Server on DEV https://${HOST}:${PORT}`);
+  });
+  // Signal handlers for HTTPS server
+  process.on('SIGINT', () => {
+    logger.info('SIGINT signal received: closing HTTPS server.');
+    server.close(() => {
+      logger.debug('HTTPS server closed');
+      process.exit(0);
+    });
+  });
+
+  process.on('SIGTERM', () => {
+    logger.info('SIGTERM signal received: closing HTTPS server.');
+    server.close(() => {
+      logger.debug('HTTPS server closed');
+      process.exit(0);
+    });
+  });
+}
 export default server;

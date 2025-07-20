@@ -70,7 +70,7 @@ paths:
           description: Unexpected server error
         default:
           description: Unexpected error
-      x-swagger-router-controller: github
+      x-swagger-router-controller: github 
   /attributes:
     get:
       tags:
