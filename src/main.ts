@@ -129,6 +129,16 @@ app.use('/connections', connections);
 app.use('/floors', floors);
 app.use('/github', github);
 
+// Health check endpoint (required for Cloud Run)
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    port: PORT,
+    environment: process.env.NODE_ENV,
+  });
+});
+
 fs.access(yamlFilename, fs.constants.R_OK, (err: NodeJS.ErrnoException | null) => {
   if (err) {
     if (err.code === 'ENOENT') {
@@ -186,21 +196,38 @@ app.use((req: Request, res: Response) => {
 // XHR client error handler
 function xhrClientErrorHandler(err: Error, req: Request, res: Response, next: NextFunction): void {
   if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
-    logger.error(err);
+    logger.error(`[main] Something failed. ${err.message}`);
     res.status(500).json({
-      message: 'Something failed!',
+      message: `[main] Something failed. ${err.message}`,
     });
     next(err);
   } else {
     next(err);
   }
 }
+
 app.use(xhrClientErrorHandler);
 
 // General error handler
 app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
-  logger.error(`Unhandled error: ${err.message}. Stack: ${err.stack}`);
+  logger.error(`[main] Unhandled error: ${err.message}. Stack: ${err.stack}`);
   next(err);
+});
+
+process.on('SIGINT', () => {
+  logger.info('SIGINT signal received: closing HTTPS server.');
+  server.close(() => {
+    logger.debug('HTTPS server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM signal received: closing HTTPS server.');
+  server.close(() => {
+    logger.debug('HTTPS server closed');
+    process.exit(0);
+  });
 });
 
 //
@@ -208,7 +235,13 @@ app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
 //
 const nl = '\n';
 const httpsServer = https.createServer(httpsOptions, app);
-const server = httpsServer.listen(Number(PORT), HOST, () => {
+const server = httpsServer;
+
+// Register error handler before listen
+server.on('error', (err: Error) => {
+  logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`);
+});
+server.listen(Number(PORT), HOST, () => {
   logger.info(
     `${nl}` +
       figlet.textSync('3d-inventory-mongo-api', {
@@ -221,28 +254,6 @@ const server = httpsServer.listen(Number(PORT), HOST, () => {
   );
   logger.info(`Server on https://${HOST}:${PORT}`);
   logger.info(`Atlas MongoDb: https://cloud.mongodb.com/v2/6488bf6ff7acab10310111b5#/overview db: ${process.env.DBNAME}`);
-});
-
-server.on('error', (err: Error) => {
-  logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}`);
-});
-
-server.on('error', (e) => {
-  if (typeof (e as any).code === 'string' && (e as any).code === 'EADDRINUSE') {
-    console.error('Address in use, retrying...');
-    setTimeout(() => {
-      server.close();
-      server.listen(PORT, HOST);
-    }, 2000);
-  }
-});
-
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM signal received: closing HTTPS server.');
-  server.close(() => {
-    logger.debug('HTTPS server closed');
-    process.exit(0);
-  });
 });
 
 export default server;

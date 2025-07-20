@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.96.31",
+  "version": "0.96.36",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -24,7 +24,7 @@
   "type": "module",
   "main": "main.js",
   "scripts": {
-    "build": "tsc && cp api.yaml .env dist && rm -rf dist/src/assets && cp -r src/assets dist/src",
+    "build": "tsc && cp api.yaml dist/ && mkdir -p dist/src && cp -r src/assets dist/src/ 2>/dev/null || true",
     "check:depcheck": "npx depcheck",
     "check:npm-check": "npx npm-check",
     "check:upgrade": "npx npm-check-updates -u && npm upgrade",
@@ -34,8 +34,10 @@
     "cp": "cpy README.md src/assets --flat",
     "doc": "npx typedoc",
     "docker:build": "npm run version:patch && ./build.sh",
-    "docker:compose": "docker compose up --build",
-    "docker:run": "docker run 3d-inventory-api",
+    "docker:run": "docker rm -f 3d-inventory-api 2>/dev/null && docker build -t 3d-inventory-api . && docker run -p 8080:8080 -e PORT=8080 3d-inventory-api",
+    "docker:test": "docker run --rm -p 8080:8080 -e PORT=8080 3d-inventory-api",
+    "gcp:deploy": "docker compose up --build",
+    "gcp:logs": "gcloud logs read d-inventory-api --project=d-inventory-406007 --limit=50",
     "kill-port": "npx cross-port-killer 3001",
     "lint": "eslint src",
     "maven:update": "cd api && mvn versions:use-latest-versions",
@@ -44,6 +46,7 @@
     "prettier": "prettier --check .",
     "prestart": "fuser -n tcp -k 3001 || true && npm run version:patch",
     "start": "CHOKIDAR_USEPOLLING=true tsx watch src/main.ts",
+    "start:prod": "NODE_ENV=production node ./dist/src/main.js",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:patch": "npm version patch --no-git-tag-version",
     "version:yaml": "node ./yaml-num.js"

@@ -32,7 +32,7 @@ type Config = {
 const DEFAULTS = {
   DBNAME: '3d-inventory',
   API_YAML_FILE: 'src/api/openapi.yaml',
-  HOST: 'localhost',
+  HOST: '0.0.0.0',
   PORT: 8080,
   COOKIE_EXPIRESIN: 3600,
 };

@@ -22,6 +22,10 @@ servers:
     description: local docker
   - url: https://172.20.0.3:3001
     description: local 3d-inventory-network subnet
+  - url: https://d-inventory-406007.uc.r.appspot.com
+    description: Google Cloud Run
+  - url: https://0.0.0.0:8080
+    description: local 3d-inventory-network subnet
 tags:
   - name: logs
     description: Operation on Logs
@@ -100,20 +104,6 @@ paths:
       summary: Update an existing attribute
       description: Update the details of an existing attribute.
       operationId: updateAttribute
-      parameters:
-        - name: id
-          in: path
-          description: ID of the attribute to update
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
       requestBody:
         required: true
         content:
@@ -131,6 +121,8 @@ paths:
           description: Attribute update data is inconsistent.
         "406":
           description: Not Acceptable
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
         "429":
           description: Too Many Requests
         "500":
@@ -148,8 +140,6 @@ paths:
         required: true
         content:
           application/json:
-            schema:
-              $ref: "#/components/schemas/Attribute"
       responses:
         "200":
           description: Attribute created successfully
@@ -159,7 +149,11 @@ paths:
                 $ref: "#/components/schemas/Attribute"
         "400":
           description: Bad request.
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
         "500":
+          description: Unexpected server error
+      x-swagger-router-controller: Attributes
           description: Unexpected server error
       x-swagger-router-controller: Attributes
     delete:
@@ -237,10 +231,6 @@ paths:
             x-42c-format: o:uuid
       requestBody:
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Attribute"
       responses:
         "200":
           description: Attribute updated successfully
@@ -252,7 +242,13 @@ paths:
           description: Attribute not found
         "406":
           description: Not Acceptable
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
         "429":
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Attributes
           description: Too Many Requests
         default:
           description: Unexpected error
@@ -308,12 +304,6 @@ paths:
         default:
           description: Unexpected error
       x-swagger-router-controller: Devices
-    put:
-      tags:
-        - devices
-      summary: Update an existing device
-      description: Update the details of an existing device.
-      operationId: updateDevice
       responses:
         "200":
           description: Device updated successfully
@@ -325,7 +315,15 @@ paths:
           description: Device update data is inconsistent.
         "406":
           description: Not Acceptable
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
         "429":
+          description: Too Many Requests
+        "500":
+          description: Unexpected server error
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Devices
           description: Too Many Requests
         "500":
           description: Unexpected server error
@@ -397,14 +395,6 @@ paths:
           description: ID of device to fetch
           required: true
           style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
       responses:
         "200":
           description: Success update device
@@ -424,11 +414,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
         "429":
           description: Too Many Requests
           content:
             application/json:
               schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Devices
                 $ref: "#/components/schemas/Error"
         default:
           description: Unexpected error
@@ -590,7 +590,7 @@ paths:
                   type: string
                   description: Device, Connection, Model, Floor
                 message:
-                  type: object
+                  type: string
                   description: Log message
       responses:
         "200":
@@ -604,20 +604,22 @@ paths:
       x-swagger-router-controller: Logs
     post:
       tags:
-        - logs
-      summary: Insert new log
-      description: Create log.
-      operationId: logPOST
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Log"
-        required: true
       responses:
         "200":
           description: Ok
           content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Log"
+              example:
+                $ref: "#/components/schemas/Log/example"
+        "404":
+          description: Error log not found
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
+        "500":
+          description: Error log not created
+      x-swagger-router-controller: Logs
             application/json:
               schema:
                 $ref: "#/components/schemas/Log"
@@ -1229,6 +1231,12 @@ paths:
                 $ref: "#/components/schemas/Confirmation"
         "404":
           description: Error log not found
+        "429":
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: "api.yaml"
       x-swagger-router-controller: Connections
   /connections/from/{id}:
     get:
@@ -1258,6 +1266,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Connections"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "api.yaml"
       x-swagger-router-controller: Connections
     delete:
       tags:
@@ -1317,6 +1331,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Connections"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "api.yaml"
       x-swagger-router-controller: Connections
     delete:
       tags:
@@ -1448,18 +1468,20 @@ paths:
           description: Not found.
         "500":
           description: Unexpected server error.
+      responses:
+        "200":
+          description: OK. Indicates that the update request has succeeded.
+        "400":
+          description: Bad request.
+        "404":
+          description: Not found.
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
+        "500":
+          description: >-
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
       x-swagger-router-controller: attributesDictionary
-    put:
-      tags:
-        - attributesDictionary
-      summary: Update attributesDictionary
-      operationId: attributesDictionaryPut
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AttributesDictionary"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the update request has succeeded.
@@ -1470,22 +1492,24 @@ paths:
         "500":
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
-            request.
-      x-swagger-router-controller: attributesDictionary
-    post:
-      tags:
-        - attributesDictionary
-      summary: Create devices attributes types.
-      description: 3d-inventory attributes from dictionary attributes
-      operationId: attributesDictionaryPost
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AttributesDictionary"
-        required: true
       responses:
         "200":
+          description: OK. Indicates that the request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttributesDictionary"
+              example:
+                $ref: "#/components/schemas/AttributesDictionary/example"
+        "400":
+          description: Bad request.
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
+        "500":
+          description: >-
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
+      x-swagger-router-controller: attributesDictionary
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
@@ -1560,16 +1584,18 @@ paths:
         - name: id
           in: path
           description: ID of attributesDictionary to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 65c2bbf4e6e6d4ea3d398765
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      responses:
+        "200":
+          description: OK.
+        "400":
+          description: Bad request.
+        "404":
+          description: Not found.
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
+        "500":
+          description: Unexpected server error.
+      x-swagger-router-controller: attributesDictionary
       requestBody:
         content:
           application/json:
@@ -1641,6 +1667,12 @@ paths:
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
             request.
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "api.yaml"
       x-swagger-router-controller: attributesDictionary
   /attributesDictionary/devices:
     get:
@@ -1687,6 +1719,12 @@ paths:
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from  fulfilling
             the request.
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "api.yaml"
       x-swagger-router-controller: attributesDictionary
   /models:
     get:
@@ -1705,24 +1743,6 @@ paths:
               example:
                 $ref: "#/components/schemas/Models/example"
         "404":
-          description: Not found
-        "500":
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-            the request.
-      x-swagger-router-controller: Models
-    put:
-      tags:
-        - models
-      summary: Update model
-      description: Update single model
-      operationId: modelsPut
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Model"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1732,19 +1752,13 @@ paths:
                 $ref: "#/components/schemas/Model"
         "404":
           description: Not found
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
         "500":
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
             the request.
       x-swagger-router-controller: Models
-    post:
-      tags:
-        - models
-      summary: Create model.
-      description: Create model of device.
-      operationId: modelsPost
-      requestBody:
-        content:
           application/json:
             schema:
               $ref: "#/components/schemas/Model"
@@ -1755,8 +1769,38 @@ paths:
           content:
             application/json:
               schema:
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+          content:
+            application/json:
+              schema:
                 $ref: "#/components/schemas/Model"
         "400":
+          description: Bad request.
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
+        "500":
+          description: >-
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
+      x-swagger-router-controller: Models
+      requestBody:
+        content:
+          application/json:
+            schema:
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+        "404":
+          description: Not found
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
+        "500":
+          description: >-
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
+      x-swagger-router-controller: Models
           description: Bad request.
         "500":
           description: >-
@@ -1877,16 +1921,18 @@ paths:
           description: Unexpected server error.
       x-swagger-router-controller: Models
   /floors:
-    get:
-      tags:
-        - floors
-      summary: Get all floors data
-      description: Get all floors data
-      operationId: floorsGet
       responses:
         "200":
-          description: OK
+          description: OK. Indicates that the request has succeeded.
         "404":
+          description: Not found
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
+        "500":
+          description: >-
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
+      x-swagger-router-controller: Floors
           description: Not found
       x-swagger-router-controller: Floors
     put:
@@ -1897,16 +1943,18 @@ paths:
       operationId: floorPut
       requestBody:
         content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Floor"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
-        "404":
-          description: Not found
+        "400":
+          description: Bad request.
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
         "500":
+          description: >-
+            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+            the request.
+      x-swagger-router-controller: Floors
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
             request.
@@ -1942,20 +1990,22 @@ paths:
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Floor"
         "404":
           description: Not found
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
         "500":
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
             the request.
       x-swagger-router-controller: Floors
-  /floors/{id}:
-    get:
-      tags:
-        - floors
-      summary: Get the single floor :id
-      description: Get single floor
-      operationId: floorIdGet
       parameters:
         - name: id
           in: path
@@ -2078,22 +2128,21 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-        required: true
-      responses:
         "200":
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-        "404":
-          description: Not found
+        "400":
+          description: Bad request.
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
         "500":
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
             request.
+      x-swagger-router-controller: Users
       x-swagger-router-controller: Users
     post:
       tags:
@@ -2116,6 +2165,9 @@ paths:
                 $ref: "#/components/schemas/User"
         "400":
           description: Bad request.
+        "415":
+          description:
+            Unsupported Media Type. The request entity has a media type which the server or resource does not support.
         "500":
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
@@ -2140,6 +2192,12 @@ paths:
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
             request.
+        "429":
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: "api.yaml"
       x-swagger-router-controller: Users
   /users/{id}:
     get:
@@ -2169,20 +2227,22 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-        "404":
-          description: Not found
+      responses:
+        "200":
+          description: OK. Indicates that the request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Confirmation"
+        "400":
+          description: Bad request.
+        "415":
+          description: Unsupported Media Type. The request entity has a media type which the server or resource does not support.
+        "500":
+          description: >-
+            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
+            request.
       x-swagger-router-controller: Users
-    post:
-      tags:
-        - users
-      summary: Create a new user
-      description: Create a new user
-      operationId: userCreate
-      parameters:
-        - name: id
-          in: path
-          description: ID of user
-          required: true
           style: simple
           explode: false
           schema:
@@ -2471,14 +2531,37 @@ components:
           type: string
         attributeDictionaryId:
           type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
         connectionId:
           type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
         deviceId:
           type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
         modelId:
           type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
         value:
           type: string
+          maxLength: 512
+          description: Value of the attribute
+          example: 3W
       example:
         _id: 653e10ecd6025afb66017c65
         attributeDictionaryId: 653e10ecd6025afb66017c65
@@ -2548,6 +2631,7 @@ components:
         name:
           type: string
           description: Device name
+          maxLength: 255
         modelId:
           example: 6566ed4ace63d42b25fbba19
           type: string
@@ -2558,6 +2642,7 @@ components:
           $ref: "#/components/schemas/Position"
         attributes:
           $ref: "#/components/schemas/Attributes"
+      additionalProperties: false
       description: Device it is basic structure 3d-inventory
       example:
         _id: 6566ed4ace63d42b25fbba19
