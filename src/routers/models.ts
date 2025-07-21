@@ -31,20 +31,26 @@ export interface Model {
 }
 
 const collectionName = 'models';
+
 const router: express.Router = express.Router();
 
 router.get('/', (async (req, res) => {
   let client;
+
   try {
     client = await connectToCluster();
   } catch (error) {
     logger.error('Error connecting to the database:', error);
     res.status(500).send('Internal Server Error');
+
     return;
   }
   const db: Db = connectToDb(client);
+
   const collection: Collection = db.collection(collectionName);
+
   const results: object[] = await collection.find({}).limit(100).toArray();
+
   if (!results) {
     logger.warn('GET /models - not found');
     res.status(404).send('Not found');
@@ -74,13 +80,19 @@ router.get('/', (async (req, res) => {
 router.get('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404);
+
     return;
   }
   const client = await connectToCluster();
+
   const db: Db = connectToDb(client);
+
   const collection: Collection = db.collection(collectionName);
+
   const query = { _id: new ObjectId(req.params.id) };
+
   const result = await collection.findOne(query);
+
   if (!result) res.status(404).end();
   else res.status(200).json(result);
   await closeConnection(client);
@@ -102,29 +114,36 @@ router.put('/:id', (async (req, res) => {
     res.status(404).send('Not correct id');
   }
   const query = { _id: new ObjectId(req.params.id) };
+
   console.log('models.router.put: ' + JSON.stringify(req.body));
   const b: Model = req.body as Model;
+
   const updates = {
     $set: {
       name: b.name,
       dimension: {
         width: b.dimension.width,
         height: b.dimension.height,
-        depth: b.dimension.depth,
+        depth: b.dimension.depth
       },
       texture: {
         front: b.texture.front,
         back: b.texture.back,
         side: b.texture.side,
         top: b.texture.top,
-        bottom: b.texture.bottom,
-      },
-    },
+        bottom: b.texture.bottom
+      }
+    }
   };
+
   const client = await connectToCluster();
+
   const db: Db = connectToDb(client);
+
   const collection: Collection = db.collection(collectionName);
+
   const result = await collection.updateOne(query, updates);
+
   if (!result) res.status(404).send('Not found models to update');
   res.status(200).json(result);
   await closeConnection(client);
@@ -132,10 +151,15 @@ router.put('/:id', (async (req, res) => {
 
 router.post('/', (async (req, res) => {
   const client = await connectToCluster();
+
   const db: Db = connectToDb(client);
+
   const collection: Collection = db.collection(collectionName);
+
   const newDocument: OptionalId<Document> = req.body as OptionalId<Document>;
+
   const results: InsertOneResult<Document> = await collection.insertOne(newDocument);
+
   res.status(200).json(results);
   await closeConnection(client);
 }) as RequestHandler);
@@ -143,14 +167,21 @@ router.post('/', (async (req, res) => {
 router.patch('/dimension/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     res.sendStatus(404);
+
     return;
   }
   const query = { _id: new ObjectId(req.params.id) };
+
   const updates: UpdateFilter<Document> = { $set: { dimension: req.body as Dimension } };
+
   const client = await connectToCluster();
+
   const db: Db = connectToDb(client);
+
   const collection: Collection = db.collection(collectionName);
+
   const result = await collection.updateOne(query, updates);
+
   res.status(200).json(result);
   await closeConnection(client);
 }) as RequestHandler);
@@ -171,11 +202,17 @@ router.patch('/texture/:id', (async (req, res) => {
     res.sendStatus(404);
   }
   const query = { _id: new ObjectId(req.params.id) };
+
   const updates: UpdateFilter<Document> = { $set: { texture: req.body as Texture } };
+
   const client = await connectToCluster();
+
   const db: Db = connectToDb(client);
+
   const collection: Collection = db.collection(collectionName);
+
   const result = await collection.updateOne(query, updates);
+
   res.status(200).json(result);
   await closeConnection(client);
 }) as RequestHandler);
@@ -194,13 +231,19 @@ router.delete('/:id', (async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     logger.warn(`DELETE /models/:id - Invalid ID: ${req.params.id}`);
     res.sendStatus(404);
+
     return;
   }
   const client = await connectToCluster();
+
   const db: Db = connectToDb(client);
+
   const collection: Collection = db.collection(collectionName);
+
   const query = { _id: new ObjectId(req.params.id) };
+
   let result: DeleteResult;
+
   try {
     result = await collection.deleteOne(query);
     if (!result) {
@@ -236,21 +279,28 @@ router.delete('/', (async (req, res) => {
   if (process.env.NODE_ENV === 'production') {
     logger.warn('DELETE /models - Attempt to delete all documents in production environment');
     res.status(403).send('Forbidden in production environment');
+
     return;
   }
 
   if (req.query.confirm !== 'true') {
     logger.warn('DELETE /models - Missing confirmation query parameter');
     res.status(400).send('Confirmation query parameter "confirm=true" is required');
+
     return;
   }
 
   const query = {};
+
   const client = await connectToCluster();
+
   const db = connectToDb(client);
+
   const collection = db.collection(collectionName); // TypeScript infers the type automatically
+
   try {
     const result: DeleteResult = await collection.deleteMany(query);
+
     res.status(200).json(result);
   } catch (error) {
     logger.error('DELETE /models - Error deleting documents:', error);

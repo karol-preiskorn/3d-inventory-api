@@ -36,14 +36,14 @@ import type { Server as HttpsServer } from 'https';
 const logger = log('index');
 
 const PORT = config.PORT;
+
 const HOST = config.HOST;
 
 // Cloud Run configuration - use HTTP instead of HTTPS
-const isCloudRun = process.env.NODE_ENV === 'production' && process.env.PORT;
 
 const httpsOptions = {
   key: fs.readFileSync('./cert/server.key'),
-  cert: fs.readFileSync('./cert/server.crt'),
+  cert: fs.readFileSync('./cert/server.crt')
 };
 
 const yamlFilename = process.env.API_YAML_FILE ?? './api.yaml';
@@ -59,10 +59,11 @@ try {
       stream: {
         write: (message: string) => {
           logger.info(message.trim());
+
           return true;
-        },
-      },
-    }),
+        }
+      }
+    })
   );
 } catch (error) {
   logger.error(`Error login in morgan: ${String(error)}`);
@@ -72,14 +73,21 @@ app.use(cors());
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const allowedOrigins = [
+    // Local development
     `https://${HOST}:${PORT}`,
     'https://172.17.0.*:3001',
     'https://172.20.0.*:3001',
     'https://cluster0.htgjako.mongodb.net',
     'https://localhost:3000',
     'https://localhost:8080',
+    // Cloud Run services (add your actual UI URL)
+    'https://d-inventory-ui-wzwe3odv7q-ew.a.run.app',
+    // Cloud Run services
     'https://d-inventory-api-*.run.app',
+    'https://d-inventory-ui-*.a.run.app',
+    'https://*.ultimasolution.pl'
   ];
+
   const origin = req.headers.origin;
 
   if (origin && allowedOrigins.includes(origin)) {
@@ -94,7 +102,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use((_req, res: Response, next: NextFunction) => {
   res.header(
     'Content-Security-Policy',
-    "default-src 'self'; connect-src *; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;",
+    'default-src \'self\'; connect-src *; script-src \'self\' \'unsafe-inline\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data: https:;'
   );
   next();
 });
@@ -112,9 +120,10 @@ morganBody(app, {
   stream: {
     write: (message: string) => {
       logger.info(message.trim());
+
       return true;
-    },
-  },
+    }
+  }
 });
 
 app.use(express.urlencoded({ extended: false }));
@@ -138,10 +147,11 @@ app.get('/health', (req, res) => {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     port: PORT,
-    environment: process.env.NODE_ENV,
+    environment: process.env.NODE_ENV
   });
 });
 
+// eslint-disable-next-line no-undef
 fs.access(yamlFilename, fs.constants.R_OK, (err: NodeJS.ErrnoException | null) => {
   if (err) {
     if (err.code === 'ENOENT') {
@@ -153,23 +163,24 @@ fs.access(yamlFilename, fs.constants.R_OK, (err: NodeJS.ErrnoException | null) =
     }
   } else {
     logger.info(`File api.yaml opened successfully from ${yamlFilename}`);
+    try {
+      const file = fs.readFileSync(yamlFilename, 'utf8');
+
+      const swaggerDocument = YAML.parse(file) as JsonObject;
+
+      app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+      logger.info(`swaggerDocument api.yaml served successfully load ${JSON.stringify(swaggerDocument).length} bytes`);
+    } catch (e) {
+      if (typeof e === 'string') {
+        logger.warn(e.toUpperCase());
+      } else if (e instanceof Error) {
+        logger.error('Open swaggerUI exception: ' + e.message);
+      } else {
+        logger.error('Unknown error occurred.');
+      }
+    }
   }
 });
-
-try {
-  const file = fs.readFileSync(yamlFilename, 'utf8');
-  const swaggerDocument = YAML.parse(file) as JsonObject;
-  app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  logger.info(`swaggerDocument api.yaml served successfully load ${JSON.stringify(swaggerDocument).length} bytes`);
-} catch (e) {
-  if (typeof e === 'string') {
-    logger.warn(e.toUpperCase());
-  } else if (e instanceof Error) {
-    logger.error('Open swaggerUI exception: ' + e.message);
-  } else {
-    logger.error('Unknown error occurred.');
-  }
-}
 
 // OpenApi validation
 try {
@@ -177,8 +188,8 @@ try {
     OpenApiValidator.middleware({
       apiSpec: yamlFilename,
       validateRequests: true,
-      validateResponses: true,
-    }),
+      validateResponses: true
+    })
   );
   logger.info(`OpenApiValidator api.yaml served successfully from ${yamlFilename}`);
 } catch (error) {
@@ -192,7 +203,7 @@ app.use((req: Request, res: Response) => {
   res.status(404).json({
     message: 'Endpoint not found',
     error: 'Not Found',
-    status: 404,
+    status: 404
   });
 });
 
@@ -201,7 +212,7 @@ function xhrClientErrorHandler(err: Error, req: Request, res: Response, next: Ne
   if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
     logger.error(`[main] Something failed. ${err.message}`);
     res.status(500).json({
-      message: `[main] Something failed. ${err.message}`,
+      message: `[main] Something failed. ${err.message}`
     });
     next(err);
   } else {
@@ -229,8 +240,8 @@ if (process.env.NODE_ENV === 'production') {
         horizontalLayout: 'default',
         verticalLayout: 'default',
         width: 160,
-        whitespaceBreak: true,
-      }),
+        whitespaceBreak: true
+      })
     );
     logger.info(`Server on GCP http://0.0.0.0:${PORT}`);
   });
@@ -263,8 +274,8 @@ if (process.env.NODE_ENV === 'production') {
         horizontalLayout: 'default',
         verticalLayout: 'default',
         width: 160,
-        whitespaceBreak: true,
-      }),
+        whitespaceBreak: true
+      })
     );
     logger.info(`Server on DEV https://${HOST}:${PORT}`);
   });

@@ -46,7 +46,7 @@ COPY cert ./cert
 # USER appuser
 
 # Health check for Cloud Run
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f --max-time 10 -k https://0.0.0.0:8080/health || exit 1
 
 # Cloud Run will set PORT dynamically

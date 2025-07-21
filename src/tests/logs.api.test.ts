@@ -1,4 +1,5 @@
 import request from 'supertest'
+import { expect, beforeAll, describe, it } from '@jest/globals'
 
 // Make sure the correct path to the Express app is used.
 // For example, if your app is exported from '../app', update the import as follows:
@@ -13,22 +14,20 @@ describe('GET /logs', () => {
     response = await request(app).get('/logs').set('Accept', 'application/json; charset=utf-8').expect(200)
   })
 
-  afterAll(() => {
-    app.listen().close()
-  })
+  // No need to close the server here since Supertest handles it.
 
   it('GET /logs => array of items', () => {
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          _id: expect.any(String) as string,
-          date: expect.any(String) as string,
-          objectId: expect.any(String) as string,
-          operation: expect.any(String) as string,
-          component: expect.any(String) as string,
-          message: expect.any(Object) as object,
-        }),
-      ]),
+          _id: expect.any(String),
+          date: expect.any(String),
+          objectId: expect.any(String),
+          operation: expect.any(String),
+          component: expect.any(String),
+          message: expect.any(Object)
+        })
+      ])
     )
     // console.log('response.body: ' + JSON.stringify(response.body));
   })

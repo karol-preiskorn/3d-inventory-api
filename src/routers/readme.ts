@@ -11,13 +11,17 @@ import Markdown from 'markdown-it'
 import { promisify } from 'util'
 
 const router: express.Router = express.Router()
+
 const readFileAsync = promisify(fs.readFile)
+
 const md = new Markdown()
 
 router.get('/', async (_req, res): Promise<void> => {
   const path = './src/assets/README.md'
+
   try {
     const data = await readFileAsync(path, 'utf8')
+
     res.status(200).send(md.render(data))
   }
   catch (err: unknown) {

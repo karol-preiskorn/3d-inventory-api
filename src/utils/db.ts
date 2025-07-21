@@ -4,30 +4,51 @@
  * @description This module exports a MongoDB client and a database connection.
  */
 
-import type { Db } from 'mongodb'
-import { MongoClient } from 'mongodb'
-import config from '../utils/config'
-import log from '../utils/logger'
+import type { Db, MongoClientOptions } from 'mongodb';
+import { MongoClient } from 'mongodb';
+import config from '../utils/config';
+import log from '../utils/logger';
 
-const logger = log('db')
+const logger = log('db');
 
-const uri = config.ATLAS_URI
+const uri = config.ATLAS_URI;
+
+const mongoOptions: MongoClientOptions = {
+  // SSL/TLS configuration
+  tls: true,
+  tlsAllowInvalidCertificates: true, // For development
+  tlsInsecure: false,
+
+  // Connection settings
+  serverSelectionTimeoutMS: 30000,
+  connectTimeoutMS: 30000,
+  socketTimeoutMS: 30000,
+
+  // Retry settings
+  retryWrites: true,
+  retryReads: true,
+  maxPoolSize: 10,
+  minPoolSize: 1
+};
 
 /**
  * Connects to the MongoDB Atlas cluster.
  * @returns {Promise<MongoClient>} The connected MongoDB client.
  */
 export async function connectToCluster(): Promise<MongoClient> {
-  let client
-  let connect
+  let client;
+
+  let connect;
+
   try {
-    client = new MongoClient(uri)
-    connect = await client.connect()
-    logger.info('Successfully connected to Atlas cluster')
-    return connect
+    client = new MongoClient(uri, mongoOptions);
+    connect = await client.connect();
+    logger.info('Successfully connected to Atlas cluster');
+
+    return connect;
   } catch (error) {
-    logger.error(`Connection to Atlas cluster failed: ${error as string}`)
-    process.exit(1)
+    logger.error(`Connection to Atlas cluster failed: ${error as string}`);
+    process.exit(1);
   }
 }
 
@@ -38,15 +59,17 @@ export async function connectToCluster(): Promise<MongoClient> {
  */
 export function connectToDb(client: MongoClient): Db {
   if (!config.DBNAME || typeof config.DBNAME !== 'string') {
-    throw new Error('Invalid or undefined DBNAME in configuration.')
+    throw new Error('Invalid or undefined DBNAME in configuration.');
   }
   try {
-    const db = client.db(config.DBNAME)
-    logger.info(`Successfully connected to Atlas DB ${config.DBNAME}`)
-    return db
+    const db = client.db(config.DBNAME);
+
+    logger.info(`Successfully connected to Atlas DB ${config.DBNAME}`);
+
+    return db;
   } catch (error) {
-    logger.error(`Connection to Atlas DB failed (${config.DBNAME}): ${error}`)
-    process.exit(1)
+    logger.error(`Connection to Atlas DB failed (${config.DBNAME}): ${error}`);
+    process.exit(1);
   }
 }
 /**
@@ -56,9 +79,10 @@ export function connectToDb(client: MongoClient): Db {
  */
 export async function closeConnection(client: MongoClient): Promise<void> {
   try {
-    await client.close()
-    logger.info('MongoDB connection closed successfully.')
+    await client.close();
+    logger.info('MongoDB connection closed successfully.');
   } catch (error) {
-    logger.error(`Failed to close MongoDB connection: ${error}`)
+    logger.error(`Failed to close MongoDB connection: ${error}`);
+    process.exit(1);
   }
 }

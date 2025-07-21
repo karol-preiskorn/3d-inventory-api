@@ -22,6 +22,7 @@ export function deleteFilesInDirectory(directory: string) {
   fs.readdir(directory, (err, files) => {
     if (err) {
       console.error(`read dir: ${directory} - ${err.message}`)
+
       return
     }
     for (const file of files) {

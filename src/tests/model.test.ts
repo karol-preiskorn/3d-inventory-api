@@ -6,6 +6,7 @@
  * @version 2023-10-29  C2RLO  Init
  */
 
+import { describe, it, beforeAll, afterAll, expect } from '@jest/globals'
 import '../utils/loadEnvironment'
 
 import { Db, MongoClient } from 'mongodb'
@@ -14,8 +15,11 @@ import { faker } from '@faker-js/faker'
 
 describe('create 3 models', () => {
   let connection: MongoClient
+
   let db: Db
+
   let mockModel
+
   let insertedModel
 
   beforeAll(async () => {
@@ -29,10 +33,12 @@ describe('create 3 models', () => {
 
   it('should insert a 10 models', async () => {
     const attributesTypes = db.collection('attributesTypes')
+
     expect(await attributesTypes.countDocuments({})).not.toBe(0)
     // const attributesTypesData = await attributesTypesCursor.toArray()
     for (let index = 0; index < 10; index++) {
       const models = db.collection('models')
+
       // const attributesTypesData: { name: string }[] = await attributesTypesCursor.toArray().then(data => data.map((doc: { name: string }) => ({ name: doc.name })));
       mockModel = {
         name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),

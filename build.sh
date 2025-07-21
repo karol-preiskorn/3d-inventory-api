@@ -6,10 +6,8 @@ else
   exit 1
 fi
 
-trap 'docker ps -a --format "{{.Names}}" | grep -q "^3d-inventory-api$" && docker rm -f 3d-inventory-api 2>/dev/null' EXIT
 # Ensure any existing container is removed on exit or error
 trap 'docker rm -f 3d-inventory-api 2>/dev/null' EXIT
-
 docker ps --filter "name=3d-inventory-api" --format "{{.ID}}" | xargs -r docker stop
 docker ps -a --filter "name=3d-inventory-api" --format "{{.ID}}" | xargs -r docker rm
 
@@ -66,11 +64,13 @@ gcloud run deploy d-inventory-api \
   --allow-unauthenticated \
   --memory 1Gi \
   --cpu 1 \
-  --timeout 900 \
-  --max-instances 2 \
+  --timeout 120 \
+  --max-instances 10 \
   --cpu-throttling \
   --execution-environment gen2 \
-  --set-env-vars="NODE_ENV=production"
+  --set-env-vars="NODE_ENV=production,UV_THREADPOOL_SIZE=8" \
+  --concurrency=80 \
+  --min-instances=1
 
 # Get and test the deployment
 SERVICE_URL=$(gcloud run services describe d-inventory-api --region europe-west1 --format 'value(status.url)')

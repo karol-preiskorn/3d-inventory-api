@@ -15,10 +15,15 @@ import { faker } from '@faker-js/faker'
 import { connectToCluster, connectToDb } from '../utils/db'
 import { User } from '../routers/users'
 
+import { beforeAll, afterAll, describe, it, expect } from '@jest/globals'
+
 describe('Test Mongo Atlas DB users', () => {
   let db: Db
+
   let users: Collection<Document>
+
   let client: MongoClient
+
   let mockUser
 
   beforeAll(async () => {
@@ -38,21 +43,27 @@ describe('Test Mongo Atlas DB users', () => {
       password: faker.internet.password({ length: 10 }),
       permissions: faker.helpers.arrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
       token: faker.internet.password({ length: 50 }),
-      _id: new ObjectId(),
+      _id: new ObjectId()
     }
+
     await users.insertOne(mockUser)
     const insertedUser = await users.findOne(mockUser)
+
     expect(insertedUser).toEqual(mockUser)
 
     const deletedUser = await users.deleteOne(mockUser)
+
     expect(deletedUser).toEqual(mockUser)
   })
 
   it('should delete all users', async () => {
     const users = db.collection('users')
+
     const mock = {}
+
     await users.deleteMany(mock)
     const deleted = (await users.findOne(mock)) as User | null
+
     expect(deleted).toBeNull()
   })
 
@@ -63,10 +74,11 @@ describe('Test Mongo Atlas DB users', () => {
         email: faker.internet.email(),
         password: faker.internet.password({ length: 10 }),
         rights: faker.helpers.arrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
-        token: faker.internet.password({ length: 50 }),
+        token: faker.internet.password({ length: 50 })
       }
       await users.insertOne(mockUser)
       const insertedUser = await users.findOne(mockUser)
+
       expect(insertedUser).toEqual(mockUser)
     }
   })

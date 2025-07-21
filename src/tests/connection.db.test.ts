@@ -8,9 +8,11 @@
 import '../utils/loadEnvironment'
 
 import { Db, MongoClient } from 'mongodb'
+import { beforeAll, afterAll, describe, it, expect } from '@jest/globals'
 
 describe('ConnectToDatabase Mongo Atlas', () => {
   let connection: MongoClient
+
   let db: Db
 
   beforeAll(async () => {
@@ -32,7 +34,9 @@ describe('ConnectToDatabase Mongo Atlas', () => {
 
   it(`connect to ${process.env.DBNAME}`, async () => {
     const devices = db.collection('devices')
+
     const device = await devices.findOne({})
+
     expect(device).toBeDefined()
   })
 })

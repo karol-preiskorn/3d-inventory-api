@@ -19,15 +19,20 @@ export interface Attributes {
 }
 
 const collectionName = 'attributes'
+
 const router: express.Router = express.Router()
 
 router.get('/', (async (_req, res) => {
   let client
+
   try {
     client = await connectToCluster()
     const db: Db = connectToDb(client)
+
     const collection: Collection = db.collection(collectionName)
+
     const results: object[] = await collection.find({}).limit(100).toArray()
+
     if (!results) {
       res.status(404).send('Not found any attributes')
     } else {
@@ -45,14 +50,18 @@ router.get('/', (async (_req, res) => {
 
 router.get('/:id', (async (req, res) => {
   const { id } = req.params
+
   if (!ObjectId.isValid(id)) {
     return res.sendStatus(400)
   }
 
   const client = await connectToCluster()
+
   try {
     const db: Db = connectToDb(client)
+
     const collection: Collection = db.collection(collectionName)
+
     const result = await collection.findOne({ _id: new ObjectId(id) })
 
     if (!result) {
@@ -72,10 +81,15 @@ router.get('/model/:id', (async (req, res) => {
     res.sendStatus(404)
   }
   const client = await connectToCluster()
+
   const db: Db = connectToDb(client)
+
   const collection: Collection = db.collection(collectionName)
+
   const query = { modelId: new ObjectId(req.params.id) }
+
   const result = await collection.find(query).toArray()
+
   if (!result) {
     res.sendStatus(404)
   } else {
@@ -89,10 +103,15 @@ router.get('/device/:id', (async (req, res) => {
     res.sendStatus(404)
   }
   const client = await connectToCluster()
+
   const db: Db = connectToDb(client)
+
   const collection: Collection = db.collection(collectionName)
+
   const query = { deviceId: new ObjectId(req.params.id) }
+
   const result = await collection.find(query).toArray()
+
   if (!result) {
     res.sendStatus(404)
   } else {
@@ -106,10 +125,15 @@ router.get('/connection/:id', (async (req, res) => {
     res.sendStatus(404)
   }
   const client = await connectToCluster()
+
   const db: Db = connectToDb(client)
+
   const collection: Collection = db.collection(collectionName)
+
   const query = { connectionId: new ObjectId(req.params.id) }
+
   const result = await collection.find(query).toArray()
+
   if (!result) {
     res.sendStatus(404)
   } else {
@@ -120,12 +144,14 @@ router.get('/connection/:id', (async (req, res) => {
 
 router.put('/:id', (async (req, res) => {
   const { id } = req.params
+
   if (!ObjectId.isValid(id)) {
     return res.status(400).send('Invalid attribute ID')
   }
 
   // Remove _id from req.body if present
   const updateBody = { ...req.body }
+
   if ('_id' in updateBody) {
     delete updateBody._id
   }
@@ -139,14 +165,19 @@ router.put('/:id', (async (req, res) => {
       value: req.body.value
     }
   }
+
   const query = { _id: new ObjectId(id) }
 
   let client
+
   try {
     client = await connectToCluster()
     const db: Db = connectToDb(client)
+
     const collection: Collection = db.collection(collectionName)
+
     const result = await collection.updateOne(query, updates)
+
     if (result.matchedCount === 0) {
       return res.status(404).send(`Attribute ${id} not found`)
     }
@@ -154,6 +185,7 @@ router.put('/:id', (async (req, res) => {
   } catch (error) {
     console.error('Error updating attribute:', error)
     const errorMessage = error instanceof Error ? error.message : String(error)
+
     res.status(500).send('Internal server error during update attributes: ' + errorMessage)
   } finally {
     if (client) {
@@ -164,11 +196,15 @@ router.put('/:id', (async (req, res) => {
 
 router.post('/', (async (req, res) => {
   let client
+
   try {
     client = await connectToCluster()
     const db: Db = connectToDb(client)
+
     const collection: Collection = db.collection(collectionName)
+
     const { attributeDictionaryId, connectionId, deviceId, modelId, value } = req.body
+
     if (
       !value ||
       typeof value !== 'string' ||
@@ -194,8 +230,11 @@ router.post('/', (async (req, res) => {
       modelId: toObjectIdOrNull(modelId),
       value
     }
+
     const result = await collection.insertOne(newAttribute)
+
     const createdAttribute = { _id: result.insertedId, ...newAttribute }
+
     if (result.acknowledged) {
       res.status(201).json(createdAttribute)
     } else {
@@ -216,10 +255,15 @@ router.delete('/:id', (async (req, res) => {
     res.sendStatus(404)
   }
   const query = { _id: new ObjectId(req.params.id) }
+
   const client = await connectToCluster()
+
   const db: Db = connectToDb(client)
+
   const collection: Collection = db.collection(collectionName)
+
   const result = await collection.deleteOne(query)
+
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {
@@ -230,10 +274,15 @@ router.delete('/:id', (async (req, res) => {
 
 router.delete('/', (async (_req, res) => {
   const query = {}
+
   const client = await connectToCluster()
+
   const db: Db = connectToDb(client)
+
   const collection: Collection = db.collection(collectionName)
+
   const result = await collection.deleteMany(query)
+
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {
@@ -247,10 +296,15 @@ router.delete('/model/:id', (async (req, res) => {
     res.sendStatus(404)
   }
   const query = { modelId: new ObjectId(req.params.id) }
+
   const client = await connectToCluster()
+
   const db: Db = connectToDb(client)
+
   const collection: Collection = db.collection(collectionName)
+
   const result = await collection.deleteMany(query)
+
   if (!result) {
     res.status(404).send('Not found models to delete')
   } else {

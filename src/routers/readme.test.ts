@@ -9,13 +9,18 @@ import request from 'supertest'
 
 import router from '../routers/readme'
 
+// Import Jest globals for type safety and editor support
+import { describe, it, expect, jest } from '@jest/globals';
+
 const app = express()
+
 app.use(helmet())
 app.use('/', router as express.RequestHandler)
 
 describe('GET /', () => {
   it('should return the rendered README.md', async () => {
     const response = await request(app).get('/')
+
     expect(response.status).toBe(200)
     expect(response.text).toContain('<h1>Sample README</h1>') // Replace with the expected content of your README.md
   })

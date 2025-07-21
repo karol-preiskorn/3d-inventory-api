@@ -5,6 +5,18 @@
  * @version 2023-10-29 C2RLO - Init
  */
 
+
+
+
+
+
+
+/**
+ * Import Jest types for global functions like describe, it, expect.
+ * This ensures TypeScript recognizes Jest globals.
+ */
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
+
 import '../utils/loadEnvironment'
 
 import { Db, MongoClient } from 'mongodb'
@@ -15,7 +27,9 @@ import { capitalizeFirstLetter } from '../utils/strings'
 
 describe('create 10 floors', () => {
   let conn: MongoClient
+
   let db: Db
+
   let insertedFloors
 
   beforeAll(async () => {
@@ -32,6 +46,7 @@ describe('create 10 floors', () => {
 
   it('should insert a 10 floors', async () => {
     const floors = db.collection('floors')
+
     let mockFloors: {
       name: string
       address: { street: string, city: string, country: string, postcode: number }
@@ -56,6 +71,7 @@ describe('create 10 floors', () => {
         }
       ]
     }
+
     await floors.insertOne(mockFloors)
     for (let index = 0; index < 10; index++) {
       mockFloors = {

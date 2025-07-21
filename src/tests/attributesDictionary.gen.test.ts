@@ -12,11 +12,18 @@ import { faker } from '@faker-js/faker'
 
 import { valueAttributeCategory } from '../utils/types'
 
+// Import Jest testing functions if not globally available
+import { beforeAll, afterAll, describe, it, expect } from '@jest/globals'
+
 describe('test create attributesDictionary', () => {
   let connection: MongoClient
+
   let db
+
   let mockModel
+
   let mockLog
+
   let logs: Collection<Document>
 
   beforeAll(async () => {
@@ -34,33 +41,36 @@ describe('test create attributesDictionary', () => {
     it('should insert a attributesDictionary x10', async () => {
       for (let index = 0; index < 10; index++) {
         const currentDateLogs = new Date()
+
         const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
+
         mockModel = {
           name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
           dimension: {
             width: faker.number.int({ min: 1, max: 10 }),
             height: faker.number.int({ min: 1, max: 10 }),
-            depth: faker.number.int({ min: 1, max: 10 }),
+            depth: faker.number.int({ min: 1, max: 10 })
           },
           texture: {
             front: '/assets/r710-2.5-nobezel__29341.png',
             back: '/assets/r710-2.5-nobezel__29341.png',
             side: '/assets/r710-2.5-nobezel__29341.png',
             top: '/assets/r710-2.5-nobezel__29341.png',
-            bottom: '/assets/r710-2.5-nobezel__29341.png',
+            bottom: '/assets/r710-2.5-nobezel__29341.png'
           },
-          category: valueAttributeCategory[Math.floor(Math.random() * valueAttributeCategory.length)].name,
+          category: valueAttributeCategory[Math.floor(Math.random() * valueAttributeCategory.length)].name
         }
         mockLog = {
           date: formattedDate,
           objectId: new ObjectId('659a4400672627600b093713'),
           operation: 'Create',
           component: 'Model',
-          message: mockModel,
+          message: mockModel
         }
 
         await logs.insertOne(mockLog)
         const insertedLog = await logs.findOne(mockLog)
+
         expect(insertedLog).toEqual(mockLog)
       }
     })

@@ -18,6 +18,7 @@ let fontLoaded = false
 async function loadFont(): Promise<void> {
   if (!fontLoaded) {
     const data = await fs.readFile('src/assets/font.flf', 'utf8')
+
     figlet.parseFont('myfont', data)
     fontLoaded = true
   }

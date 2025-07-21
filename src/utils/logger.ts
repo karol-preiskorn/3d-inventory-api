@@ -8,22 +8,23 @@
  * @module utils/logger
  */
 
-import 'winston-daily-rotate-file'
+import 'winston-daily-rotate-file';
 
-import winston from 'winston'
+import winston from 'winston';
 
-const { createLogger, format, transports } = winston
+const { createLogger, format, transports } = winston;
 
 const logFormat = format.combine(
   format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   format((info) => {
-    info.moduleName = info.moduleName ?? 'default'
-    info.level = info.level.toUpperCase()
-    info.message = typeof info.message === 'string' ? info.message.trim() : info.message
-    return info
+    info.moduleName = info.moduleName ?? 'default';
+    info.level = info.level.toUpperCase();
+    info.message = typeof info.message === 'string' ? info.message.trim() : info.message;
+
+    return info;
   })(),
   format.printf(({ timestamp, moduleName, level, message }) => `${timestamp} [${moduleName}] ${level}: ${message}`)
-)
+);
 
 export const logger = createLogger({
   level: 'debug',
@@ -39,7 +40,7 @@ export const logger = createLogger({
       format: logFormat
     })
   ]
-})
+});
 
 /**
  * Returns a child logger with the specified module name.
@@ -48,5 +49,5 @@ export const logger = createLogger({
  * @returns A child logger instance with the module name set.
  */
 export default function getLogger(moduleName: string) {
-  return logger.child({ moduleName })
+  return logger.child({ moduleName });
 }

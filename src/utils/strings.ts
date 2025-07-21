@@ -10,8 +10,9 @@
  * @returns {string} string with first letter capitalized
  */
 export function capitalizeFirstLetter(str: string): string {
-  if (str.length === 0) return str
-  return str.charAt(0).toUpperCase() + str.slice(1)
+  if (str.length === 0) return str;
+
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 /**
  * Capitalizes the first letter of a string and cut last letter
@@ -20,5 +21,5 @@ export function capitalizeFirstLetter(str: string): string {
  * @returns The capitalized string.
  */
 export function capitalize(s: string): string {
-  return s[0].toUpperCase().slice(0, 1) + s.slice(1, s.length - 1)
+  return s[0].toUpperCase().slice(0, 1) + s.slice(1, s.length - 1);
 }

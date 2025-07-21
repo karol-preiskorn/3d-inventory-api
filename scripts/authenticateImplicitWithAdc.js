@@ -1,5 +1,5 @@
-// Copyright 2022 Google LLC
-//
+/* eslint-env node */
+/* global console */
 /**
  * Shows credentials auto-detections in the intercation with GCP libraries
  * @param {string} projectId - Project ID or project number of the Cloud project you want to use.

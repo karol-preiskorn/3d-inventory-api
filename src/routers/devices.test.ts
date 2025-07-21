@@ -4,7 +4,7 @@ import helmet from 'helmet'
 import { Collection, Db, MongoClient } from 'mongodb'
 import request from 'supertest'
 
-import { expect, jest } from '@jest/globals'
+import { expect, jest, it, describe, beforeAll, afterAll } from '@jest/globals'
 
 import { logger } from '../utils/logger'
 import router from './devices'
@@ -15,13 +15,16 @@ jest.mock('../db/dbUtils')
 jest.mock('../utils/logger')
 
 const app = express()
+
 app.use(express.json())
 app.use(helmet())
 app.use('/devices', router)
 
 describe('PUT /devices/:id/attributes', () => {
   let client: MongoClient
+
   let db: Db
+
   interface Device {
     _id: string
     attributes: { key: string, value: string }[]

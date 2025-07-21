@@ -11,6 +11,7 @@
  */
 
 import request from 'supertest'
+import { expect, it, describe, afterAll } from '@jest/globals'
 
 import app from '../main'
 
@@ -25,16 +26,16 @@ describe('GET /devices', () => {
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          _id: expect.stringMatching(/.+/) as string,
-          name: expect.any(String) as string,
-          modelId: expect.any(String) as string,
+          _id: expect.stringMatching(/.+/),
+          name: expect.any(String),
+          modelId: expect.any(String),
           position: {
-            x: expect.any(Number) as number,
-            y: expect.any(Number) as number,
-            h: expect.any(Number) as number,
-          },
-        }),
-      ]),
+            x: expect.any(Number),
+            y: expect.any(Number),
+            h: expect.any(Number)
+          }
+        })
+      ])
     )
 
     const responseGetId = await request(app)
@@ -44,16 +45,16 @@ describe('GET /devices', () => {
     expect(responseGetId.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          _id: expect.any(String) as string,
-          name: expect.any(String) as string,
-          modelId: expect.any(String) as string,
+          _id: expect.any(String),
+          name: expect.any(String),
+          modelId: expect.any(String),
           position: {
-            x: expect.any(Number) as number,
-            y: expect.any(Number) as number,
-            h: expect.any(Number) as number,
-          },
-        }),
-      ]),
+            x: expect.any(Number),
+            y: expect.any(Number),
+            h: expect.any(Number)
+          }
+        })
+      ])
     )
   })
 })

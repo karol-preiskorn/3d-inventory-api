@@ -11,11 +11,19 @@ import { Db, MongoClient } from 'mongodb'
 
 import { faker } from '@faker-js/faker'
 
+// Ensure Jest globals are available for TypeScript
+// (If using tsconfig, make sure "types": ["jest"] is set in "compilerOptions")
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals'
+
 describe('prepare test data', () => {
   let connection: MongoClient
+
   let db: Db
+
   let mockModel
+
   let insertedModel
+
   let insertedLog
 
   beforeAll(async () => {
@@ -30,23 +38,32 @@ describe('prepare test data', () => {
   describe('delete all data', () => {
     it('should delete all devices', async () => {
       const device = db.collection('devices')
+
       const mock = {}
+
       await device.deleteMany(mock)
       const inserted = await device.findOne(mock)
+
       expect(inserted).toBeNull()
     })
     it('should delete all models', async () => {
       const model = db.collection('models')
+
       const mock = {}
+
       await model.deleteMany(mock)
       const inserted = await model.findOne(mock)
+
       expect(inserted).toBeNull()
     })
     it('should delete all logs', async () => {
       const logs = db.collection('logs')
+
       const mock = {}
+
       await logs.deleteMany(mock)
       const inserted = await logs.findOne(mock)
+
       expect(inserted).toBeNull()
     })
   })
@@ -56,6 +73,7 @@ describe('prepare test data', () => {
     it('should insert a model and logs doc into collection models', async () => {
       for (let index = 0; index < 3; index++) {
         const model = db.collection('models')
+
         mockModel = {
           name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
           dimension: {
@@ -76,7 +94,9 @@ describe('prepare test data', () => {
         expect(insertedModel).toEqual(mockModel)
 
         const logs = db.collection('logs')
+
         let currentDateLogs = new Date()
+
         let formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
 
         let mockLog = {
@@ -92,6 +112,7 @@ describe('prepare test data', () => {
         expect(insertedLog).toEqual(mockLog)
 
         const device = db.collection('devices')
+
         for (let index = 0; index < 5; index++) {
           const mockDevice = {
             name: faker.commerce.product() + ' ' + faker.color.human() + '-' + faker.animal.type(),
@@ -102,8 +123,10 @@ describe('prepare test data', () => {
               h: faker.number.int({ min: 1, max: 10 })
             }
           }
+
           await device.insertOne(mockDevice)
           const insertedDevice = await device.findOne(mockDevice)
+
           expect(insertedDevice).toEqual(mockDevice)
 
           currentDateLogs = new Date()

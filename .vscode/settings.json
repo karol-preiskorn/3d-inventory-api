@@ -11,6 +11,7 @@
     "smoothstep",
     "tsdoc",
     "tseslint",
+    "tsparser",
     "upserted",
     "wraping"
   ],
