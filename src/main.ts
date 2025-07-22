@@ -30,6 +30,7 @@ import readme from './routers/readme';
 
 import config from './utils/config';
 import log from './utils/logger';
+import { connectToCluster, connectToDb } from './utils/db';
 import type { Server as HttpServer } from 'http';
 import type { Server as HttpsServer } from 'https';
 
@@ -50,6 +51,28 @@ const yamlFilename = process.env.API_YAML_FILE ?? './api.yaml';
 
 const app = express();
 
+// Initialize MongoDB connection
+import type { MongoClient, Db } from 'mongodb';
+
+let mongoClient: MongoClient;
+
+let db: Db | undefined;
+
+(async () => {
+  try {
+    mongoClient = await connectToCluster();
+    db = connectToDb(mongoClient);
+    logger.info('✅ MongoDB initialized successfully');
+  } catch (error) {
+    logger.error('❌ MongoDB initialization failed:', error);
+    if (process.env.NODE_ENV === 'production') {
+      // Don't exit in production, log the error and continue
+      logger.error('Production: Running without database connection');
+    }
+  }
+})();
+
+
 app.use(cookieParser());
 app.use(helmet());
 
@@ -69,45 +92,78 @@ try {
   logger.error(`Error login in morgan: ${String(error)}`);
 }
 
-app.use(cors());
+// Remove the manual CORS headers and replace with this:
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    const allowedOrigins = [
+      // Local development
+      'http://localhost:3001',
+      'https://localhost:3001',
+      'http://localhost:3000',
+      'http://localhost:4200',
+      'http://localhost:8080',
+      'https://localhost:3000',
+      'https://localhost:4200',
+      'https://localhost:8080',
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  const allowedOrigins = [
-    // Local development
-    `https://${HOST}:${PORT}`,
-    'https://172.17.0.*:3001',
-    'https://172.20.0.*:3001',
-    'https://cluster0.htgjako.mongodb.net',
-    'https://localhost:3000',
-    'https://localhost:8080',
-    // Cloud Run services (add your actual UI URL)
-    'https://d-inventory-ui-wzwe3odv7q-ew.a.run.app',
-    // Cloud Run services
-    'https://d-inventory-api-*.run.app',
-    'https://d-inventory-ui-*.a.run.app',
-    'https://*.ultimasolution.pl'
-  ];
+      // Cloud Run services
+      'https://d-inventory-ui-wzwe3odv7q-ew.a.run.app',
+      'https://d-inventory-api-wzwe3odv7q-ew.a.run.app',
 
-  const origin = req.headers.origin;
+      // Your custom domains
+      'https://3d-inventory-api.ultimasolution.pl',
+      'https://3d-inventory-ui.ultimasolution.pl'
+    ];
 
-  if (origin && allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    // Check for exact match or pattern match
+    const isAllowed = allowedOrigins.some(allowed => {
+      return allowed === origin;
+    }) || /^https?:\/\/localhost:\d+$/.test(origin) || /^https:\/\/.*\.run\.app$/.test(origin) || /^https:\/\/.*\.ultimasolution\.pl$/.test(origin);
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      logger.warn(`CORS blocked origin: ${origin}`);
+      callback(null, false);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'Authorization',
+    'Cache-Control',
+    'X-API-Key'
+  ],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ['\'self\''],
+    scriptSrc: ['\'self\'', '\'unsafe-inline\'', '\'unsafe-eval\'', 'https:'],
+    styleSrc: ['\'self\'', '\'unsafe-inline\'', 'https:'],
+    fontSrc: ['\'self\'', 'https:', 'data:'],
+    imgSrc: ['\'self\'', 'data:', 'https:', 'blob:'],
+    connectSrc: ['\'self\'', 'https:', 'wss:'],
+    frameSrc: ['\'self\'', 'https:'],
+    mediaSrc: ['\'self\'', 'https:'],
+    objectSrc: ['\'none\''],
+    baseUri: ['\'self\'']
   }
+}));
 
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  next();
-});
-
-app.use((_req, res: Response, next: NextFunction) => {
-  res.header(
-    'Content-Security-Policy',
-    'default-src \'self\'; connect-src *; script-src \'self\' \'unsafe-inline\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data: https:;'
-  );
-  next();
-});
-
-app.use(express.json());
+app.use(express.json({ limit: '50mb' })); // Increase body size limit if needed
 app.use(bodyParser.json()); // must parse body before morganBody as body will be logged
 
 morganBody(app, {
@@ -141,46 +197,64 @@ app.use('/connections', connections);
 app.use('/floors', floors);
 app.use('/github', github);
 
+app.get('/favicon.ico', (req, res) => {
+  res.status(204).end();
+});
+
 // Health check endpoint (required for Cloud Run)
-app.get('/health', (req, res) => {
-  res.status(200).json({
+app.get('/health', async (req, res) => {
+  const health = {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     port: PORT,
-    environment: process.env.NODE_ENV
-  });
-});
+    environment: process.env.NODE_ENV,
+    database: 'unknown',
+    uptime: process.uptime()
+  };
 
-// eslint-disable-next-line no-undef
-fs.access(yamlFilename, fs.constants.R_OK, (err: NodeJS.ErrnoException | null) => {
-  if (err) {
-    if (err.code === 'ENOENT') {
-      logger.warn(`File not found: ${yamlFilename}`);
-    } else if (err.code === 'EACCES') {
-      logger.error(`No permission to file ${yamlFilename}`);
+  try {
+    if (mongoClient) {
+      await mongoClient.db().admin().ping();
+      health.database = 'connected';
     } else {
-      logger.error('Unknown Error during access api.yaml: ' + err.message);
+      health.database = 'not_initialized';
     }
-  } else {
-    logger.info(`File api.yaml opened successfully from ${yamlFilename}`);
-    try {
-      const file = fs.readFileSync(yamlFilename, 'utf8');
-
-      const swaggerDocument = YAML.parse(file) as JsonObject;
-
-      app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-      logger.info(`swaggerDocument api.yaml served successfully load ${JSON.stringify(swaggerDocument).length} bytes`);
-    } catch (e) {
-      if (typeof e === 'string') {
-        logger.warn(e.toUpperCase());
-      } else if (e instanceof Error) {
-        logger.error('Open swaggerUI exception: ' + e.message);
-      } else {
-        logger.error('Unknown error occurred.');
-      }
-    }
+  } catch {
+    health.database = 'disconnected';
+    health.status = 'degraded';
   }
+
+  const statusCode = health.database === 'disconnected' ? 503 : 200;
+
+  res.status(statusCode).json(health);
 });
+
+try {
+  const file = fs.readFileSync(yamlFilename, 'utf8');
+
+  const swaggerDocument = YAML.parse(file) as JsonObject;
+
+  app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  logger.info(`Swagger api.yaml served successfully load ${JSON.stringify(swaggerDocument).length} bytes`);
+} catch (err: unknown) {
+  if (typeof err === 'object' && err !== null && 'code' in err) {
+    const errorWithCode = err as { code?: string };
+
+    if (errorWithCode.code === 'ENOENT') {
+      logger.error(`File not found: ${yamlFilename}`);
+    } else if (errorWithCode.code === 'EACCES') {
+      logger.error(`No permission to file ${yamlFilename}`);
+    } else if (err instanceof Error) {
+      logger.error('Open swaggerUI exception: ' + err.message);
+    } else {
+      logger.error('Unknown error occurred.');
+    }
+  } else if (err instanceof Error) {
+    logger.error('Open swaggerUI exception: ' + err.message);
+  } else {
+    logger.error('Unknown error occurred.');
+  }
+}
 
 // OpenApi validation
 try {
@@ -201,7 +275,7 @@ try {
 app.use((req: Request, res: Response) => {
   logger.warn(`404 Not Found: ${req.method} ${req.originalUrl}`);
   res.status(404).json({
-    message: 'Endpoint not found',
+    message: `Endpoint not found: ${req.method} ${req.originalUrl}`,
     error: 'Not Found',
     status: 404
   });
@@ -222,10 +296,13 @@ function xhrClientErrorHandler(err: Error, req: Request, res: Response, next: Ne
 
 app.use(xhrClientErrorHandler);
 
-// General error handler
-app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
-  logger.error(`[main] Unhandled error: ${err.message}. Stack: ${err.stack}`);
-  next(err);
+app.use((err: Error, req: Request, res: Response) => {
+  logger.error(`Unhandled error exception: ${err.message}. Stack: ${err.stack}`);
+  res.status(500).json({
+    message: `Internal Server Error - ${req.method} ${req.originalUrl}`,
+    error: err.message,
+    status: 500
+  });
 });
 
 // Start the server
@@ -235,7 +312,7 @@ let server: HttpServer | HttpsServer;
 if (process.env.NODE_ENV === 'production') {
   server = app.listen(Number(PORT), '0.0.0.0', () => {
     logger.info(
-      figlet.textSync('3d-inventory-mongo-api GCP', {
+      figlet.textSync('\r\n\r\r\r\r\r3d-inventory-api GCP', {
         font: 'Mini',
         horizontalLayout: 'default',
         verticalLayout: 'default',
@@ -243,7 +320,7 @@ if (process.env.NODE_ENV === 'production') {
         whitespaceBreak: true
       })
     );
-    logger.info(`Server on GCP http://0.0.0.0:${PORT}`);
+    logger.info(`---- Server on GCP http://0.0.0.0:${PORT}`);
   });
 
   // Update signal handlers for HTTP server
@@ -264,11 +341,13 @@ if (process.env.NODE_ENV === 'production') {
   });
 } else {
   server = https.createServer(httpsOptions, app);
+
   server.on('error', (err: Error) => {
     logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`);
   });
+
   server.listen(Number(PORT), HOST, () => {
-    logger.info(
+    logger.info('\n' +
       figlet.textSync('3d-inventory-mongo-api DEV', {
         font: 'Mini',
         horizontalLayout: 'default',
@@ -277,6 +356,7 @@ if (process.env.NODE_ENV === 'production') {
         whitespaceBreak: true
       })
     );
+
     logger.info(`Server on DEV https://${HOST}:${PORT}`);
   });
   // Signal handlers for HTTPS server

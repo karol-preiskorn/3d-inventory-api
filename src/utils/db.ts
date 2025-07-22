@@ -17,7 +17,6 @@ const mongoOptions: MongoClientOptions = {
   // SSL/TLS configuration
   tls: true,
   tlsAllowInvalidCertificates: true, // For development
-  tlsInsecure: false,
 
   // Connection settings
   serverSelectionTimeoutMS: 30000,
@@ -43,11 +42,11 @@ export async function connectToCluster(): Promise<MongoClient> {
   try {
     client = new MongoClient(uri, mongoOptions);
     connect = await client.connect();
-    logger.info('Successfully connected to Atlas cluster');
+    logger.info('✅ Successfully connected to Atlas cluster');
 
     return connect;
   } catch (error) {
-    logger.error(`Connection to Atlas cluster failed: ${error as string}`);
+    logger.error(`❌ Connection to Atlas cluster failed: ${error as string}`);
     process.exit(1);
   }
 }

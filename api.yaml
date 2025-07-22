@@ -17,15 +17,17 @@ info:
   version: 0.53.23
 servers:
   - url: https://localhost:3001
-    description: localhost
+    description: localhost development
+  - url: http://localhost:8080
+    description: localhost docker
   - url: https://172.17.0.3:3001
     description: local docker
   - url: https://172.20.0.3:3001
     description: local 3d-inventory-network subnet
-  - url: https://d-inventory-406007.uc.r.appspot.com
+  - url: https://d-inventory-api-wzwe3odv7q-ew.a.run.app
     description: Google Cloud Run
-  - url: https://0.0.0.0:8080
-    description: local 3d-inventory-network subnet
+  - url: https://3d-inventory-api.ultimasolution.pl
+    description: Production API
 tags:
   - name: logs
     description: Operation on Logs
@@ -70,7 +72,7 @@ paths:
           description: Unexpected server error
         default:
           description: Unexpected error
-      x-swagger-router-controller: github 
+      x-swagger-router-controller: github
   /attributes:
     get:
       tags:
