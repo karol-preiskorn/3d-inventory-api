@@ -11,43 +11,59 @@ import log from '../utils/logger';
 
 const logger = log('db');
 
-const uri = config.ATLAS_URI;
-
+/**
+ * MongoDB connection options.
+ * @type {MongoClientOptions}
+ */
 const mongoOptions: MongoClientOptions = {
   // SSL/TLS configuration
   tls: true,
-  tlsAllowInvalidCertificates: true, // For development
+  tlsAllowInvalidCertificates: false,
+  tlsAllowInvalidHostnames: false,
 
   // Connection settings
-  serverSelectionTimeoutMS: 30000,
-  connectTimeoutMS: 30000,
-  socketTimeoutMS: 30000,
-
-  // Retry settings
+  serverSelectionTimeoutMS: 10000,
+  connectTimeoutMS: 10000,
+  socketTimeoutMS: 45000,
   retryWrites: true,
   retryReads: true,
   maxPoolSize: 10,
-  minPoolSize: 1
+  minPoolSize: 1,
+
+  // Retry configuration
+  w: 'majority'
+
 };
 
 /**
  * Connects to the MongoDB Atlas cluster.
  * @returns {Promise<MongoClient>} The connected MongoDB client.
+ * @throws {Error} If the connection fails or MONGODB_URI is not set.
  */
 export async function connectToCluster(): Promise<MongoClient> {
-  let client;
+  const mongoUri = config.ATLAS_URI;
 
-  let connect;
+  if (!mongoUri) {
+    throw new Error('❌ ATLAS_URI environment variable is not set');
+  }
 
   try {
-    client = new MongoClient(uri, mongoOptions);
-    connect = await client.connect();
-    logger.info('✅ Successfully connected to Atlas cluster');
+    logger.info('✅ Attempting to connect to MongoDB Atlas...');
+    const client = new MongoClient(mongoUri, mongoOptions);
 
-    return connect;
-  } catch (error) {
-    logger.error(`❌ Connection to Atlas cluster failed: ${error as string}`);
-    process.exit(1);
+    // Test the connection
+    await client.connect();
+    await client.db().admin().ping();
+
+    logger.info('✅ Successfully connected to MongoDB Atlas');
+
+    return client;
+  } catch (error: unknown) {
+    logger.error(
+      '❌ MongoDB connection failed:',
+      error instanceof Error ? error.message : error
+    );
+    throw error;
   }
 }
 
@@ -63,14 +79,16 @@ export function connectToDb(client: MongoClient): Db {
   try {
     const db = client.db(config.DBNAME);
 
-    logger.info(`Successfully connected to Atlas DB ${config.DBNAME}`);
+    logger.info(`✅ Successfully connected to Atlas DB ${config.DBNAME}`);
 
     return db;
   } catch (error) {
-    logger.error(`Connection to Atlas DB failed (${config.DBNAME}): ${error}`);
-    process.exit(1);
+    logger.error(`❌ Connection to Atlas DB failed (${config.DBNAME}): ${error instanceof Error ? error.message : error}`);
+    throw new Error(`❌ Connection to Atlas DB failed (${config.DBNAME}): ${error}`);
   }
 }
+
+
 /**
  * Closes the MongoDB connection.
  * @param {MongoClient} connection - The MongoDB connection.
@@ -79,9 +97,10 @@ export function connectToDb(client: MongoClient): Db {
 export async function closeConnection(client: MongoClient): Promise<void> {
   try {
     await client.close();
-    logger.info('MongoDB connection closed successfully.');
+    logger.info('✅ MongoDB connection closed successfully.');
   } catch (error) {
-    logger.error(`Failed to close MongoDB connection: ${error}`);
-    process.exit(1);
+    logger.error(`❌ Failed to close MongoDB connection: ${error}`);
+    // Optionally, rethrow or handle the error as needed
+    throw error;
   }
 }

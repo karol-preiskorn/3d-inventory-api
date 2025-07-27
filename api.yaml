@@ -5,29 +5,19 @@ info:
     REST API for **3d-inventory**. Project is a simple solution that allows you to build a spatial and database
     representation of all types of warehouses and server rooms.
 
-    ### Modules
-
-    [Devices](https://localhost:3001/api/#/devices) - [Logs](https://localhost:3001/api/#/logs) -
-    [Models](https://localhost:3001/api/#/models) - [Connection](https://localhost:3001/api/#/connection) -
-    [AttributesDictionary](https://localhost:3001/api/#/attributesdictionary) -
-    [Floors](https://localhost:3001/api/#/floors)
   contact:
     name: 3d-inventory-mongo-api
     url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/
   version: 0.53.23
 servers:
-  - url: https://localhost:3001
-    description: localhost development
+  - url: http://0.0.0.0:8080
   - url: http://localhost:8080
-    description: localhost docker
-  - url: https://172.17.0.3:3001
-    description: local docker
-  - url: https://172.20.0.3:3001
-    description: local 3d-inventory-network subnet
+  - url: http://172.17.0.2:8080
+  - url: http://172.17.0.3:8080
+  - url: http://172.20.0.3:8080
   - url: https://d-inventory-api-wzwe3odv7q-ew.a.run.app
-    description: Google Cloud Run
   - url: https://3d-inventory-api.ultimasolution.pl
-    description: Production API
+  - url: https://3d-inventory.ultimasolution.pl
 tags:
   - name: logs
     description: Operation on Logs
@@ -2761,12 +2751,6 @@ components:
           object: 6566ed4ace63d42b25fbba19
           operation: Update
           component: Device
-          message: Message in log
-        - _id: 666f1f958237b346e54f2cd0
-          date: 2022/01/17 11:37:58.44
-          object: 6566ed4ace63d42b25fbba19
-          operation: Update
-          component: Model
           message: Message in log
     FloorAddress:
       type: object

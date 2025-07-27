@@ -17,7 +17,9 @@
     "src/utils/*",
     "README.md",
     "*.json",
-    "*.(mjs|yaml|md)"
+    "*.mjs",
+    "*.yaml",
+    "*.md"
   ],
   "exec": "ts-node src/index.ts",
   "ext": "ts,js,json,yaml"

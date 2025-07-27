@@ -49,15 +49,10 @@
     "@package",
     "@property",
     "@prop",
-    "@protected",
-    "@public",
-    "@readonly",
     "@requires",
     "@static",
     "@template",
     "@this",
-    "@throws",
-    "@type",
     "@var",
     "@yields",
     "@remarks"
@@ -81,16 +76,10 @@
     "./src/routers/github.test.ts",
     "./src/routers/logs.ts",
     "./src/routers/models.ts",
-    "./src/routers/models.ts",
     "./src/routers/readme.ts",
     "./src/routers/users.ts",
     "./src/services/logs.ts",
     "./src/tests/generateTextures.test.js"
-  ],
-  "exclude": [
-    "**/node_modules/**/*",
-    "**/dist/**/*",
-    "**/coverage/**/*"
   ],
   "includeVersion": true,
   "inlineTags": [
@@ -121,5 +110,5 @@
     "@experimental"
   ],
   "mergeModulesRenameDefaults": true,
-  "mergeModulesMergeMode": "module",
+  "mergeModulesMergeMode": "module"
 }

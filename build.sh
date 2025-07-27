@@ -28,7 +28,7 @@ gcloud auth configure-docker gcr.io
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VERSION=$(node -p "require('$SCRIPT_DIR/package.json').version")
 
-docker build --target runtime -t 3d-inventory-api .
+docker build -t 3d-inventory-api .
 
 # docker tag 3d-inventory-api ghcr.io/$GH_USERNAME/3d-inventory-api:${VERSION}
 # docker push ghcr.io/$GH_USERNAME/3d-inventory-api:${VERSION}
@@ -42,18 +42,17 @@ docker push gcr.io/d-inventory-406007/3d-inventory-api:latest
 # Test container locally first
 echo "Testing container locally..."
 docker run --rm -d --name test-3d-inventory-api -p 8080:8080 -e PORT=8080 3d-inventory-api
-sleep 10
+sleep 8
 
-if curl -f --max-time 10 -k https://0.0.0.0:8080/health; then
-  echo "✅ Container health check passed"
+if curl -f --max-time 10 -k ${HOST}:${PORT}/health; then
+  echo "✅ Container health check passed ${HOST}:${PORT}/health"
   docker stop test-3d-inventory-api
 else
-  echo "❌ Container health check failed"
+  echo -e "\033[0;31m❌ Container health check failed: ${HOST}:${PORT}/health \033[0m"
   docker logs test-3d-inventory-api
   docker stop test-3d-inventory-api
   exit 1
 fi
-
 
 # docker run --rm -d --name 3d-inventory-api --network 3d-inventory-network --ip 172.20.0.3 -p ${EXPOSED_PORT}:${EXPOSED_PORT}/tcp 3d-inventory-api:latest
 

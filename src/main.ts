@@ -8,10 +8,12 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import * as OpenApiValidator from 'express-openapi-validator';
+import session from 'express-session';
 import figlet from 'figlet';
 import fs from 'fs';
 import helmet from 'helmet';
 import https from 'https';
+import { constants as cryptoConstants } from 'crypto';
 import methodOverride from 'method-override';
 import morgan from 'morgan';
 import morganBody from 'morgan-body';
@@ -28,53 +30,84 @@ import logs from './routers/logs';
 import models from './routers/models';
 import readme from './routers/readme';
 
-import config from './utils/config';
-import log from './utils/logger';
-import { connectToCluster, connectToDb } from './utils/db';
 import type { Server as HttpServer } from 'http';
 import type { Server as HttpsServer } from 'https';
+import type { Db, MongoClient } from 'mongodb';
+import config from './utils/config';
+import { connectToCluster, connectToDb } from './utils/db';
+import getLogger from './utils/logger';
 
-const logger = log('index');
+const logger = getLogger('index');
 
 const PORT = config.PORT;
 
 const HOST = config.HOST;
 
+const HOST_DEV = config.HOST_DEV || 'http://localhost'; // Default to localhost for development
+
 // Cloud Run configuration - use HTTP instead of HTTPS
 
-const httpsOptions = {
-  key: fs.readFileSync('./cert/server.key'),
-  cert: fs.readFileSync('./cert/server.crt')
+let httpsOptions: https.ServerOptions = {
+  secureOptions: cryptoConstants.SSL_OP_NO_SSLv3 | cryptoConstants.SSL_OP_NO_TLSv1 | cryptoConstants.SSL_OP_NO_TLSv1_1,
+  honorCipherOrder: true,
+  minVersion: 'TLSv1.2',
+  maxVersion: 'TLSv1.3',
+  requestCert: true,
+  rejectUnauthorized: false
 };
+
+if (process.env.NODE_ENV !== 'production') {
+  try {
+    httpsOptions = {
+      ...httpsOptions,
+      key: fs.readFileSync('./cert/server.key'),
+      cert: fs.readFileSync('./cert/server.crt')
+    };
+  } catch (error) {
+    logger.error(`SSL certificates not found, using HTTP only: ${error}`);
+  }
+}
 
 const yamlFilename = process.env.API_YAML_FILE ?? './api.yaml';
 
 const app = express();
 
+let mongoClient: MongoClient | null = null;
+
 // Initialize MongoDB connection
-import type { MongoClient, Db } from 'mongodb';
-
-let mongoClient: MongoClient;
-
-let db: Db | undefined;
-
 (async () => {
+  let db: Db | null = null;
+
   try {
-    mongoClient = await connectToCluster();
-    db = connectToDb(mongoClient);
-    logger.info('✅ MongoDB initialized successfully');
+    if (config.ATLAS_URI) {
+      mongoClient = await connectToCluster();
+      db = connectToDb(mongoClient);
+      db.admin().ping();
+      logger.info(`✅ MongoDB connected to database: ${config.DBNAME}`);
+    } else {
+      logger.warn('⚠️ No MongoDB URI provided, running without database');
+    }
   } catch (error) {
     logger.error('❌ MongoDB initialization failed:', error);
     if (process.env.NODE_ENV === 'production') {
-      // Don't exit in production, log the error and continue
       logger.error('Production: Running without database connection');
+      mongoClient = null;
+    } else {
+      // Exit in development if MongoDB is required
+      process.exit(1);
     }
   }
 })();
 
+// app.use(session({
+//   secret: process.env.SESSION_SECRET || 'your-secret-key',
+//   resave: false,
+//   saveUninitialized: false
+
+// }));
 
 app.use(cookieParser());
-app.use(helmet());
+// app.use(helmet());
 
 try {
   app.use(
@@ -93,78 +126,92 @@ try {
 }
 
 // Remove the manual CORS headers and replace with this:
-const corsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    const allowedOrigins = [
-      // Local development
-      'http://localhost:3001',
-      'https://localhost:3001',
-      'http://localhost:3000',
-      'http://localhost:4200',
-      'http://localhost:8080',
-      'https://localhost:3000',
-      'https://localhost:4200',
-      'https://localhost:8080',
+import type { CorsOptions } from 'cors';
 
-      // Cloud Run services
-      'https://d-inventory-ui-wzwe3odv7q-ew.a.run.app',
-      'https://d-inventory-api-wzwe3odv7q-ew.a.run.app',
+// const allowedOrigins = [
+//   // Local development
+//   'http://localhost:4200',
+//   'http://localhost:8080',
+//   'http://localhost:3000',
+//   // Local Docker development
+//   'http://172.17.0.2:8080',
+//   'http://172.17.0.3:8080',
+//   'http://172.17.20.2:8080',
+//   'http://172.17.20.3:8080',
+//   // Cloud Run services
+//   'https://d-inventory-ui-wzwe3odv7q-ew.a.run.app',
+//   'https://d-inventory-api-wzwe3odv7q-ew.a.run.app',
+//   // Ultima Solution domains
+//   'https://3d-inventory-api.ultimasolution.pl',
+//   'https://3d-inventory-ui.ultimasolution.pl'
+// ];
 
-      // Your custom domains
-      'https://3d-inventory-api.ultimasolution.pl',
-      'https://3d-inventory-ui.ultimasolution.pl'
-    ];
+// const corsOptions: CorsOptions = {
+//   origin: (origin, callback) => {
+//     // Allow requests with no origin (mobile apps, Postman, etc.)
+//     if (!origin) {
+//       logger.info(`[CORS DEBUG] No origin header - allowing: ${origin}`);
 
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) {
-      return callback(null, true);
-    }
+//       return callback(null, true);
+//     }
 
-    // Check for exact match or pattern match
-    const isAllowed = allowedOrigins.some(allowed => {
-      return allowed === origin;
-    }) || /^https?:\/\/localhost:\d+$/.test(origin) || /^https:\/\/.*\.run\.app$/.test(origin) || /^https:\/\/.*\.ultimasolution\.pl$/.test(origin);
+//     const isAllowed =
+//       allowedOrigins.includes(origin) ||
+//       /^https?:\/\/localhost:\d+$/.test(origin);
 
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      logger.warn(`CORS blocked origin: ${origin}`);
-      callback(null, false);
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: [
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'Authorization',
-    'Cache-Control',
-    'X-API-Key'
-  ],
-  optionsSuccessStatus: 200
-};
+//     if (isAllowed) {
+//       logger.info(`[CORS DEBUG] Origin allowed: ${origin}`);
 
-app.use(cors(corsOptions));
+//       return callback(null, true);
+//     } else {
+//       logger.warn(`[CORS DEBUG] Origin blocked: ${origin}`);
 
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ['\'self\''],
-    scriptSrc: ['\'self\'', '\'unsafe-inline\'', '\'unsafe-eval\'', 'https:'],
-    styleSrc: ['\'self\'', '\'unsafe-inline\'', 'https:'],
-    fontSrc: ['\'self\'', 'https:', 'data:'],
-    imgSrc: ['\'self\'', 'data:', 'https:', 'blob:'],
-    connectSrc: ['\'self\'', 'https:', 'wss:'],
-    frameSrc: ['\'self\'', 'https:'],
-    mediaSrc: ['\'self\'', 'https:'],
-    objectSrc: ['\'none\''],
-    baseUri: ['\'self\'']
-  }
-}));
+//       return callback(new Error(`Not allowed by CORS: ${origin}`), false);
+//     }
+//   },
+//   credentials: true,
+//   methods: ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
+//   allowedHeaders: [
+//     'Accept',
+//     'Authorization',
+//     'Cache-Control',
+//     'Content-Type',
+//     'Origin',
+//     'X-API-Key',
+//     'X-Requested-With'
+//   ]
+// };
+
+// app.use(cors(corsOptions));
+
+
+// CSP configuration
+// app.use(helmet.contentSecurityPolicy({
+//   directives: {
+//     defaultSrc: ['\'self\''],
+//     scriptSrc: ['\'self\'', '\'unsafe-inline\'', '\'unsafe-eval\'', 'https:'],
+//     styleSrc: ['\'self\'', '\'unsafe-inline\'', 'https:'],
+//     fontSrc: ['\'self\'', 'https:', 'data:'],
+//     imgSrc: ['\'self\'', 'data:', 'https:', 'blob:'],
+//     connectSrc: ['\'self\'', 'https:', 'wss:'],
+//     frameSrc: ['\'self\'', 'https:'],
+//     mediaSrc: ['\'self\'', 'https:'],
+//     objectSrc: ['\'none\''],
+//     baseUri: ['\'self\''],
+//     // Add a CSP violation reporting endpoint
+//     reportUri: ['/csp-violation-report'] // Supported by most browsers
+//     // reportTo: ['csp-endpoint'] // Modern reporting (requires additional configuration)
+//   }
+// }));
 
 app.use(express.json({ limit: '50mb' })); // Increase body size limit if needed
 app.use(bodyParser.json()); // must parse body before morganBody as body will be logged
+
+// CSP violation reporting endpoint
+app.post('/csp-violation-report', (req, res) => {
+  logger.warn('CSP Violation:', req.body);
+  res.status(204).end();
+});
 
 morganBody(app, {
   noColors: false,
@@ -203,28 +250,30 @@ app.get('/favicon.ico', (req, res) => {
 
 // Health check endpoint (required for Cloud Run)
 app.get('/health', async (req, res) => {
-  const health = {
+  let health = {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     port: PORT,
     environment: process.env.NODE_ENV,
-    database: 'unknown',
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    database: 'unknown' as 'unknown' | 'connected' | 'not_initialized' | 'disconnected'
   };
 
   try {
     if (mongoClient) {
-      await mongoClient.db().admin().ping();
+      await mongoClient.db(config.DBNAME).admin().ping();
       health.database = 'connected';
     } else {
       health.database = 'not_initialized';
+      health.status = 'degraded';
     }
-  } catch {
+  } catch(error) {
     health.database = 'disconnected';
     health.status = 'degraded';
+    logger.warn('Database ping failed:', error);
   }
 
-  const statusCode = health.database === 'disconnected' ? 503 : 200;
+  const statusCode = (health.database === 'disconnected' || health.database === 'not_initialized') ? 503 : 200;
 
   res.status(statusCode).json(health);
 });
@@ -235,7 +284,7 @@ try {
   const swaggerDocument = YAML.parse(file) as JsonObject;
 
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  logger.info(`Swagger api.yaml served successfully load ${JSON.stringify(swaggerDocument).length} bytes`);
+  logger.info(`✅ Swagger ${yamlFilename} served successfully load ${JSON.stringify(swaggerDocument).length} bytes`);
 } catch (err: unknown) {
   if (typeof err === 'object' && err !== null && 'code' in err) {
     const errorWithCode = err as { code?: string };
@@ -262,10 +311,10 @@ try {
     OpenApiValidator.middleware({
       apiSpec: yamlFilename,
       validateRequests: true,
-      validateResponses: true
+      validateResponses: process.env.NODE_ENV !== 'production'
     })
   );
-  logger.info(`OpenApiValidator api.yaml served successfully from ${yamlFilename}`);
+  logger.info(`OpenApiValidator middleware registered using Swagger from ${yamlFilename}`);
 } catch (error) {
   logger.error(`OpenApiValidator: ${String(error)}`);
 }
@@ -284,9 +333,9 @@ app.use((req: Request, res: Response) => {
 // XHR client error handler
 function xhrClientErrorHandler(err: Error, req: Request, res: Response, next: NextFunction): void {
   if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
-    logger.error(`[main] Something failed. ${err.message}`);
+    logger.error(`[main/xhrClientErrorHandler] Something failed. ${err.message}`);
     res.status(500).json({
-      message: `[main] Something failed. ${err.message}`
+      message: `[main/xhrClientErrorHandler] Something failed. ${err.message}`
     });
     next(err);
   } else {
@@ -305,14 +354,12 @@ app.use((err: Error, req: Request, res: Response) => {
   });
 });
 
-// Start the server
-// Register error handler before listen
 let server: HttpServer | HttpsServer;
 
 if (process.env.NODE_ENV === 'production') {
   server = app.listen(Number(PORT), '0.0.0.0', () => {
     logger.info(
-      figlet.textSync('\r\n\r\r\r\r\r3d-inventory-api GCP', {
+      figlet.textSync('3d-Inventory-API GCP', {
         font: 'Mini',
         horizontalLayout: 'default',
         verticalLayout: 'default',
@@ -320,7 +367,7 @@ if (process.env.NODE_ENV === 'production') {
         whitespaceBreak: true
       })
     );
-    logger.info(`---- Server on GCP http://0.0.0.0:${PORT}`);
+    logger.info(`---- Server on GCP ${HOST}:${PORT}`);
   });
 
   // Update signal handlers for HTTP server
@@ -340,15 +387,15 @@ if (process.env.NODE_ENV === 'production') {
     });
   });
 } else {
-  server = https.createServer(httpsOptions, app);
+  // server = https.createServer(httpsOptions, app);
 
-  server.on('error', (err: Error) => {
-    logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`);
-  });
+  // server.on('error', (err: Error) => {
+  //   logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`);
+  // });
 
-  server.listen(Number(PORT), HOST, () => {
-    logger.info('\n' +
-      figlet.textSync('3d-inventory-mongo-api DEV', {
+  server = app.listen(Number(PORT), HOST_DEV, () => {
+    logger.info(
+      figlet.textSync('3d-Inventory-API DEV', {
         font: 'Mini',
         horizontalLayout: 'default',
         verticalLayout: 'default',
@@ -357,7 +404,7 @@ if (process.env.NODE_ENV === 'production') {
       })
     );
 
-    logger.info(`Server on DEV https://${HOST}:${PORT}`);
+    logger.info(`Server on DEV http://${HOST_DEV}:${PORT}`);
   });
   // Signal handlers for HTTPS server
   process.on('SIGINT', () => {
@@ -376,4 +423,5 @@ if (process.env.NODE_ENV === 'production') {
     });
   });
 }
+
 export default server;
