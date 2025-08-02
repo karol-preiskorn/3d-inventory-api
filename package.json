@@ -1,6 +1,6 @@
 {
   "name": "3d-inventory-mongo-api",
-  "version": "0.96.83",
+  "version": "0.96.86",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -76,7 +76,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "express-openapi-validator": "^5.5.7",
+    "express-openapi-validator": "^5.5.8",
     "express-session": "^1.18.2",
     "figlet": "^1.8.2",
     "helmet": "^8.1.0",
@@ -90,13 +90,14 @@
     "morgan-body": "^2.6.9",
     "node-fetch": "^3.3.2",
     "pino": "^9.7.0",
-    "pino-pretty": "^13.0.0",
+    "pino-pretty": "^13.1.1",
     "prettier": "3.6.2",
     "rxjs": "^7.8.2",
     "sanitize-html": "^2.17.0",
     "swagger-ui-express": "^5.0.1",
     "tsx": "^4.20.3",
-    "yaml": "^2.8.0"
+    "yaml": "^2.8.0",
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.9",
@@ -110,7 +111,7 @@
     "@types/mongo-sanitize": "^1.0.3",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.1.0",
-    "@types/node-fetch": "^2.6.12",
+    "@types/node-fetch": "^2.6.13",
     "@types/sanitize-html": "^2.16.0",
     "@types/supertest": "^6.0.3",
     "@types/swagger-ui-express": "^4.1.8",
@@ -127,12 +128,12 @@
     "rimraf": "^6.0.1",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.0",
-    "typedoc": "^0.28.7",
+    "typedoc": "^0.28.8",
     "typedoc-plugin-coverage": "^4.0.1",
-    "typedoc-plugin-mdn-links": "^5.0.5",
+    "typedoc-plugin-mdn-links": "^5.0.6",
     "typedoc-plugin-merge-modules": "^7.0.0",
     "typedoc-plugin-missing-exports": "^4.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.0"
   },
   "engines": {
     "node": ">=24.0.0"

@@ -14,7 +14,7 @@
     "outDir": "./dist",
     "pretty": true,
     "removeComments": false,
-    "rootDir": "./src",
+    "rootDir": "../3d-inventory-api/src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
@@ -35,10 +35,10 @@
     "coverage",
     "build",
     "scripts",
-    "src/__tests__",
-    "src/__mocks__"
+    "../3d-inventory-api/src/__tests__",
+    "../3d-inventory-api/src/__mocks__"
   ],
   "include": [
-    "src/**/*.ts"
+    "../3d-inventory-api/src/**/*.ts"
   ]
 }

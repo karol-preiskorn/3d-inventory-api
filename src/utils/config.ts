@@ -35,7 +35,7 @@ const DEFAULTS = {
   DBNAME: '3d-inventory',
   API_YAML_FILE: './api.yaml',
   HOST: '0.0.0.0',
-  HOST_DEV: 'http://localhost',
+  HOST_DEV: 'localhost',
   PORT: 8080,
   COOKIE_EXPIRESIN: 3600
 };
