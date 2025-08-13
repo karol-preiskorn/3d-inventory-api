@@ -134,7 +134,7 @@
     "typedoc-plugin-mdn-links": "^5.0.6",
     "typedoc-plugin-merge-modules": "^7.0.0",
     "typedoc-plugin-missing-exports": "^4.0.0",
-    "typescript": "^5.8.0"
+    "typescript": "^5.9.2"
   },
   "engines": {
     "node": ">=24.0.0"
