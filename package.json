@@ -1,5 +1,5 @@
 {
-  "name": "3d-inventory-mongo-api",
+  "name": "d-inventory-api",
   "version": "0.96.86",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
@@ -36,8 +36,9 @@
     "docker:build": "npm run version:patch && ./build.sh",
     "docker:run": "docker rm -f 3d-inventory-api && docker build -t 3d-inventory-api . && docker run -p 8080:8080 -e PORT=8080 -e HOST=172.17.0.2 3d-inventory-api",
     "docker:test": "docker run --rm -p 8080:8080 -e PORT=8080 3d-inventory-api",
-    "gcp:deploy": "docker compose up --build",
-    "gcp:logs": "gcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=d-inventory-api\" --project=d-inventory-406007 --limit=50",
+    "gcp:deploy": "./deploy.sh",
+    "gcp:logs": "gcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=3d-inventory-api\" --limit=50",
+    "gcp:status": "gcloud run services describe 3d-inventory-api --region=us-central1 --format='table(metadata.name,status.url,status.conditions[0].type,status.conditions[0].status)'",
     "kill-port": "npx cross-port-killer 3001",
     "lint": "eslint --fix src",
     "openapi:format": "npx openapi-format api/openapi.yaml --output api/openapi-formatted.yaml",
@@ -128,7 +129,7 @@
     "rimraf": "^6.0.1",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.0",
-    "typedoc": "^0.28.8",
+    "typedoc": "^0.28.9",
     "typedoc-plugin-coverage": "^4.0.1",
     "typedoc-plugin-mdn-links": "^5.0.6",
     "typedoc-plugin-merge-modules": "^7.0.0",

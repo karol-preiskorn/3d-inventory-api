@@ -40,7 +40,12 @@ router.get('/', (async (_req, res) => {
     }
   } catch (error) {
     console.error('Error fetching attributes:', error)
-    res.status(500).send('Internal server error while fetching attributes')
+    res.status(500).json({
+      module: 'attributes',
+      procedure: 'getAttributes',
+      status: 'Internal Server Error',
+      message: error instanceof Error ? error.message : String(error)
+    })
   } finally {
     if (client) {
       await closeConnection(client)
@@ -70,7 +75,12 @@ router.get('/:id', (async (req, res) => {
       res.status(200).json(result)
     }
   } catch (error) {
-    res.status(500).send('Internal server error' + (error instanceof Error ? error.message : String(error)))
+    res.status(500).json({
+      module: 'attributes',
+      procedure: 'getAttribute',
+      status: 'Internal Server Error',
+      message: error instanceof Error ? error.message : String(error)
+    })
   } finally {
     await closeConnection(client)
   }
@@ -186,7 +196,12 @@ router.put('/:id', (async (req, res) => {
     console.error('Error updating attribute:', error)
     const errorMessage = error instanceof Error ? error.message : String(error)
 
-    res.status(500).send('Internal server error during update attributes: ' + errorMessage)
+    res.status(500).json({
+      module: 'attributes',
+      procedure: 'updateAttribute',
+      status: 'Internal Server Error',
+      message: errorMessage
+    })
   } finally {
     if (client) {
       await closeConnection(client)
@@ -242,7 +257,12 @@ router.post('/', (async (req, res) => {
     }
   } catch (error) {
     console.error('Error creating attribute:', error)
-    res.status(500).send('Internal server error during attribute creation')
+    res.status(500).json({
+      module: 'attributes',
+      procedure: 'createAttribute',
+      status: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
   } finally {
     if (client) {
       await closeConnection(client)

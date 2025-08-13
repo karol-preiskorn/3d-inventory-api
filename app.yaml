@@ -1,0 +1,58 @@
+# Google App Engine Configuration for 3D Inventory API
+# Alternative to Cloud Run deployment
+
+automatic_scaling:
+  max_instances: 10
+  min_instances: 0
+  target_cpu_utilization: 0.6
+
+# Automatic scaling configuration
+env_variables:
+  API_YAML_FILE: api.yaml
+  COOKIE_EXPIRESIN: 24h
+  HOST: 0.0.0.0
+  NODE_ENV: production
+  # Add your MongoDB Atlas URI here or use Secret Manager
+  # MONGO_URL: mongodb+srv://username:password@cluster.mongodb.net/3d-inventory
+
+# Health check configuration
+
+# Environment variables
+liveness_check:
+  check_interval_sec: 30
+  failure_threshold: 2
+  path: "/health"
+  success_threshold: 2
+  timeout_sec: 4
+
+# Health check configuration
+
+# Environment variables
+PORT: 8080 # Add your MongoDB Atlas URI here or use Secret Manager
+# MONGO_URL: mongodb+srv://username:password@cluster.mongodb.net/3d-inventory
+
+readiness_check:
+  check_interval_sec: 5
+  failure_threshold: 2
+  path: "/health"
+  success_threshold: 2
+  timeout_sec: 4
+
+resources:
+  cpu: 1
+  memory_gb: 0.5
+
+# Resource configuration
+runtime: nodejs20
+
+# Files to skip during deployment
+skip_files:
+  - ^(.*/)?#.*#$
+  - ^(.*/)?.*~$
+  - ^(.*/)?.*\.py[co]$
+  - ^(.*/)?.*/RCS/.*$
+  - ^(.*/)?\..*$
+  - ^(.*/)?node_modules/.*$
+  - ^(.*/)?logs/.*$
+  - ^(.*/)?dist/.*$
+  - ^(.*/)?coverage/.*$

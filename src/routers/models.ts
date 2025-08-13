@@ -41,7 +41,12 @@ router.get('/', (async (req, res) => {
     client = await connectToCluster();
   } catch (error) {
     logger.error('Error connecting to the database:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({
+      module: 'models',
+      procedure: 'fetchModels',
+      status: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
 
     return;
   }
@@ -304,7 +309,12 @@ router.delete('/', (async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     logger.error('DELETE /models - Error deleting documents:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({
+      module: 'models',
+      procedure: 'deleteAllModels',
+      status: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
   } finally {
     await closeConnection(client);
   }

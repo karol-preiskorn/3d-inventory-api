@@ -19,6 +19,7 @@ import morgan from 'morgan';
 import morganBody from 'morgan-body';
 import swaggerUi, { JsonObject } from 'swagger-ui-express';
 import YAML from 'yaml';
+import type { CorsOptions } from 'cors';
 
 import attributes from './routers/attributes';
 import attributesDictionary from './routers/attributesDictionary';
@@ -72,17 +73,89 @@ const yamlFilename = process.env.API_YAML_FILE ?? './api.yaml';
 
 const app = express();
 
+
+
+const allowedOrigins = [
+  // Local development
+  'http://localhost:4200',
+  'http://localhost:8080',
+  'http://localhost:3000',
+  // Local Docker development
+  'http://172.17.0.2:8080',
+  'http://172.17.0.3:8080',
+  'http://172.17.20.2:8080',
+  'http://172.17.20.3:8080',
+  // Cloud Run services
+  'https://d-inventory-ui-wzwe3odv7q-ew.a.run.app',
+  'https://d-inventory-api-wzwe3odv7q-ew.a.run.app',
+  // Ultima Solution domains
+  'https://3d-inventory-api.ultimasolution.pl',
+  'https://3d-inventory-ui.ultimasolution.pl',
+  // MongoDB Atlas
+  'https://cluster0.htgjako.mongodb.net'
+  // Add more allowed origins as needed
+];
+
+const LOCALHOST_ORIGIN_REGEX = /^https?:\/\/localhost:\d+$/;
+
+const corsOptions: CorsOptions = {
+  origin: (origin: string | undefined, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (typeof origin === 'undefined' || origin === null) {
+      logger.info(`[CORS DEBUG] No origin header - allowing: ${origin}`);
+      logger.info('[CORS DEBUG] No origin header - allowing request');
+
+      return callback(null, true);
+    }
+
+    const isAllowed =
+      allowedOrigins.includes(origin) ||
+      LOCALHOST_ORIGIN_REGEX.test(origin);
+
+    if (isAllowed) {
+      logger.info(`[CORS DEBUG] Origin allowed: ${origin}`);
+
+      return callback(null, true);
+    } else {
+      logger.warn(`[CORS DEBUG] Origin blocked: ${origin}`);
+
+      const corsError = new Error(`CORS policy: This origin is not allowed: ${origin}`);
+
+      // @ts-expect-error: Assigning custom 'status' property to Error object for CORS handling
+      corsError.status = 403;
+      // @ts-expect-error Assigning custom 'origin' property to Error object for CORS handling
+      corsError.origin = origin;
+
+      return callback(corsError, false);
+    }
+  },
+  credentials: true,
+  methods: ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
+  allowedHeaders: [
+    'Accept',
+    'Authorization',
+    'Cache-Control',
+    'Content-Type',
+    'Origin',
+    'X-API-Key',
+    'X-Requested-With'
+  ]
+};
+
+app.use(cors(corsOptions));
+
+
+
 let mongoClient: MongoClient | null = null;
 
-// Initialize MongoDB connection
-(async () => {
-  let db: Db | null = null;
+let db: Db | null = null;
 
+(async () => {
   try {
     if (config.ATLAS_URI) {
       mongoClient = await connectToCluster();
       db = connectToDb(mongoClient);
-      db.admin().ping();
+      await db.admin().ping();
       logger.info(`✅ MongoDB connected to database: ${config.DBNAME}`);
     } else {
       logger.warn('⚠️ No MongoDB URI provided, running without database');
@@ -125,64 +198,7 @@ try {
   logger.error(`Error login in morgan: ${String(error)}`);
 }
 
-// Remove the manual CORS headers and replace with this:
-import type { CorsOptions } from 'cors';
 
-// const allowedOrigins = [
-//   // Local development
-//   'http://localhost:4200',
-//   'http://localhost:8080',
-//   'http://localhost:3000',
-//   // Local Docker development
-//   'http://172.17.0.2:8080',
-//   'http://172.17.0.3:8080',
-//   'http://172.17.20.2:8080',
-//   'http://172.17.20.3:8080',
-//   // Cloud Run services
-//   'https://d-inventory-ui-wzwe3odv7q-ew.a.run.app',
-//   'https://d-inventory-api-wzwe3odv7q-ew.a.run.app',
-//   // Ultima Solution domains
-//   'https://3d-inventory-api.ultimasolution.pl',
-//   'https://3d-inventory-ui.ultimasolution.pl'
-// ];
-
-// const corsOptions: CorsOptions = {
-//   origin: (origin, callback) => {
-//     // Allow requests with no origin (mobile apps, Postman, etc.)
-//     if (!origin) {
-//       logger.info(`[CORS DEBUG] No origin header - allowing: ${origin}`);
-
-//       return callback(null, true);
-//     }
-
-//     const isAllowed =
-//       allowedOrigins.includes(origin) ||
-//       /^https?:\/\/localhost:\d+$/.test(origin);
-
-//     if (isAllowed) {
-//       logger.info(`[CORS DEBUG] Origin allowed: ${origin}`);
-
-//       return callback(null, true);
-//     } else {
-//       logger.warn(`[CORS DEBUG] Origin blocked: ${origin}`);
-
-//       return callback(new Error(`Not allowed by CORS: ${origin}`), false);
-//     }
-//   },
-//   credentials: true,
-//   methods: ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
-//   allowedHeaders: [
-//     'Accept',
-//     'Authorization',
-//     'Cache-Control',
-//     'Content-Type',
-//     'Origin',
-//     'X-API-Key',
-//     'X-Requested-With'
-//   ]
-// };
-
-// app.use(cors(corsOptions));
 
 
 // CSP configuration
@@ -249,15 +265,25 @@ app.get('/favicon.ico', (req, res) => {
 });
 
 // Health check endpoint (required for Cloud Run)
-app.get('/health', async (req, res) => {
-  let health = {
+app.get('/health', async (_req, res) => {
+  const health: {
+    status: string;
+    timestamp: string;
+    port: typeof PORT;
+    environment: typeof process.env.NODE_ENV;
+    uptime: number;
+    database: 'unknown' | 'connected' | 'not_initialized' | 'disconnected';
+    error: string | null;
+  } = {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     port: PORT,
     environment: process.env.NODE_ENV,
     uptime: process.uptime(),
-    database: 'unknown' as 'unknown' | 'connected' | 'not_initialized' | 'disconnected'
+    database: 'unknown',
+    error: null
   };
+
 
   try {
     if (mongoClient) {
@@ -270,7 +296,8 @@ app.get('/health', async (req, res) => {
   } catch(error) {
     health.database = 'disconnected';
     health.status = 'degraded';
-    logger.warn('Database ping failed:', error);
+    health.error = error instanceof Error ? error.message : String(error);
+    logger.warn('Database ping failed:', health.error);
   }
 
   const statusCode = (health.database === 'disconnected' || health.database === 'not_initialized') ? 503 : 200;
@@ -348,9 +375,10 @@ app.use(xhrClientErrorHandler);
 app.use((err: Error, req: Request, res: Response) => {
   logger.error(`Unhandled error exception: ${err.message}. Stack: ${err.stack}`);
   res.status(500).json({
-    message: `Internal Server Error - ${req.method} ${req.originalUrl}`,
-    error: err.message,
-    status: 500
+    module: 'main',
+    procedure: 'unhandledError',
+    message: `Internal Server Error Unhandled error- ${req.method} ${req.originalUrl}`,
+    error: err.message
   });
 });
 
@@ -387,19 +415,19 @@ if (process.env.NODE_ENV === 'production') {
     });
   });
 } else {
-  // server = https.createServer(httpsOptions, app);
+  server = https.createServer(httpsOptions, app);
 
-  // server.on('error', (err: Error) => {
-  //   logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`);
-  // });
+  server.on('error', (err: Error) => {
+    logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`);
+  });
 
   server = app.listen(Number(PORT), HOST_DEV, () => {
     logger.info(
-      figlet.textSync('3d-Inventory-API DEV', {
+      figlet.textSync(`3d-inventory-api https://${HOST_DEV}:${PORT}`, {
         font: 'Mini',
         horizontalLayout: 'default',
         verticalLayout: 'default',
-        width: 160,
+        width: 170,
         whitespaceBreak: true
       })
     );

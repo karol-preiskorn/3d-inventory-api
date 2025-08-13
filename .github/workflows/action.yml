@@ -1,29 +1,17 @@
 name: 'Configure GitHub Pages'
-description: 'Composite action to configure GitHub Pages with Nuxt'
+on:
+  push:
+    branches:
+      - main
 
-inputs:
-  static_site_generator:
-    description: 'The static site generator to use'
-    required: true
-  token:
-    description: 'GitHub token'
-    required: true
-  enablement:
-    description: 'Enablement flag'
-    required: false
-    default: 'false'
-
-outputs:
-  base_url:
-    description: 'The base URL for the deployed site'
-
-runs:
-  using: 'composite'
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Run your action logic
-      id: my_step
-      run: |
-        echo "Running with ${{ inputs.static_site_generator }}"
-        echo "base_url=https://example.com" >> $GITHUB_OUTPUT
+jobs:
+  configure-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run your action logic
+        id: my_step
+        run: |
+          echo "Running with ${{ inputs.static_site_generator }}"
+          echo "base_url=https://example.com" >> $GITHUB_OUTPUT

@@ -101,7 +101,12 @@ router.get('/component/:component', (async (req, res) => {
     }
   } catch (error) {
     logger.error(`GET /logs/component/${component} - Error: ${error}`);
-    res.status(500).json({ message: 'Internal server error.' });
+    res.status(500).json({
+      module: 'logs',
+      procedure: 'fetchLogsByComponent',
+      status: 'Internal server error.',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
   } finally {
     await closeConnection(client);
   }
@@ -168,7 +173,12 @@ router.get('/:id', (async (req, res) => {
     }
   } catch (error) {
     logger.error(`GET /logs/${id} - Error: ${error}`);
-    res.status(500).json({ message: 'Internal server error.' });
+    res.status(500).json({
+      module: 'logs',
+      procedure: 'fetchLogsById',
+      message: 'Internal server error.',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
   } finally {
     await closeConnection(client);
   }
@@ -217,7 +227,12 @@ router.post('/', (async (req, res) => {
     res.status(201).json(newDocument);
   } catch (error) {
     logger.error(`POST /logs/ - Error: ${error}`);
-    res.status(500).json({ message: 'Internal server error.' });
+    res.status(500).json({
+      module: 'logs',
+      procedure: 'createLog',
+      message: 'Internal server error.',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
   } finally {
     await closeConnection(client);
   }

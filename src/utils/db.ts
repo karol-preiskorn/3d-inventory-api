@@ -11,6 +11,9 @@ import log from './logger';
 
 const logger = log('db');
 
+// Configurable emoji usage for logs and errors
+const useEmoji = config.USE_EMOJI ?? false;
+
 /**
  * MongoDB connection options.
  * @type {MongoClientOptions}
@@ -18,7 +21,8 @@ const logger = log('db');
 const mongoOptions: MongoClientOptions = {
   // SSL/TLS configuration
   tls: true,
-  tlsAllowInvalidCertificates: false,
+  tlsInsecure: true, // For development/testing
+  tlsAllowInvalidCertificates: true,
   tlsAllowInvalidHostnames: false,
 
   // Connection settings
@@ -43,24 +47,26 @@ const mongoOptions: MongoClientOptions = {
 export async function connectToCluster(): Promise<MongoClient> {
   const mongoUri = config.ATLAS_URI;
 
-  if (!mongoUri) {
-    throw new Error('❌ ATLAS_URI environment variable is not set');
-  }
-
   try {
-    logger.info('✅ Attempting to connect to MongoDB Atlas...');
+    if (!mongoUri) {
+      throw new Error(
+        `${useEmoji ? '❌ ' : ''}ATLAS_URI environment variable is not set`
+      );
+    }
+    // Test the connection
     const client = new MongoClient(mongoUri, mongoOptions);
 
-    // Test the connection
     await client.connect();
-    await client.db().admin().ping();
+
+    // Test the connection
+    // await client.db().admin().ping();
 
     logger.info('✅ Successfully connected to MongoDB Atlas');
 
     return client;
   } catch (error: unknown) {
     logger.error(
-      '❌ MongoDB connection failed:',
+      `❌ MongoDB connection to ${mongoUri} failed:`,
       error instanceof Error ? error.message : error
     );
     throw error;

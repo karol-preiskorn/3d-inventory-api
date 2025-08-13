@@ -1,9 +1,6 @@
 /**
  * @file config.ts
- * @description Loads and validates environment variables.
- *              This module is responsible for loading environment variables
- *              from a .env file and providing a configuration object to the
- *              rest of the application.
+ * @description Loads and validates environment variables for the application.
  */
 
 import dotenv from 'dotenv';
@@ -11,17 +8,7 @@ import path from 'path';
 
 dotenv.config({ path: path.resolve('./.env') });
 
-type EnvVars = {
-  ATLAS_URI?: string;
-  DBNAME?: string;
-  API_YAML_FILE?: string;
-  HOST?: string;
-  HOST_DEV?: string;
-  PORT?: string;
-  COOKIE_EXPIRESIN?: string;
-};
-
-type Config = {
+interface Config {
   ATLAS_URI: string;
   DBNAME: string;
   API_YAML_FILE: string;
@@ -29,45 +16,35 @@ type Config = {
   HOST_DEV: string;
   PORT: number;
   COOKIE_EXPIRESIN: number;
-};
+}
 
 const DEFAULTS = {
   DBNAME: '3d-inventory',
   API_YAML_FILE: './api.yaml',
   HOST: '0.0.0.0',
-  HOST_DEV: 'localhost',
+  HOST_DEV: '0.0.0.0',
   PORT: 8080,
   COOKIE_EXPIRESIN: 3600
 };
 
-function loadEnv(): EnvVars {
-  return {
-    ATLAS_URI: process.env.ATLAS_URI,
-    DBNAME: process.env.DBNAME,
-    API_YAML_FILE: process.env.API_YAML_FILE,
-    HOST: process.env.HOST,
-    HOST_DEV: process.env.HOST_DEV,
-    PORT: process.env.PORT,
-    COOKIE_EXPIRESIN: process.env.COOKIE_EXPIRESIN
-  };
-}
+function getEnvVar(key: string, required = false): string | undefined {
+  const value = process.env[key];
 
-function sanitizeEnv(env: EnvVars): Config {
-  if (!env.ATLAS_URI) {
-    throw new Error('Missing required environment variable: ATLAS_URI');
+  if (required && !value) {
+    throw new Error(`Missing required environment variable: ${key}`);
   }
 
-  return {
-    ATLAS_URI: env.ATLAS_URI,
-    DBNAME: env.DBNAME || DEFAULTS.DBNAME,
-    API_YAML_FILE: env.API_YAML_FILE || DEFAULTS.API_YAML_FILE,
-    HOST: env.HOST || DEFAULTS.HOST,
-    HOST_DEV: env.HOST_DEV || DEFAULTS.HOST_DEV,
-    PORT: env.PORT ? Number(env.PORT) : DEFAULTS.PORT,
-    COOKIE_EXPIRESIN: env.COOKIE_EXPIRESIN ? Number(env.COOKIE_EXPIRESIN) : DEFAULTS.COOKIE_EXPIRESIN
-  };
+  return value;
 }
 
-const config = sanitizeEnv(loadEnv());
+const config: Config = {
+  ATLAS_URI: getEnvVar('ATLAS_URI', true)!,
+  DBNAME: getEnvVar('DBNAME') || DEFAULTS.DBNAME,
+  API_YAML_FILE: getEnvVar('API_YAML_FILE') || DEFAULTS.API_YAML_FILE,
+  HOST: getEnvVar('HOST') || DEFAULTS.HOST,
+  HOST_DEV: getEnvVar('HOST_DEV') || DEFAULTS.HOST_DEV,
+  PORT: Number(getEnvVar('PORT')) || DEFAULTS.PORT,
+  COOKIE_EXPIRESIN: Number(getEnvVar('COOKIE_EXPIRESIN')) || DEFAULTS.COOKIE_EXPIRESIN
+};
 
 export default config;

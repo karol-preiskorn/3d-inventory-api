@@ -1,14 +1,56 @@
-# This file specifies files that are *not* uploaded to Google Cloud
+# This file specifies files that are _not_ uploaded to Google Cloud
+
 # using gcloud. It follows the same syntax as .gitignore, with the addition of
+
 # "#!include" directives (which insert the entries of the given .gitignore-style
+
 # file at that point).
+
 #
+
 # For more information, run:
-#   $ gcloud topic gcloudignore
+
+# $ gcloud topic gcloudignore
+
 #
+
 .gcloudignore
 .git
 .gitignore
 
 # Node.js dependencies:
+
 node_modules/
+
+# Development and build files
+
+logs/
+dist/
+coverage/
+_.log
+.env.local
+.env._.local
+
+# Docker files (not needed for Cloud Run deployment)
+
+compose.yaml
+compose.dev.yaml
+docker-compose.sh
+
+# Documentation and misc
+
+docs/
+README.md
+README.Docker.md
+\*.md
+
+# IDE and OS files
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test files
+
+src/tests/

@@ -67,7 +67,12 @@ router.get('/:id', (async (req, res) => {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
     logger.error(`GET /${collectionName}/${req.params.id} - error: ${errorMessage}`)
-    res.status(500).json({ message: 'Internal Server Error' })
+    res.status(500).json({
+      module: 'attributesDictionary',
+      procedure: 'getAttributesDictionary',
+      status: 'Internal Server Error',
+      message: errorMessage
+    })
   } finally {
     await closeConnection(client)
   }
@@ -157,7 +162,12 @@ router.put('/:id', (async (req, res) => {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
     logger.error(`PUT /${collectionName}/${id} - error: ${errorMessage}`)
-    res.status(500).json({ message: 'Internal Server Error' })
+    res.status(500).json({
+      module: 'attributesDictionary',
+      procedure: 'updateAttributesDictionary',
+      status: 'Internal Server Error',
+      message: errorMessage
+    })
   } finally {
     await closeConnection(client)
   }

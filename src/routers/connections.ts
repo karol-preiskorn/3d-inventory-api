@@ -152,7 +152,11 @@ router.put('/:id', (async (req, res) => {
       res.status(200).json({ matchedCount: result.matchedCount, modifiedCount: result.modifiedCount });
     }
   } catch {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      module: 'connections',
+      procedure: 'updateOne',
+      error: 'Internal server error'
+    });
   } finally {
     if (client) {
       await closeConnection(client);
@@ -275,7 +279,11 @@ router.post('/', (async (req, res) => {
 
     res.status(201).json({ insertedId: result.insertedId });
   } catch {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      module: 'connections',
+      procedure: 'insertOne',
+      error: 'Internal server error'
+    });
   } finally {
     await closeConnection(client);
   }
@@ -382,7 +390,12 @@ router.delete('/:id', (async (req, res) => {
       res.status(200).json({ deletedCount: result.deletedCount });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Internal server error', message: String(err) });
+    res.status(500).json({
+      module: 'connections',
+      procedure: 'deleteConnection',
+      error: err instanceof Error ? err.message : 'Unknown error',
+      message: 'Internal server error'
+    });
   } finally {
     await closeConnection(client);
   }

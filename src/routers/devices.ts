@@ -136,7 +136,12 @@ router.put('/:id', validateObjectId, (async (req, res) => {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
     logger.error(`PUT /devices/${req.params.id} - error updating device: ${errorMessage}`);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({
+      module: 'devices',
+      procedure: 'updateDevice',
+      status: 'Internal Server Error',
+      message: errorMessage
+    });
 
     return;
   }
@@ -230,7 +235,12 @@ router.patch('/position/:id', validateObjectId, (async (req, res) => {
     result = await collection.updateOne(query, updates);
   } catch (error) {
     logger.error(`PATCH /devices/position/${req.params.id} - error updating position: ${(error as Error).message}`);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({
+      module: 'devices',
+      procedure: 'updateDevicePosition',
+      status: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
     await closeConnection(client);
 
     return;
