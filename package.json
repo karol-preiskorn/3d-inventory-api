@@ -129,7 +129,7 @@
     "rimraf": "^6.0.1",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.0",
-    "typedoc": "^0.28.9",
+    "typedoc": "^0.28.10",
     "typedoc-plugin-coverage": "^4.0.1",
     "typedoc-plugin-mdn-links": "^5.0.6",
     "typedoc-plugin-merge-modules": "^7.0.0",
