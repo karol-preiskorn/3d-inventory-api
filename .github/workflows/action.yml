@@ -1,17 +1,14 @@
-name: 'Configure GitHub Pages'
+name: Example Workflow
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  configure-pages:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run your action logic
-        id: my_step
-        run: |
-          echo "Running with ${{ inputs.static_site_generator }}"
-          echo "base_url=https://example.com" >> $GITHUB_OUTPUT
+      - uses: actions/checkout@v3
+      - name: Run a one-line script
+        run: echo "Hello, world!"

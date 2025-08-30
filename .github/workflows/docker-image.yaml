@@ -1,11 +1,10 @@
-name: Docker Image CI
-description: Build a Docker image for the repository
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
+name: Docker Image CI
 
 jobs:
   build:

@@ -16,6 +16,7 @@ interface Config {
   HOST_DEV: string;
   PORT: number;
   COOKIE_EXPIRESIN: number;
+  USE_EMOJI?: boolean;
 }
 
 const DEFAULTS = {
@@ -44,7 +45,8 @@ const config: Config = {
   HOST: getEnvVar('HOST') || DEFAULTS.HOST,
   HOST_DEV: getEnvVar('HOST_DEV') || DEFAULTS.HOST_DEV,
   PORT: Number(getEnvVar('PORT')) || DEFAULTS.PORT,
-  COOKIE_EXPIRESIN: Number(getEnvVar('COOKIE_EXPIRESIN')) || DEFAULTS.COOKIE_EXPIRESIN
+  COOKIE_EXPIRESIN: Number(getEnvVar('COOKIE_EXPIRESIN')) || DEFAULTS.COOKIE_EXPIRESIN,
+  USE_EMOJI: process.env.USE_EMOJI === 'true'
 };
 
 export default config;

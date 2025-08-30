@@ -1,0 +1,99 @@
+networks:
+  app-network:
+    driver: bridge
+    name: 3d-inventory-network
+
+services:
+  # 3D Inventory API Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 3d-inventory-api
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - HOST=0.0.0.0
+      # MongoDB Atlas Configuration - replace with your actual Atlas URI
+      - MONGO_URL=${ATLAS_URI:-mongodb+srv://username:password@cluster.mongodb.net/3d-inventory?retryWrites=true&w=majority}
+      - ATLAS_URI=${ATLAS_URI:-mongodb+srv://username:password@cluster.mongodb.net/3d-inventory?retryWrites=true&w=majority}
+      - DBNAME=${DBNAME:-3d-inventory}
+      - API_YAML_FILE=api.yaml
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:4200,http://localhost:3001
+      - COOKIE_EXPIRESIN=24h
+      # GitHub Configuration (optional)
+      - GH_AUTH_TOKEN=${GH_AUTH_TOKEN:-}
+      - GH_USERNAME=${GH_USERNAME:-}
+      - GH_REPO=${GH_REPO:-}
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 40s
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/health']
+      timeout: 10s
+    networks:
+      - app-network
+    ports:
+      - '3001:8080'
+    restart: unless-stopped
+    volumes:
+      - ./logs:/usr/src/3d-inventory-api/logs
+      - ./cert:/usr/src/3d-inventory-api/cert:ro
+
+  # Angular Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-production}
+    container_name: 3d-inventory-frontend
+    depends_on:
+      - api
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - API_BASE_URL=http://api:8080
+      - API_URL=http://localhost:3001
+    healthcheck:
+      interval: 30s
+      retries: 3
+      test: ['CMD', 'curl', '-f', 'http://localhost:80/']
+      timeout: 10s
+    networks:
+      - app-network
+    ports:
+      - '4200:80'
+    restart: unless-stopped
+    volumes:
+      # For development mode - uncomment these lines
+      # - ./frontend/src:/app/src:ro
+      # - ./frontend/angular.json:/app/angular.json:ro
+      # - ./frontend/package.json:/app/package.json:ro
+      - frontend_dist:/usr/share/nginx/html
+
+  # Nginx Reverse Proxy (Optional - for production)
+  nginx:
+    container_name: 3d-inventory-nginx
+    depends_on:
+      - api
+      - frontend
+    image: nginx:alpine
+    networks:
+      - app-network
+    ports:
+      - '80:80'
+      - '443:443'
+    profiles:
+      - production
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./cert:/etc/nginx/ssl:ro
+      - frontend_dist:/usr/share/nginx/html:ro
+
+version: '3.8'
+volumes:
+  frontend_dist:
+    name: 3d-inventory-frontend-dist
