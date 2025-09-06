@@ -1,5 +1,10 @@
 name: Example Workflow
 
+runs:
+  using: 'composite'
+  steps:
+    - run: echo "noop"
+
 on:
   push:
     branches:

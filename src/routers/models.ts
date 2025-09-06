@@ -40,7 +40,7 @@ router.get('/', (async (req, res) => {
   try {
     client = await connectToCluster();
   } catch (error) {
-    logger.error('Error connecting to the database:', error);
+    logger.error('Error connecting to the database: ' + (error instanceof Error ? error.message : String(error)));
     res.status(500).json({
       module: 'models',
       procedure: 'fetchModels',
@@ -67,7 +67,7 @@ router.get('/', (async (req, res) => {
     try {
       await closeConnection(client);
     } catch (error) {
-      logger.error('Error closing the database connection:', error);
+      logger.error('Error closing the database connection: ' + (error instanceof Error ? error.message : String(error)));
     }
   }
 }) as RequestHandler);
@@ -264,7 +264,7 @@ router.delete('/:id', (async (req, res) => {
       try {
         await closeConnection(client);
       } catch (error) {
-        logger.error('Error closing the database connection:', error);
+        logger.error('Error closing the database connection: ' + (error instanceof Error ? error.message : String(error)));
       }
     }
   }
@@ -308,7 +308,7 @@ router.delete('/', (async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    logger.error('DELETE /models - Error deleting documents:', error);
+    logger.error('DELETE /models - Error deleting documents: ' + (error instanceof Error ? error.message : String(error)));
     res.status(500).json({
       module: 'models',
       procedure: 'deleteAllModels',

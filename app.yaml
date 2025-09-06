@@ -13,7 +13,7 @@ env_variables:
   HOST: 0.0.0.0
   NODE_ENV: production
   # Add your MongoDB Atlas URI here or use Secret Manager
-  # MONGO_URL: mongodb+srv://username:password@cluster.mongodb.net/3d-inventory
+  # ATLAS_URI: mongodb+srv://username:password@cluster.mongodb.net/3d-inventory
 
 # Health check configuration
 
@@ -29,7 +29,7 @@ liveness_check:
 
 # Environment variables
 PORT: 8080 # Add your MongoDB Atlas URI here or use Secret Manager
-# MONGO_URL: mongodb+srv://username:password@cluster.mongodb.net/3d-inventory
+# ATLAS_URI: mongodb+srv://username:password@cluster.mongodb.net/3d-inventory
 
 readiness_check:
   check_interval_sec: 5

@@ -6,8 +6,8 @@ This guide explains how to deploy your 3D Inventory API to Google Cloud Platform
 
 ### Prerequisites
 
-1. **Google Cloud Account**: Sign up at https://cloud.google.com
-2. **Google Cloud CLI**: Install from https://cloud.google.com/sdk/docs/install
+1. **Google Cloud Account**: Sign up at <https://cloud.google.com>
+2. **Google Cloud CLI**: Install from <https://cloud.google.com/sdk/docs/install>
 3. **Project Setup**: Create or select a Google Cloud project
 
 ### Step 1: Authentication and Project Setup
@@ -36,8 +36,10 @@ npm run gcp:deploy
 ### Step 3: Access Your API
 
 After deployment, your API will be available at:
-- https://3d-inventory-api-*.run.app
-- Health check: https://3d-inventory-api-*.run.app/health
+
+- Your API URL will look like: `https://3d-inventory-api-<region>-<hash>.run.app`
+  Replace `<region>` and `<hash>` with the values shown after deployment.
+- Health check: `https://3d-inventory-api-<region>-<hash>.run.app/health`
 
 ## Deployment Options
 
@@ -60,7 +62,7 @@ gcloud run deploy 3d-inventory-api \
     --platform managed \
     --region us-central1 \
     --allow-unauthenticated \
-    --port 8080 \
+    --set-env-vars "NODE_ENV=production,PORT=8080,ATLAS_URI=your-connection-string"
     --set-env-vars "NODE_ENV=production,PORT=8080"
 ```
 
@@ -80,6 +82,7 @@ gcloud app browse
 
 ```bash
 # Build and push to Container Registry
+# Replace 'your-project-id' with your actual Google Cloud project ID in the commands below.
 docker build -t gcr.io/your-project-id/3d-inventory-api .
 docker push gcr.io/your-project-id/3d-inventory-api
 
@@ -96,16 +99,18 @@ gcloud run deploy 3d-inventory-api \
 For production deployment, set these environment variables:
 
 ### Required
+
 - `NODE_ENV=production`
 - `PORT=8080`
 - `HOST=0.0.0.0`
 
 ### Database (MongoDB Atlas recommended)
-- `MONGO_URL`: Your MongoDB connection string
-- `ATLAS_URI`: Same as MONGO_URL
+
+- `DBNAME`: Database name (default: inventory)
 - `DBNAME`: Database name (default: 3d-inventory)
 
 ### Optional
+
 - `API_YAML_FILE=api.yaml`
 - `CORS_ORIGINS`: Comma-separated list of allowed origins
 - `COOKIE_EXPIRESIN=24h`
@@ -113,23 +118,25 @@ For production deployment, set these environment variables:
 ## Setting Environment Variables
 
 ### Cloud Run
+
 ```bash
 gcloud run services update 3d-inventory-api \
-    --set-env-vars "MONGO_URL=your-connection-string,DBNAME=3d-inventory"
+    --set-env-vars "ATLAS_URI=your-connection-string,DBNAME=3d-inventory"
 ```
 
 ### App Engine
+
 Update the `env_variables` section in `app.yaml`:
 
 ```yaml
 env_variables:
-  MONGO_URL: "your-connection-string"
-  DBNAME: "3d-inventory"
+  ATLAS_URI: 'your-connection-string'
+  DBNAME: '3d-inventory'
 ```
 
 ## Database Setup (MongoDB Atlas)
 
-1. Create MongoDB Atlas account at https://cloud.mongodb.com
+1. Create MongoDB Atlas account at <https://cloud.mongodb.com>
 2. Create a cluster
 3. Create a database user
 4. Get connection string
@@ -137,12 +144,13 @@ env_variables:
 
 ```bash
 gcloud run services update 3d-inventory-api \
-    --set-env-vars "MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/3d-inventory"
+    --set-env-vars "ATLAS_URI=mongodb+srv://user:pass@cluster.mongodb.net/3d-inventory"
 ```
 
 ## Monitoring and Logs
 
 ### View Logs
+
 ```bash
 # Using npm script
 npm run gcp:logs
@@ -152,6 +160,7 @@ gcloud logging read "resource.type=cloud_run_revision AND resource.labels.servic
 ```
 
 ### Check Status
+
 ```bash
 # Using npm script
 npm run gcp:status
@@ -161,7 +170,9 @@ gcloud run services describe 3d-inventory-api --region=us-central1
 ```
 
 ### Monitoring Dashboard
-Visit https://console.cloud.google.com/run to see:
+
+Visit <https://console.cloud.google.com/run> to see:
+
 - Request metrics
 - Error rates
 - Response times
@@ -172,11 +183,13 @@ Visit https://console.cloud.google.com/run to see:
 To use a custom domain:
 
 1. **Verify domain ownership**:
+
    ```bash
    gcloud domains verify your-domain.com
    ```
 
 2. **Map domain to service**:
+
    ```bash
    gcloud run domain-mappings create \
        --service 3d-inventory-api \
@@ -189,6 +202,7 @@ To use a custom domain:
 ## Security Considerations
 
 ### Authentication
+
 For production, consider adding authentication:
 
 ```bash
@@ -204,9 +218,11 @@ gcloud run services add-iam-policy-binding 3d-inventory-api \
 ```
 
 ### HTTPS
+
 Cloud Run provides HTTPS by default with automatic SSL certificates.
 
 ### Environment Variables
+
 Use Google Secret Manager for sensitive data:
 
 ```bash
@@ -215,8 +231,12 @@ echo -n "your-secret-value" | gcloud secrets create my-secret --data-file=-
 
 # Use in Cloud Run
 gcloud run services update 3d-inventory-api \
-    --set-secrets="MONGO_URL=my-secret:latest"
+    --set-secrets="ATLAS_URI=my-secret:latest"
 ```
+
+> **Note:** Using `--set-secrets` makes the secret available as an environment variable.
+> Ensure your application reads the secret from the environment variable (e.g., `process.env.ATLAS_URI`).
+> See [Using secrets with Cloud Run](https://cloud.google.com/run/docs/configuring/secrets) for more details.
 
 ## Troubleshooting
 
@@ -224,30 +244,48 @@ gcloud run services update 3d-inventory-api \
 
 1. **Build failures**: Check build logs and ensure all dependencies are in package.json
 2. **Port issues**: Ensure your app listens on `process.env.PORT || 8080`
+
+   ```js
+   // Example for Express.js
+   const PORT = process.env.PORT || 8080;
+   app.listen(PORT, () => {
+     console.log(`Server listening on port ${PORT}`);
+   });
+   ```
+
 3. **Database connection**: Verify MongoDB Atlas network access and credentials
 4. **Permission errors**: Ensure proper IAM roles and authentication
 
-### Debug Commands
+# Test locally with environment
+
+# Ensure your application is configured to read the NODE_ENV and PORT environment variables.
+
+NODE_ENV=production PORT=8080 npm start
 
 ```bash
 # Check service status
+
 gcloud run services describe 3d-inventory-api --region=us-central1
 
 # View recent logs
+
 gcloud logging read "resource.type=cloud_run_revision" --limit=100
 
 # Test locally with environment
+
 NODE_ENV=production PORT=8080 npm start
 ```
 
 ## Cost Optimization
 
 ### Cloud Run Pricing
+
 - Pay only for requests and compute time
 - First 2 million requests per month are free
 - Scales to zero when not in use
 
 ### Cost-saving tips
+
 1. Set appropriate CPU and memory limits
 2. Use appropriate concurrency settings
 3. Monitor usage in Cloud Console
@@ -268,12 +306,15 @@ gcloud run services update 3d-inventory-api \
 ## Updates and Rollbacks
 
 ### Deploy Updates
+
 Simply run the deployment command again:
+
 ```bash
 ./deploy.sh
 ```
 
 ### Rollback
+
 ```bash
 # List revisions
 gcloud run revisions list --service=3d-inventory-api
@@ -286,6 +327,7 @@ gcloud run services update-traffic 3d-inventory-api \
 ## Support
 
 For issues:
-1. Check Google Cloud Status: https://status.cloud.google.com
-2. Google Cloud Documentation: https://cloud.google.com/run/docs
+
+1. Check Google Cloud Status: <https://status.cloud.google.com>
+2. Google Cloud Documentation: <https://cloud.google.com/run/docs>
 3. Stack Overflow: Tag questions with `google-cloud-run`

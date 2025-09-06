@@ -11,7 +11,9 @@ info:
   version: 0.53.23
 servers:
   - url: http://0.0.0.0:8080
+  - url: https://0.0.0.0:8080
   - url: http://localhost:8080
+  - url: https://localhost:8080
   - url: http://172.17.0.2:8080
   - url: http://172.17.0.3:8080
   - url: http://172.20.0.3:8080

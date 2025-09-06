@@ -38,7 +38,7 @@ import config from './utils/config';
 import { connectToCluster, connectToDb } from './utils/db';
 import getLogger from './utils/logger';
 
-const logger = getLogger('index');
+const logger = getLogger('main');
 
 const PORT = config.PORT;
 
@@ -78,8 +78,13 @@ const app = express();
 const allowedOrigins = [
   // Local development
   'http://localhost:4200',
+  'https://localhost:4200',
   'http://localhost:8080',
-  'http://localhost:3000',
+  'https://localhost:8080',
+  'http://127.0.0.1:8080',
+  'https://127.0.0.1:8080',
+  'http://0.0.0.0:8080',
+  'https://0.0.0.0:8080',
   // Local Docker development
   'http://172.17.0.2:8080',
   'http://172.17.0.3:8080',
@@ -103,7 +108,6 @@ const corsOptions: CorsOptions = {
     // Allow requests with no origin (mobile apps, Postman, etc.)
     if (typeof origin === 'undefined' || origin === null) {
       logger.info(`[CORS DEBUG] No origin header - allowing: ${origin}`);
-      logger.info('[CORS DEBUG] No origin header - allowing request');
 
       return callback(null, true);
     }
@@ -144,8 +148,6 @@ const corsOptions: CorsOptions = {
 
 app.use(cors(corsOptions));
 
-
-
 let mongoClient: MongoClient | null = null;
 
 let db: Db | null = null;
@@ -156,12 +158,12 @@ let db: Db | null = null;
       mongoClient = await connectToCluster();
       db = connectToDb(mongoClient);
       await db.admin().ping();
-      logger.info(`✅ MongoDB connected to database: ${config.DBNAME}`);
+      //logger.info(`✅ MongoDB connected to database: ${config.DBNAME}`);
     } else {
       logger.warn('⚠️ No MongoDB URI provided, running without database');
     }
   } catch (error) {
-    logger.error('❌ MongoDB initialization failed:', error);
+    logger.error(`❌ MongoDB initialization failed: ${error instanceof Error ? error.message : String(error)}`);
     if (process.env.NODE_ENV === 'production') {
       logger.error('Production: Running without database connection');
       mongoClient = null;
@@ -297,7 +299,7 @@ app.get('/health', async (_req, res) => {
     health.database = 'disconnected';
     health.status = 'degraded';
     health.error = error instanceof Error ? error.message : String(error);
-    logger.warn('Database ping failed:', health.error);
+    logger.warn(`Database ping failed: ${health.error}`);
   }
 
   const statusCode = (health.database === 'disconnected' || health.database === 'not_initialized') ? 503 : 200;
@@ -415,15 +417,10 @@ if (process.env.NODE_ENV === 'production') {
     });
   });
 } else {
-  server = https.createServer(httpsOptions, app);
-
-  server.on('error', (err: Error) => {
-    logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`);
-  });
-
-  server = app.listen(Number(PORT), HOST_DEV, () => {
+  // Development server with HTTPS
+  server = https.createServer(httpsOptions, app).listen(Number(PORT), HOST, () => {
     logger.info(
-      figlet.textSync(`3d-inventory-api https://${HOST_DEV}:${PORT}`, {
+      figlet.textSync('3d-inventory-api', {
         font: 'Mini',
         horizontalLayout: 'default',
         verticalLayout: 'default',
@@ -431,9 +428,14 @@ if (process.env.NODE_ENV === 'production') {
         whitespaceBreak: true
       })
     );
-
-    logger.info(`Server on DEV http://${HOST_DEV}:${PORT}`);
+    logger.info('--------- Development server ---------');
+    logger.info(`Server on https://${HOST}:${PORT}`);
   });
+
+  server.on('error', (err: Error) => {
+    logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`);
+  });
+
   // Signal handlers for HTTPS server
   process.on('SIGINT', () => {
     logger.info('SIGINT signal received: closing HTTPS server.');

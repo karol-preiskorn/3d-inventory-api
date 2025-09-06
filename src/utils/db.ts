@@ -12,7 +12,7 @@ import log from './logger';
 const logger = log('db');
 
 // Configurable emoji usage for logs and errors
-const useEmoji = config.USE_EMOJI ?? false;
+const useEmoji = config.USE_EMOJI ?? true;
 
 /**
  * MongoDB connection options.
@@ -21,7 +21,6 @@ const useEmoji = config.USE_EMOJI ?? false;
 const mongoOptions: MongoClientOptions = {
   // SSL/TLS configuration
   tls: true,
-  tlsInsecure: true, // For development/testing
   tlsAllowInvalidCertificates: true,
   tlsAllowInvalidHostnames: false,
 
@@ -42,34 +41,30 @@ const mongoOptions: MongoClientOptions = {
 /**
  * Connects to the MongoDB Atlas cluster.
  * @returns {Promise<MongoClient>} The connected MongoDB client.
- * @throws {Error} If the connection fails or MONGODB_URI is not set.
+ * @throws {Error} If the connection fails or ATLAS_URI is not set.
  */
 export async function connectToCluster(): Promise<MongoClient> {
   const mongoUri = config.ATLAS_URI;
 
+  if (!mongoUri || typeof mongoUri !== 'string') {
+    const msg = `${useEmoji ? '❌ ' : ''}ATLAS_URI environment variable is not set or invalid.`
+
+    logger.error(msg);
+    throw new Error(msg);
+  }
+
   try {
-    if (!mongoUri) {
-      throw new Error(
-        `${useEmoji ? '❌ ' : ''}ATLAS_URI environment variable is not set`
-      );
-    }
-    // Test the connection
     const client = new MongoClient(mongoUri, mongoOptions);
 
     await client.connect();
-
-    // Test the connection
-    // await client.db().admin().ping();
-
-    logger.info('✅ Successfully connected to MongoDB Atlas');
+    logger.info(`${useEmoji ? '✅ ' : ''}Connected to MongoDB Atlas Cluster`);
 
     return client;
-  } catch (error: unknown) {
-    logger.error(
-      `❌ MongoDB connection to ${mongoUri} failed:`,
-      error instanceof Error ? error.message : error
-    );
-    throw error;
+  } catch (error) {
+    const errMsg = `${useEmoji ? '❌ ' : ''}MongoDB connection to ${config.DBNAME} failed: ${error instanceof Error ? error.message : String(error)}`;
+
+    logger.error(errMsg);
+    throw new Error(errMsg);
   }
 }
 

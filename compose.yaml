@@ -17,7 +17,6 @@ services:
       - PORT=8080
       - HOST=0.0.0.0
       # MongoDB Atlas Configuration - replace with your actual Atlas URI
-      - MONGO_URL=${ATLAS_URI:-mongodb+srv://username:password@cluster.mongodb.net/3d-inventory?retryWrites=true&w=majority}
       - ATLAS_URI=${ATLAS_URI:-mongodb+srv://username:password@cluster.mongodb.net/3d-inventory?retryWrites=true&w=majority}
       - DBNAME=${DBNAME:-3d-inventory}
       - API_YAML_FILE=api.yaml

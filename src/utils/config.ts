@@ -25,7 +25,8 @@ const DEFAULTS = {
   HOST: '0.0.0.0',
   HOST_DEV: '0.0.0.0',
   PORT: 8080,
-  COOKIE_EXPIRESIN: 3600
+  COOKIE_EXPIRESIN: 3600,
+  USE_EMOJI: true
 };
 
 function getEnvVar(key: string, required = false): string | undefined {
@@ -46,7 +47,7 @@ const config: Config = {
   HOST_DEV: getEnvVar('HOST_DEV') || DEFAULTS.HOST_DEV,
   PORT: Number(getEnvVar('PORT')) || DEFAULTS.PORT,
   COOKIE_EXPIRESIN: Number(getEnvVar('COOKIE_EXPIRESIN')) || DEFAULTS.COOKIE_EXPIRESIN,
-  USE_EMOJI: process.env.USE_EMOJI === 'true'
+  USE_EMOJI: process.env.USE_EMOJI !== undefined ? process.env.USE_EMOJI === 'true' : DEFAULTS.USE_EMOJI
 };
 
 export default config;

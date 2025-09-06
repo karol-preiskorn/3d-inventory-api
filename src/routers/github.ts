@@ -63,7 +63,7 @@ router.get('/issues', async (_req: Request, res: ExpressResponse): Promise<void>
     log.info(`GET /github/issues - Fetched ${data.length} issues from GitHub`);
     res.json(data);
   } catch (error) {
-    log.error('[github.fetchIssues] Internal server error', error);
+    log.error(`[github.fetchIssues] Internal server error: ${error instanceof Error ? error.message : String(error)}`);
     res.status(500).json({
       module: 'github',
       procedure: 'fetchIssues',

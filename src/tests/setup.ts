@@ -5,4 +5,4 @@
  * @version 2024-01-15 C2RLO - Initial
  */
 
-export const __MONGOD__ = process.env.MONGO_URL
+export const __MONGOD__ = process.env.ATLAS_URI
