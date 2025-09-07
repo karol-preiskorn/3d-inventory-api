@@ -1,6 +1,6 @@
 {
   "name": "d-inventory-api",
-  "version": "0.96.95",
+  "version": "0.96.110",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -40,18 +40,19 @@
     "gcp:deploy": "./deploy.sh",
     "gcp:logs": "gcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=3d-inventory-api\" --limit=50",
     "gcp:status": "gcloud run services describe 3d-inventory-api --region=us-central1 --format='table(metadata.name,status.url,status.conditions[0].type,status.conditions[0].status)'",
-    "kill-port": "npx cross-port-killer 3001",
+    "kill-port": "npx cross-port-killer 8080",
     "lint": "eslint --fix src",
     "openapi:format": "npx openapi-format api/openapi.yaml --output api/openapi-formatted.yaml",
     "prepare:husky": "husky install",
     "prettier": "prettier --check .",
-    "prestart": "fuser -n tcp -k 3001 || true && npm run version:patch",
+    "prestart": "fuser -n tcp -k 8080 || true && npm run version:patch",
     "start": "CHOKIDAR_USEPOLLING=true tsx watch src/main.ts",
     "start:prod": "NODE_ENV=production node ./dist/src/main.js",
     "version:major": "npm version minor --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:patch": "npm version patch --no-git-tag-version",
-    "version:yaml": "node ./yaml-num.js"
+    "version:yaml": "node ./yaml-num.js",
+    "api:login": "curl -k -X POST https://0.0.0.0:8080/login -H \"Content-Type: application/json\" -d '{\"username\":\"carlo\"}'"
   },
   "husky": {
     "hooks": {
@@ -83,11 +84,13 @@
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "express-openapi-validator": "^5.5.8",
+    "express-rate-limit": "^8.1.0",
     "express-session": "^1.18.2",
     "figlet": "^1.8.2",
     "helmet": "^8.1.0",
     "import": "^0.0.6",
     "jest-extended": "^6.0.0",
+    "jsonwebtoken": "^9.0.2",
     "markdown-it": "^14.1.0",
     "method-override": "^3.0.0",
     "mongo-sanitize": "^1.1.0",

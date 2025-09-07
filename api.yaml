@@ -4,16 +4,17 @@ info:
   description: >-
     REST API for **3d-inventory**. Project is a simple solution that allows you to build a spatial and database
     representation of all types of warehouses and server rooms.
-
   contact:
     name: 3d-inventory-mongo-api
     url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/
-  version: 0.53.23
+  version: 0.54.0
 servers:
+  - url: https://127.0.0.1:8080
   - url: http://0.0.0.0:8080
   - url: https://0.0.0.0:8080
   - url: http://localhost:8080
   - url: https://localhost:8080
+  - url: http://127.0.0.1:8080
   - url: http://172.17.0.2:8080
   - url: http://172.17.0.3:8080
   - url: http://172.20.0.3:8080
@@ -21,16 +22,18 @@ servers:
   - url: https://3d-inventory-api.ultimasolution.pl
   - url: https://3d-inventory.ultimasolution.pl
 tags:
+  - name: authentication
+    description: Login to obtain JWT token and access protected routes
   - name: logs
     description: Operation on Logs
   - name: devices
     description: >-
-      Basic object _3d-inventory_ device and operation on devices API. Represent by position blok x, y, z with devices
-      parameters.
+      Basic object _3d-inventory_ device and operation on devices API. Represent by position blok x, y, z with
+      devices parameters.
   - name: models
     description: >-
-      Models of devices API. Represent by blok dimension x, y, h with block images on every side and model types and
-      parameters.
+      Models of devices API. Represent by blok dimension x, y, h with block images on every side and model types
+      and parameters.
   - name: connections
     description: Connections between devices API
   - name: attributes
@@ -43,14 +46,85 @@ tags:
     description: GitHub API
   - name: users
     description: User management API
-  - name: components
-    description: Components API.
 paths:
+  /login:
+    post:
+      tags:
+        - authentication
+      summary: User login to obtain JWT token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              required:
+                - username
+      responses:
+        "200":
+          description: JWT token issued
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "400":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /protected:
+    get:
+      tags:
+        - authentication
+      summary: Protected route, requires Bearer token
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Success, returns protected data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    type: object
+        "401":
+          description: Unauthorized, missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
   /github/issues:
     get:
       tags:
         - github
       summary: Get all issues for GitHub
+      security:
+        - BearerAuth: []
       description: List all issues.
       operationId: githubIssuesGet
       responses:
@@ -71,8 +145,8 @@ paths:
         - attributes
       summary: Get all attributes
       description: >-
-        Retrieve a list of all attributes. You can apply optional query parameters such as `key` to filter attributes by
-        their key or `type` to filter by their type.
+        Retrieve a list of all attributes. You can apply optional query parameters such as `key` to filter
+        attributes by their key or `type` to filter by their type.
       operationId: getAllAttributes
       responses:
         "200":
@@ -113,11 +187,11 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Attribute"
+        required: true
       responses:
         "200":
           description: Attribute updated successfully
@@ -607,11 +681,11 @@ paths:
       description: Create log.
       operationId: logPOST
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Log"
-        required: true
       responses:
         "200":
           description: Ok
@@ -1048,11 +1122,11 @@ paths:
         Create connection between two devices. Two id and attributes from attributes.
       operationId: connectionPUT
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Connections"
-        required: true
       responses:
         "200":
           description: Ok
@@ -1075,11 +1149,11 @@ paths:
         Create connection between two devices. Two id and attributes from attributes.
       operationId: connectionPOST
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Connections"
-        required: true
       responses:
         "200":
           description: Ok
@@ -1453,11 +1527,11 @@ paths:
       summary: Update attributesDictionary
       operationId: attributesDictionaryPut
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/AttributesDictionary"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the update request has succeeded.
@@ -1467,8 +1541,8 @@ paths:
           description: Not found.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
-            request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
     post:
       tags:
@@ -1481,7 +1555,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/AttributesDictionary"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1495,8 +1568,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
-            request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
     delete:
       tags:
@@ -1512,8 +1585,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
-            request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
   /attributesDictionary/{id}:
     get:
@@ -1573,7 +1646,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/AttributesDictionary"
-        required: true
       responses:
         "200":
           description: OK.
@@ -1637,8 +1709,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
-            request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
   /attributesDictionary/devices:
     get:
@@ -1660,8 +1732,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from  fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            from  fulfilling the request.
       x-swagger-router-controller: attributesDictionary
   /attributesDictionary/connections:
     get:
@@ -1683,8 +1755,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from  fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            from  fulfilling the request.
       x-swagger-router-controller: attributesDictionary
   /models:
     get:
@@ -1706,8 +1778,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
       x-swagger-router-controller: Models
     put:
       tags:
@@ -1716,11 +1788,11 @@ paths:
       description: Update single model
       operationId: modelsPut
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Model"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1732,8 +1804,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
       x-swagger-router-controller: Models
     post:
       tags:
@@ -1758,8 +1830,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
       x-swagger-router-controller: Models
     delete:
       tags:
@@ -1774,8 +1846,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
       x-swagger-router-controller: Models
   /models/{id}:
     get:
@@ -1894,11 +1966,11 @@ paths:
       description: Create floor
       operationId: floorPut
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Floor"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1906,8 +1978,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
-            request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            fromfulfilling the request.
       x-swagger-router-controller: Floors
     post:
       tags:
@@ -1916,11 +1988,11 @@ paths:
       description: Create new object floor
       operationId: floorPost
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Floor"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -1928,8 +2000,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
       x-swagger-router-controller: Floors
     delete:
       tags:
@@ -1944,8 +2016,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
       x-swagger-router-controller: Floors
   /floors/{id}:
     get:
@@ -1979,8 +2051,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
       x-swagger-router-controller: Floors
     delete:
       tags:
@@ -2013,8 +2085,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
       x-swagger-router-controller: Floors
     put:
       tags:
@@ -2047,8 +2119,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-            the request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it from
+            fulfilling the request.
       x-swagger-router-controller: Floors
   /users:
     get:
@@ -2074,11 +2146,11 @@ paths:
       description: Create user
       operationId: usersPut
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/User"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -2090,8 +2162,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
-            request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            fromfulfilling the request.
       x-swagger-router-controller: Users
     post:
       tags:
@@ -2100,11 +2172,11 @@ paths:
       description: Create new user
       operationId: userPost
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/User"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -2116,8 +2188,8 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
-            request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            fromfulfilling the request.
       x-swagger-router-controller: Users
     delete:
       tags:
@@ -2136,8 +2208,8 @@ paths:
           description: Not found
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
-            request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            fromfulfilling the request.
       x-swagger-router-controller: Users
   /users/{id}:
     get:
@@ -2178,9 +2250,9 @@ paths:
       operationId: userCreate
       parameters:
         - name: id
+          required: true
           in: path
           description: ID of user
-          required: true
           style: simple
           explode: false
           schema:
@@ -2191,11 +2263,11 @@ paths:
             x-42c-format: o:uuid
             pattern: ^[0-9A-Fa-f]{24}$
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/User"
-        required: true
       responses:
         "200":
           description: OK. Indicates that the request has succeeded.
@@ -2207,10 +2279,17 @@ paths:
           description: Bad request.
         "500":
           description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the
-            request.
+            Unexpected server error. The server encountered an unexpected condition that prevented it
+            fromfulfilling the request.
       x-swagger-router-controller: Users
+
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     User:
       type: object
@@ -2793,19 +2872,19 @@ components:
       description: Not found
     "405":
       description: >-
-        Method Not Allowed. The request HTTPS method is known by the server but has been disabled and cannot be used for
-        that resource.
+        Method Not Allowed. The request HTTPS method is known by the server but has been disabled and cannot be
+        used for that resource.
     "500":
       description: >-
-        Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the
-        request.
+        Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
+        the request.
     "501":
       description: >-
         Not Implemented. The HTTPS method is not supported by the server and cannot be handled.
     "502":
       description: >-
-        Bad getaway. The server got an invalid response while working as a gateway to get the response needed to handle
-        the request.
+        Bad getaway. The server got an invalid response while working as a gateway to get the response needed to
+        handle the request.
     "503":
       description: Service Unavailable. The server is not ready to handle the request.
     "504":

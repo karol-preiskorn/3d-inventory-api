@@ -5,24 +5,27 @@
 
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import type { CorsOptions } from 'cors';
 import cors from 'cors';
+import { constants as cryptoConstants } from 'crypto';
 import express, { NextFunction, Request, Response } from 'express';
 import * as OpenApiValidator from 'express-openapi-validator';
-import session from 'express-session';
+import rateLimit from 'express-rate-limit';
 import figlet from 'figlet';
 import fs from 'fs';
-import helmet from 'helmet';
+import type { Server as HttpServer } from 'http';
+import type { Server as HttpsServer } from 'https';
 import https from 'https';
-import { constants as cryptoConstants } from 'crypto';
+import kleur from 'kleur';
 import methodOverride from 'method-override';
+import type { Db, MongoClient } from 'mongodb';
 import morgan from 'morgan';
 import morganBody from 'morgan-body';
 import swaggerUi, { JsonObject } from 'swagger-ui-express';
 import YAML from 'yaml';
-import type { CorsOptions } from 'cors';
-
 import attributes from './routers/attributes';
 import attributesDictionary from './routers/attributesDictionary';
+import login from './routers/login';
 import connections from './routers/connections';
 import devices from './routers/devices';
 import floors from './routers/floors';
@@ -30,21 +33,17 @@ import github from './routers/github';
 import logs from './routers/logs';
 import models from './routers/models';
 import readme from './routers/readme';
-
-import type { Server as HttpServer } from 'http';
-import type { Server as HttpsServer } from 'https';
-import type { Db, MongoClient } from 'mongodb';
 import config from './utils/config';
 import { connectToCluster, connectToDb } from './utils/db';
 import getLogger from './utils/logger';
 
 const logger = getLogger('main');
 
+const proc = '[main]';
+
 const PORT = config.PORT;
 
 const HOST = config.HOST;
-
-const HOST_DEV = config.HOST_DEV || 'http://localhost'; // Default to localhost for development
 
 // Cloud Run configuration - use HTTP instead of HTTPS
 
@@ -65,15 +64,13 @@ if (process.env.NODE_ENV !== 'production') {
       cert: fs.readFileSync('./cert/server.crt')
     };
   } catch (error) {
-    logger.error(`SSL certificates not found, using HTTP only: ${error}`);
+    logger.error(`${proc}SSL certificates not found, using HTTP only: ${error}`);
   }
 }
 
 const yamlFilename = process.env.API_YAML_FILE ?? './api.yaml';
 
-const app = express();
-
-
+export const app = express();
 
 const allowedOrigins = [
   // Local development
@@ -142,9 +139,21 @@ const corsOptions: CorsOptions = {
     'Content-Type',
     'Origin',
     'X-API-Key',
-    'X-Requested-With'
+    'X-Requested-With',
+    'Bearer'
   ]
 };
+
+
+// Middleware for rate limiting
+const limiter = rateLimit({
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS ?? '900000', 10), // 15 minutes default
+  max: parseInt(process.env.RATE_LIMIT_MAX ?? '100', 10), // Limit each IP to 100 requests per windowMs default
+  message: { message: process.env.RATE_LIMIT_MESSAGE }
+});
+
+// Apply the rate limiter to all requests
+app.use(limiter);
 
 app.use(cors(corsOptions));
 
@@ -174,12 +183,6 @@ let db: Db | null = null;
   }
 })();
 
-// app.use(session({
-//   secret: process.env.SESSION_SECRET || 'your-secret-key',
-//   resave: false,
-//   saveUninitialized: false
-
-// }));
 
 app.use(cookieParser());
 // app.use(helmet());
@@ -197,10 +200,8 @@ try {
     })
   );
 } catch (error) {
-  logger.error(`Error login in morgan: ${String(error)}`);
+  logger.error(`${proc} Error login in morgan: ${String(error)}`);
 }
-
-
 
 
 // CSP configuration
@@ -227,7 +228,7 @@ app.use(bodyParser.json()); // must parse body before morganBody as body will be
 
 // CSP violation reporting endpoint
 app.post('/csp-violation-report', (req, res) => {
-  logger.warn('CSP Violation:', req.body);
+  logger.warn(`${proc} CSP Violation:`, req.body);
   res.status(204).end();
 });
 
@@ -261,6 +262,7 @@ app.use('/attributesDictionary', attributesDictionary);
 app.use('/connections', connections);
 app.use('/floors', floors);
 app.use('/github', github);
+app.use('/login', login)
 
 app.get('/favicon.ico', (req, res) => {
   res.status(204).end();
@@ -299,7 +301,7 @@ app.get('/health', async (_req, res) => {
     health.database = 'disconnected';
     health.status = 'degraded';
     health.error = error instanceof Error ? error.message : String(error);
-    logger.warn(`Database ping failed: ${health.error}`);
+    logger.warn(`${proc} Database ping failed: ${health.error}`);
   }
 
   const statusCode = (health.database === 'disconnected' || health.database === 'not_initialized') ? 503 : 200;
@@ -312,7 +314,7 @@ try {
 
   const swaggerDocument = YAML.parse(file) as JsonObject;
 
-  app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   logger.info(`✅ Swagger ${yamlFilename} served successfully load ${JSON.stringify(swaggerDocument).length} bytes`);
 } catch (err: unknown) {
   if (typeof err === 'object' && err !== null && 'code' in err) {
@@ -335,25 +337,21 @@ try {
 }
 
 // OpenApi validation
-try {
-  app.use(
-    OpenApiValidator.middleware({
-      apiSpec: yamlFilename,
-      validateRequests: true,
-      validateResponses: process.env.NODE_ENV !== 'production'
-    })
-  );
-  logger.info(`OpenApiValidator middleware registered using Swagger from ${yamlFilename}`);
-} catch (error) {
-  logger.error(`OpenApiValidator: ${String(error)}`);
-}
+app.use(
+  OpenApiValidator.middleware({
+    apiSpec: yamlFilename,
+    validateRequests: true,
+    // Enable response validation only in non-production environments for easier debugging
+    validateResponses: process.env.NODE_ENV !== 'production'
+  })
+);
+
 
 // Error-related middleware (404 and error handlers) grouped together for clarity
-
 app.use((req: Request, res: Response) => {
-  logger.warn(`404 Not Found: ${req.method} ${req.originalUrl}`);
+  logger.warn(`${proc} 404 Not Found: ${req.method} ${req.originalUrl}`);
   res.status(404).json({
-    message: `Endpoint not found: ${req.method} ${req.originalUrl}`,
+    message: `${proc} Endpoint not found: ${req.method} ${req.originalUrl}`,
     error: 'Not Found',
     status: 404
   });
@@ -389,7 +387,7 @@ let server: HttpServer | HttpsServer;
 if (process.env.NODE_ENV === 'production') {
   server = app.listen(Number(PORT), '0.0.0.0', () => {
     logger.info(
-      figlet.textSync('3d-Inventory-API GCP', {
+      figlet.textSync('3d-inventory-api GCP', {
         font: 'Mini',
         horizontalLayout: 'default',
         verticalLayout: 'default',
@@ -397,7 +395,8 @@ if (process.env.NODE_ENV === 'production') {
         whitespaceBreak: true
       })
     );
-    logger.info(`---- Server on GCP ${HOST}:${PORT}`);
+    logger.info(`Server on GCP https://${HOST}:${PORT}`);
+    logger.info(`Server on GCP https://${HOST}:${PORT}/doc (Swagger UI)`);
   });
 
   // Update signal handlers for HTTP server
@@ -420,16 +419,17 @@ if (process.env.NODE_ENV === 'production') {
   // Development server with HTTPS
   server = https.createServer(httpsOptions, app).listen(Number(PORT), HOST, () => {
     logger.info(
-      figlet.textSync('3d-inventory-api', {
-        font: 'Mini',
+      '\n\n'+figlet.textSync('3d-inventory-api', {
+        font: 'Nancyj-Fancy',
         horizontalLayout: 'default',
         verticalLayout: 'default',
-        width: 170,
+        width: process.stdout.columns || 180,
         whitespaceBreak: true
       })
     );
-    logger.info('--------- Development server ---------');
-    logger.info(`Server on https://${HOST}:${PORT}`);
+    logger.info(`✅ Development ver. ${kleur.green(process.env.npm_package_version ?? 'unknown')} `);
+    logger.info(`✅ Server on ${kleur.green(`https://${HOST}:${PORT}`)}`);
+    logger.info(`✅ Server on ${kleur.green(`https://${HOST}:${PORT}/doc (Swagger UI)`)}`);
   });
 
   server.on('error', (err: Error) => {
