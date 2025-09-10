@@ -58,17 +58,19 @@ export function authenticateBearer(req: Request, res: Response, next: NextFuncti
   const token = authHeader.split(' ')[1];
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
+    const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
-    // Optionally attach payload to request
-    (req as any).user = payload;
+    // Attach payload to request
+    req.user = payload;
     next();
   } catch (err) {
-    return res.status(401).json({ message: `Invalid or expired token ${err.message}` });
+    const message = (err instanceof Error) ? err.message : String(err);
+
+    return res.status(401).json({ message: `Invalid or expired token ${message}` });
   }
 }
 
-// 3. Example protected route
+// 3. Example Protected route
 router.get('/protected', authenticateBearer, (req, res) => {
   res.json({ message: `${proc} This is a protected route`, user: req.user });
 });

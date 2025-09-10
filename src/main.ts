@@ -1,5 +1,6 @@
 /**
  * @description API 3d-inventory. Project is a simple solution that allows you to build a spatial and database representation of all types of warehouses and server rooms.
+ *
  * @public
  */
 
@@ -13,6 +14,7 @@ import * as OpenApiValidator from 'express-openapi-validator';
 import rateLimit from 'express-rate-limit';
 import figlet from 'figlet';
 import fs from 'fs';
+import helmet from 'helmet';
 import type { Server as HttpServer } from 'http';
 import type { Server as HttpsServer } from 'https';
 import https from 'https';
@@ -149,7 +151,22 @@ const corsOptions: CorsOptions = {
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS ?? '900000', 10), // 15 minutes default
   max: parseInt(process.env.RATE_LIMIT_MAX ?? '100', 10), // Limit each IP to 100 requests per windowMs default
-  message: { message: process.env.RATE_LIMIT_MESSAGE }
+  message: { message: process.env.RATE_LIMIT_MESSAGE },
+  keyGenerator: (req) => {
+    // Prefer Forwarded header if present, else fall back to IP
+    const forwarded = req.headers['forwarded'];
+
+    if (typeof forwarded === 'string') {
+      // Example: Forwarded: for=192.0.2.60;proto=http;by=203.0.113.43
+      const match = forwarded.match(/for=([^;]+)/);
+
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+
+    return req.ip || '';
+  }
 });
 
 // Apply the rate limiter to all requests
@@ -185,7 +202,15 @@ let db: Db | null = null;
 
 
 app.use(cookieParser());
-// app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ['\'none\''],
+      styleSrc: ['\'self\'', '\'unsafe-inline\'']
+      // ...other directives as needed
+    }
+  }
+}));
 
 try {
   app.use(
@@ -381,6 +406,8 @@ app.use((err: Error, req: Request, res: Response) => {
     error: err.message
   });
 });
+
+app.set('trust proxy', 1); // or true, or the number of proxies in front of your app
 
 let server: HttpServer | HttpsServer;
 

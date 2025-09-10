@@ -1,6 +1,6 @@
 {
   "name": "d-inventory-api",
-  "version": "0.96.110",
+  "version": "0.96.113",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -91,6 +91,7 @@
     "import": "^0.0.6",
     "jest-extended": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
+    "kleur": "^4.1.5",
     "markdown-it": "^14.1.0",
     "method-override": "^3.0.0",
     "mongo-sanitize": "^1.1.0",
@@ -115,6 +116,7 @@
     "@types/express-session": "^1.18.2",
     "@types/figlet": "^1.7.0",
     "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/markdown-it": "^14.1.2",
     "@types/method-override": "^3.0.0",
     "@types/mongo-sanitize": "^1.0.3",
