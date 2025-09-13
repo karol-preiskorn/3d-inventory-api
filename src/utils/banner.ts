@@ -3,7 +3,7 @@
  * @version: 2024-01-07  C2RLO  Initial
  */
 
-import figlet, { Fonts } from 'figlet'
+import figlet from 'figlet'
 import fs from 'fs/promises'
 
 import { logger } from './logger'
@@ -30,5 +30,5 @@ async function loadFont(): Promise<void> {
  */
 export async function banner(): Promise<void> {
   await loadFont()
-  logger.warn('\n' + figlet.textSync('3d-inv API', 'myfont' as Fonts))
+  logger.warn('\n' + figlet.textSync('3d-inv API', { font: 'myfont' }))
 }

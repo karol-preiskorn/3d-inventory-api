@@ -200,17 +200,8 @@ let db: Db | null = null;
   }
 })();
 
-
 app.use(cookieParser());
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ['\'none\''],
-      styleSrc: ['\'self\'', '\'unsafe-inline\'']
-      // ...other directives as needed
-    }
-  }
-}));
+
 
 try {
   app.use(
@@ -230,23 +221,23 @@ try {
 
 
 // CSP configuration
-// app.use(helmet.contentSecurityPolicy({
-//   directives: {
-//     defaultSrc: ['\'self\''],
-//     scriptSrc: ['\'self\'', '\'unsafe-inline\'', '\'unsafe-eval\'', 'https:'],
-//     styleSrc: ['\'self\'', '\'unsafe-inline\'', 'https:'],
-//     fontSrc: ['\'self\'', 'https:', 'data:'],
-//     imgSrc: ['\'self\'', 'data:', 'https:', 'blob:'],
-//     connectSrc: ['\'self\'', 'https:', 'wss:'],
-//     frameSrc: ['\'self\'', 'https:'],
-//     mediaSrc: ['\'self\'', 'https:'],
-//     objectSrc: ['\'none\''],
-//     baseUri: ['\'self\''],
-//     // Add a CSP violation reporting endpoint
-//     reportUri: ['/csp-violation-report'] // Supported by most browsers
-//     // reportTo: ['csp-endpoint'] // Modern reporting (requires additional configuration)
-//   }
-// }));
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ['\'self\''],
+    scriptSrc: ['\'self\'', '\'unsafe-inline\'', '\'unsafe-eval\'', 'https:'],
+    styleSrc: ['\'self\'', '\'unsafe-inline\'', 'https:'],
+    fontSrc: ['\'self\'', 'https:', 'data:'],
+    imgSrc: ['\'self\'', 'data:', 'https:', 'blob:'],
+    connectSrc: ['\'self\'', 'https:', 'wss:'],
+    frameSrc: ['\'self\'', 'https:'],
+    mediaSrc: ['\'self\'', 'https:'],
+    objectSrc: ['\'none\''],
+    baseUri: ['\'self\''],
+    // Add a CSP violation reporting endpoint
+    reportUri: ['/csp-violation-report'] // Supported by most browsers
+    // reportTo: ['csp-endpoint'] // Modern reporting (requires additional configuration)
+  }
+}));
 
 app.use(express.json({ limit: '50mb' })); // Increase body size limit if needed
 app.use(bodyParser.json()); // must parse body before morganBody as body will be logged

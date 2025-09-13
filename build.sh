@@ -6,10 +6,13 @@ else
   exit 1
 fi
 
-# Ensure any existing container is removed on exit or error
-trap 'docker rm -f 3d-inventory-api 2>/dev/null' EXIT
-docker ps --filter "name=3d-inventory-api" --format "{{.ID}}" | xargs -r docker stop
-docker ps -a --filter "name=3d-inventory-api" --format "{{.ID}}" | xargs -r docker rm
+# Ensure cleanup of any running or stopped containers with relevant names
+trap 'docker rm -f 3d-inventory-api test-3d-inventory-api 2>/dev/null' EXIT
+
+for cname in 3d-inventory-api test-3d-inventory-api; do
+  docker ps -q --filter "name=^/${cname}$" | xargs -r docker stop
+  docker ps -aq --filter "name=^/${cname}$" | xargs -r docker rm
+done
 
 if [[ -z "$GHCR_PAT" ]]; then
   echo "Error: GHCR_PAT environment variable is not set."
@@ -42,7 +45,7 @@ docker push gcr.io/d-inventory-406007/3d-inventory-api:latest
 # Test container locally first
 echo "Testing container locally..."
 docker run --rm -d --name test-3d-inventory-api -p 8080:8080 -e PORT=8080 3d-inventory-api
-sleep 8
+sleep 10
 
 if curl -f --max-time 10 -k ${HOST}:${PORT}/health; then
   echo "✅ Container health check passed ${HOST}:${PORT}/health"

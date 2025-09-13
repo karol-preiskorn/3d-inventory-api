@@ -1,8 +1,6 @@
 /**
  * @description This file contains the router for handling log-related API endpoints.
  * @module routers
- * @description This file contains the router for handling log-related API endpoints.
- * @version 2024-01-27 C2RLO - Initial
  */
 
 import { format } from 'date-fns';
@@ -16,7 +14,7 @@ const logger = log('logs');
 
 const VALID_COMPONENTS = ['attributes', 'devices', 'floors', 'models', 'connections', 'users', 'attributesDictionary'];
 
-const VALID_OPERATIONS = ['Create', 'Update', 'Delete', 'Fetch'];
+//const VALID_OPERATIONS = ['Create', 'Update', 'Delete', 'Fetch'];
 
 export interface Logs {
   _id: ObjectId;
@@ -53,7 +51,7 @@ router.get('/component/:component', (async (req, res) => {
 
   const validComponentsString = VALID_COMPONENTS.join(', ');
 
-  const validOperationsString = VALID_OPERATIONS.join(', ');
+  //const validOperationsString = VALID_OPERATIONS.join(', ');
 
   if (!component) {
     logger.error('GET /logs/component/ - No component name provided.');
@@ -72,14 +70,15 @@ router.get('/component/:component', (async (req, res) => {
 
     return;
   }
-  if (!req.query.operation || !VALID_OPERATIONS.includes(req.query.operation as string)) {
-    logger.warn(`GET /logs/component/${component} - Invalid or missing operation: ${req.query.operation}. Valid operations are: [${validOperationsString}].`);
-    res.status(400).json({
-      message: `Invalid or missing operation. Valid operations are: [${validOperationsString}].`
-    });
 
-    return;
-  }
+  // if (!req.query.operation || !VALID_OPERATIONS.includes(req.query.operation as string)) {
+  //   logger.warn(`GET /logs/component/${component} - Invalid or missing operation: ${req.query.operation}. Valid operations are: [${validOperationsString}].`);
+  //   res.status(400).json({
+  //     message: `Invalid or missing operation. Valid operations are: [${validOperationsString}].`
+  //   });
+
+  //   return;
+  // }
 
   const client = await connectToCluster();
 
@@ -88,7 +87,9 @@ router.get('/component/:component', (async (req, res) => {
 
     const collection: Collection<Document> = db.collection(collectionName);
 
-    const query: Filter<Document> = { component: component };
+    const operation = req.query.operation as string;
+
+    const query: Filter<Document> = { component: component, operation: operation };
 
     logger.info(`GET /logs/component/${component} - Query: ${JSON.stringify(query)}`);
     const result = await collection.find(query).sort({ date: -1 }).toArray();
