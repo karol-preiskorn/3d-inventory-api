@@ -16,13 +16,17 @@
       1. [🔐 **Authentication Endpoints**](#-authentication-endpoints)
       2. [👥 **User Management Endpoints** (Admin/User Access)](#-user-management-endpoints-adminuser-access)
       3. [🔑 **Role Management Endpoints** (Admin Only)](#-role-management-endpoints-admin-only)
-   6. [About](#about)
-      1. [MEAN stack](#mean-stack)
-   7. [📚 API Endpoints](#-api-endpoints)
-      1. [📦 **Inventory Management Endpoints**](#-inventory-management-endpoints)
-      2. [🔧 **System Endpoints**](#-system-endpoints)
-   8. [Getting Started](#getting-started)
-   9. [License](#license)
+      4. [📦 **Inventory Management Endpoints**](#-inventory-management-endpoints)
+      5. [🔧 **System Endpoints**](#-system-endpoints)
+   6. [Getting Started](#getting-started)
+      1. [📋 **Prerequisites**](#-prerequisites)
+      2. [🚀 **Installation**](#-installation)
+      3. [🔧 **Development Setup**](#-development-setup)
+      4. [🐳 **Docker Deployment**](#-docker-deployment)
+      5. [🔑 **Default Users**](#-default-users)
+      6. [📊 **Technology Stack**](#-technology-stack)
+      7. [🔄 **Development Workflow**](#-development-workflow)
+   7. [License](#license)
 
 [![wakatime](https://wakatime.com/badge/user/3bbeedbe-0c6a-4a01-b3cd-a85d319a03bf/project/018c29b5-69aa-44a9-823a-51170ee4eafb.svg)](https://wakatime.com/badge/user/3bbeedbe-0c6a-4a01-b3cd-a85d319a03bf/project/018c29b5-69aa-44a9-823a-51170ee4eafb)
 [![GitHub latest commit](https://badgen.net/github/last-commit/karol-preiskorn/3d-inventory-mongo-api)](https://GitHub.com/karol-preiskorn/3d-inventory-mongo-api/commit/)
@@ -204,38 +208,6 @@ The API provides comprehensive documentation through [Swagger/OpenAPI](https://s
 | `/roles/{name}/permissions` | GET    | Get role permissions    | Admin         |
 | `/roles/{name}/check`       | GET    | Check role permission   | Admin         |
 
-## About
-
-Backend API for the 3D-Inventory platform — a modern inventory management system
-that combines spatial visualization with structured inventory data.
-This Node.js-based API uses MongoDB as its primary database and serves inventory
-data to a frontend interface built in
-[✨3d-inventory✨](https://github.com/users/karol-preiskorn/3d-inventory-angular-ui).
-
-🌟 Features
-
-```
-🗃️ RESTful API for managing inventory elements, racks, rooms, and objects
-🌍 MongoDB schema designed for spatial and visual representation of inventory items
-🧩 Modular structure using Express.js
-🔐 Secure API endpoints with basic validation
-🔄 Designed to support 3D spatial UI representation in real-time
-```
-
-### MEAN stack
-
-- [MongoDB](https://www.mongodb.com/) is a `NoSQL` database that stores data in
-  `JSON` format.
-- [Express.js](https://expressjs.com/) is a web application framework for Node.js
-  that simplifies the process of building web servers and APIs.
-- [RxJs](https://rxjs.dev/) - Reactive Extensions Library for JavaScript.
-- [NodeJS](https://nodejs.org/en) is a `JavaScript` runtime that allows you to
-  run code on the server-side.
-
-## 📚 API Endpoints
-
-[Swagger](https://swagger.io/) API definition available at `/doc` endpoint.
-
 ### 📦 **Inventory Management Endpoints**
 
 | Endpoint                     | Method | Description                       | Auth Required |
@@ -284,14 +256,142 @@ data to a frontend interface built in
 
 ## Getting Started
 
-To get started with the 3D Inventory Mongo API, follow the instructions below:
+### 📋 **Prerequisites**
+
+Before you begin, ensure you have the following installed on your system:
+
+- **Node.js**: Version 22.0.0 or higher
+- **npm**: Latest version (comes with Node.js)
+- **MongoDB**: Atlas connection or local MongoDB instance
+- **Git**: For version control
+
+### 🚀 **Installation**
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/karol-preiskorn/3d-inventory-mongo-api.git
+   cd 3d-inventory-mongo-api
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Environment configuration:**
+
+   ```bash
+   cp .env.example .env
+   # Edit .env file with your configuration
+   ```
+
+4. **Required environment variables:**
+   ```env
+   NODE_ENV=development
+   HOST=0.0.0.0
+   PORT=8080
+   ATLAS_URI=your-mongodb-connection-string
+   DBNAME=3d-inventory
+   JWT_SECRET=your-secure-jwt-secret
+   ```
+
+### 🔧 **Development Setup**
+
+1. **Start development server:**
+
+   ```bash
+   npm start
+   ```
+
+2. **Build for production:**
+
+   ```bash
+   npm run build
+   npm run start:prod
+   ```
+
+3. **Run tests:**
+
+   ```bash
+   npm test
+   ```
+
+4. **API Documentation:**
+   - Swagger UI: `http://localhost:8080/doc`
+   - Health Check: `http://localhost:8080/health`
+
+### 🐳 **Docker Deployment**
+
+1. **Build and run with Docker:**
+
+   ```bash
+   npm run docker:build
+   npm run docker:run
+   ```
+
+2. **Google Cloud Run deployment:**
+   ```bash
+   npm run gcp:build
+   ```
+
+### 🔑 **Default Users**
+
+The system automatically creates default users on first startup:
+
+| Username | Password | Role   | Description        |
+| -------- | -------- | ------ | ------------------ |
+| admin    | admin    | ADMIN  | Full system access |
+| user     | user     | USER   | Standard user      |
+| viewer   | view     | VIEWER | Read-only access   |
+
+### 📊 **Technology Stack**
+
+**Backend Framework:**
+
+- **Node.js**: Runtime environment (v22.0.0+)
+- **Express.js**: Web application framework (v5.1.0)
+- **TypeScript**: Type-safe JavaScript development
+
+**Database & Authentication:**
+
+- **MongoDB**: NoSQL database with Atlas cloud support
+- **JWT**: JSON Web Tokens for authentication
+- **bcrypt**: Password hashing and security
+
+**Development Tools:**
+
+- **Jest**: Testing framework with coverage reporting
+- **ESLint**: Code linting and formatting
+- **TypeDoc**: API documentation generation
+- **Husky**: Git hooks for code quality
+- **Docker**: Containerization support
+
+**Security & Monitoring:**
+
+- **Helmet**: Security headers and XSS protection
+- **Rate Limiting**: API request throttling
+- **CORS**: Cross-origin resource sharing
+- **Winston**: Structured logging system
+
+### 🔄 **Development Workflow**
+
+**Available Scripts:**
 
 ```bash
-git clone https://github.com/karol-preiskorn/3d-inventory-mongo-api.git
-cd 3d-inventory-mongo-api
-npm install
-npm start
+npm start          # Start development server with hot reload
+npm run build      # Build for production
+npm run test       # Run test suite
+npm run lint       # Lint and format code
+npm run doc        # Generate API documentation
+npm run clean      # Clean build artifacts
 ```
+
+**Git Hooks:**
+
+- Pre-commit: Automatic linting, formatting, and version bump
+- Husky integration for code quality enforcement
 
 ## License
 
