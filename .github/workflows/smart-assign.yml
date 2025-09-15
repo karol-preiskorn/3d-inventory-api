@@ -1,0 +1,95 @@
+name: Smart PR Assignment
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+
+jobs:
+  smart-assign:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Auto-assign based on file changes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo, number } = context.issue;
+
+            // Get PR files
+            const files = await github.rest.pulls.listFiles({
+              owner,
+              repo,
+              pull_number: number
+            });
+
+            let reviewers = [];
+            let assignees = [];
+            let labels = [];
+
+            // Check what files were changed
+            const changedFiles = files.data.map(file => file.filename);
+
+            // Always assign main maintainer
+            reviewers.push('karol-preiskorn');
+            assignees.push('karol-preiskorn');
+
+            // Add labels based on file types
+            if (changedFiles.some(file => file.includes('src/controllers/'))) {
+              labels.push('backend');
+            }
+            if (changedFiles.some(file => file.includes('src/services/'))) {
+              labels.push('service-layer');
+            }
+            if (changedFiles.some(file => file.includes('auth') || file.includes('login'))) {
+              labels.push('security');
+            }
+            if (changedFiles.some(file => file.includes('.md'))) {
+              labels.push('documentation');
+            }
+            if (changedFiles.some(file => file.includes('Dockerfile') || file.includes('docker'))) {
+              labels.push('docker');
+            }
+            if (changedFiles.some(file => file.includes('package.json'))) {
+              labels.push('dependencies');
+            }
+
+            // Assign reviewers
+            if (reviewers.length > 0) {
+              await github.rest.pulls.requestReviewers({
+                owner,
+                repo,
+                pull_number: number,
+                reviewers: [...new Set(reviewers)] // Remove duplicates
+              });
+            }
+
+            // Assign assignees
+            if (assignees.length > 0) {
+              await github.rest.issues.addAssignees({
+                owner,
+                repo,
+                issue_number: number,
+                assignees: [...new Set(assignees)] // Remove duplicates
+              });
+            }
+
+            // Add labels
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: number,
+                labels: [...new Set(labels)] // Remove duplicates
+              });
+            }
+
+            // Add to project (requires project ID)
+            // Note: You'll need to replace PROJECT_ID with your actual project ID
+            const projectId = 'your-project-id'; // Get from project URL
+
+            console.log(`Assigned reviewers: ${reviewers.join(', ')}`);
+            console.log(`Assigned assignees: ${assignees.join(', ')}`);
+            console.log(`Added labels: ${labels.join(', ')}`);

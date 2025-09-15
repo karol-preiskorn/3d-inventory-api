@@ -1,0 +1,33 @@
+# Auto-assign configuration for pull requests
+# This file defines automatic assignment rules for PRs
+
+# Automatically assign reviewers to pull requests
+addReviewers: true
+
+# Automatically assign PR authors as assignees
+addAssignees: false
+
+# List of potential reviewers (GitHub usernames)
+reviewers:
+  - karol-preiskorn
+
+# List of potential assignees (GitHub usernames)
+assignees:
+  - karol-preiskorn
+
+# Optionally, you can add team names instead of individual usernames
+# teams:
+#   - backend-team
+#   - security-team
+
+# Skip if PR has specific labels
+skipKeywords:
+  - wip
+  - draft
+  - do-not-review
+
+# Number of reviewers to assign (default: 0, assigns all)
+numberOfReviewers: 1
+
+# Number of assignees to assign (default: 0, assigns all)
+numberOfAssignees: 1
