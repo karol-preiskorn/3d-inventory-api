@@ -1,0 +1,90 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test:coverage
+
+      - name: Build project
+        run: npm run build
+
+      - name: Generate documentation
+        run: npm run doc
+
+      - name: Create release archive
+        run: |
+          tar -czf 3d-inventory-api-${{ github.ref_name }}.tar.gz \
+            dist/ \
+            docs/ \
+            package.json \
+            README.md \
+            LICENSE \
+            api.yaml
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          echo "## Changes in ${{ github.ref_name }}" > CHANGELOG.md
+          git log $(git describe --tags --abbrev=0 HEAD^)..HEAD --pretty=format:"- %s" >> CHANGELOG.md
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          cat CHANGELOG.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## 🚀 Release ${{ github.ref_name }}
+
+            ### 📦 What's included:
+            - Built application (`dist/`)
+            - API documentation (`docs/`)
+            - OpenAPI specification (`api.yaml`)
+
+            ### 📋 Changes:
+            ${{ steps.changelog.outputs.CHANGELOG }}
+
+            ### 🔧 Installation:
+            1. Download the release archive
+            2. Extract and configure environment variables
+            3. Run with `npm start`
+
+            ### 🐳 Docker:
+            ```bash
+            docker pull ghcr.io/karol-preiskorn/3d-inventory-mongo-api:${{ github.ref_name }}
+            ```
+          files: |
+            3d-inventory-api-${{ github.ref_name }}.tar.gz
+          draft: false
+          prerelease: false

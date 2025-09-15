@@ -4,35 +4,94 @@ on:
   push:
     branches:
       - main
+  workflow_run:
+    workflows: ['CI/CD Pipeline']
+    types:
+      - completed
+
+env:
+  GCP_REGION: us-central1
+  SERVICE_NAME: 3d-inventory-api
 
 jobs:
   deploy:
+    name: Deploy to GCP Cloud Run
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'push'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Configure Docker for GCR
-        run: gcloud auth configure-docker
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      - name: Build Docker image
+      - name: Build and tag Docker image
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/3d-inventory-api:${{ github.sha }} .
+          IMAGE_TAG="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/3d-inventory/3d-inventory-api:${{ github.sha }}"
+          IMAGE_LATEST="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/3d-inventory/3d-inventory-api:latest"
 
-      - name: Push Docker image to GCR
+          docker build -t $IMAGE_TAG .
+          docker tag $IMAGE_TAG $IMAGE_LATEST
+
+      - name: Push Docker image to Artifact Registry
         run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/3d-inventory-api:${{ github.sha }}
+          IMAGE_TAG="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/3d-inventory/3d-inventory-api:${{ github.sha }}"
+          IMAGE_LATEST="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/3d-inventory/3d-inventory-api:latest"
+
+          docker push $IMAGE_TAG
+          docker push $IMAGE_LATEST
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: 3d-inventory-api
-          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/3d-inventory-api:${{ github.sha }}
-          region: ${{ secrets.GCP_REGION }}
+          service: ${{ env.SERVICE_NAME }}
+          image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/3d-inventory/3d-inventory-api:${{ github.sha }}
+          region: ${{ env.GCP_REGION }}
+          env_vars: |
+            NODE_ENV=production
+            PORT=8080
+            HOST=0.0.0.0
+          secrets: |
+            ATLAS_URI=atlas-uri:latest
+            DBNAME=dbname:latest
+            JWT_SECRET=jwt-secret:latest
+          flags: |
+            --allow-unauthenticated
+            --memory=1Gi
+            --cpu=1
+            --min-instances=0
+            --max-instances=10
+            --concurrency=100
+            --timeout=300
+            --port=8080
+
+      - name: Verify deployment
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region=${{ env.GCP_REGION }} \
+            --format='value(status.url)')
+
+          echo "Service URL: $SERVICE_URL"
+
+          # Test health endpoint
+          curl -f "$SERVICE_URL/health" || exit 1
+          echo "✅ Health check passed"
+
+          # Test API documentation endpoint
+          curl -f "$SERVICE_URL/doc" || echo "⚠️ Documentation endpoint check failed"
+
+      - name: Update service traffic
+        if: success()
+        run: |
+          gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
+            --region=${{ env.GCP_REGION }} \
+            --to-latest
