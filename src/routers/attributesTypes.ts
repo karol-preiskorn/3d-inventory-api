@@ -1,14 +1,15 @@
 /**
- * @file /routers/attributesDictionary.js
- * @description attributesDictionary router
+ * @file /routers/attributesTypes.js
+ * @description attributesTypes router
  * @module routers
  */
 
 import express, { RequestHandler } from 'express'
 import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
 
-import { AttributesDictionary } from '../routers/attributesDictionary'
+import { AttributesDictionary } from '../controllers/attributesDictionary'
 import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
+import { validateObjectId } from '../middlewares';
 
 export interface AttributesTypes {
   _id: ObjectId
@@ -40,10 +41,7 @@ router.get('/', (async (req, res) => {
   await closeConnection(client)
 }) as RequestHandler)
 
-router.get('/:id', (async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
-  }
+router.get('/:id', validateObjectId, (async (req, res) => {
   const client = await connectToCluster()
 
   const db: Db = connectToDb(client)
@@ -59,10 +57,7 @@ router.get('/:id', (async (req, res) => {
   await closeConnection(client)
 }) as RequestHandler)
 
-router.get('/model/:id', (async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
-  }
+router.get('/model/:id', validateObjectId, (async (req, res) => {
   const client = await connectToCluster()
 
   const db: Db = connectToDb(client)
@@ -95,10 +90,7 @@ router.post('/', (async (req, res) => {
   await closeConnection(client)
 }) as RequestHandler)
 
-router.delete('/:id', (async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
-  }
+router.delete('/:id', validateObjectId, (async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) }
 
   const client = await connectToCluster()
@@ -128,10 +120,7 @@ router.delete('/', (async (req, res) => {
   await closeConnection(client)
 }) as RequestHandler)
 
-router.delete('/model/:id', (async (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    res.sendStatus(404)
-  }
+router.delete('/model/:id', validateObjectId, (async (req, res) => {
   const query = { modelId: new ObjectId(req.params.id) }
 
   const client = await connectToCluster()

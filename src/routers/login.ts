@@ -1,79 +1,22 @@
 
-import jwt from 'jsonwebtoken';
-import config from '../utils/config';
-import getLogger from '../utils/logger';
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
+import { loginUser, getProtectedData } from '../controllers/login';
+import { authRateLimit, requireAuth } from '../middlewares';
+import log from '../utils/logger';
 
-// Extend Express Request interface to include 'user'
+const logger = log('login');
 
-const router: express.Router = express.Router();
+// Create login router with enhanced security
+export default function createLoginRouter() {
+  const router = express.Router();
 
-const logger = getLogger('auth');
+  // POST /login - User authentication with rate limiting
+  router.post('/', authRateLimit, loginUser);
 
-const proc = '[login]';
+  // GET /protected - Protected route example using centralized auth middleware
+  router.get('/protected', requireAuth, getProtectedData);
 
-const JWT_SECRET = config.JWT_SECRET || 'your-secret-key';
+  logger.info('Login router created with enhanced security: POST / (with rate limiting), GET /protected (with JWT auth)');
 
-// Fake user for demo
-const API_USER = { id: 1, username: 'carlo' };
-
-export type JwtPayload = {
-  id: number;
-  username: string;
-  iat?: number;
-  exp?: number;
-};
-
-// Extend Express Request interface to include 'user' property using module augmentation
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: JwtPayload;
-  }
+  return router;
 }
-
-router.post('/', (req, res) => {
-  const { username } = req.body;
-
-  if (username !== API_USER.username) {
-    logger.warn(`${proc} Invalid login attempt for user: ${username}`);
-
-    return res.status(401).json({ message: `${proc} Invalid credentials` });
-  }
-
-  // Generate token (expires in 1 hour)
-  const token = jwt.sign({ id: API_USER.id, username: API_USER.username }, JWT_SECRET, { expiresIn: '1h' });
-
-  logger.info(`${proc} User logged in: ${username}`);
-  res.json({ token });
-});
-
-// 2. Middleware to verify Bearer token
-export function authenticateBearer(req: Request, res: Response, next: NextFunction) {
-  const authHeader = req.headers['authorization'];
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Missing or invalid Authorization header' });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  try {
-    const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
-
-    // Attach payload to request
-    req.user = payload;
-    next();
-  } catch (err) {
-    const message = (err instanceof Error) ? err.message : String(err);
-
-    return res.status(401).json({ message: `Invalid or expired token ${message}` });
-  }
-}
-
-// 3. Example Protected route
-router.get('/protected', authenticateBearer, (req, res) => {
-  res.json({ message: `${proc} This is a protected route`, user: req.user });
-});
-
-
-export default router;

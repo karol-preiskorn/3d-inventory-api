@@ -105,3 +105,57 @@ export async function closeConnection(client: MongoClient): Promise<void> {
     throw error;
   }
 }
+
+
+let lastPingTime = 0;
+
+export let cachedDb: Db | null = null;
+
+export let cachedMongoClient: MongoClient | null = null;
+
+const PING_INTERVAL_MS = 60000; // 60 seconds
+
+export async function getDb(): Promise<Db | null> {
+  const now = Date.now();
+
+  if (cachedDb && now - lastPingTime < PING_INTERVAL_MS) {
+    return cachedDb;
+  }
+  try {
+    if (config.ATLAS_URI) {
+      if (!cachedMongoClient) {
+        cachedMongoClient = await connectToCluster();
+        cachedDb = connectToDb(cachedMongoClient);
+      }
+      await cachedDb!.admin().ping();
+      lastPingTime = Date.now();
+
+      return cachedDb;
+    } else {
+      logger.warn('⚠️ No MongoDB URI provided, running without database');
+
+      return null;
+    }
+  } catch (error) {
+    logger.error(`Failed to connect to the database: ${error instanceof Error ? error.message : String(error)}`);
+    cachedDb = null;
+    cachedMongoClient = null;
+
+    return null;
+  }
+}
+
+
+import type { Request, Response, NextFunction } from 'express';
+
+// db middleware for attaching db instance to request
+export const dbConnection = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // Attach the db instance to req.app.locals for access in routes
+    req.app.locals.db = await getDb();
+
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+};

@@ -1,6 +1,6 @@
 {
   "name": "d-inventory-api",
-  "version": "0.96.113",
+  "version": "0.96.130",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -38,7 +38,6 @@
     "docker:run": "docker rm -f 3d-inventory-api && docker build -t 3d-inventory-api . && docker run -p 8080:8080 -e PORT=8080 -e HOST=172.17.0.2 3d-inventory-api",
     "docker:test": "docker run --rm -p 8080:8080 -e PORT=8080 3d-inventory-api",
     "gcp:build": "./build.sh",
-    "gcp:deploy": "./deploy.sh",
     "gcp:logs": "gcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=3d-inventory-api\" --limit=50",
     "gcp:status": "gcloud run services describe 3d-inventory-api --region=us-central1 --format='table(metadata.name,status.url,status.conditions[0].type,status.conditions[0].status)'",
     "kill-port": "npx cross-port-killer 8080",
@@ -78,6 +77,8 @@
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
     "@jest/globals": "^30.1.2",
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -148,6 +149,6 @@
     "typescript": "^5.9.2"
   },
   "engines": {
-    "node": ">=24.0.0"
+    "node": ">=22.0.0"
   }
 }

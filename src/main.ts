@@ -11,7 +11,7 @@ import cors from 'cors';
 import { constants as cryptoConstants } from 'crypto';
 import express, { NextFunction, Request, Response } from 'express';
 import * as OpenApiValidator from 'express-openapi-validator';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import figlet from 'figlet';
 import fs from 'fs';
 import helmet from 'helmet';
@@ -20,23 +20,25 @@ import type { Server as HttpsServer } from 'https';
 import https from 'https';
 import kleur from 'kleur';
 import methodOverride from 'method-override';
-import type { Db, MongoClient } from 'mongodb';
 import morgan from 'morgan';
 import morganBody from 'morgan-body';
-import swaggerUi, { JsonObject } from 'swagger-ui-express';
-import YAML from 'yaml';
-import attributes from './routers/attributes';
-import attributesDictionary from './routers/attributesDictionary';
-import login from './routers/login';
-import connections from './routers/connections';
-import devices from './routers/devices';
-import floors from './routers/floors';
-import github from './routers/github';
-import logs from './routers/logs';
-import models from './routers/models';
-import readme from './routers/readme';
+import { createAttributesRouter } from './routers/attributes';
+import createAttributesDictionaryRouter from './routers/attributesDictionary';
+import { createConnectionsRouter } from './routers/connections';
+import createDevicesRouter from './routers/devices';
+import createDocRouter from './routers/doc';
+import { createFloorsRouter } from './routers/floors';
+import createGithubRouter from './routers/github';
+import createHealthRouter from './routers/health';
+import createLoginRouter from './routers/login';
+import { createLogsRouter } from './routers/logs';
+import { createModelsRouter } from './routers/models';
+import { createReadmeRouter } from './routers/readme';
+import userManagementRouter from './routers/user-management';
+import rolesRouter from './routers/roles';
+import { InitializationService } from './services/InitializationService';
 import config from './utils/config';
-import { connectToCluster, connectToDb } from './utils/db';
+import { getDb } from './utils/db';
 import getLogger from './utils/logger';
 
 const logger = getLogger('main');
@@ -151,22 +153,8 @@ const corsOptions: CorsOptions = {
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS ?? '900000', 10), // 15 minutes default
   max: parseInt(process.env.RATE_LIMIT_MAX ?? '100', 10), // Limit each IP to 100 requests per windowMs default
-  message: { message: process.env.RATE_LIMIT_MESSAGE },
-  keyGenerator: (req) => {
-    // Prefer Forwarded header if present, else fall back to IP
-    const forwarded = req.headers['forwarded'];
-
-    if (typeof forwarded === 'string') {
-      // Example: Forwarded: for=192.0.2.60;proto=http;by=203.0.113.43
-      const match = forwarded.match(/for=([^;]+)/);
-
-      if (match && match[1]) {
-        return match[1];
-      }
-    }
-
-    return req.ip || '';
-  }
+  keyGenerator: (req) => ipKeyGenerator(req.ip ?? ''), // Use the official helper for IPv4/IPv6 safety
+  message: { message: process.env.RATE_LIMIT_MESSAGE }
 });
 
 // Apply the rate limiter to all requests
@@ -174,34 +162,24 @@ app.use(limiter);
 
 app.use(cors(corsOptions));
 
-let mongoClient: MongoClient | null = null;
 
-let db: Db | null = null;
+export let db: Awaited<ReturnType<typeof getDb>> | null = null;
 
 (async () => {
-  try {
+  db = await getDb();
+
+  if (db === null) {
     if (config.ATLAS_URI) {
-      mongoClient = await connectToCluster();
-      db = connectToDb(mongoClient);
-      await db.admin().ping();
-      //logger.info(`✅ MongoDB connected to database: ${config.DBNAME}`);
+      logger.error('❌ Could not connect to the database, exiting.');
+
+      process.exit(1);
     } else {
       logger.warn('⚠️ No MongoDB URI provided, running without database');
-    }
-  } catch (error) {
-    logger.error(`❌ MongoDB initialization failed: ${error instanceof Error ? error.message : String(error)}`);
-    if (process.env.NODE_ENV === 'production') {
-      logger.error('Production: Running without database connection');
-      mongoClient = null;
-    } else {
-      // Exit in development if MongoDB is required
-      process.exit(1);
     }
   }
 })();
 
 app.use(cookieParser());
-
 
 try {
   app.use(
@@ -216,7 +194,7 @@ try {
     })
   );
 } catch (error) {
-  logger.error(`${proc} Error login in morgan: ${String(error)}`);
+  logger.error(`${proc} Error login in morgan: ${String(error)} `);
 }
 
 
@@ -244,7 +222,7 @@ app.use(bodyParser.json()); // must parse body before morganBody as body will be
 
 // CSP violation reporting endpoint
 app.post('/csp-violation-report', (req, res) => {
-  logger.warn(`${proc} CSP Violation:`, req.body);
+  logger.warn(`${proc} CSP Violation: `, req.body);
   res.status(204).end();
 });
 
@@ -269,88 +247,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride());
 
 // Register API routers
-app.use('/readme', readme);
-app.use('/logs', logs);
-app.use('/devices', devices);
-app.use('/models', models);
-app.use('/attributes', attributes);
-app.use('/attributesDictionary', attributesDictionary);
-app.use('/connections', connections);
-app.use('/floors', floors);
-app.use('/github', github);
-app.use('/login', login)
+app.use('/readme', createReadmeRouter());
+app.use('/logs', createLogsRouter());
+app.use('/devices', createDevicesRouter());
+app.use('/models', createModelsRouter());
+app.use('/attributes', createAttributesRouter());
+app.use('/attributesDictionary', createAttributesDictionaryRouter());
+app.use('/connections', createConnectionsRouter());
+app.use('/doc', createDocRouter());
+app.use('/floors', createFloorsRouter());
+app.use('/github', createGithubRouter());
+app.use('/login', createLoginRouter());
+app.use('/health', createHealthRouter());
+app.use('/user-management', userManagementRouter);
+app.use('/roles', rolesRouter);
 
 app.get('/favicon.ico', (req, res) => {
   res.status(204).end();
 });
-
-// Health check endpoint (required for Cloud Run)
-app.get('/health', async (_req, res) => {
-  const health: {
-    status: string;
-    timestamp: string;
-    port: typeof PORT;
-    environment: typeof process.env.NODE_ENV;
-    uptime: number;
-    database: 'unknown' | 'connected' | 'not_initialized' | 'disconnected';
-    error: string | null;
-  } = {
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    port: PORT,
-    environment: process.env.NODE_ENV,
-    uptime: process.uptime(),
-    database: 'unknown',
-    error: null
-  };
-
-
-  try {
-    if (mongoClient) {
-      await mongoClient.db(config.DBNAME).admin().ping();
-      health.database = 'connected';
-    } else {
-      health.database = 'not_initialized';
-      health.status = 'degraded';
-    }
-  } catch(error) {
-    health.database = 'disconnected';
-    health.status = 'degraded';
-    health.error = error instanceof Error ? error.message : String(error);
-    logger.warn(`${proc} Database ping failed: ${health.error}`);
-  }
-
-  const statusCode = (health.database === 'disconnected' || health.database === 'not_initialized') ? 503 : 200;
-
-  res.status(statusCode).json(health);
-});
-
-try {
-  const file = fs.readFileSync(yamlFilename, 'utf8');
-
-  const swaggerDocument = YAML.parse(file) as JsonObject;
-
-  app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  logger.info(`✅ Swagger ${yamlFilename} served successfully load ${JSON.stringify(swaggerDocument).length} bytes`);
-} catch (err: unknown) {
-  if (typeof err === 'object' && err !== null && 'code' in err) {
-    const errorWithCode = err as { code?: string };
-
-    if (errorWithCode.code === 'ENOENT') {
-      logger.error(`File not found: ${yamlFilename}`);
-    } else if (errorWithCode.code === 'EACCES') {
-      logger.error(`No permission to file ${yamlFilename}`);
-    } else if (err instanceof Error) {
-      logger.error('Open swaggerUI exception: ' + err.message);
-    } else {
-      logger.error('Unknown error occurred.');
-    }
-  } else if (err instanceof Error) {
-    logger.error('Open swaggerUI exception: ' + err.message);
-  } else {
-    logger.error('Unknown error occurred.');
-  }
-}
 
 // OpenApi validation
 app.use(
@@ -365,9 +279,9 @@ app.use(
 
 // Error-related middleware (404 and error handlers) grouped together for clarity
 app.use((req: Request, res: Response) => {
-  logger.warn(`${proc} 404 Not Found: ${req.method} ${req.originalUrl}`);
+  logger.warn(`${proc} 404 Not Found: ${req.method} ${req.originalUrl} `);
   res.status(404).json({
-    message: `${proc} Endpoint not found: ${req.method} ${req.originalUrl}`,
+    message: `${proc} Endpoint not found: ${req.method} ${req.originalUrl} `,
     error: 'Not Found',
     status: 404
   });
@@ -376,9 +290,9 @@ app.use((req: Request, res: Response) => {
 // XHR client error handler
 function xhrClientErrorHandler(err: Error, req: Request, res: Response, next: NextFunction): void {
   if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
-    logger.error(`[main/xhrClientErrorHandler] Something failed. ${err.message}`);
+    logger.error(`[main / xhrClientErrorHandler] Something failed.${err.message} `);
     res.status(500).json({
-      message: `[main/xhrClientErrorHandler] Something failed. ${err.message}`
+      message: `[main / xhrClientErrorHandler] Something failed.${err.message} `
     });
     next(err);
   } else {
@@ -389,21 +303,41 @@ function xhrClientErrorHandler(err: Error, req: Request, res: Response, next: Ne
 app.use(xhrClientErrorHandler);
 
 app.use((err: Error, req: Request, res: Response) => {
-  logger.error(`Unhandled error exception: ${err.message}. Stack: ${err.stack}`);
+  logger.error(`Unhandled error exception: ${err.message}.Stack: ${err.stack} `);
   res.status(500).json({
     module: 'main',
     procedure: 'unhandledError',
-    message: `Internal Server Error Unhandled error- ${req.method} ${req.originalUrl}`,
+    message: `Internal Server Error Unhandled error - ${req.method} ${req.originalUrl} `,
     error: err.message
   });
 });
 
 app.set('trust proxy', 1); // or true, or the number of proxies in front of your app
 
+// Initialize database with default users and roles
+async function initializeDatabase() {
+  try {
+    const initService = InitializationService.getInstance();
+
+    const needsInit = await initService.isInitializationNeeded();
+
+    if (needsInit) {
+      logger.info('Initializing database with default users and roles...');
+      await initService.initializeApplication();
+      logger.info('Database initialization completed successfully');
+    } else {
+      logger.info('Database already initialized');
+    }
+  } catch (error) {
+    logger.error(`Database initialization failed: ${error instanceof Error ? error.message : String(error)}`);
+    logger.warn('Continuing without initialization - manual setup may be required');
+  }
+}
+
 let server: HttpServer | HttpsServer;
 
 if (process.env.NODE_ENV === 'production') {
-  server = app.listen(Number(PORT), '0.0.0.0', () => {
+  server = app.listen(Number(PORT), '0.0.0.0', async () => {
     logger.info(
       figlet.textSync('3d-inventory-api GCP', {
         font: 'Mini',
@@ -415,6 +349,10 @@ if (process.env.NODE_ENV === 'production') {
     );
     logger.info(`Server on GCP https://${HOST}:${PORT}`);
     logger.info(`Server on GCP https://${HOST}:${PORT}/doc (Swagger UI)`);
+    logger.info(`Server on GCP https://${HOST}:${PORT}/health (Status)`);
+
+    // Initialize database after server starts
+    await initializeDatabase();
   });
 
   // Update signal handlers for HTTP server
@@ -435,9 +373,9 @@ if (process.env.NODE_ENV === 'production') {
   });
 } else {
   // Development server with HTTPS
-  server = https.createServer(httpsOptions, app).listen(Number(PORT), HOST, () => {
+  server = https.createServer(httpsOptions, app).listen(Number(PORT), HOST, async () => {
     logger.info(
-      '\n\n'+figlet.textSync('3d-inventory-api', {
+      '\n\n' + figlet.textSync('3d-inventory-api', {
         font: 'Nancyj-Fancy',
         horizontalLayout: 'default',
         verticalLayout: 'default',
@@ -447,7 +385,11 @@ if (process.env.NODE_ENV === 'production') {
     );
     logger.info(`✅ Development ver. ${kleur.green(process.env.npm_package_version ?? 'unknown')} `);
     logger.info(`✅ Server on ${kleur.green(`https://${HOST}:${PORT}`)}`);
-    logger.info(`✅ Server on ${kleur.green(`https://${HOST}:${PORT}/doc (Swagger UI)`)}`);
+    logger.info(`✅ ${kleur.green(`https://${HOST}:${PORT}/doc  - Swagger UI`)}`);
+    logger.info(`✅ ${kleur.green(`https://${HOST}:${PORT}/health  - Status`)}`);
+
+    // Initialize database after server starts
+    await initializeDatabase();
   });
 
   server.on('error', (err: Error) => {
@@ -473,3 +415,5 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export default server;
+
+;
