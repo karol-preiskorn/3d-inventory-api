@@ -6,11 +6,10 @@
  * @version 2023-10-29  C2RLO  Init
  */
 
-import { describe, it, beforeAll, afterAll, expect } from '@jest/globals'
-import '../utils/loadEnvironment'
-
-import { Db, MongoClient } from 'mongodb'
 import { faker } from '@faker-js/faker'
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
+import { Db, MongoClient } from 'mongodb'
+import '../utils/loadEnvironment'
 
 describe('create 3 models', () => {
   let connection: MongoClient
@@ -52,9 +51,13 @@ describe('create 3 models', () => {
         }
         // type: faker.helpers.arrayElement(attributesTypesData).name,
       }
-      await models.insertOne(mockModel)
-      insertedModel = await models.findOne(mockModel)
-      expect(insertedModel).toEqual(mockModel)
+      const insertResult = await models.insertOne(mockModel)
+
+      insertedModel = await models.findOne({ _id: insertResult.insertedId })
+      // Remove _id before comparison
+      const { _id, ...modelWithoutId } = insertedModel || {}
+
+      expect(modelWithoutId).toEqual(mockModel)
     }
   })
 })
