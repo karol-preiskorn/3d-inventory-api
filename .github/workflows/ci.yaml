@@ -11,15 +11,26 @@ on:
 
 env:
   NODE_VERSION: '22.x'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+  pull-requests: write
 
 jobs:
-  security:
-    name: Security Audit
+  code-quality:
+    name: Code Quality & Security
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,23 +39,51 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit
 
-      - name: Run security audit
-        run: npm audit --audit-level=high
-        continue-on-error: true
+      - name: Cache ESLint
+        uses: actions/cache@v4
+        with:
+          path: .eslintcache
+          key: ${{ runner.os }}-eslint-${{ hashFiles('**/eslint.config.*') }}
+          restore-keys: |
+            ${{ runner.os }}-eslint-
+
+      - name: Run Prettier check
+        run: npm run prettier
+
+      - name: Run ESLint
+        run: npm run lint -- --cache --cache-location .eslintcache
+
+      - name: Run TypeScript type checking
+        run: npm run check:type
 
       - name: Run dependency check
         run: npm run check:depcheck
         continue-on-error: true
 
-  lint-and-test:
-    name: Lint, Type Check & Test
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: CodeQL Analysis
+        uses: github/codeql-action/init@v3
+        with:
+          languages: typescript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  test:
+    name: Tests & Coverage
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: code-quality
 
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [20.x, 22.x]
+        os: [ubuntu-latest]
 
     steps:
       - name: Checkout repository
@@ -57,32 +96,39 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
-
-      - name: Run Prettier check
-        run: npm run prettier
-
-      - name: Run linting
-        run: npm run lint
-
-      - name: Run type checking
-        run: npm run check:type
+        run: npm ci --prefer-offline --no-audit
 
       - name: Run tests with coverage
         run: npm run test:coverage
         env:
           CI: true
+          NODE_ENV: test
 
-      - name: Upload coverage reports
+      - name: Upload coverage to Codecov
+        if: matrix.node-version == '22.x'
         uses: codecov/codecov-action@v4
         with:
           file: ./coverage/lcov.info
           fail_ci_if_error: false
+          verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.node-version }}-${{ matrix.os }}
+          path: |
+            coverage/
+            test-results.xml
+          retention-days: 7
 
   build:
-    name: Build Application
+    name: Build & Documentation
     runs-on: ubuntu-latest
-    needs: [security, lint-and-test]
+    timeout-minutes: 15
+    needs: [code-quality, test]
 
     steps:
       - name: Checkout repository
@@ -95,13 +141,18 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit
 
       - name: Build project
         run: npm run build
 
-      - name: Generate documentation
+      - name: Generate TypeScript documentation
         run: npm run doc
+
+      - name: Verify build artifacts
+        run: |
+          ls -la dist/
+          node -e "console.log('Build verification passed')"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -118,9 +169,11 @@ jobs:
           retention-days: 30
 
   docker-build:
-    name: Build & Test Docker Image
+    name: Docker Build & Security Scan
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: build
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
 
     steps:
       - name: Checkout repository
@@ -129,6 +182,25 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Log in to Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -136,13 +208,37 @@ jobs:
           path: dist/
 
       - name: Build Docker image
-        run: |
-          docker build -t 3d-inventory-api:${{ github.sha }} .
-          docker tag 3d-inventory-api:${{ github.sha }} 3d-inventory-api:latest
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            VCS_REF=${{ github.sha }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
 
       - name: Test Docker image
+        if: github.event_name != 'pull_request'
         run: |
-          # Start container in background
+          # Start container for testing
           docker run --rm -d --name test-container -p 8080:8080 \
             -e NODE_ENV=production \
             -e PORT=8080 \
@@ -150,31 +246,29 @@ jobs:
             -e ATLAS_URI=mongodb://localhost:27017 \
             -e DBNAME=test \
             -e JWT_SECRET=test-secret-key-for-testing \
-            3d-inventory-api:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-          # Wait for container to start
-          sleep 15
+          # Wait for container to be ready
+          timeout 60 bash -c 'until curl -f http://localhost:8080/health; do sleep 2; done'
 
-          # Test health endpoint
+          # Run basic health check
           curl -f http://localhost:8080/health || exit 1
 
-          # Show logs for debugging
-          docker logs test-container
-
-          # Stop container
+          # Cleanup
           docker stop test-container
 
-      - name: Scan Docker image for vulnerabilities
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '3d-inventory-api:latest'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-        continue-on-error: true
+  notify:
+    name: Notify Status
+    runs-on: ubuntu-latest
+    needs: [code-quality, test, build, docker-build]
+    if: always()
 
-      - name: Upload Trivy scan results
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
-        continue-on-error: true
+    steps:
+      - name: Check workflow status
+        run: |
+          if [[ "${{ needs.code-quality.result }}" == "failure" || "${{ needs.test.result }}" == "failure" || "${{ needs.build.result }}" == "failure" || "${{ needs.docker-build.result }}" == "failure" ]]; then
+            echo "❌ Workflow failed"
+            exit 1
+          else
+            echo "✅ Workflow completed successfully"
+          fi

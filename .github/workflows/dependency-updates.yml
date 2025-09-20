@@ -2,14 +2,30 @@ name: Dependency Updates
 
 on:
   schedule:
-    # Run every Monday at 9 AM UTC
+    # Run weekly on Mondays at 9 AM UTC
     - cron: '0 9 * * 1'
-  workflow_dispatch: # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      update_type:
+        description: 'Type of update to perform'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: write
 
 jobs:
-  update-dependencies:
+  dependency-updates:
     name: Update Dependencies
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
@@ -23,19 +39,267 @@ jobs:
           node-version: '22.x'
           cache: 'npm'
 
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit
 
-      - name: Check for updates
+      - name: Check for outdated packages
         run: |
-          npm outdated || true
-          npm run check:upgrade
+          npm outdated --json > outdated.json || true
+          cat outdated.json
 
-      - name: Run tests after updates
+      - name: Update dependencies
+        id: update
         run: |
-          npm ci
+          UPDATE_TYPE="${{ inputs.update_type || 'patch' }}"
+
+          case $UPDATE_TYPE in
+            "patch")
+              echo "Updating patch versions..."
+              npx npm-check-updates -u --target patch
+              ;;
+            "minor")
+              echo "Updating minor versions..."
+              npx npm-check-updates -u --target minor
+              ;;
+            "major")
+              echo "Updating major versions (excluding breaking changes)..."
+              npx npm-check-updates -u --target latest --reject "@types/node,typescript"
+              ;;
+          esac
+
+          # Check if package.json was modified
+          if git diff --quiet package.json; then
+            echo "No updates available"
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+          else
+            echo "Updates found"
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install updated dependencies
+        if: steps.update.outputs.has_updates == 'true'
+        run: |
+          npm install
+          npm audit fix --audit-level=moderate || true
+
+      - name: Run tests
+        if: steps.update.outputs.has_updates == 'true'
+        run: |
           npm run test
-          npm run build
+          npm run check:type
+          npm run lint
+
+      - name: Generate update summary
+        if: steps.update.outputs.has_updates == 'true'
+        id: summary
+        run: |
+          echo "## 📦 Dependency Updates" > update_summary.md
+          echo "" >> update_summary.md
+          echo "### Changed packages:" >> update_summary.md
+          echo "" >> update_summary.md
+
+          # Show package changes
+          git diff package.json | grep -E '^[+-].*"[^"]*": "' | \
+            sed 's/^[+-]//' | \
+            sort | uniq -u | \
+            while read line; do
+              echo "- $line" >> update_summary.md
+            done
+
+          echo "" >> update_summary.md
+          echo "### Security Status:" >> update_summary.md
+          echo "" >> update_summary.md
+
+          # Run audit and capture results
+          if npm audit --audit-level=moderate; then
+            echo "✅ No security vulnerabilities found" >> update_summary.md
+          else
+            echo "⚠️ Security vulnerabilities detected - please review" >> update_summary.md
+          fi
+
+          # Save summary for PR
+          cat update_summary.md > summary.txt
+          echo "SUMMARY<<EOF" >> $GITHUB_OUTPUT
+          cat update_summary.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        if: steps.update.outputs.has_updates == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            deps: update dependencies (${{ inputs.update_type || 'patch' }})
+
+            - Update ${{ inputs.update_type || 'patch' }} versions
+            - Fix security vulnerabilities
+            - Update package-lock.json
+          title: "deps: Update dependencies (${{ inputs.update_type || 'patch' }})"
+          body: |
+            ${{ steps.summary.outputs.SUMMARY }}
+
+            ---
+
+            This PR was automatically created by the dependency update workflow.
+
+            **Update Type:** ${{ inputs.update_type || 'patch' }}
+            **Branch:** dependency-updates-${{ github.run_number }}
+
+            ### Checklist:
+            - [x] Dependencies updated
+            - [x] Tests passing
+            - [x] TypeScript compilation successful
+            - [x] Linting passed
+            - [x] Security audit completed
+
+            ### Next Steps:
+            1. Review the changes
+            2. Test manually if needed
+            3. Merge when ready
+          branch: dependency-updates-${{ github.run_number }}
+          branch-suffix: short-commit-hash
+          delete-branch: true
+          labels: |
+            dependencies
+            automated-pr
+            ${{ inputs.update_type || 'patch' }}
+
+  security-updates:
+    name: Security Updates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Check for security vulnerabilities
+        id: audit
+        run: |
+          # Get vulnerability count
+          VULNS=$(npm audit --audit-level=moderate --json | jq '.metadata.vulnerabilities.moderate + .metadata.vulnerabilities.high + .metadata.vulnerabilities.critical')
+          echo "vulnerabilities=$VULNS" >> $GITHUB_OUTPUT
+
+          if [ "$VULNS" -gt 0 ]; then
+            echo "has_vulnerabilities=true" >> $GITHUB_OUTPUT
+            npm audit --audit-level=moderate
+          else
+            echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
+            echo "No security vulnerabilities found"
+          fi
+
+      - name: Apply security fixes
+        if: steps.audit.outputs.has_vulnerabilities == 'true'
+        id: fix
+        run: |
+          # Try automatic fixes first
+          npm audit fix --audit-level=moderate
+
+          # Check if fixes were applied
+          if git diff --quiet package.json package-lock.json; then
+            echo "has_fixes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_fixes=true" >> $GITHUB_OUTPUT
+          fi
+
+          # Re-run audit to see remaining issues
+          npm audit --audit-level=moderate || true
+
+      - name: Run tests after security fixes
+        if: steps.fix.outputs.has_fixes == 'true'
+        run: |
+          npm test
+          npm run check:type
+
+      - name: Create Security Fix PR
+        if: steps.fix.outputs.has_fixes == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            security: fix security vulnerabilities
+
+            - Apply automatic security fixes
+            - Update vulnerable dependencies
+            - Resolve ${{ steps.audit.outputs.vulnerabilities }} vulnerabilities
+          title: 'security: Fix security vulnerabilities'
+          body: |
+            ## 🔒 Security Vulnerability Fixes
+
+            This PR addresses **${{ steps.audit.outputs.vulnerabilities }}** security vulnerabilities found in dependencies.
+
+            ### Changes:
+            - Applied automatic security fixes via `npm audit fix`
+            - Updated vulnerable dependencies to secure versions
+            - Verified tests still pass after updates
+
+            ### Security Status:
+            Please review the changes and ensure no breaking changes were introduced.
+
+            ---
+
+            This PR was automatically created by the security update workflow.
+
+            **Priority:** High
+            **Type:** Security Fix
+          branch: security-fixes-${{ github.run_number }}
+          delete-branch: true
+          labels: |
+            security
+            automated-pr
+            priority-high
+
+      - name: Create issue for manual security fixes
+        if: steps.audit.outputs.has_vulnerabilities == 'true' && steps.fix.outputs.has_fixes == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔒 Manual Security Review Required',
+              body: `## Security Vulnerabilities Detected
+
+              **Vulnerabilities Found:** ${{ steps.audit.outputs.vulnerabilities }}
+
+              Automatic fixes could not resolve all security issues. Manual review and updates are required.
+
+              ### Next Steps:
+              1. Run \`npm audit\` locally to see detailed vulnerability information
+              2. Update vulnerable packages manually
+              3. Test thoroughly after updates
+              4. Consider alternative packages if updates aren't available
+
+              ### Audit Results:
+              \`\`\`
+              npm audit --audit-level=moderate
+              \`\`\`
+
+              This issue was automatically created by the security scanning workflow.`,
+              labels: ['security', 'manual-review', 'priority-high']
+            });
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5

@@ -313,11 +313,38 @@ export class UserService {
   async initializeDefaultUsers(): Promise<void> {
     try {
       const defaultUsers = [
-        { username: 'admin', email: 'admin@3d-inventory.com', password: 'admin123456', role: UserRole.ADMIN },
-        { username: 'user', email: 'user@3d-inventory.com', password: 'user123456', role: UserRole.USER },
-        { username: 'carlo', email: 'carlo@3d-inventory.com', password: 'carlo123456', role: UserRole.USER },
-        { username: 'viewer', email: 'viewer@3d-inventory.com', password: 'viewer123456', role: UserRole.VIEWER }
+        {
+          username: 'admin',
+          email: 'admin@3d-inventory.com',
+          password: process.env.DEFAULT_ADMIN_PASSWORD,
+          role: UserRole.ADMIN
+        },
+        {
+          username: 'user',
+          email: 'user@3d-inventory.com',
+          password: process.env.DEFAULT_USER_PASSWORD,
+          role: UserRole.USER
+        },
+        {
+          username: 'carlo',
+          email: 'carlo@3d-inventory.com',
+          password: process.env.DEFAULT_CARLO_PASSWORD,
+          role: UserRole.USER
+        },
+        {
+          username: 'viewer',
+          email: 'viewer@3d-inventory.com',
+          password: process.env.DEFAULT_VIEWER_PASSWORD,
+          role: UserRole.VIEWER
+        }
       ]
+
+      // Ensure all default passwords are set
+      for (const user of defaultUsers) {
+        if (!user.password) {
+          throw new Error(`Default password for user "${user.username}" is not set in environment variables.`)
+        }
+      }
 
       for (const userData of defaultUsers) {
         try {
