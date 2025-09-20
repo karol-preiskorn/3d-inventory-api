@@ -5,8 +5,8 @@
  */
 
 import { Request, Response } from 'express'
+import { Permission, UserRole } from '../middlewares/auth'
 import { RoleService } from '../services/RoleService'
-import { UserRole, Permission } from '../middlewares/auth'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('RoleController')
@@ -184,7 +184,7 @@ export class RoleController {
         return
       }
 
-      const updatedRole = await roleService.updateRole(name as UserRole, permissions)
+      const updatedRole = await roleService.updateRole(name as UserRole, { permissions })
 
       logger.info(`Role updated by ${req.user?.username}: ${name}`)
 

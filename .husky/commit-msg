@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+# File:        /.husky/commit-msg
+# Description: Validate commit message format using commitlint
+# 2025-09-20   Created    Conventional commit enforcement
+
+. "$(dirname "$0")/_/husky.sh"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}📝 Validating commit message format...${NC}"
+
+# Run commitlint
+npx commitlint --edit "$1"
+
+if [ $? -ne 0 ]; then
+  echo -e "${RED}❌ Commit message does not follow conventional format.${NC}"
+  echo -e "${BLUE}💡 Expected format: type(scope): description${NC}"
+  echo -e "${BLUE}   Examples:${NC}"
+  echo -e "${BLUE}   - feat: add user authentication${NC}"
+  echo -e "${BLUE}   - fix(api): resolve CORS issue${NC}"
+  echo -e "${BLUE}   - docs: update README installation guide${NC}"
+  echo -e "${BLUE}   - refactor(models): improve User model structure${NC}"
+  exit 1
+fi
+
+echo -e "${GREEN}✅ Commit message format is valid${NC}"

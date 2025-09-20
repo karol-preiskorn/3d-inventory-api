@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
+import type { Db } from 'mongodb'
 import config from '../utils/config'
 import getLogger from '../utils/logger'
-import type { Db } from 'mongodb'
 
 const logger = getLogger('health')
 const proc = '[health]'

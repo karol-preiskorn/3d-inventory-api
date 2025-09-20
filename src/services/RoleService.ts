@@ -5,8 +5,8 @@
  */
 
 import { Collection, Db, MongoClient, ObjectId } from 'mongodb'
-import { Role, RoleResponse, toRoleResponse, DEFAULT_ROLES } from '../models/Role'
 import { UserRole, Permission } from '../middlewares/auth'
+import { Role, RoleResponse, toRoleResponse, DEFAULT_ROLES } from '../models/Role'
 import { connectToCluster, connectToDb, closeConnection } from '../utils/db'
 import getLogger from '../utils/logger'
 

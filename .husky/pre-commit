@@ -53,6 +53,17 @@ fi
 
 echo -e "${GREEN}✅ TypeScript type check passed${NC}"
 
+# Security audit check
+echo -e "${BLUE}🔒 Running security audit...${NC}"
+npm audit --audit-level=moderate
+
+if [ $? -ne 0 ]; then
+  echo -e "${YELLOW}⚠️  Security vulnerabilities detected. Consider running 'npm audit fix'${NC}"
+  # Don't fail the commit for security issues, just warn
+fi
+
+echo -e "${GREEN}✅ Pre-commit checks completed successfully${NC}"
+
 # Version bump (only for main branch commits)
 BRANCH=$(git branch --show-current)
 if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then

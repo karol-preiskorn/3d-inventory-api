@@ -10,7 +10,6 @@ import { describe, it, beforeAll, afterAll, expect } from '@jest/globals'
 import '../utils/loadEnvironment'
 
 import { Db, MongoClient } from 'mongodb'
-
 import { faker } from '@faker-js/faker'
 
 describe('create 3 models', () => {

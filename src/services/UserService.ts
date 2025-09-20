@@ -6,8 +6,8 @@
 
 import bcrypt from 'bcrypt'
 import { Collection, Db, ObjectId, MongoClient } from 'mongodb'
-import { User, CreateUserRequest, UpdateUserRequest, UserResponse, toUserResponse, USER_VALIDATION } from '../models/User'
 import { UserRole, ROLE_PERMISSIONS } from '../middlewares/auth'
+import { User, CreateUserRequest, UpdateUserRequest, UserResponse, toUserResponse, USER_VALIDATION } from '../models/User'
 import { connectToCluster, connectToDb, closeConnection } from '../utils/db'
 import getLogger from '../utils/logger'
 

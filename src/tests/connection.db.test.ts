@@ -7,8 +7,8 @@
 
 import '../utils/loadEnvironment'
 
-import { Db, MongoClient } from 'mongodb'
 import { beforeAll, afterAll, describe, it, expect } from '@jest/globals'
+import { Db, MongoClient } from 'mongodb'
 
 describe('ConnectToDatabase Mongo Atlas', () => {
   let connection: MongoClient

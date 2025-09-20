@@ -20,9 +20,7 @@ import { describe, it, expect, beforeAll, afterAll } from '@jest/globals'
 import '../utils/loadEnvironment'
 
 import { Db, MongoClient } from 'mongodb'
-
 import { faker } from '@faker-js/faker'
-
 import { capitalizeFirstLetter } from '../utils/strings'
 
 describe('create 10 floors', () => {

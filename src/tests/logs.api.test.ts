@@ -1,5 +1,5 @@
-import request from 'supertest'
 import { expect, beforeAll, describe, it } from '@jest/globals'
+import request from 'supertest'
 
 // Make sure the correct path to the Express app is used.
 // For example, if your app is exported from '../app', update the import as follows:

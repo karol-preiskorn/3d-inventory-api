@@ -4,9 +4,9 @@
  * @module services
  */
 
-import { UserService } from './UserService'
-import { RoleService } from './RoleService'
 import getLogger from '../utils/logger'
+import { RoleService } from './RoleService'
+import { UserService } from './UserService'
 
 const logger = getLogger('InitializationService')
 

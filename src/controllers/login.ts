@@ -1,9 +1,9 @@
-import jwt from 'jsonwebtoken'
 import { Request, RequestHandler, Response, NextFunction } from 'express'
-import config from '../utils/config'
-import getLogger from '../utils/logger'
+import jwt from 'jsonwebtoken'
 import { JwtPayload } from '../middlewares/auth'
 import { UserService } from '../services/UserService'
+import config from '../utils/config'
+import getLogger from '../utils/logger'
 
 const logger = getLogger('login')
 const userService = UserService.getInstance()

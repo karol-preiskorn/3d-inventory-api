@@ -1,7 +1,7 @@
-import { RequestHandler } from 'express'
 import fs from 'fs'
-import Markdown from 'markdown-it'
 import { promisify } from 'util'
+import { RequestHandler } from 'express'
+import Markdown from 'markdown-it'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('readme')

@@ -6,12 +6,12 @@
 
 import '../utils/loadEnvironment'
 
-import { Db, MongoClient } from 'mongodb'
 
 import { faker } from '@faker-js/faker'
 
 // If using Jest, ensure the environment is set up for Jest. Optionally, you can import the types for better IDE support:
 import { describe, it, beforeAll, afterAll, expect } from '@jest/globals'
+import { Db, MongoClient } from 'mongodb'
 
 describe('create 10 connections', () => {
   let connection: MongoClient

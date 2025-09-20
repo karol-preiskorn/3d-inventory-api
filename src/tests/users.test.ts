@@ -8,12 +8,10 @@
 
 import '../../../../../src/utils/loadEnvironment'
 
-import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb'
-
 import { faker } from '@faker-js/faker'
-
-import { connectToCluster, connectToDb } from '../utils/db'
+import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb'
 import { User } from '../routers/users'
+import { connectToCluster, connectToDb } from '../utils/db'
 
 
 describe('Test Mongo Atlas DB users', () => {

@@ -3,8 +3,8 @@
  * @description Loads and validates environment variables for the application.
  */
 
-import dotenv from 'dotenv'
 import path from 'path'
+import dotenv from 'dotenv'
 
 dotenv.config({ path: path.resolve('./.env') })
 

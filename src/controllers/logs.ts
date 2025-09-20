@@ -1,7 +1,7 @@
-import { RequestHandler } from 'express'
 import { format } from 'date-fns'
-import { Collection, Db, Document, Filter, InsertOneResult, DeleteResult, ObjectId } from 'mongodb'
+import { RequestHandler } from 'express'
 import mongoSanitize from 'mongo-sanitize'
+import { Collection, Db, Document, Filter, InsertOneResult, DeleteResult, ObjectId } from 'mongodb'
 import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 import getLogger from '../utils/logger'
 

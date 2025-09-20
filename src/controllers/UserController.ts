@@ -5,10 +5,10 @@
  */
 
 import { Request, Response } from 'express'
+import { UserRole } from '../middlewares/auth'
+import { CreateUserRequest, UpdateUserRequest } from '../models/User'
 import { UserService } from '../services/UserService'
 //import { RoleService } from '../services/RoleService';
-import { CreateUserRequest, UpdateUserRequest } from '../models/User'
-import { UserRole } from '../middlewares/auth'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('UserController')

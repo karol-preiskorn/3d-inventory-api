@@ -1,6 +1,6 @@
-import { RequestHandler } from 'express'
-import dotenv from 'dotenv'
 import path from 'path'
+import dotenv from 'dotenv'
+import { RequestHandler } from 'express'
 import fetch from 'node-fetch'
 import getLogger from '../utils/logger'
 

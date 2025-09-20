@@ -7,13 +7,13 @@
 
 import '../utils/loadEnvironment'
 
-import { Db, MongoClient } from 'mongodb'
 
 import { faker } from '@faker-js/faker'
 
 // Ensure Jest globals are available for TypeScript
 // (If using tsconfig, make sure "types": ["jest"] is set in "compilerOptions")
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals'
+import { Db, MongoClient } from 'mongodb'
 
 describe('prepare test data', () => {
   let connection: MongoClient

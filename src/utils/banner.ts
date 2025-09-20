@@ -3,9 +3,8 @@
  * @version: 2024-01-07  C2RLO  Initial
  */
 
-import figlet from 'figlet'
 import fs from 'fs/promises'
-
+import figlet from 'figlet'
 import { logger } from './logger'
 
 let fontLoaded = false

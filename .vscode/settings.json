@@ -20,6 +20,62 @@
   "search.useIgnoreFiles": true,
   "search.useParentIgnoreFiles": true,
   "files.exclude": {
-    "logseq/*": true
-  }
+    "logseq/*": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "**/logs": true
+  },
+  // Enhanced development workflow settings
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit",
+    "source.removeUnusedImports": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.trimAutoWhitespace": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.format.semicolons": "remove",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ],
+  "eslint.format.enable": true,
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "prettier.singleQuote": true,
+  "prettier.semi": false,
+  "prettier.trailingComma": "none",
+  "prettier.tabWidth": 2,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "terminal.integrated.env.linux": {
+    "NODE_ENV": "development"
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "**/logs": true,
+    "**/.git": true
+  },
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "json.format.enable": true,
+  "yaml.format.enable": true,
+  "markdown.preview.breaks": true,
+  "debug.onTaskErrors": "showErrors",
+  "jest.autoRun": "off",
+  "jest.showCoverageOnLoad": true
 }

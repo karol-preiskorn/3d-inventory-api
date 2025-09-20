@@ -6,10 +6,9 @@
 
 import express, { RequestHandler } from 'express'
 import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
-
 import { AttributesDictionary } from '../controllers/attributesDictionary'
-import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 import { validateObjectId } from '../middlewares'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 
 export interface AttributesTypes {
   _id: ObjectId

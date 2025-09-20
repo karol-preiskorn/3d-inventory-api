@@ -6,11 +6,10 @@
 
 import '../utils/loadEnvironment'
 
+import { expect, describe, it, beforeAll, afterAll } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
 import request, { Response } from 'supertest'
-
 import app from '../main'
-import { expect, describe, it, beforeAll, afterAll } from '@jest/globals'
 
 describe('GET /models', () => {
   let connection: MongoClient

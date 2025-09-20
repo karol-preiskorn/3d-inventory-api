@@ -1,6 +1,8 @@
 import js from '@eslint/js'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import tsparser from '@typescript-eslint/parser'
+import importPlugin from 'eslint-plugin-import'
+import unusedImports from 'eslint-plugin-unused-imports'
 import globals from 'globals'
 
 export default [
@@ -36,7 +38,9 @@ export default [
   {
     files: ['**/*.ts'],
     plugins: {
-      '@typescript-eslint': tseslint
+      '@typescript-eslint': tseslint,
+      'import': importPlugin,
+      'unused-imports': unusedImports
     },
     languageOptions: {
       parser: tsparser,
@@ -55,11 +59,34 @@ export default [
       'comma-dangle': ['error', 'never'],
       'semi': ['error', 'never'],
 
-      // TypeScript specific rules
-      '@typescript-eslint/no-unused-vars': ['error', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_'
+      // Import rules
+      'import/order': ['error', {
+        'groups': [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index'
+        ],
+        'newlines-between': 'never',
+        'alphabetize': {
+          'order': 'asc',
+          'caseInsensitive': true
+        }
       }],
+      'import/no-duplicates': 'error',
+      'import/no-unused-modules': 'error',
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': ['warn', {
+        'vars': 'all',
+        'varsIgnorePattern': '^_',
+        'args': 'after-used',
+        'argsIgnorePattern': '^_'
+      }],
+
+      // TypeScript specific rules
+      '@typescript-eslint/no-unused-vars': 'off', // Use unused-imports instead
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',

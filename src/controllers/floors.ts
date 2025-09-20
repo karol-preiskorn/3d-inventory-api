@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
-import { Collection, Db, ObjectId, UpdateFilter, Document } from 'mongodb'
 import mongoSanitize from 'mongo-sanitize'
+import { Collection, Db, ObjectId, UpdateFilter, Document } from 'mongodb'
 import sanitize from 'sanitize-html'
 import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 import getLogger from '../utils/logger'

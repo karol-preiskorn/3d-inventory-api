@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
-import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
+import helmet from 'helmet'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('security-middleware')

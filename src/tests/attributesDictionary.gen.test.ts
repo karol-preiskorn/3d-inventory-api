@@ -6,10 +6,8 @@
 
 import '../utils/loadEnvironment'
 
-import { Collection, Document, MongoClient, ObjectId } from 'mongodb'
-
 import { faker } from '@faker-js/faker'
-
+import { Collection, Document, MongoClient, ObjectId } from 'mongodb'
 import { valueAttributeCategory } from '../utils/types'
 
 

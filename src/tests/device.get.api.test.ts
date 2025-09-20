@@ -10,9 +10,8 @@
  * @version 2024-01-03  C2RLO  Initial
  */
 
-import request from 'supertest'
 import { expect, it, describe, afterAll } from '@jest/globals'
-
+import request from 'supertest'
 import app from '../main'
 
 describe('GET /devices', () => {

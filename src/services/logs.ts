@@ -7,7 +7,6 @@
 import { format } from 'date-fns'
 import { Collection, Db, InsertOneResult, ObjectId, Document } from 'mongodb'
 import { Observable, of } from 'rxjs'
-
 import { connectToCluster, connectToDb } from '../utils/db'
 
 /**
