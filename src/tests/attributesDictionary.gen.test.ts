@@ -4,12 +4,11 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment'
+import '../utils/config'
 
-import { faker } from '@faker-js/faker'
 import { Collection, Document, MongoClient, ObjectId } from 'mongodb'
 import { valueAttributeCategory } from '../utils/types'
-
+import { testGenerators } from './testGenerators'
 
 describe('test create attributesDictionary', () => {
   let connection: MongoClient
@@ -36,11 +35,11 @@ describe('test create attributesDictionary', () => {
         const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
 
         mockModel = {
-          name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
+          name: testGenerators.productName(),
           dimension: {
-            width: faker.number.int({ min: 1, max: 10 }),
-            height: faker.number.int({ min: 1, max: 10 }),
-            depth: faker.number.int({ min: 1, max: 10 })
+            width: testGenerators.randomInt(1, 10),
+            height: testGenerators.randomInt(1, 10),
+            depth: testGenerators.randomInt(1, 10)
           },
           texture: {
             front: '/assets/r710-2.5-nobezel__29341.png',

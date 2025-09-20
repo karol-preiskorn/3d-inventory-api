@@ -6,13 +6,11 @@
  * @version: 2023-10-29  C2RLO  Init
  */
 
-import '../../../../../src/utils/loadEnvironment'
-
-import { faker } from '@faker-js/faker'
 import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb'
 import { User } from '../routers/users'
+import '../utils/config'
 import { connectToCluster, connectToDb } from '../utils/db'
-
+import { testGenerators } from './testGenerators'
 
 describe('Test Mongo Atlas DB users', () => {
   let db: Db
@@ -31,12 +29,13 @@ describe('Test Mongo Atlas DB users', () => {
   })
 
   it('should insert a one User doc into collection', async () => {
+    const userData = testGenerators.userSimple()
     const mockUser: User = {
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-      password: faker.internet.password({ length: 10 }),
-      permissions: faker.helpers.arrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
-      token: faker.internet.password({ length: 50 }),
+      name: userData.name,
+      email: userData.email,
+      password: userData.password,
+      permissions: testGenerators.randomArrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
+      token: userData.token,
       _id: new ObjectId()
     }
 
@@ -62,12 +61,14 @@ describe('Test Mongo Atlas DB users', () => {
 
   it('should insert a ten User doc into collection', async () => {
     for (let index = 0; index < 10; index++) {
+      const userData = testGenerators.userSimple()
+
       mockUser = {
-        name: faker.person.fullName(),
-        email: faker.internet.email(),
-        password: faker.internet.password({ length: 10 }),
-        rights: faker.helpers.arrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
-        token: faker.internet.password({ length: 50 })
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+        rights: testGenerators.randomArrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
+        token: userData.token
       }
       await users.insertOne(mockUser)
       const insertedUser = await users.findOne(mockUser)

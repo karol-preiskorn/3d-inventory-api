@@ -5,7 +5,7 @@
  * @version 2024-01-14 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment'
+import '../utils/config'
 
 import { beforeAll, afterAll, describe, it, expect } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
@@ -21,8 +21,7 @@ describe('ConnectToDatabase Mongo Atlas', () => {
     try {
       connection = await MongoClient.connect(process.env.ATLAS_URI, {})
       db = connection.db(process.env.DBNAME)
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error connecting to the database:', error)
     }
   })

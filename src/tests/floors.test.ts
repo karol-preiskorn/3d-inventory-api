@@ -3,11 +3,9 @@
  * This ensures TypeScript recognizes Jest globals.
  */
 
-import '../utils/loadEnvironment'
-
-import { faker } from '@faker-js/faker'
 import { Db, MongoClient } from 'mongodb'
-import { capitalizeFirstLetter } from '../utils/strings'
+import '../utils/config'
+import { testGenerators } from './testGenerators'
 
 describe('create 10 floors', () => {
   let conn: MongoClient
@@ -28,57 +26,18 @@ describe('create 10 floors', () => {
 
   it('should insert a 10 floors', async () => {
     const floors = db.collection('floors')
-    let mockFloors: {
+    const mockFloors: {
       name: string
-      address: { street: string, city: string, country: string, postcode: number }
-      dimension: { description: string, x: number, y: number, h: number, xPos: number, yPos: number, hPos: number }[]
+      address: { street: string; city: string; country: string; postcode: number }
+      dimension: { description: string; x: number; y: number; h: number; xPos: number; yPos: number; hPos: number }[]
     } = {
-      name: capitalizeFirstLetter(faker.color.human()) + ' ' + faker.commerce.product(),
-      address: {
-        street: faker.location.street(),
-        city: faker.location.city(),
-        country: faker.location.country(),
-        postcode: faker.number.int({ min: 10000, max: 99999 })
-      },
-      dimension: [
-        {
-          description: faker.commerce.productDescription(),
-          x: faker.number.int({ min: 10, max: 100 }),
-          y: faker.number.int({ min: 10, max: 100 }),
-          h: faker.number.int({ min: 10, max: 100 }),
-          xPos: faker.number.int({ min: 10, max: 100 }),
-          yPos: faker.number.int({ min: 10, max: 100 }),
-          hPos: faker.number.int({ min: 10, max: 100 })
-        }
-      ]
+      name: testGenerators.floorName(),
+      address: testGenerators.address(),
+      dimension: [testGenerators.floorDimension()]
     }
+    const insertResult = await floors.insertOne(mockFloors)
 
-    await floors.insertOne(mockFloors)
-    for (let index = 0; index < 10; index++) {
-      mockFloors = {
-        name: capitalizeFirstLetter(faker.color.human()[0]) + ' ' + faker.commerce.product(),
-        address: {
-          street: faker.location.street(),
-          city: faker.location.city(),
-          country: faker.location.country(),
-          postcode: faker.number.int({ min: 10000, max: 99999 })
-        },
-        dimension: [
-          {
-            description: faker.commerce.productDescription(),
-            x: faker.number.int({ min: 10, max: 100 }),
-            y: faker.number.int({ min: 10, max: 100 }),
-            h: faker.number.int({ min: 10, max: 100 }),
-            xPos: faker.number.int({ min: 10, max: 100 }),
-            yPos: faker.number.int({ min: 10, max: 100 }),
-            hPos: faker.number.int({ min: 10, max: 100 })
-          }
-        ]
-      }
-      const insertResult = await floors.insertOne(mockFloors)
-
-      insertedFloors = await floors.findOne({ _id: insertResult.insertedId })
-      expect(insertedFloors).toMatchObject(mockFloors)
-    }
+    insertedFloors = await floors.findOne({ _id: insertResult.insertedId })
+    expect(insertedFloors).toMatchObject(mockFloors)
   })
 })

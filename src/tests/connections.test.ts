@@ -4,10 +4,10 @@
  * @version 2024-10-29 C2RLO - Init
  */
 
-import { faker } from '@faker-js/faker'
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
-import '../utils/loadEnvironment'
+import '../utils/config'
+import { testGenerators } from './testGenerators'
 
 describe('create 10 connections', () => {
   let connection: MongoClient
@@ -35,13 +35,13 @@ describe('create 10 connections', () => {
     const devicesData = await devicesCursor.toArray()
     const connections = db.collection('connections')
 
-    console.log(JSON.stringify(devicesData[faker.number.int({ min: 0, max: 11 })]._id))
+    console.log(JSON.stringify(devicesData[testGenerators.randomInt(0, 11)]._id))
     for (let index = 0; index < 10; index++) {
-      const to = devicesData[faker.number.int({ min: 0, max: 10 })]._id
-      const from = devicesData[faker.number.int({ min: 0, max: 10 })]._id
+      const to = devicesData[testGenerators.randomInt(0, 10)]._id
+      const from = devicesData[testGenerators.randomInt(0, 10)]._id
 
       mockConnection = {
-        name: faker.color.human() + ' ' + faker.commerce.product(),
+        name: testGenerators.connection().name,
         deviceIdTo: to,
         deviceIdFrom: from
       }

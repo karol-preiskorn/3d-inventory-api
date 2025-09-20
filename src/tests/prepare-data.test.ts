@@ -5,10 +5,10 @@
  * @version     2023-12-26 C2RLO - Initial
  */
 
-import { faker } from '@faker-js/faker'
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
-import '../utils/loadEnvironment'
+import '../utils/config'
+import { testGenerators } from './testGenerators'
 
 describe('prepare test data', () => {
   let connection: MongoClient
@@ -63,11 +63,11 @@ describe('prepare test data', () => {
         const model = db.collection('models')
 
         mockModel = {
-          name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
+          name: testGenerators.productName(),
           dimension: {
-            width: faker.number.int({ min: 1, max: 10 }),
-            height: faker.number.int({ min: 1, max: 10 }),
-            depth: faker.number.int({ min: 1, max: 10 })
+            width: testGenerators.randomInt(1, 10),
+            height: testGenerators.randomInt(1, 10),
+            depth: testGenerators.randomInt(1, 10)
           },
           texture: {
             front: '/assets/r710-2.5-nobezel__29341.png',
@@ -100,12 +100,12 @@ describe('prepare test data', () => {
 
         for (let index = 0; index < 5; index++) {
           const mockDevice = {
-            name: faker.commerce.product() + ' ' + faker.color.human() + '-' + faker.animal.type(),
+            name: testGenerators.productName(),
             modelId: insertedModel ? insertedModel._id : null,
             position: {
-              x: faker.number.int({ min: 1, max: 100 }),
-              y: faker.number.int({ min: 1, max: 100 }),
-              h: faker.number.int({ min: 1, max: 10 })
+              x: testGenerators.randomInt(1, 100),
+              y: testGenerators.randomInt(1, 100),
+              h: testGenerators.randomInt(1, 10)
             }
           }
 

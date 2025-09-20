@@ -4,9 +4,9 @@
  * @version 2024-02-01 C2RLO - Add test for post device
  */
 
-import '../utils/loadEnvironment'
+import '../utils/config'
 
-import { expect, describe, it, beforeAll, afterAll } from '@jest/globals'
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
 import request, { Response } from 'supertest'
 import app from '../main'

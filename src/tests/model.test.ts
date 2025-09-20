@@ -6,10 +6,10 @@
  * @version 2023-10-29  C2RLO  Init
  */
 
-import { faker } from '@faker-js/faker'
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
-import '../utils/loadEnvironment'
+import '../utils/config'
+import { testGenerators } from './testGenerators'
 
 describe('create 3 models', () => {
   let connection: MongoClient
@@ -33,15 +33,12 @@ describe('create 3 models', () => {
     // const attributesTypesData = await attributesTypesCursor.toArray()
     for (let index = 0; index < 10; index++) {
       const models = db.collection('models')
-
       // const attributesTypesData: { name: string }[] = await attributesTypesCursor.toArray().then(data => data.map((doc: { name: string }) => ({ name: doc.name })));
+      const deviceData = testGenerators.deviceSimple()
+
       mockModel = {
-        name: faker.commerce.product() + ' ' + faker.color.human() + ' ' + faker.animal.type(),
-        dimension: {
-          width: faker.number.int({ min: 1, max: 10 }),
-          height: faker.number.int({ min: 1, max: 10 }),
-          depth: faker.number.int({ min: 1, max: 10 })
-        },
+        name: deviceData.name,
+        dimension: deviceData.dimensions,
         texture: {
           front: '/assets/texture/r710-2.5-nobezel__29341.png',
           back: '/assets/texture/r710-2.5-nobezel__29341.png',
