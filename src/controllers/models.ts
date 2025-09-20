@@ -43,6 +43,37 @@ export interface ModelInput {
 const DEFAULT_LIMIT = 100
 const MAX_LIMIT = 1000
 
+// Validation helper functions
+function validateObjectId(id: string): boolean {
+  return ObjectId.isValid(id)
+}
+
+function validateModelInput(data: Partial<ModelInput>): { isValid: boolean; error?: string } {
+  const { name, dimension, texture } = data
+
+  if (typeof name !== 'string' || name.trim().length === 0) {
+    return { isValid: false, error: 'name must be a non-empty string' }
+  }
+
+  if (!dimension || typeof dimension !== 'object' ||
+    typeof dimension.width !== 'number' || dimension.width <= 0 ||
+    typeof dimension.height !== 'number' || dimension.height <= 0 ||
+    typeof dimension.depth !== 'number' || dimension.depth <= 0) {
+    return { isValid: false, error: 'dimension must be an object with width, height, and depth as positive numbers' }
+  }
+
+  if (!texture || typeof texture !== 'object' ||
+    typeof texture.front !== 'string' || texture.front.trim().length === 0 ||
+    typeof texture.back !== 'string' || texture.back.trim().length === 0 ||
+    typeof texture.side !== 'string' || texture.side.trim().length === 0 ||
+    typeof texture.top !== 'string' || texture.top.trim().length === 0 ||
+    typeof texture.bottom !== 'string' || texture.bottom.trim().length === 0) {
+    return { isValid: false, error: 'texture must be an object with front, back, side, top, and bottom as non-empty strings' }
+  }
+
+  return { isValid: true }
+}
+
 // Get all models
 export async function getAllModels(req: Request, res: Response) {
   let limit = DEFAULT_LIMIT
@@ -63,14 +94,14 @@ export async function getAllModels(req: Request, res: Response) {
     const results = await collection.find({}).limit(limit).toArray()
 
     if (!results.length) {
-      logger.info('No models found')
-      res.status(404).json({ message: 'No models found' })
+      logger.info(`${proc} No models found`)
+      res.status(200).json({ message: 'No models found', data: [] })
 
       return
     }
 
-    logger.info(`Retrieved ${results.length} models`)
-    res.status(200).json(results)
+    logger.info(`${proc} Retrieved ${results.length} models`)
+    res.status(200).json({ data: results, count: results.length })
   } catch (error) {
     logger.error(`${proc} Error fetching models: ${error instanceof Error ? error.message : String(error)}`)
     res.status(500).json({
@@ -87,6 +118,17 @@ export async function getAllModels(req: Request, res: Response) {
 // Get model by ID
 export async function getModelById(req: Request, res: Response) {
   const { id } = req.params
+
+  if (!validateObjectId(id)) {
+    logger.warn(`${proc} Invalid ObjectId: ${id}`)
+    res.status(400).json({
+      error: 'Invalid ID format',
+      message: 'The provided ID is not a valid ObjectId'
+    })
+
+    return
+  }
+
   const query = { _id: new ObjectId(id) }
   const client = await connectToCluster()
 
@@ -120,54 +162,36 @@ export async function getModelById(req: Request, res: Response) {
 // Create new model
 export async function createModel(req: Request, res: Response) {
   const { name, dimension, texture, type, category } = req.body
-  const sanitizedName = sanitize(name)
-  const sanitizedType = type ? sanitize(type) : undefined
-  const sanitizedCategory = category ? sanitize(category) : undefined
+  // Validate input
+  const validation = validateModelInput({ name, dimension, texture })
 
-  if (typeof sanitizedName !== 'string' || sanitizedName.trim().length === 0) {
-    logger.warn(`${proc} Invalid model name`)
+  if (!validation.isValid) {
+    logger.warn(`${proc} ${validation.error}`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: 'name must be a non-empty string'
+      message: validation.error
     })
 
     return
   }
 
-  // Validate dimension object
-  if (!dimension || typeof dimension !== 'object' ||
-    typeof dimension.width !== 'number' ||
-    typeof dimension.height !== 'number' ||
-    typeof dimension.depth !== 'number') {
-    logger.warn(`${proc} Invalid dimension data`)
-    res.status(400).json({
-      error: 'Invalid input data',
-      message: 'dimension must be an object with width, height, and depth as numbers'
-    })
-
-    return
-  }
-
-  // Validate texture object
-  if (!texture || typeof texture !== 'object' ||
-    typeof texture.front !== 'string' ||
-    typeof texture.back !== 'string' ||
-    typeof texture.side !== 'string' ||
-    typeof texture.top !== 'string' ||
-    typeof texture.bottom !== 'string') {
-    logger.warn(`${proc} Invalid texture data`)
-    res.status(400).json({
-      error: 'Invalid input data',
-      message: 'texture must be an object with front, back, side, top, and bottom as strings'
-    })
-
-    return
-  }
-
+  const sanitizedName = sanitize(name).trim()
+  const sanitizedType = type ? sanitize(type).trim() : undefined
+  const sanitizedCategory = category ? sanitize(category).trim() : undefined
   const newModel: Model = {
     name: sanitizedName,
-    dimension,
-    texture,
+    dimension: {
+      width: Number(dimension.width),
+      height: Number(dimension.height),
+      depth: Number(dimension.depth)
+    },
+    texture: {
+      front: texture.front.trim(),
+      back: texture.back.trim(),
+      side: texture.side.trim(),
+      top: texture.top.trim(),
+      bottom: texture.bottom.trim()
+    },
     ...(sanitizedType && { type: sanitizedType }),
     ...(sanitizedCategory && { category: sanitizedCategory })
   }
@@ -176,6 +200,19 @@ export async function createModel(req: Request, res: Response) {
   try {
     const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
+    // Check for duplicate name
+    const existingModel = await collection.findOne({ name: sanitizedName })
+
+    if (existingModel) {
+      logger.warn(`${proc} Model with name '${sanitizedName}' already exists`)
+      res.status(409).json({
+        error: 'Conflict',
+        message: 'A model with this name already exists'
+      })
+
+      return
+    }
+
     const result: InsertOneResult<Model> = await collection.insertOne(newModel)
 
     if (!result.acknowledged) {
@@ -205,56 +242,49 @@ export async function createModel(req: Request, res: Response) {
 export async function updateModel(req: Request, res: Response) {
   const { id } = req.params
   const { name, dimension, texture, type, category } = req.body
-  const sanitizedName = sanitize(name)
-  const sanitizedType = type ? sanitize(type) : undefined
-  const sanitizedCategory = category ? sanitize(category) : undefined
 
-  if (typeof sanitizedName !== 'string' || sanitizedName.trim().length === 0) {
-    logger.warn(`${proc} Invalid model name for update`)
+  if (!validateObjectId(id)) {
+    logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
-      error: 'Invalid input data',
-      message: 'name must be a non-empty string'
+      error: 'Invalid ID format',
+      message: 'The provided ID is not a valid ObjectId'
     })
 
     return
   }
 
-  // Validate dimension object
-  if (!dimension || typeof dimension !== 'object' ||
-    typeof dimension.width !== 'number' ||
-    typeof dimension.height !== 'number' ||
-    typeof dimension.depth !== 'number') {
-    logger.warn(`${proc} Invalid dimension data for update`)
+  // Validate input
+  const validation = validateModelInput({ name, dimension, texture })
+
+  if (!validation.isValid) {
+    logger.warn(`${proc} ${validation.error}`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: 'dimension must be an object with width, height, and depth as numbers'
+      message: validation.error
     })
 
     return
   }
 
-  // Validate texture object
-  if (!texture || typeof texture !== 'object' ||
-    typeof texture.front !== 'string' ||
-    typeof texture.back !== 'string' ||
-    typeof texture.side !== 'string' ||
-    typeof texture.top !== 'string' ||
-    typeof texture.bottom !== 'string') {
-    logger.warn(`${proc} Invalid texture data for update`)
-    res.status(400).json({
-      error: 'Invalid input data',
-      message: 'texture must be an object with front, back, side, top, and bottom as strings'
-    })
-
-    return
-  }
-
+  const sanitizedName = sanitize(name).trim()
+  const sanitizedType = type ? sanitize(type).trim() : undefined
+  const sanitizedCategory = category ? sanitize(category).trim() : undefined
   const query = { _id: new ObjectId(id) }
   const updates = {
     $set: {
       name: sanitizedName,
-      dimension,
-      texture,
+      dimension: {
+        width: Number(dimension.width),
+        height: Number(dimension.height),
+        depth: Number(dimension.depth)
+      },
+      texture: {
+        front: texture.front.trim(),
+        back: texture.back.trim(),
+        side: texture.side.trim(),
+        top: texture.top.trim(),
+        bottom: texture.bottom.trim()
+      },
       ...(sanitizedType && { type: sanitizedType }),
       ...(sanitizedCategory && { category: sanitizedCategory })
     }
@@ -264,14 +294,35 @@ export async function updateModel(req: Request, res: Response) {
   try {
     const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
-    const result: UpdateResult = await collection.updateOne(query, updates)
+    // Check if model exists
+    const existingModel = await collection.findOne(query)
 
-    if (result.matchedCount === 0) {
+    if (!existingModel) {
       logger.warn(`${proc} Model not found for update: ${id}`)
       res.status(404).json({ message: 'Model not found' })
 
       return
     }
+
+    // Check for name conflict (if name is changing)
+    if (sanitizedName !== existingModel.name) {
+      const nameConflict = await collection.findOne({
+        name: sanitizedName,
+        _id: { $ne: new ObjectId(id) }
+      })
+
+      if (nameConflict) {
+        logger.warn(`${proc} Model with name '${sanitizedName}' already exists`)
+        res.status(409).json({
+          error: 'Conflict',
+          message: 'A model with this name already exists'
+        })
+
+        return
+      }
+    }
+
+    const result: UpdateResult = await collection.updateOne(query, updates)
 
     logger.info(`${proc} Updated model: ${id}`)
     res.status(200).json({
@@ -297,22 +348,40 @@ export async function updateModelDimension(req: Request, res: Response) {
   const { id } = req.params
   const { dimension } = req.body
 
+  if (!validateObjectId(id)) {
+    logger.warn(`${proc} Invalid ObjectId: ${id}`)
+    res.status(400).json({
+      error: 'Invalid ID format',
+      message: 'The provided ID is not a valid ObjectId'
+    })
+
+    return
+  }
+
   // Validate dimension
   if (!dimension || typeof dimension !== 'object' ||
-    typeof dimension.width !== 'number' ||
-    typeof dimension.height !== 'number' ||
-    typeof dimension.depth !== 'number') {
+    typeof dimension.width !== 'number' || dimension.width <= 0 ||
+    typeof dimension.height !== 'number' || dimension.height <= 0 ||
+    typeof dimension.depth !== 'number' || dimension.depth <= 0) {
     logger.warn(`${proc} Invalid dimension data for update`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: 'dimension must be an object with width, height, and depth as numbers'
+      message: 'dimension must be an object with width, height, and depth as positive numbers'
     })
 
     return
   }
 
   const query = { _id: new ObjectId(id) }
-  const updates = { $set: { dimension } }
+  const updates = {
+    $set: {
+      dimension: {
+        width: Number(dimension.width),
+        height: Number(dimension.height),
+        depth: Number(dimension.depth)
+      }
+    }
+  }
   const client = await connectToCluster()
 
   try {
@@ -351,24 +420,44 @@ export async function updateModelTexture(req: Request, res: Response) {
   const { id } = req.params
   const { texture } = req.body
 
+  if (!validateObjectId(id)) {
+    logger.warn(`${proc} Invalid ObjectId: ${id}`)
+    res.status(400).json({
+      error: 'Invalid ID format',
+      message: 'The provided ID is not a valid ObjectId'
+    })
+
+    return
+  }
+
   // Validate texture
   if (!texture || typeof texture !== 'object' ||
-    typeof texture.front !== 'string' ||
-    typeof texture.back !== 'string' ||
-    typeof texture.side !== 'string' ||
-    typeof texture.top !== 'string' ||
-    typeof texture.bottom !== 'string') {
+    typeof texture.front !== 'string' || texture.front.trim().length === 0 ||
+    typeof texture.back !== 'string' || texture.back.trim().length === 0 ||
+    typeof texture.side !== 'string' || texture.side.trim().length === 0 ||
+    typeof texture.top !== 'string' || texture.top.trim().length === 0 ||
+    typeof texture.bottom !== 'string' || texture.bottom.trim().length === 0) {
     logger.warn(`${proc} Invalid texture data for update`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: 'texture must be an object with front, back, side, top, and bottom as strings'
+      message: 'texture must be an object with front, back, side, top, and bottom as non-empty strings'
     })
 
     return
   }
 
   const query = { _id: new ObjectId(id) }
-  const updates = { $set: { texture } }
+  const updates = {
+    $set: {
+      texture: {
+        front: texture.front.trim(),
+        back: texture.back.trim(),
+        side: texture.side.trim(),
+        top: texture.top.trim(),
+        bottom: texture.bottom.trim()
+      }
+    }
+  }
   const client = await connectToCluster()
 
   try {
@@ -405,6 +494,17 @@ export async function updateModelTexture(req: Request, res: Response) {
 // Delete model by ID
 export async function deleteModel(req: Request, res: Response) {
   const { id } = req.params
+
+  if (!validateObjectId(id)) {
+    logger.warn(`${proc} Invalid ObjectId: ${id}`)
+    res.status(400).json({
+      error: 'Invalid ID format',
+      message: 'The provided ID is not a valid ObjectId'
+    })
+
+    return
+  }
+
   const query = { _id: new ObjectId(id) }
   const client = await connectToCluster()
 

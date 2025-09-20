@@ -14,7 +14,7 @@
     "outDir": "./dist",
     "pretty": true,
     "removeComments": false,
-    "rootDir": "../3d-inventory-api/src",
+    "rootDir": "./src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
@@ -35,11 +35,12 @@
     "coverage",
     "build",
     "scripts",
-    "../3d-inventory-api/src/__tests__",
-    "../3d-inventory-api/src/__mocks__"
+    "src/__tests__",
+    "src/__mocks__",
+    "jest.config.ts",
+    "*.config.ts"
   ],
   "include": [
-    "../3d-inventory-api/src/**/*.ts",
-    "jest.config.ts" // Add this line
+    "src/**/*.ts"
   ]
 }

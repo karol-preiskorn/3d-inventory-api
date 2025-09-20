@@ -48,7 +48,7 @@ export const loginUser: RequestHandler = async (req: Request, res: Response): Pr
 
     // Generate enhanced JWT token with role and permissions
     const payload: Omit<JwtPayload, 'iat' | 'exp'> = {
-      id: user._id!.toString(),
+      id: user._id ? user._id.toString() : '',
       username: user.username,
       role: user.role,
       permissions: user.permissions
@@ -67,7 +67,7 @@ export const loginUser: RequestHandler = async (req: Request, res: Response): Pr
     res.json({
       token,
       user: {
-        id: user._id!.toString(),
+        id: user._id ? user._id.toString() : '',
         username: user.username,
         role: user.role,
         permissions: user.permissions

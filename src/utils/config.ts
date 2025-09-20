@@ -44,12 +44,30 @@ function getEnvVar(key: string, required = false): string | undefined {
 
 const config: Config = {
   API_YAML_FILE: getEnvVar('API_YAML_FILE') || DEFAULTS.API_YAML_FILE,
-  ATLAS_URI: getEnvVar('ATLAS_URI', true)!,
+  ATLAS_URI: (() => {
+    const value = getEnvVar('ATLAS_URI', true)
+
+    if (!value) throw new Error('Missing required environment variable: ATLAS_URI')
+
+    return value
+  })(),
   COOKIE_EXPIRESIN: Number(getEnvVar('COOKIE_EXPIRESIN')) || DEFAULTS.COOKIE_EXPIRESIN,
   DBNAME: getEnvVar('DBNAME') || DEFAULTS.DBNAME,
   HOST: getEnvVar('HOST') || DEFAULTS.HOST,
-  JWT_SECRET: getEnvVar('JWT_SECRET', true)!,
-  NODE_ENV: getEnvVar('NODE_ENV') as 'development' | 'production' | 'test' || DEFAULTS.NODE_ENV,
+  JWT_SECRET: (() => {
+    const value = getEnvVar('JWT_SECRET', true)
+
+    if (!value) throw new Error('Missing required environment variable: JWT_SECRET')
+
+    return value
+  })(),
+  NODE_ENV: (() => {
+    const value = getEnvVar('NODE_ENV') as 'development' | 'production' | 'test' || DEFAULTS.NODE_ENV
+
+    if (!value) throw new Error('Missing required environment variable: NODE_ENV')
+
+    return value
+  })(),
   PORT: Number(getEnvVar('PORT')) || DEFAULTS.PORT,
   USE_EMOJI: process.env.USE_EMOJI !== undefined ? process.env.USE_EMOJI === 'true' : DEFAULTS.USE_EMOJI
 }

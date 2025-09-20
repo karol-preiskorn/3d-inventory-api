@@ -1,14 +1,10 @@
 import { Request, Response } from 'express'
-import type { Collection, Db, UpdateFilter, Document, InsertOneResult, OptionalId } from 'mongodb'
-import { ObjectId as MongoObjectId } from 'mongodb'
-import getLogger from '../utils/logger'
-import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
+import { ObjectId as MongoObjectId, type Collection, type Db, type Document, type InsertOneResult, type OptionalId, type UpdateFilter } from 'mongodb'
 import { CreateLog } from '../services/logs'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
+import getLogger from '../utils/logger'
 
 const logger = getLogger('devices')
-
-// const proc = '[devices]';
-
 const collectionName = 'devices'
 
 export interface Device {

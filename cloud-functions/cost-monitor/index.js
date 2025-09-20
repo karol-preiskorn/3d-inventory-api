@@ -1,17 +1,15 @@
 // Cloud Function for cost monitoring and automatic scaling
 // File: cloud-functions/cost-monitor/index.js
 
-const { CloudBillingClient } = require('@google-cloud/billing')
 const { CloudRunServiceV1Client } = require('@google-cloud/run')
 
-const billing = new CloudBillingClient()
 const cloudRun = new CloudRunServiceV1Client()
 
-exports.monitorCosts = async (message, context) => {
+exports.monitorCosts = async (message) => {
   const data = JSON.parse(Buffer.from(message.data, 'base64').toString())
   console.log('Budget alert received:', data)
 
-  const { budgetDisplayName, alertThresholdExceeded, costAmount, budgetAmount } = data
+  const { costAmount, budgetAmount } = data
   const costPercentage = (costAmount / budgetAmount) * 100
 
   console.log(`Cost alert: ${costPercentage.toFixed(2)}% of budget used`)

@@ -87,8 +87,12 @@ export const DEFAULT_ROLES: Omit<Role, '_id' | 'createdAt' | 'updatedAt'>[] = [
 
 // Convert Role to RoleResponse
 export function toRoleResponse(role: Role): RoleResponse {
+  if (!role._id) {
+    throw new Error('Role _id is required to create RoleResponse')
+  }
+
   return {
-    _id: role._id!,
+    _id: role._id,
     name: role.name,
     displayName: role.displayName,
     description: role.description,

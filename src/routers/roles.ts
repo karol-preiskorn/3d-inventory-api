@@ -6,8 +6,7 @@
 
 import { Router } from 'express'
 import { RoleController } from '../controllers/RoleController'
-import { requireAuth, requireRole } from '../middlewares/auth'
-import { UserRole } from '../middlewares/auth'
+import { requireAuth, requireRole, UserRole } from '../middlewares/auth'
 //import getLogger from '../utils/logger';
 
 //const logger = getLogger('role-routes');

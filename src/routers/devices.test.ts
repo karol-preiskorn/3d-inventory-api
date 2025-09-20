@@ -1,12 +1,10 @@
 import dotenv from 'dotenv'
 import express from 'express'
 import helmet from 'helmet'
-import { Db, MongoClient } from 'mongodb'
+import { Collection, Db, Document, MongoClient } from 'mongodb'
 import request from 'supertest'
-
 import { logger } from '../utils/logger'
 import router from './devices'
-import { Collection, Document } from 'mongodb'
 
 dotenv.config()
 

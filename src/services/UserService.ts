@@ -271,7 +271,11 @@ export class UserService {
 
       if (!isValidPassword) {
         // Increment login attempts
-        await this.incrementLoginAttempts(user._id!)
+        if (user._id) {
+          await this.incrementLoginAttempts(user._id)
+        } else {
+          logger.error('User object is missing _id when incrementing login attempts')
+        }
 
         return null
       }

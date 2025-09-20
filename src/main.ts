@@ -6,8 +6,7 @@
 
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import type { CorsOptions } from 'cors'
-import cors from 'cors'
+import cors, { type CorsOptions } from 'cors'
 import { constants as cryptoConstants } from 'crypto'
 import express, { NextFunction, Request, Response } from 'express'
 import * as OpenApiValidator from 'express-openapi-validator'
@@ -16,8 +15,7 @@ import figlet from 'figlet'
 import fs from 'fs'
 import helmet from 'helmet'
 import type { Server as HttpServer } from 'http'
-import type { Server as HttpsServer } from 'https'
-import https from 'https'
+import https, { type Server as HttpsServer } from 'https'
 import kleur from 'kleur'
 import methodOverride from 'method-override'
 import morgan from 'morgan'
@@ -34,8 +32,8 @@ import createLoginRouter from './routers/login'
 import { createLogsRouter } from './routers/logs'
 import { createModelsRouter } from './routers/models'
 import { createReadmeRouter } from './routers/readme'
-import userManagementRouter from './routers/user-management'
 import rolesRouter from './routers/roles'
+import userManagementRouter from './routers/user-management'
 import { InitializationService } from './services/InitializationService'
 import config from './utils/config'
 import { getDb } from './utils/db'
@@ -45,9 +43,7 @@ const logger = getLogger('main')
 const proc = '[main]'
 const PORT = config.PORT
 const HOST = config.HOST
-
 // Cloud Run configuration - use HTTP instead of HTTPS
-
 let httpsOptions: https.ServerOptions = {
   secureOptions: cryptoConstants.SSL_OP_NO_SSLv3 | cryptoConstants.SSL_OP_NO_TLSv1 | cryptoConstants.SSL_OP_NO_TLSv1_1,
   honorCipherOrder: true,
@@ -407,5 +403,3 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export default server
-
-

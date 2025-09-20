@@ -74,8 +74,12 @@ export const USER_VALIDATION = {
 
 // Convert User to UserResponse (remove sensitive fields)
 export function toUserResponse(user: User): UserResponse {
+  if (!user._id) {
+    throw new Error('User _id is required to create UserResponse')
+  }
+
   return {
-    _id: user._id!,
+    _id: user._id,
     username: user.username,
     email: user.email,
     role: user.role,

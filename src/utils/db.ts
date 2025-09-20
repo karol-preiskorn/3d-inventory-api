@@ -4,8 +4,7 @@
  * @description This module exports a MongoDB client and a database connection.
  */
 
-import type { Db, MongoClientOptions } from 'mongodb'
-import { MongoClient } from 'mongodb'
+import { MongoClient, type Db, type MongoClientOptions } from 'mongodb'
 import config from './config'
 import log from './logger'
 
@@ -125,10 +124,16 @@ export async function getDb(): Promise<Db | null> {
         cachedMongoClient = await connectToCluster()
         cachedDb = connectToDb(cachedMongoClient)
       }
-      await cachedDb!.admin().ping()
-      lastPingTime = Date.now()
+      if (cachedDb) {
+        await cachedDb.admin().ping()
+        lastPingTime = Date.now()
 
-      return cachedDb
+        return cachedDb
+      } else {
+        logger.error('No cachedDb instance available for ping.')
+
+        return null
+      }
     } else {
       logger.warn('⚠️ No MongoDB URI provided, running without database')
 

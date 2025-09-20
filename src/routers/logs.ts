@@ -19,18 +19,20 @@ const validateComponent: RequestHandler = (req, res, next) => {
   const validComponentsString = VALID_COMPONENTS.join(', ')
 
   if (!component) {
-    logger.error('No component name provided.')
+    logger.warn('No component name provided')
     res.status(400).json({
-      message: `Component name is required. Valid components are: [${validComponentsString}].`
+      error: 'Invalid component',
+      message: `Component name is required. Valid components are: [${validComponentsString}]`
     })
 
     return
   }
 
-  if (!VALID_COMPONENTS.includes(component)) {
-    logger.warn(`Invalid component: ${component}. Valid components are: [${validComponentsString}].`)
+  if (!VALID_COMPONENTS.includes(component as typeof VALID_COMPONENTS[number])) {
+    logger.warn(`Invalid component: ${component}`)
     res.status(400).json({
-      message: `Invalid component: ${component}. Valid components are: [${validComponentsString}].`
+      error: 'Invalid component',
+      message: `Invalid component: ${component}. Valid components are: [${validComponentsString}]`
     })
 
     return
@@ -42,9 +44,12 @@ const validateComponent: RequestHandler = (req, res, next) => {
 const validateObjectIdParam: RequestHandler = (req, res, next) => {
   const { id } = req.params
 
-  if (!id) {
-    logger.error('No ID provided.')
-    res.status(400).json({ message: 'ID is required.' })
+  if (!id || typeof id !== 'string' || id.trim().length === 0) {
+    logger.warn('No ID provided or invalid ID format')
+    res.status(400).json({
+      error: 'Invalid ID',
+      message: 'ID is required and must be a non-empty string'
+    })
 
     return
   }
@@ -73,7 +78,11 @@ const validateLogInput: RequestHandler = (req, res, next) => {
     return
   }
 
-  if (!component || typeof component !== 'string' || !VALID_COMPONENTS.includes(component)) {
+  if (
+    !component ||
+    typeof component !== 'string' ||
+    !VALID_COMPONENTS.includes(component as typeof VALID_COMPONENTS[number])
+  ) {
     res.status(400).json({
       error: 'Invalid input data',
       message: `component must be one of: [${VALID_COMPONENTS.join(', ')}]`

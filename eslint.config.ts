@@ -16,7 +16,7 @@ export default [
       'docs/**',
       '*.config.js',
       'package*.json',
-      'jest.config.ts' // Add this to ignore Jest config
+      'jest.config.ts'
     ]
   },
 
@@ -40,11 +40,9 @@ export default [
     },
     languageOptions: {
       parser: tsparser,
-      parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: 'module',
-        project: './tsconfig.json'
-      },
+      ecmaVersion: 2022,
+      sourceType: 'module',
+
       globals: {
         ...globals.node
       }
@@ -77,7 +75,7 @@ export default [
       ],
 
       // Best practices
-      'no-console': 'off', // Allow console for logging
+      'no-console': 'off',
       'no-debugger': 'error',
       'no-duplicate-imports': 'error',
       'prefer-const': 'error',
@@ -93,11 +91,9 @@ export default [
     },
     languageOptions: {
       parser: tsparser,
-      parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: 'module',
-        project: './tsconfig.json'
-      },
+      ecmaVersion: 2022,
+      sourceType: 'module',
+
       globals: {
         ...globals.node,
         ...globals.jest
@@ -120,11 +116,8 @@ export default [
     },
     languageOptions: {
       parser: tsparser,
-      parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: 'module'
-        // Don't include project for config files to avoid circular dependency
-      },
+      ecmaVersion: 2022,
+      sourceType: 'module',
       globals: {
         ...globals.node
       }
