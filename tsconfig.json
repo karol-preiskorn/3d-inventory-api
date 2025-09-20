@@ -39,6 +39,7 @@
     "../3d-inventory-api/src/__mocks__"
   ],
   "include": [
-    "../3d-inventory-api/src/**/*.ts"
+    "../3d-inventory-api/src/**/*.ts",
+    "jest.config.ts" // Add this line
   ]
 }

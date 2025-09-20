@@ -5,7 +5,6 @@ dotenv.config({ path: path.resolve('./.env') })
 
 import request from 'supertest'
 import app from '../main'
-import { expect, it, describe } from '@jest/globals'
 
 describe('GitHub API', () => {
   it('should get GitHub issues', async () => {

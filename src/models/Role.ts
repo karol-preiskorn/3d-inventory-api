@@ -4,8 +4,8 @@
  * @module models
  */
 
-import { ObjectId } from 'mongodb';
-import { UserRole, Permission } from '../middlewares/auth';
+import { ObjectId } from 'mongodb'
+import { UserRole, Permission } from '../middlewares/auth'
 
 export interface Role {
   _id?: ObjectId;
@@ -83,7 +83,7 @@ export const DEFAULT_ROLES: Omit<Role, '_id' | 'createdAt' | 'updatedAt'>[] = [
     ],
     isActive: true
   }
-];
+]
 
 // Convert Role to RoleResponse
 export function toRoleResponse(role: Role): RoleResponse {
@@ -96,5 +96,5 @@ export function toRoleResponse(role: Role): RoleResponse {
     isActive: role.isActive,
     createdAt: role.createdAt,
     updatedAt: role.updatedAt
-  };
+  }
 }

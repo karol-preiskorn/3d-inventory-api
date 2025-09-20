@@ -17,13 +17,9 @@ import { describe, it, expect, beforeAll, afterAll } from '@jest/globals'
 
 describe('prepare test data', () => {
   let connection: MongoClient
-
   let db: Db
-
   let mockModel
-
   let insertedModel
-
   let insertedLog
 
   beforeAll(async () => {
@@ -38,7 +34,6 @@ describe('prepare test data', () => {
   describe('delete all data', () => {
     it('should delete all devices', async () => {
       const device = db.collection('devices')
-
       const mock = {}
 
       await device.deleteMany(mock)
@@ -48,7 +43,6 @@ describe('prepare test data', () => {
     })
     it('should delete all models', async () => {
       const model = db.collection('models')
-
       const mock = {}
 
       await model.deleteMany(mock)
@@ -58,7 +52,6 @@ describe('prepare test data', () => {
     })
     it('should delete all logs', async () => {
       const logs = db.collection('logs')
-
       const mock = {}
 
       await logs.deleteMany(mock)
@@ -94,11 +87,8 @@ describe('prepare test data', () => {
         expect(insertedModel).toEqual(mockModel)
 
         const logs = db.collection('logs')
-
         let currentDateLogs = new Date()
-
         let formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
-
         let mockLog = {
           date: formattedDate,
           objectId: insertedModel ? insertedModel._id : null,

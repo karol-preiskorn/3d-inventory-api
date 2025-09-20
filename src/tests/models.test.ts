@@ -14,7 +14,6 @@ import { expect, describe, it, beforeAll, afterAll } from '@jest/globals'
 
 describe('GET /models', () => {
   let connection: MongoClient
-
   let db: Db
 
   beforeAll(async () => {
@@ -29,7 +28,6 @@ describe('GET /models', () => {
 
   it('GET /models => array of models', async () => {
     const response = await request(app).get('/models').set('Accept', 'application/json; charset=utf-8').expect(200)
-
     const components = db.collection('components')
 
     // const componentsCursor = components.find({ attributes: true })

@@ -9,7 +9,7 @@ import { Collection, Db, ObjectId, WithoutId } from 'mongodb'
 
 import { AttributesDictionary } from '../controllers/attributesDictionary'
 import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
-import { validateObjectId } from '../middlewares';
+import { validateObjectId } from '../middlewares'
 
 export interface AttributesTypes {
   _id: ObjectId
@@ -22,16 +22,12 @@ export interface AttributesTypes {
 }
 
 const collectionName = 'attributesDictionary'
-
 const router: express.Router = express.Router()
 
 router.get('/', (async (req, res) => {
   const client = await connectToCluster()
-
   const db: Db = connectToDb(client)
-
   const collection: Collection = db.collection(collectionName)
-
   const results: object[] = await collection.find({}).limit(10).toArray()
 
   if (!results) res.status(404).send('Not found')
@@ -43,13 +39,9 @@ router.get('/', (async (req, res) => {
 
 router.get('/:id', validateObjectId, (async (req, res) => {
   const client = await connectToCluster()
-
   const db: Db = connectToDb(client)
-
   const collection: Collection = db.collection(collectionName)
-
   const query = { _id: new ObjectId(req.params.id) }
-
   const result = await collection.findOne(query)
 
   if (!result) res.status(404).json({ message: 'Not found' })
@@ -59,13 +51,9 @@ router.get('/:id', validateObjectId, (async (req, res) => {
 
 router.get('/model/:id', validateObjectId, (async (req, res) => {
   const client = await connectToCluster()
-
   const db: Db = connectToDb(client)
-
   const collection: Collection = db.collection(collectionName)
-
   const query = { modelId: new ObjectId(req.params.id) }
-
   const result = await collection.findOne(query)
 
   if (!result) res.status(404).json({ message: 'Not found' })
@@ -75,15 +63,10 @@ router.get('/model/:id', validateObjectId, (async (req, res) => {
 
 router.post('/', (async (req, res) => {
   const client = await connectToCluster()
-
   const db: Db = connectToDb(client)
-
   const collection: Collection = db.collection(collectionName)
-
   const newDocument = req.body as WithoutId<AttributesDictionary>
-
   const results = await collection.insertOne(newDocument)
-
   const insertedDocument = await collection.findOne({ _id: results.insertedId })
 
   res.status(201).json(insertedDocument)
@@ -92,13 +75,9 @@ router.post('/', (async (req, res) => {
 
 router.delete('/:id', validateObjectId, (async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) }
-
   const client = await connectToCluster()
-
   const db: Db = connectToDb(client)
-
   const collection: Collection = db.collection(collectionName)
-
   const result = await collection.deleteOne(query)
 
   res.status(200).json(result)
@@ -107,13 +86,9 @@ router.delete('/:id', validateObjectId, (async (req, res) => {
 
 router.delete('/', (async (req, res) => {
   const query = {}
-
   const client = await connectToCluster()
-
   const db: Db = connectToDb(client)
-
   const collection: Collection = db.collection(collectionName)
-
   const result = await collection.deleteMany(query)
 
   res.status(200).json(result)
@@ -122,13 +97,9 @@ router.delete('/', (async (req, res) => {
 
 router.delete('/model/:id', validateObjectId, (async (req, res) => {
   const query = { modelId: new ObjectId(req.params.id) }
-
   const client = await connectToCluster()
-
   const db: Db = connectToDb(client)
-
   const collection: Collection = db.collection(collectionName)
-
   const result = await collection.deleteMany(query)
 
   res.status(200).json(result)

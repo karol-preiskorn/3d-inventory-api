@@ -4,15 +4,15 @@
  * @module routers
  */
 
-import { Router } from 'express';
-import { RoleController } from '../controllers/RoleController';
-import { requireAuth, requireRole } from '../middlewares/auth';
-import { UserRole } from '../middlewares/auth';
+import { Router } from 'express'
+import { RoleController } from '../controllers/RoleController'
+import { requireAuth, requireRole } from '../middlewares/auth'
+import { UserRole } from '../middlewares/auth'
 //import getLogger from '../utils/logger';
 
 //const logger = getLogger('role-routes');
 
-const router = Router();
+const router = Router()
 
 /**
  * @swagger
@@ -30,7 +30,7 @@ const router = Router();
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/', requireAuth, requireRole(UserRole.ADMIN), RoleController.getAllRoles);
+router.get('/', requireAuth, requireRole(UserRole.ADMIN), RoleController.getAllRoles)
 
 /**
  * @swagger
@@ -75,7 +75,7 @@ router.get('/', requireAuth, requireRole(UserRole.ADMIN), RoleController.getAllR
  *       409:
  *         description: Conflict - Role already exists
  */
-router.post('/', requireAuth, requireRole(UserRole.ADMIN), RoleController.createRole);
+router.post('/', requireAuth, requireRole(UserRole.ADMIN), RoleController.createRole)
 
 /**
  * @swagger
@@ -105,7 +105,7 @@ router.post('/', requireAuth, requireRole(UserRole.ADMIN), RoleController.create
  *       404:
  *         description: Role not found
  */
-router.get('/:name', requireAuth, requireRole(UserRole.ADMIN), RoleController.getRoleByName);
+router.get('/:name', requireAuth, requireRole(UserRole.ADMIN), RoleController.getRoleByName)
 
 /**
  * @swagger
@@ -154,7 +154,7 @@ router.get('/:name', requireAuth, requireRole(UserRole.ADMIN), RoleController.ge
  *       404:
  *         description: Role not found
  */
-router.put('/:name', requireAuth, requireRole(UserRole.ADMIN), RoleController.updateRole);
+router.put('/:name', requireAuth, requireRole(UserRole.ADMIN), RoleController.updateRole)
 
 /**
  * @swagger
@@ -184,7 +184,7 @@ router.put('/:name', requireAuth, requireRole(UserRole.ADMIN), RoleController.up
  *       404:
  *         description: Role not found
  */
-router.delete('/:name', requireAuth, requireRole(UserRole.ADMIN), RoleController.deleteRole);
+router.delete('/:name', requireAuth, requireRole(UserRole.ADMIN), RoleController.deleteRole)
 
 /**
  * @swagger
@@ -212,7 +212,7 @@ router.delete('/:name', requireAuth, requireRole(UserRole.ADMIN), RoleController
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/:name/permissions', requireAuth, requireRole(UserRole.ADMIN), RoleController.getRolePermissions);
+router.get('/:name/permissions', requireAuth, requireRole(UserRole.ADMIN), RoleController.getRolePermissions)
 
 /**
  * @swagger
@@ -252,6 +252,6 @@ router.get('/:name/permissions', requireAuth, requireRole(UserRole.ADMIN), RoleC
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/:name/check', requireAuth, requireRole(UserRole.ADMIN), RoleController.checkPermission);
+router.get('/:name/check', requireAuth, requireRole(UserRole.ADMIN), RoleController.checkPermission)
 
-export default router;
+export default router

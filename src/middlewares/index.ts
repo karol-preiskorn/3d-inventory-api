@@ -7,7 +7,7 @@ export {
   requireAdmin,
   UserRole,
   Permission
-} from './auth';
+} from './auth'
 
 // Validation middlewares
 export {
@@ -19,14 +19,14 @@ export {
   validateObjectIdFields,
   validateAttributeInput,
   validateConnectionInput
-} from './validation';
+} from './validation'
 
 // Logging middlewares
 export {
   requestLogger,
   errorLogger,
   performanceMonitor
-} from './logging';
+} from './logging'
 
 // Security middlewares
 export {
@@ -37,4 +37,4 @@ export {
   sanitizeInput,
   requestTimeout,
   ipWhitelist
-} from './security';
+} from './security'

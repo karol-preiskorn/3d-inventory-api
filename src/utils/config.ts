@@ -3,10 +3,10 @@
  * @description Loads and validates environment variables for the application.
  */
 
-import dotenv from 'dotenv';
-import path from 'path';
+import dotenv from 'dotenv'
+import path from 'path'
 
-dotenv.config({ path: path.resolve('./.env') });
+dotenv.config({ path: path.resolve('./.env') })
 
 interface Config {
   API_YAML_FILE: string;
@@ -30,16 +30,16 @@ const DEFAULTS = {
   NODE_ENV: 'development',
   PORT: 8080,
   USE_EMOJI: true
-};
+}
 
 function getEnvVar(key: string, required = false): string | undefined {
-  const value = process.env[key];
+  const value = process.env[key]
 
   if (required && !value) {
-    throw new Error(`Missing required environment variable: ${key}`);
+    throw new Error(`Missing required environment variable: ${key}`)
   }
 
-  return value;
+  return value
 }
 
 const config: Config = {
@@ -52,6 +52,6 @@ const config: Config = {
   NODE_ENV: getEnvVar('NODE_ENV') as 'development' | 'production' | 'test' || DEFAULTS.NODE_ENV,
   PORT: Number(getEnvVar('PORT')) || DEFAULTS.PORT,
   USE_EMOJI: process.env.USE_EMOJI !== undefined ? process.env.USE_EMOJI === 'true' : DEFAULTS.USE_EMOJI
-};
+}
 
-export default config;
+export default config

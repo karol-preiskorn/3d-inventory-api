@@ -15,11 +15,8 @@ import { faker } from '@faker-js/faker'
 
 describe('create 3 models', () => {
   let connection: MongoClient
-
   let db: Db
-
   let mockModel
-
   let insertedModel
 
   beforeAll(async () => {

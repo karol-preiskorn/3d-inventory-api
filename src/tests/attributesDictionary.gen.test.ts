@@ -12,18 +12,12 @@ import { faker } from '@faker-js/faker'
 
 import { valueAttributeCategory } from '../utils/types'
 
-// Import Jest testing functions if not globally available
-import { beforeAll, afterAll, describe, it, expect } from '@jest/globals'
 
 describe('test create attributesDictionary', () => {
   let connection: MongoClient
-
   let db
-
   let mockModel
-
   let mockLog
-
   let logs: Collection<Document>
 
   beforeAll(async () => {
@@ -41,7 +35,6 @@ describe('test create attributesDictionary', () => {
     it('should insert a attributesDictionary x10', async () => {
       for (let index = 0; index < 10; index++) {
         const currentDateLogs = new Date()
-
         const formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
 
         mockModel = {

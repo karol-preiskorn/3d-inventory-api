@@ -1,0 +1,79 @@
+name: Cost Monitoring
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+env:
+  GCP_REGION: us-central1
+  SERVICE_NAME: 3d-inventory-api
+  COST_THRESHOLD: 50 # USD
+
+jobs:
+  monitor-costs:
+    name: Monitor GCP Costs
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Check current costs
+        id: cost-check
+        run: |
+          # Get billing account ID
+          BILLING_ACCOUNT=$(gcloud billing accounts list --format="value(name)" --limit=1)
+          echo "billing_account=$BILLING_ACCOUNT" >> $GITHUB_OUTPUT
+
+          # Get current month's spending (simplified - you might need to adjust this)
+          CURRENT_MONTH=$(date +%Y-%m)
+          echo "Checking costs for $CURRENT_MONTH..."
+
+          # Note: Actual cost querying requires Billing API and proper setup
+          echo "Current billing account: $BILLING_ACCOUNT"
+
+      - name: Check service resources
+        run: |
+          echo "📊 Current service configuration:"
+          gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region=${{ env.GCP_REGION }} \
+            --format="table(
+              metadata.name,
+              spec.template.spec.containers[0].resources.limits.memory,
+              spec.template.spec.containers[0].resources.limits.cpu,
+              spec.template.metadata.annotations['autoscaling.knative.dev/maxScale'],
+              spec.template.metadata.annotations['autoscaling.knative.dev/minScale']
+            )" || echo "Service not found"
+
+      - name: Run cost control script
+        run: |
+          export GCP_PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
+          export GCP_BILLING_ACCOUNT_ID="${{ steps.cost-check.outputs.billing_account }}"
+          export SLACK_WEBHOOK_URL="${{ secrets.SLACK_WEBHOOK_URL }}"
+          ./scripts/cost-control.sh
+
+      - name: Report current quotas
+        run: |
+          echo "📋 Current Cloud Run quotas:"
+          gcloud compute project-info describe \
+            --format="table(quotas.metric,quotas.limit,quotas.usage)" \
+            --filter="quotas.metric:run"
+
+      - name: Check for cost alerts
+        run: |
+          echo "🔔 Checking for active budget alerts..."
+          gcloud billing budgets list \
+            --billing-account="${{ steps.cost-check.outputs.billing_account }}" \
+            --format="table(displayName,amount.specifiedAmount.currencyCode,amount.specifiedAmount.units)" \
+            || echo "No budgets configured"

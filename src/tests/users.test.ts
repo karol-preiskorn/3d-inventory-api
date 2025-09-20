@@ -15,15 +15,11 @@ import { faker } from '@faker-js/faker'
 import { connectToCluster, connectToDb } from '../utils/db'
 import { User } from '../routers/users'
 
-import { beforeAll, afterAll, describe, it, expect } from '@jest/globals'
 
 describe('Test Mongo Atlas DB users', () => {
   let db: Db
-
   let users: Collection<Document>
-
   let client: MongoClient
-
   let mockUser
 
   beforeAll(async () => {
@@ -58,7 +54,6 @@ describe('Test Mongo Atlas DB users', () => {
 
   it('should delete all users', async () => {
     const users = db.collection('users')
-
     const mock = {}
 
     await users.deleteMany(mock)

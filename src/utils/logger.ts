@@ -3,11 +3,10 @@
  * Optimized for Cloud Run and Google Cloud Logging.
  */
 
-import pino from 'pino';
+import pino from 'pino'
 
 // Cloud Run/Production configuration
-const isProduction = process.env.NODE_ENV === 'production';
-
+const isProduction = process.env.NODE_ENV === 'production'
 const logger = pino({
   level: process.env.LOG_LEVEL || (isProduction ? 'info' : 'debug'),
 
@@ -31,13 +30,13 @@ const logger = pino({
       }
     }
   })
-});
+})
 
 /**
  * Returns a child logger with the specified module name.
  */
 export default function getLogger(moduleName: string) {
-  return logger.child({ module: moduleName });
+  return logger.child({ module: moduleName })
 }
 
-export { logger };
+export { logger }

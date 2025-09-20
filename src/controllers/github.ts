@@ -1,14 +1,13 @@
-import { RequestHandler } from 'express';
-import dotenv from 'dotenv';
-import path from 'path';
-import fetch from 'node-fetch';
-import getLogger from '../utils/logger';
+import { RequestHandler } from 'express'
+import dotenv from 'dotenv'
+import path from 'path'
+import fetch from 'node-fetch'
+import getLogger from '../utils/logger'
 
-const logger = getLogger('github');
+const logger = getLogger('github')
+const proc = '[github]'
 
-const proc = '[github]';
-
-dotenv.config({ path: path.resolve('./.env') });
+dotenv.config({ path: path.resolve('./.env') })
 
 export interface GitHubIssue {
   id: number;
@@ -27,13 +26,12 @@ export interface GitHubIssue {
   updated_at: string;
 }
 
-const githubIssuesUrl = 'https://api.github.com/repos/karol-preiskorn/3d-inventory-angular-ui/issues';
-
-const authToken = process.env.GH_AUTH_TOKEN;
+const githubIssuesUrl = 'https://api.github.com/repos/karol-preiskorn/3d-inventory-angular-ui/issues'
+const authToken = process.env.GH_AUTH_TOKEN
 
 if (!authToken) {
-  logger.error(`${proc} GH_AUTH_TOKEN environment variable is not set`);
-  throw new Error('GH_AUTH_TOKEN environment variable is not set.');
+  logger.error(`${proc} GH_AUTH_TOKEN environment variable is not set`)
+  throw new Error('GH_AUTH_TOKEN environment variable is not set.')
 }
 
 /**
@@ -41,7 +39,7 @@ if (!authToken) {
  */
 export const getGithubIssues: RequestHandler = async (_req, res) => {
   try {
-    logger.info(`${proc} Fetching issues from GitHub API`);
+    logger.info(`${proc} Fetching issues from GitHub API`)
 
     const response = await fetch(githubIssuesUrl, {
       headers: {
@@ -50,26 +48,26 @@ export const getGithubIssues: RequestHandler = async (_req, res) => {
         'X-GitHub-Api-Version': '2022-11-28',
         Authorization: `Bearer ${authToken}`
       }
-    });
+    })
 
     if (!response.ok) {
-      logger.error(`${proc} GitHub API error: ${response.status} ${response.statusText}`);
-      res.status(response.status).json({ error: 'Failed to fetch issues from GitHub' });
+      logger.error(`${proc} GitHub API error: ${response.status} ${response.statusText}`)
+      res.status(response.status).json({ error: 'Failed to fetch issues from GitHub' })
 
-      return;
+      return
     }
 
-    const data = (await response.json()) as GitHubIssue[];
+    const data = (await response.json()) as GitHubIssue[]
 
-    logger.info(`${proc} Successfully fetched ${data.length} issues from GitHub`);
-    res.status(200).json(data);
+    logger.info(`${proc} Successfully fetched ${data.length} issues from GitHub`)
+    res.status(200).json(data)
   } catch (error) {
-    logger.error(`${proc} Error fetching GitHub issues: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(`${proc} Error fetching GitHub issues: ${error instanceof Error ? error.message : String(error)}`)
     res.status(500).json({
       module: 'github',
       procedure: 'getGithubIssues',
       status: 'Internal Server Error',
       message: error instanceof Error ? error.message : String(error)
-    });
+    })
   }
-};
+}

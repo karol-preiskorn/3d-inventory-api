@@ -4,15 +4,15 @@
  * @module routers
  */
 
-import { Router } from 'express';
-import { UserController } from '../controllers/UserController';
-import { requireAuth, requireRole } from '../middlewares/auth';
-import { UserRole } from '../middlewares/auth';
+import { Router } from 'express'
+import { UserController } from '../controllers/UserController'
+import { requireAuth, requireRole } from '../middlewares/auth'
+import { UserRole } from '../middlewares/auth'
 //import getLogger from '../utils/logger';
 
 // const logger = getLogger('user-management-routes');
 
-const router = Router();
+const router = Router()
 
 /**
  * @swagger
@@ -63,7 +63,7 @@ const router = Router();
  *       409:
  *         description: Conflict - User already exists
  */
-router.post('/', requireAuth, requireRole(UserRole.ADMIN), UserController.createUser);
+router.post('/', requireAuth, requireRole(UserRole.ADMIN), UserController.createUser)
 
 /**
  * @swagger
@@ -81,7 +81,7 @@ router.post('/', requireAuth, requireRole(UserRole.ADMIN), UserController.create
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/', requireAuth, requireRole(UserRole.ADMIN), UserController.getAllUsers);
+router.get('/', requireAuth, requireRole(UserRole.ADMIN), UserController.getAllUsers)
 
 /**
  * @swagger
@@ -99,7 +99,7 @@ router.get('/', requireAuth, requireRole(UserRole.ADMIN), UserController.getAllU
  *       404:
  *         description: User profile not found
  */
-router.get('/me', requireAuth, UserController.getCurrentUser);
+router.get('/me', requireAuth, UserController.getCurrentUser)
 
 /**
  * @swagger
@@ -137,7 +137,7 @@ router.get('/me', requireAuth, UserController.getCurrentUser);
  *       403:
  *         description: Forbidden - Cannot change own role
  */
-router.put('/me', requireAuth, UserController.updateCurrentUser);
+router.put('/me', requireAuth, UserController.updateCurrentUser)
 
 /**
  * @swagger
@@ -164,7 +164,7 @@ router.put('/me', requireAuth, UserController.updateCurrentUser);
  *       404:
  *         description: User not found
  */
-router.get('/:id', requireAuth, UserController.getUserById);
+router.get('/:id', requireAuth, UserController.getUserById)
 
 /**
  * @swagger
@@ -216,7 +216,7 @@ router.get('/:id', requireAuth, UserController.getUserById);
  *       404:
  *         description: User not found
  */
-router.put('/:id', requireAuth, UserController.updateUser);
+router.put('/:id', requireAuth, UserController.updateUser)
 
 /**
  * @swagger
@@ -245,6 +245,6 @@ router.put('/:id', requireAuth, UserController.updateUser);
  *       404:
  *         description: User not found
  */
-router.delete('/:id', requireAuth, requireRole(UserRole.ADMIN), UserController.deleteUser);
+router.delete('/:id', requireAuth, requireRole(UserRole.ADMIN), UserController.deleteUser)
 
-export default router;
+export default router

@@ -4,8 +4,8 @@
  * @module models
  */
 
-import { ObjectId } from 'mongodb';
-import { UserRole, Permission } from '../middlewares/auth';
+import { ObjectId } from 'mongodb'
+import { UserRole, Permission } from '../middlewares/auth'
 
 export interface User {
   _id?: ObjectId;
@@ -70,7 +70,7 @@ export const USER_VALIDATION = {
   EMAIL_REGEX: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
   MAX_LOGIN_ATTEMPTS: 5,
   LOCK_TIME: 2 * 60 * 60 * 1000 // 2 hours in milliseconds
-};
+}
 
 // Convert User to UserResponse (remove sensitive fields)
 export function toUserResponse(user: User): UserResponse {
@@ -84,5 +84,5 @@ export function toUserResponse(user: User): UserResponse {
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
     lastLogin: user.lastLogin
-  };
+  }
 }

@@ -1,18 +1,14 @@
 import dotenv from 'dotenv'
 import express from 'express'
 import helmet from 'helmet'
-import { Collection, Db, MongoClient } from 'mongodb'
+import { Db, MongoClient } from 'mongodb'
 import request from 'supertest'
-
-import { expect, jest, it, describe, beforeAll, afterAll } from '@jest/globals'
 
 import { logger } from '../utils/logger'
 import router from './devices'
+import { Collection, Document } from 'mongodb'
 
 dotenv.config()
-
-jest.mock('../db/dbUtils')
-jest.mock('../utils/logger')
 
 const app = express()
 
@@ -22,15 +18,8 @@ app.use('/devices', router)
 
 describe('PUT /devices/:id/attributes', () => {
   let client: MongoClient
-
   let db: Db
-
-  interface Device {
-    _id: string
-    attributes: { key: string, value: string }[]
-  }
-
-  let collection: Collection<Device>
+  let collection: jest.Mocked<Collection<Document>>
 
   beforeAll(async () => {
     if (!process.env.ATLAS_URI) {
@@ -39,10 +28,10 @@ describe('PUT /devices/:id/attributes', () => {
     client = new MongoClient(process.env.ATLAS_URI)
     await client.connect()
     db = client.db(process.env.DBNAME)
-    collection = db.collection('devices')
+    collection = db.collection('devices') as jest.Mocked<Collection<Document>>
 
     // Mock the updateOne method
-    collection.updateOne = jest.fn<jest.MockedFunction<typeof collection.updateOne>>().mockResolvedValue({
+    collection.updateOne.mockResolvedValue({
       acknowledged: true,
       matchedCount: 0,
       modifiedCount: 0,
@@ -57,15 +46,15 @@ describe('PUT /devices/:id/attributes', () => {
 
   it('should return 404 if the device id is invalid', async () => {
     const response = await request(app)
-      .put('/devices/66af8c766f87d90fa87bb982/attributes')
+      .put('/devices/6830d0319a425_0cceba42be2/attributes')
       .send({ attributes: [{ key: 'color', value: 'red' }] })
 
     expect(response.status).toBe(404)
-    expect(logger.error).toHaveBeenCalledWith('PUT /devices/6_6af8c766f87d90fa87bb982/attributes - wrong device id')
+    expect(logger.error).toHaveBeenCalledWith('PUT /devices/6830d0319a425_0cceba42be2/attributes - wrong device id')
   })
 
   it('should return 404 if the device is not found', async () => {
-    ;(collection.updateOne as jest.Mock<jest.MockedFunction<typeof collection.updateOne>>).mockResolvedValueOnce({
+    collection.updateOne.mockResolvedValueOnce({
       acknowledged: true,
       matchedCount: 0,
       modifiedCount: 0,
@@ -79,7 +68,7 @@ describe('PUT /devices/:id/attributes', () => {
   })
 
   it('should update the device attributes and return 200', async () => {
-    ;(collection.updateOne as jest.Mock<jest.MockedFunction<typeof collection.updateOne>>).mockResolvedValueOnce({
+    collection.updateOne.mockResolvedValueOnce({
       acknowledged: true,
       matchedCount: 1,
       modifiedCount: 1,

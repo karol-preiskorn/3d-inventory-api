@@ -10,7 +10,6 @@ import request from 'supertest'
 import { createReadmeRouter } from '../routers/readme'
 
 // Import Jest globals for type safety and editor support
-import { describe, it, expect } from '@jest/globals';
 
 const app = express()
 
@@ -28,10 +27,10 @@ describe('GET /', () => {
   it('should return 404 if README.md file is not found', async () => {
     // This test would require mocking the fs module or the controller
     // For now, we'll test the actual behavior when file doesn't exist
-    const response = await request(app).get('/nonexistent');
+    const response = await request(app).get('/nonexistent')
 
     // Since we're hitting the root route, this will test the actual file reading
     // The test should be updated based on actual behavior expectations
-    expect(response.status).toBeDefined();
+    expect(response.status).toBeDefined()
   })
 })

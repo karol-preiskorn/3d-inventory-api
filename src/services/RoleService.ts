@@ -4,46 +4,43 @@
  * @module services
  */
 
-import { Collection, Db, MongoClient } from 'mongodb';
-import { Role, RoleResponse, toRoleResponse, DEFAULT_ROLES } from '../models/Role';
-import { UserRole, Permission } from '../middlewares/auth';
-import { connectToCluster, connectToDb, closeConnection } from '../utils/db';
-import getLogger from '../utils/logger';
+import { Collection, Db, MongoClient } from 'mongodb'
+import { Role, RoleResponse, toRoleResponse, DEFAULT_ROLES } from '../models/Role'
+import { UserRole, Permission } from '../middlewares/auth'
+import { connectToCluster, connectToDb, closeConnection } from '../utils/db'
+import getLogger from '../utils/logger'
 
-const logger = getLogger('RoleService');
-
-const COLLECTION_NAME = 'roles';
+const logger = getLogger('RoleService')
+const COLLECTION_NAME = 'roles'
 
 export class RoleService {
-  private static instance: RoleService;
+  private static instance: RoleService
 
   private constructor() { }
 
   public static getInstance(): RoleService {
     if (!RoleService.instance) {
-      RoleService.instance = new RoleService();
+      RoleService.instance = new RoleService()
     }
 
-    return RoleService.instance;
+    return RoleService.instance
   }
 
   /**
    * Create a new role
    */
   async createRole(roleData: { name: UserRole; permissions: Permission[] }): Promise<RoleResponse> {
-    let client: MongoClient | null = null;
+    let client: MongoClient | null = null
 
     try {
-      client = await connectToCluster();
-      const db: Db = connectToDb(client);
-
-      const collection: Collection<Role> = db.collection(COLLECTION_NAME);
-
+      client = await connectToCluster()
+      const db: Db = connectToDb(client)
+      const collection: Collection<Role> = db.collection(COLLECTION_NAME)
       // Check if role already exists
-      const existingRole = await collection.findOne({ name: roleData.name });
+      const existingRole = await collection.findOne({ name: roleData.name })
 
       if (existingRole) {
-        throw new Error(`Role ${roleData.name} already exists`);
+        throw new Error(`Role ${roleData.name} already exists`)
       }
 
       const newRole: Omit<Role, '_id'> = {
@@ -54,30 +51,29 @@ export class RoleService {
         isActive: true,
         createdAt: new Date(),
         updatedAt: new Date()
-      };
-
-      const result = await collection.insertOne(newRole as Role);
+      }
+      const result = await collection.insertOne(newRole as Role)
 
       if (!result.insertedId) {
-        throw new Error('Failed to create role');
+        throw new Error('Failed to create role')
       }
 
-      const createdRole = await collection.findOne({ _id: result.insertedId });
+      const createdRole = await collection.findOne({ _id: result.insertedId })
 
       if (!createdRole) {
-        throw new Error('Failed to retrieve created role');
+        throw new Error('Failed to retrieve created role')
       }
 
-      logger.info(`Role created successfully: ${roleData.name}`);
+      logger.info(`Role created successfully: ${roleData.name}`)
 
-      return toRoleResponse(createdRole);
+      return toRoleResponse(createdRole)
 
     } catch (error) {
-      logger.error(`Error creating role: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
+      logger.error(`Error creating role: ${error instanceof Error ? error.message : String(error)}`)
+      throw error
     } finally {
       if (client) {
-        await closeConnection(client);
+        await closeConnection(client)
       }
     }
   }
@@ -86,24 +82,22 @@ export class RoleService {
    * Get role by name
    */
   async getRoleByName(name: UserRole): Promise<RoleResponse | null> {
-    let client: MongoClient | null = null;
+    let client: MongoClient | null = null
 
     try {
-      client = await connectToCluster();
-      const db: Db = connectToDb(client);
+      client = await connectToCluster()
+      const db: Db = connectToDb(client)
+      const collection: Collection<Role> = db.collection(COLLECTION_NAME)
+      const role = await collection.findOne({ name })
 
-      const collection: Collection<Role> = db.collection(COLLECTION_NAME);
-
-      const role = await collection.findOne({ name });
-
-      return role ? toRoleResponse(role) : null;
+      return role ? toRoleResponse(role) : null
 
     } catch (error) {
-      logger.error(`Error getting role by name: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
+      logger.error(`Error getting role by name: ${error instanceof Error ? error.message : String(error)}`)
+      throw error
     } finally {
       if (client) {
-        await closeConnection(client);
+        await closeConnection(client)
       }
     }
   }
@@ -112,24 +106,22 @@ export class RoleService {
    * Get all roles
    */
   async getAllRoles(): Promise<RoleResponse[]> {
-    let client: MongoClient | null = null;
+    let client: MongoClient | null = null
 
     try {
-      client = await connectToCluster();
-      const db: Db = connectToDb(client);
+      client = await connectToCluster()
+      const db: Db = connectToDb(client)
+      const collection: Collection<Role> = db.collection(COLLECTION_NAME)
+      const roles = await collection.find({}).toArray()
 
-      const collection: Collection<Role> = db.collection(COLLECTION_NAME);
-
-      const roles = await collection.find({}).toArray();
-
-      return roles.map(toRoleResponse);
+      return roles.map(toRoleResponse)
 
     } catch (error) {
-      logger.error(`Error getting all roles: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
+      logger.error(`Error getting all roles: ${error instanceof Error ? error.message : String(error)}`)
+      throw error
     } finally {
       if (client) {
-        await closeConnection(client);
+        await closeConnection(client)
       }
     }
   }
@@ -138,14 +130,12 @@ export class RoleService {
    * Update role permissions
    */
   async updateRole(name: UserRole, permissions: Permission[]): Promise<RoleResponse> {
-    let client: MongoClient | null = null;
+    let client: MongoClient | null = null
 
     try {
-      client = await connectToCluster();
-      const db: Db = connectToDb(client);
-
-      const collection: Collection<Role> = db.collection(COLLECTION_NAME);
-
+      client = await connectToCluster()
+      const db: Db = connectToDb(client)
+      const collection: Collection<Role> = db.collection(COLLECTION_NAME)
       const result = await collection.findOneAndUpdate(
         { name },
         {
@@ -155,22 +145,22 @@ export class RoleService {
           }
         },
         { returnDocument: 'after' }
-      );
+      )
 
       if (!result) {
-        throw new Error('Role not found or update failed');
+        throw new Error('Role not found or update failed')
       }
 
-      logger.info(`Role updated successfully: ${name}`);
+      logger.info(`Role updated successfully: ${name}`)
 
-      return toRoleResponse(result);
+      return toRoleResponse(result)
 
     } catch (error) {
-      logger.error(`Error updating role: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
+      logger.error(`Error updating role: ${error instanceof Error ? error.message : String(error)}`)
+      throw error
     } finally {
       if (client) {
-        await closeConnection(client);
+        await closeConnection(client)
       }
     }
   }
@@ -179,35 +169,33 @@ export class RoleService {
    * Delete role
    */
   async deleteRole(name: UserRole): Promise<boolean> {
-    let client: MongoClient | null = null;
+    let client: MongoClient | null = null
 
     try {
       // Prevent deletion of default roles
       if (Object.values(UserRole).includes(name)) {
-        throw new Error('Cannot delete default system roles');
+        throw new Error('Cannot delete default system roles')
       }
 
-      client = await connectToCluster();
-      const db: Db = connectToDb(client);
-
-      const collection: Collection<Role> = db.collection(COLLECTION_NAME);
-
-      const result = await collection.deleteOne({ name });
+      client = await connectToCluster()
+      const db: Db = connectToDb(client)
+      const collection: Collection<Role> = db.collection(COLLECTION_NAME)
+      const result = await collection.deleteOne({ name })
 
       if (result.deletedCount === 1) {
-        logger.info(`Role deleted successfully: ${name}`);
+        logger.info(`Role deleted successfully: ${name}`)
 
-        return true;
+        return true
       }
 
-      return false;
+      return false
 
     } catch (error) {
-      logger.error(`Error deleting role: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
+      logger.error(`Error deleting role: ${error instanceof Error ? error.message : String(error)}`)
+      throw error
     } finally {
       if (client) {
-        await closeConnection(client);
+        await closeConnection(client)
       }
     }
   }
@@ -219,23 +207,23 @@ export class RoleService {
     try {
       for (const [roleName, roleData] of Object.entries(DEFAULT_ROLES)) {
         try {
-          const existingRole = await this.getRoleByName(roleName as UserRole);
+          const existingRole = await this.getRoleByName(roleName as UserRole)
 
           if (!existingRole) {
             await this.createRole({
               name: roleName as UserRole,
               permissions: roleData.permissions
-            });
-            logger.info(`Default role created: ${roleName}`);
+            })
+            logger.info(`Default role created: ${roleName}`)
           }
         } catch (error) {
-          logger.warn(`Failed to create default role ${roleName}: ${error instanceof Error ? error.message : String(error)}`);
+          logger.warn(`Failed to create default role ${roleName}: ${error instanceof Error ? error.message : String(error)}`)
         }
       }
 
     } catch (error) {
-      logger.error(`Error initializing default roles: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
+      logger.error(`Error initializing default roles: ${error instanceof Error ? error.message : String(error)}`)
+      throw error
     }
   }
 
@@ -244,18 +232,18 @@ export class RoleService {
    */
   async hasPermission(roleName: UserRole, permission: Permission): Promise<boolean> {
     try {
-      const role = await this.getRoleByName(roleName);
+      const role = await this.getRoleByName(roleName)
 
       if (!role) {
-        return false;
+        return false
       }
 
-      return role.permissions.includes(permission);
+      return role.permissions.includes(permission)
 
     } catch (error) {
-      logger.error(`Error checking permission: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(`Error checking permission: ${error instanceof Error ? error.message : String(error)}`)
 
-      return false;
+      return false
     }
   }
 
@@ -264,14 +252,14 @@ export class RoleService {
    */
   async getRolePermissions(roleName: UserRole): Promise<Permission[]> {
     try {
-      const role = await this.getRoleByName(roleName);
+      const role = await this.getRoleByName(roleName)
 
-      return role ? role.permissions : [];
+      return role ? role.permissions : []
 
     } catch (error) {
-      logger.error(`Error getting role permissions: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(`Error getting role permissions: ${error instanceof Error ? error.message : String(error)}`)
 
-      return [];
+      return []
     }
   }
 }
