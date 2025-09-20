@@ -55,6 +55,7 @@ describe('create 3 models', () => {
 
       insertedModel = await models.findOne({ _id: insertResult.insertedId })
       // Remove _id before comparison
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { _id, ...modelWithoutId } = insertedModel || {}
 
       expect(modelWithoutId).toEqual(mockModel)

@@ -1,10 +1,10 @@
 /// <reference types="jest" />
 import path from 'path'
 import dotenv from 'dotenv'
-dotenv.config({ path: path.resolve('./.env') })
-
 import request from 'supertest'
 import app from '../main'
+
+dotenv.config({ path: path.resolve('./.env') })
 
 describe('GitHub API', () => {
   it('should get GitHub issues', async () => {

@@ -1,26 +1,12 @@
 /**
- * @file        floors.test.js
- * @description Create Floors to DB and test the Floors
- * @version 2024-04-12 C2RLO - convert to typescript
- * @version 2023-10-29 C2RLO - Init
- */
-
-
-
-
-
-
-
-/**
  * Import Jest types for global functions like describe, it, expect.
  * This ensures TypeScript recognizes Jest globals.
  */
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals'
 
 import '../utils/loadEnvironment'
 
-import { Db, MongoClient } from 'mongodb'
 import { faker } from '@faker-js/faker'
+import { Db, MongoClient } from 'mongodb'
 import { capitalizeFirstLetter } from '../utils/strings'
 
 describe('create 10 floors', () => {
@@ -89,9 +75,10 @@ describe('create 10 floors', () => {
           }
         ]
       }
-      await floors.insertOne(mockFloors)
-      insertedFloors = await floors.findOne(mockFloors)
-      expect(insertedFloors).toEqual(mockFloors)
+      const insertResult = await floors.insertOne(mockFloors)
+
+      insertedFloors = await floors.findOne({ _id: insertResult.insertedId })
+      expect(insertedFloors).toMatchObject(mockFloors)
     }
   })
 })

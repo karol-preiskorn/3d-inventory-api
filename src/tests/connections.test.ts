@@ -4,14 +4,10 @@
  * @version 2024-10-29 C2RLO - Init
  */
 
-import '../utils/loadEnvironment'
-
-
 import { faker } from '@faker-js/faker'
-
-// If using Jest, ensure the environment is set up for Jest. Optionally, you can import the types for better IDE support:
-import { describe, it, beforeAll, afterAll, expect } from '@jest/globals'
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
+import '../utils/loadEnvironment'
 
 describe('create 10 connections', () => {
   let connection: MongoClient

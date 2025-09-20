@@ -5,9 +5,9 @@
  */
 
 import { Collection, Db, MongoClient, ObjectId } from 'mongodb'
-import { UserRole, Permission } from '../middlewares/auth'
-import { Role, RoleResponse, toRoleResponse, DEFAULT_ROLES } from '../models/Role'
-import { connectToCluster, connectToDb, closeConnection } from '../utils/db'
+import { Permission, UserRole } from '../middlewares/auth'
+import { DEFAULT_ROLES, Role, RoleResponse, toRoleResponse } from '../models/Role'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('RoleService')
@@ -212,7 +212,7 @@ export class RoleService {
       const db: Db = connectToDb(client)
       const collection: Collection<Role> = db.collection(COLLECTION_NAME)
       // Build update object
-      const updateFields: any = { updatedAt: new Date() }
+      const updateFields: Record<string, unknown> = { updatedAt: new Date() }
 
       if (updateData.permissions) {
         updateFields.permissions = [...new Set(updateData.permissions)] // Remove duplicates
@@ -344,8 +344,6 @@ export class RoleService {
    * Initialize default roles (for first-time setup)
    */
   async initializeDefaultRoles(): Promise<void> {
-    const client: MongoClient | null = null
-
     try {
       logger.info('Initializing default roles...')
 
@@ -474,7 +472,7 @@ export class RoleService {
       const db: Db = connectToDb(client)
       const collection: Collection<Role> = db.collection(COLLECTION_NAME)
       const searchRegex = new RegExp(searchTerm.trim(), 'i')
-      const query: any = {
+      const query: Record<string, unknown> = {
         $or: [
           { name: searchRegex },
           { displayName: searchRegex },

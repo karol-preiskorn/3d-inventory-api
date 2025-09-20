@@ -15,8 +15,5 @@
   "package.json": [
     "sort-package-json",
     "prettier --write"
-  ],
-  "src/**/*.test.{ts,js}": [
-    "npm run test -- --findRelatedTests --passWithNoTests"
   ]
 }

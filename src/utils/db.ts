@@ -4,9 +4,11 @@
  * @description This module exports a MongoDB client and a database connection.
  */
 
+import type { NextFunction, Request, Response } from 'express'
 import { MongoClient, type Db, type MongoClientOptions } from 'mongodb'
 import config from './config'
 import log from './logger'
+
 
 const logger = log('db')
 // Configurable emoji usage for logs and errors
@@ -147,9 +149,6 @@ export async function getDb(): Promise<Db | null> {
     return null
   }
 }
-
-
-import type { Request, Response, NextFunction } from 'express'
 
 // db middleware for attaching db instance to request
 export const dbConnection = async (req: Request, res: Response, next: NextFunction) => {

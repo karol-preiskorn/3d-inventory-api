@@ -5,15 +5,10 @@
  * @version     2023-12-26 C2RLO - Initial
  */
 
-import '../utils/loadEnvironment'
-
-
 import { faker } from '@faker-js/faker'
-
-// Ensure Jest globals are available for TypeScript
-// (If using tsconfig, make sure "types": ["jest"] is set in "compilerOptions")
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals'
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
+import '../utils/loadEnvironment'
 
 describe('prepare test data', () => {
   let connection: MongoClient
