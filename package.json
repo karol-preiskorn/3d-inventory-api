@@ -43,7 +43,7 @@
     "kill-port": "npx cross-port-killer 8080",
     "lint": "eslint --fix src",
     "openapi:format": "npx openapi-format api/openapi.yaml --output api/openapi-formatted.yaml",
-    "prepare:husky": "husky install",
+    "prepare:husky": "husky",
     "prettier": "prettier --check .",
     "prestart": "fuser -n tcp -k 8080 || true && npm run version:patch",
     "start": "CHOKIDAR_USEPOLLING=true tsx watch src/main.ts",
@@ -56,26 +56,6 @@
     "version:patch": "npm version patch --no-git-tag-version",
     "version:yaml": "node ./yaml-num.js",
     "api:login": "curl -k -X POST https://0.0.0.0:8080/login -H \"Content-Type: application/json\" -d '{\"username\":\"carlo\"}'"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": [
-        "npm run lint",
-        "npm run prettier",
-        "npm run check:type"
-      ]
-    },
-    "lint-staged": {
-      "src/**.{ts,js}": [
-        "prettier --write --ignore-unknown src/**.ts",
-        "eslint --fix src",
-        "git add -A ."
-      ],
-      "src/**/*.html": [
-        "prettier --write --ignore-unknown src/**/*.ts",
-        "git add -A ."
-      ]
-    }
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
