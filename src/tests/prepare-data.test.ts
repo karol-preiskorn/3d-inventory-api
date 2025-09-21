@@ -59,14 +59,6 @@ describe('prepare test data', () => {
     }
   })
 
-  // Helper function to check if database is connected
-  const skipIfNoDb = () => {
-    if (!connection) {
-      return test.skip
-    }
-
-    return test
-  }
 
   describe('delete all data', () => {
     it('should delete all devices', async () => {
