@@ -5,22 +5,21 @@
  * @version 2024-01-14 C2RLO - Initial
  */
 
-import '../utils/config'
-
-import { beforeAll, afterAll, describe, it, expect } from '@jest/globals'
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
+import config from '../utils/config'
 
 describe('ConnectToDatabase Mongo Atlas', () => {
   let connection: MongoClient
   let db: Db
 
   beforeAll(async () => {
-    if (!process.env.ATLAS_URI) {
+    if (!config.ATLAS_URI) {
       throw new Error('ATLAS_URI environment variable is not defined.')
     }
     try {
-      connection = await MongoClient.connect(process.env.ATLAS_URI, {})
-      db = connection.db(process.env.DBNAME)
+      connection = await MongoClient.connect(config.ATLAS_URI, {})
+      db = connection.db(config.DBNAME)
     } catch (error) {
       console.error('Error connecting to the database:', error)
     }

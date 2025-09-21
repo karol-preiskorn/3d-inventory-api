@@ -4,9 +4,8 @@
  * @version 2024-01-30 C2RLO - Initial
  */
 
-import '../utils/config'
-
 import { Collection, Document, MongoClient, ObjectId } from 'mongodb'
+import config from '../utils/config'
 import { valueAttributeCategory } from '../utils/types'
 import { testGenerators } from './testGenerators'
 
@@ -18,8 +17,8 @@ describe('test create attributesDictionary', () => {
   let logs: Collection<Document>
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI ?? '', {})
-    db = connection.db(process.env.DBNAME)
+    connection = await MongoClient.connect(config.ATLAS_URI ?? '', {})
+    db = connection.db(config.DBNAME)
     logs = db.collection('logs')
   })
 

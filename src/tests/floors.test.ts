@@ -4,7 +4,7 @@
  */
 
 import { Db, MongoClient } from 'mongodb'
-import '../utils/config'
+import config from '../utils/config'
 import { testGenerators } from './testGenerators'
 
 describe('create 10 floors', () => {
@@ -13,11 +13,11 @@ describe('create 10 floors', () => {
   let insertedFloors
 
   beforeAll(async () => {
-    if (!process.env.ATLAS_URI) {
+    if (!config.ATLAS_URI) {
       throw new Error('ATLAS_URI environment variable is not defined.')
     }
-    conn = await MongoClient.connect(process.env.ATLAS_URI, {})
-    db = conn.db(process.env.DBNAME)
+    conn = await MongoClient.connect(config.ATLAS_URI, {})
+    db = conn.db(config.DBNAME)
   })
 
   afterAll(async () => {

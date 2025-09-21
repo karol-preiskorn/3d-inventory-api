@@ -4,20 +4,19 @@
  * @version 2024-02-01 C2RLO - Add test for post device
  */
 
-import '../utils/config'
-
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
 import request, { Response } from 'supertest'
 import app from '../main'
+import config from '../utils/config'
 
 describe('GET /models', () => {
   let connection: MongoClient
   let db: Db
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI ?? '', {})
-    db = connection.db(process.env.DBNAME)
+    connection = await MongoClient.connect(config.ATLAS_URI ?? '', {})
+    db = connection.db(config.DBNAME)
   })
 
   afterAll(async () => {

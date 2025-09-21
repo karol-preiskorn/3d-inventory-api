@@ -8,7 +8,7 @@
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
-import '../utils/config'
+import config from '../utils/config'
 import { testGenerators } from './testGenerators'
 
 describe('create 3 models', () => {
@@ -18,8 +18,8 @@ describe('create 3 models', () => {
   let insertedModel
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.ATLAS_URI ?? '', {})
-    db = connection.db(process.env.DBNAME)
+    connection = await MongoClient.connect(config.ATLAS_URI)
+    db = connection.db(config.DBNAME)
   })
 
   afterAll(async () => {

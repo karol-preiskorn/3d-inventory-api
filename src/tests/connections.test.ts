@@ -6,7 +6,7 @@
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { Db, MongoClient } from 'mongodb'
-import '../utils/config'
+import config from '../utils/config'
 import { testGenerators } from './testGenerators'
 
 describe('create 10 connections', () => {
@@ -16,10 +16,10 @@ describe('create 10 connections', () => {
   let insertedConnection
 
   beforeAll(async () => {
-    const atlasUri = process.env.ATLAS_URI ?? ''
+    const atlasUri = config.ATLAS_URI ?? ''
 
     connection = await MongoClient.connect(atlasUri, {})
-    db = connection.db(process.env.DBNAME)
+    db = connection.db(config.DBNAME)
   })
 
   afterAll(async () => {

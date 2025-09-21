@@ -1,12 +1,10 @@
-import dotenv from 'dotenv'
 import express from 'express'
 import helmet from 'helmet'
 import { Collection, Db, Document, MongoClient } from 'mongodb'
 import request from 'supertest'
+import config from '../utils/config'
 import { logger } from '../utils/logger'
 import router from './devices'
-
-dotenv.config()
 
 const app = express()
 
@@ -20,12 +18,12 @@ describe('PUT /devices/:id/attributes', () => {
   let collection: jest.Mocked<Collection<Document>>
 
   beforeAll(async () => {
-    if (!process.env.ATLAS_URI) {
+    if (!config.ATLAS_URI) {
       throw new Error('ATLAS_URI is not defined in the environment variables')
     }
-    client = new MongoClient(process.env.ATLAS_URI)
+    client = new MongoClient(config.ATLAS_URI)
     await client.connect()
-    db = client.db(process.env.DBNAME)
+    db = client.db(config.DBNAME)
     collection = db.collection('devices') as jest.Mocked<Collection<Document>>
 
     // Mock the updateOne method

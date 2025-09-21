@@ -51,7 +51,11 @@ const config: Config = {
 
     return value
   })(),
-  COOKIE_EXPIRESIN: Number(getEnvVar('COOKIE_EXPIRESIN')) || DEFAULTS.COOKIE_EXPIRESIN,
+  COOKIE_EXPIRESIN: (() => {
+    const value = Number(getEnvVar('COOKIE_EXPIRESIN'))
+
+    return isNaN(value) ? DEFAULTS.COOKIE_EXPIRESIN : value
+  })(),
   DBNAME: getEnvVar('DBNAME') || DEFAULTS.DBNAME,
   HOST: getEnvVar('HOST') || DEFAULTS.HOST,
   JWT_SECRET: (() => {
@@ -61,14 +65,18 @@ const config: Config = {
 
     return value
   })(),
-  NODE_ENV: (() => {
-    const value = getEnvVar('NODE_ENV') as 'development' | 'production' | 'test' || DEFAULTS.NODE_ENV
+  NODE_ENV: ((): 'development' | 'production' | 'test' => {
+    const value = getEnvVar('NODE_ENV') as 'development' | 'production' | 'test' | undefined
 
     if (!value) throw new Error('Missing required environment variable: NODE_ENV')
 
     return value
   })(),
-  PORT: Number(getEnvVar('PORT')) || DEFAULTS.PORT,
+  PORT: (() => {
+    const value = Number(getEnvVar('PORT'))
+
+    return isNaN(value) ? DEFAULTS.PORT : value
+  })(),
   USE_EMOJI: process.env.USE_EMOJI !== undefined ? process.env.USE_EMOJI === 'true' : DEFAULTS.USE_EMOJI
 }
 

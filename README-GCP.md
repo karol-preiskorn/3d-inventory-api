@@ -82,7 +82,8 @@ gcloud app browse
 
 ```bash
 # Build and push to Container Registry
-# Replace 'your-project-id' with your actual Google Cloud project ID in the commands below.
+# Replace 'your-project-id' with your actual Google Cloud project ID in the
+# commands below.
 docker build -t gcr.io/your-project-id/3d-inventory-api .
 docker push gcr.io/your-project-id/3d-inventory-api
 
@@ -155,7 +156,9 @@ gcloud run services update 3d-inventory-api \
 # Using npm script
 npm run gcp:logs
 
-# Or directly with gcloud
+gcloud logging read \
+  "resource.type=cloud_run_revision AND resource.labels.service_name=3d-inventory-api" \
+  --limit=50
 gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=3d-inventory-api" --limit=50
 ```
 
@@ -219,7 +222,9 @@ gcloud run services add-iam-policy-binding 3d-inventory-api \
 
 ### HTTPS
 
-Cloud Run provides HTTPS by default with automatic SSL certificates.
+### Secret Management
+
+Use Google Secret Manager for sensitive data:
 
 ### Environment Variables
 
@@ -236,7 +241,8 @@ gcloud run services update 3d-inventory-api \
 
 > **Note:** Using `--set-secrets` makes the secret available as an environment variable.
 > Ensure your application reads the secret from the environment variable (e.g., `process.env.ATLAS_URI`).
-> See [Using secrets with Cloud Run](https://cloud.google.com/run/docs/configuring/secrets) for more details.
+> See [Using secrets with Cloud Run](https://cloud.google.com/run/docs/configuring/secrets)
+> for more details.
 
 ## Troubleshooting
 
@@ -253,10 +259,11 @@ gcloud run services update 3d-inventory-api \
    });
    ```
 
-3. **Database connection**: Verify MongoDB Atlas network access and credentials
-4. **Permission errors**: Ensure proper IAM roles and authentication
+## Local Testing
 
-# Test locally with environment
+Ensure your application is configured to read the NODE_ENV and PORT environment variables
+
+NODE_ENV=production PORT=8080 npm start
 
 # Ensure your application is configured to read the NODE_ENV and PORT environment variables.
 
