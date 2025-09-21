@@ -1,7 +1,12 @@
 /**
- * @description This file is used to test the README.md file rendering
- * @module tests
- * @version 2024-01-27 C2RLO - Initial
+ * @file readme.test.ts
+ * @description README documentation rendering and serving test suite.
+ * Tests the README router functionality including Markdown file parsing,
+ * HTML rendering, content delivery, and error handling for missing files.
+ * Validates proper HTTP response formatting, content-type headers, and
+ * file system integration for documentation serving. Ensures documentation
+ * accessibility and proper error responses for documentation endpoints.
+ * @version 2024-09-21 Enhanced with comprehensive documentation serving tests
  */
 import express from 'express'
 import helmet from 'helmet'

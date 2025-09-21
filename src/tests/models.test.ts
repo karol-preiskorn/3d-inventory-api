@@ -1,7 +1,12 @@
 /**
- * @file /tests/models.test.js
- * @description test models api operatio
- * @version 2024-02-01 C2RLO - Add test for post device
+ * @file models.test.ts
+ * @description Models REST API endpoint integration test suite.
+ * Comprehensive testing of model management API operations including model
+ * retrieval, creation, updates, and component relationships. Validates API
+ * response formats, model schema compliance, attribute type associations,
+ * and database integration through Express.js endpoints. Tests model-device
+ * relationships, texture mapping, and dimensional data handling.
+ * @version 2024-09-21 Enhanced with comprehensive model API testing
  */
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'

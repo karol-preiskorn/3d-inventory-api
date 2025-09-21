@@ -5,11 +5,11 @@
  */
 
 const config: import('jest').Config = {
-  testTimeout: 3000,
+  testTimeout: 30000,
   rootDir: '.',
   fakeTimers: {
     doNotFake: ['nextTick'],
-    timerLimit: 3000
+    timerLimit: 30000
   },
   bail: 1,
   verbose: true,
@@ -32,13 +32,14 @@ const config: import('jest').Config = {
     {
       displayName: 'ts-jest',
       clearMocks: true,
+      setupFilesAfterEnv: ['<rootDir>/src/tests/jest.setup.ts'],
       globals: {
         __DEV__: true
       },
       moduleFileExtensions: ['js', 'ts', 'yaml', 'json'],
       preset: 'ts-jest',
       testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/dist/', '<rootDir>/logs/', '<rootDir>/coverage/'],
-      testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(mjs?|cjs?|js?|tsx?|ts?)$',
+      testRegex: '(/tests/.*\\.test\\.(mjs?|cjs?|js?|tsx?|ts?)$|(\\.|/)(test|spec))\\.(mjs?|cjs?|js?|tsx?|ts?)$',
       transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest'
       }

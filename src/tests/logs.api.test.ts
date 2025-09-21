@@ -1,3 +1,13 @@
+/**
+ * @file logs.api.test.ts
+ * @description Logging API and audit trail functionality test suite.
+ * Tests the logs REST API endpoints for system activity tracking, audit trails,
+ * and operational event logging. Validates log entry creation, retrieval,
+ * filtering, and formatting. Ensures proper logging of CRUD operations,
+ * user activities, and system events with appropriate timestamps and metadata.
+ * Tests log API response formats and query parameter handling.
+ * @version 2024-09-21 Enhanced with comprehensive logging API validation
+ */
 import { beforeAll, describe, expect, it } from '@jest/globals'
 import request from 'supertest'
 // Make sure the correct path to the Express app is used.

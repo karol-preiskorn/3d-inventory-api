@@ -1,6 +1,12 @@
 /**
- * Import Jest types for global functions like describe, it, expect.
- * This ensures TypeScript recognizes Jest globals.
+ * @file floors.test.ts
+ * @description Floor management and spatial hierarchy test suite.
+ * Tests the creation, insertion, and management of floor entities within
+ * the 3D inventory system's spatial hierarchy. Validates floor data structure,
+ * spatial relationships, naming conventions, and database operations.
+ * Ensures proper floor-level organization for datacenter rack placement
+ * and spatial navigation functionality.
+ * @version 2024-09-21 Enhanced with comprehensive floor management testing
  */
 
 import { Db, MongoClient } from 'mongodb'

@@ -1,7 +1,12 @@
 /**
- * @file /tests/attributes.gen.test copy.js
- * @description test create attributesDictionary documents
- * @version 2024-01-30 C2RLO - Initial
+ * @file attributesDictionary.gen.test.ts
+ * @description Attributes dictionary generation and management test suite.
+ * Tests the creation, validation, and management of attribute dictionaries
+ * for device and model metadata. Validates attribute type definitions,
+ * category mappings, value constraints, and dynamic attribute generation.
+ * Ensures proper attribute schema compliance, type safety, and database
+ * integration for flexible device property management.
+ * @version 2024-09-21 Enhanced with comprehensive attribute dictionary testing
  */
 
 import { Collection, Document, MongoClient, ObjectId } from 'mongodb'

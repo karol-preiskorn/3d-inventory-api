@@ -1,3 +1,13 @@
+/**
+ * @file devices.test.ts
+ * @description Device router API endpoint integration test suite.
+ * Comprehensive testing of device management REST API endpoints including
+ * CRUD operations, attribute updates, spatial positioning, and device-model
+ * relationships. Validates HTTP request handling, response formats, error
+ * conditions, and database integration through the Express.js router layer.
+ * Tests authentication, authorization, and data validation for device operations.
+ * @version 2024-09-21 Enhanced with comprehensive device API testing
+ */
 import express from 'express'
 import helmet from 'helmet'
 import { Collection, Db, Document, MongoClient } from 'mongodb'

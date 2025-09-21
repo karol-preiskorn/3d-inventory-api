@@ -1,7 +1,12 @@
 /**
- * @file        connections.test.js
- * @description Create connection to DB and test the connection
- * @version 2024-10-29 C2RLO - Init
+ * @file connections.test.ts
+ * @description Database connectivity and network connection management test suite.
+ * Tests MongoDB Atlas connection establishment, connection pooling, and
+ * database accessibility validation. Validates connection string handling,
+ * authentication mechanisms, timeout configurations, and connection lifecycle
+ * management. Ensures robust database connectivity for production environments
+ * and proper error handling for network failures.
+ * @version 2024-09-21 Enhanced with comprehensive connection testing and error handling
  */
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'

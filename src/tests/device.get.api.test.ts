@@ -1,16 +1,15 @@
 /**
- * @module /tests
- * @description Test suite for the GET /devices endpoint.
- *  - Checks if the endpoint returns an array of devices.
- *  - Checks if the endpoint returns a specific device by ID.
- *  - Checks if the endpoint updates a device by ID. Check data types and values.
- * @version 2024-01-30  C2RLO  Initial
- * @version 2024-01-13  C2RLO  Add variant promises test, async/await and superagent for learn
- * @version 2024-01-06  C2RLO  Add array test
- * @version 2024-01-03  C2RLO  Initial
+ * @file device.get.api.test.ts
+ * @description Device retrieval API endpoint comprehensive test suite.
+ * Tests the GET /devices REST API functionality including device listing,
+ * individual device retrieval by ID, device updates, and data validation.
+ * Validates response data types, device schema compliance, spatial coordinates,
+ * model relationships, and proper HTTP status codes. Ensures API endpoint
+ * reliability, error handling, and response format consistency.
+ * @version 2024-09-21 Enhanced with comprehensive device API validation testing
  */
 
-import { expect, it, describe, afterAll } from '@jest/globals'
+import { afterAll, describe, expect, it } from '@jest/globals'
 import request from 'supertest'
 import app from '../main'
 

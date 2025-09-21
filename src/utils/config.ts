@@ -15,9 +15,9 @@ interface Config {
   DBNAME: string;
   HOST: string;
   JWT_SECRET: string;
-  NODE_ENV?: 'development' | 'production' | 'test';
+  NODE_ENV: string;
   PORT: number;
-  USE_EMOJI?: boolean;
+  USE_EMOJI: boolean;
 }
 
 const DEFAULTS = {

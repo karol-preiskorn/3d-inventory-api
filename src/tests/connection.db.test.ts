@@ -1,8 +1,12 @@
 /**
- * @file: /tests/conn.test.js
- * @module: /tests
- * @description: This file contains the global setup for Jest testing.
- * @version 2024-01-14 C2RLO - Initial
+ * @file connection.db.test.ts
+ * @description Database connection establishment and validation test suite.
+ * Tests MongoDB Atlas connection setup, database authentication, and
+ * connection lifecycle management. Validates connection string parsing,
+ * SSL/TLS configuration, connection pooling, and database accessibility.
+ * Ensures robust database connectivity patterns and proper error handling
+ * for production deployment scenarios and network resilience.
+ * @version 2024-09-21 Enhanced with comprehensive database connection testing
  */
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
