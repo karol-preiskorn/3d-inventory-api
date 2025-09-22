@@ -268,45 +268,90 @@ export const validateObjectIdFields = (fields: string[]): RequestHandler => {
  * Middleware to validate connection input
  */
 export const validateConnectionInput: RequestHandler = (req, res, next) => {
-  const { name, deviceIdFrom, deviceIdTo } = req.body
+  const { 
+    name, 
+    label,
+    sourceDeviceId, 
+    targetDeviceId, 
+    deviceIdFrom, 
+    deviceIdTo,
+    protocol 
+  } = req.body
 
-  if (!name || typeof name !== 'string' || name.trim().length === 0) {
+  // Support both new and legacy field names
+  const connectionName = name || label
+  const fromId = sourceDeviceId || deviceIdFrom
+  const toId = targetDeviceId || deviceIdTo
+
+  // Name/label is optional but if provided must be valid
+  if (connectionName !== undefined && (typeof connectionName !== 'string' || connectionName.trim().length === 0)) {
     const errorResponse: ErrorResponse = {
       error: 'Invalid Input',
-      message: 'name must be a non-empty string',
+      message: 'name/label must be a non-empty string if provided',
       field: 'name'
     }
 
-    logger.error(`${req.method} ${req.originalUrl} - invalid name field`)
+    logger.error(`${req.method} ${req.originalUrl} - invalid name/label field`)
     res.status(400).json(errorResponse)
 
     return
   }
 
-  if (!deviceIdFrom || !ObjectId.isValid(deviceIdFrom)) {
+  // Check if we have at least one pair of device IDs
+  if (!fromId || !toId) {
     const errorResponse: ErrorResponse = {
       error: 'Invalid Input',
-      message: 'deviceIdFrom must be a valid ObjectId string',
-      field: 'deviceIdFrom'
+      message: 'Source device and target device are required (sourceDeviceId/deviceIdFrom and targetDeviceId/deviceIdTo)',
+      field: 'deviceIds'
     }
 
-    logger.error(`${req.method} ${req.originalUrl} - invalid deviceIdFrom field`)
+    logger.error(`${req.method} ${req.originalUrl} - missing device ID fields`)
     res.status(400).json(errorResponse)
 
     return
   }
 
-  if (!deviceIdTo || !ObjectId.isValid(deviceIdTo)) {
+  if (!ObjectId.isValid(fromId)) {
     const errorResponse: ErrorResponse = {
       error: 'Invalid Input',
-      message: 'deviceIdTo must be a valid ObjectId string',
-      field: 'deviceIdTo'
+      message: 'Source device ID must be a valid ObjectId string',
+      field: 'sourceDeviceId'
     }
 
-    logger.error(`${req.method} ${req.originalUrl} - invalid deviceIdTo field`)
+    logger.error(`${req.method} ${req.originalUrl} - invalid source device ID field`)
     res.status(400).json(errorResponse)
 
     return
+  }
+
+  if (!ObjectId.isValid(toId)) {
+    const errorResponse: ErrorResponse = {
+      error: 'Invalid Input',
+      message: 'Target device ID must be a valid ObjectId string',
+      field: 'targetDeviceId'
+    }
+
+    logger.error(`${req.method} ${req.originalUrl} - invalid target device ID field`)
+    res.status(400).json(errorResponse)
+
+    return
+  }
+
+  // Validate protocol if provided
+  if (protocol !== undefined) {
+    const validProtocols = ['ethernet', 'fiber', 'tcp', 'udp', 'http', 'https', 'serial', 'wireless']
+    if (typeof protocol !== 'string' || !validProtocols.includes(protocol)) {
+      const errorResponse: ErrorResponse = {
+        error: 'Invalid Input',
+        message: 'Protocol must be one of: ' + validProtocols.join(', '),
+        field: 'protocol'
+      }
+
+      logger.error(`${req.method} ${req.originalUrl} - invalid protocol field`)
+      res.status(400).json(errorResponse)
+
+      return
+    }
   }
 
   next()

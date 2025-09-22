@@ -30,7 +30,7 @@ export interface GitHubIssue {
 const githubIssuesUrl = 'https://api.github.com/repos/karol-preiskorn/3d-inventory-angular-ui/issues'
 const authToken = process.env.GH_AUTH_TOKEN
 
-if (!authToken) {
+if (!authToken && process.env.NODE_ENV !== 'test') {
   logger.error(`${proc} GH_AUTH_TOKEN environment variable is not set`)
   throw new Error('GH_AUTH_TOKEN environment variable is not set.')
 }

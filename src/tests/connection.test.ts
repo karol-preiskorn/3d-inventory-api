@@ -384,7 +384,7 @@ describe('Connection API - Comprehensive Test Suite', () => {
         .expect(200)
 
       expect(response.body.data.length).toBeGreaterThan(0)
-      response.body.data.forEach(conn => {
+      response.body.data.forEach((conn: any) => {
         expect(conn.sourceDeviceId).toBe(testDeviceIds[0])
       })
     })
@@ -397,7 +397,7 @@ describe('Connection API - Comprehensive Test Suite', () => {
         .expect(200)
 
       expect(Array.isArray(response.body.data)).toBe(true)
-      response.body.data.forEach(conn => {
+      response.body.data.forEach((conn: any) => {
         expect(conn.targetDeviceId).toBe(testDeviceIds[1])
       })
     })
@@ -408,7 +408,7 @@ describe('Connection API - Comprehensive Test Suite', () => {
         .expect(200)
 
       expect(Array.isArray(response.body.data)).toBe(true)
-      response.body.data.forEach(conn => {
+      response.body.data.forEach((conn: any) => {
         expect(conn.protocol).toBe('ethernet')
       })
     })
@@ -419,7 +419,7 @@ describe('Connection API - Comprehensive Test Suite', () => {
         .expect(200)
 
       expect(Array.isArray(response.body.data)).toBe(true)
-      response.body.data.forEach(conn => {
+      response.body.data.forEach((conn: any) => {
         expect(conn.status).toBe('active')
       })
     })
@@ -865,7 +865,7 @@ describe('Connection API - Comprehensive Test Suite', () => {
         .expect(200)
 
       expect(Array.isArray(response.body.data)).toBe(true)
-      response.body.data.forEach(conn => {
+      response.body.data.forEach((conn: any) => {
         expect(
           conn.sourceDeviceId === testDeviceIds[0] ||
           conn.targetDeviceId === testDeviceIds[0]

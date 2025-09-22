@@ -322,84 +322,96 @@ async function initializeDatabase() {
   }
 }
 
-let server: HttpServer | HttpsServer
+let server: HttpServer | HttpsServer | undefined
 
-if (process.env.NODE_ENV === 'production') {
-  server = app.listen(Number(PORT), '0.0.0.0', async () => {
-    logger.info(
-      figlet.textSync('3d-inventory-api GCP', {
-        font: 'Mini',
-        horizontalLayout: 'default',
-        verticalLayout: 'default',
-        width: 160,
-        whitespaceBreak: true
-      })
-    )
-    logger.info(`Server on GCP https://${HOST}:${PORT}`)
-    logger.info(`Server on GCP https://${HOST}:${PORT}/doc (Swagger UI)`)
-    logger.info(`Server on GCP https://${HOST}:${PORT}/health (Status)`)
+// Only start the server if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  if (process.env.NODE_ENV === 'production') {
+    server = app.listen(Number(PORT), '0.0.0.0', async () => {
+      logger.info(
+        figlet.textSync('3d-inventory-api GCP', {
+          font: 'Mini',
+          horizontalLayout: 'default',
+          verticalLayout: 'default',
+          width: 160,
+          whitespaceBreak: true
+        })
+      )
+      logger.info(`Server on GCP https://${HOST}:${PORT}`)
+      logger.info(`Server on GCP https://${HOST}:${PORT}/doc (Swagger UI)`)
+      logger.info(`Server on GCP https://${HOST}:${PORT}/health (Status)`)
 
-    // Initialize database after server starts
-    await initializeDatabase()
-  })
-
-  // Update signal handlers for HTTP server
-  process.on('SIGINT', () => {
-    logger.info('SIGINT signal received: closing HTTP server.')
-    server.close(() => {
-      logger.debug('HTTP server closed')
-      process.exit(0)
+      // Initialize database after server starts
+      await initializeDatabase()
     })
-  })
 
-  process.on('SIGTERM', () => {
-    logger.info('SIGTERM signal received: closing HTTP server.')
-    server.close(() => {
-      logger.debug('HTTP server closed')
-      process.exit(0)
+    // Update signal handlers for HTTP server
+    process.on('SIGINT', () => {
+      logger.info('SIGINT signal received: closing HTTP server.')
+      if (server) {
+        server.close(() => {
+          logger.debug('HTTP server closed')
+          process.exit(0)
+        })
+      }
     })
-  })
-} else {
-  // Development server with HTTPS
-  server = https.createServer(httpsOptions, app).listen(Number(PORT), HOST, async () => {
-    logger.info(
-      '\n\n' + figlet.textSync('3d-inventory-api', {
-        font: 'Nancyj-Fancy',
-        horizontalLayout: 'default',
-        verticalLayout: 'default',
-        width: process.stdout.columns || 180,
-        whitespaceBreak: true
-      })
-    )
-    logger.info(`✅ Development ver. ${kleur.green(process.env.npm_package_version ?? 'unknown')} `)
-    logger.info(`✅ Server on ${kleur.green(`https://${HOST}:${PORT}`)}`)
-    logger.info(`✅ ${kleur.green(`https://${HOST}:${PORT}/doc  - Swagger UI`)}`)
-    logger.info(`✅ ${kleur.green(`https://${HOST}:${PORT}/health  - Status`)}`)
 
-    // Initialize database after server starts
-    await initializeDatabase()
-  })
-
-  server.on('error', (err: Error) => {
-    logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`)
-  })
-
-  // Signal handlers for HTTPS server
-  process.on('SIGINT', () => {
-    logger.info('SIGINT signal received: closing HTTPS server.')
-    server.close(() => {
-      logger.debug('HTTPS server closed')
-      process.exit(0)
+    process.on('SIGTERM', () => {
+      logger.info('SIGTERM signal received: closing HTTP server.')
+      if (server) {
+        server.close(() => {
+          logger.debug('HTTP server closed')
+          process.exit(0)
+        })
+      }
     })
-  })
+  } else {
+    // Development server with HTTPS
+    server = https.createServer(httpsOptions, app).listen(Number(PORT), HOST, async () => {
+      logger.info(
+        '\n\n' + figlet.textSync('3d-inventory-api', {
+          font: 'Nancyj-Fancy',
+          horizontalLayout: 'default',
+          verticalLayout: 'default',
+          width: process.stdout.columns || 180,
+          whitespaceBreak: true
+        })
+      )
+      logger.info(`✅ Development ver. ${kleur.green(process.env.npm_package_version ?? 'unknown')} `)
+      logger.info(`✅ Server on ${kleur.green(`https://${HOST}:${PORT}`)}`)
+      logger.info(`✅ ${kleur.green(`https://${HOST}:${PORT}/doc  - Swagger UI`)}`)
+      logger.info(`✅ ${kleur.green(`https://${HOST}:${PORT}/health  - Status`)}`)
 
-  process.on('SIGTERM', () => {
-    logger.info('SIGTERM signal received: closing HTTPS server.')
-    server.close(() => {
-      logger.debug('HTTPS server closed')
-      process.exit(0)
+      // Initialize database after server starts
+      await initializeDatabase()
     })
-  })
+
+    server.on('error', (err: Error) => {
+      logger.error(`Error listen on address https://${HOST}:${PORT}: ${String(err)}\nStack: ${err.stack}`)
+    })
+
+    // Signal handlers for HTTPS server
+    process.on('SIGINT', () => {
+      logger.info('SIGINT signal received: closing HTTPS server.')
+      if (server) {
+        server.close(() => {
+          logger.debug('HTTPS server closed')
+          process.exit(0)
+        })
+      }
+    })
+
+    process.on('SIGTERM', () => {
+      logger.info('SIGTERM signal received: closing HTTPS server.')
+      if (server) {
+        server.close(() => {
+          logger.debug('HTTPS server closed')
+          process.exit(0)
+        })
+      }
+    })
+  }
 }
 
-export default server
+// Export the app for testing, server for production
+export default process.env.NODE_ENV === 'test' ? app : (server || app)

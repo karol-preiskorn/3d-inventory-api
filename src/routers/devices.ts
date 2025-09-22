@@ -10,6 +10,7 @@ import {
   deleteAllDevices,
   deleteDevicesByModel
 } from '../controllers/devices'
+import { getDeviceConnections } from '../controllers/connections'
 import {
   validateObjectId,
   requireAuth,
@@ -43,14 +44,14 @@ export default function createDevicesRouter() {
   // DELETE /devices/:id - Delete device by ID (requires delete permission)
   router.delete('/:id', validateObjectId, requireAuth, requirePermission(Permission.DELETE_DEVICES), deleteDevice)
 
+  // GET /devices/:id/connections - Get device connections (public read access)
+  router.get('/:id/connections', validateObjectId, optionalAuth, getDeviceConnections)
+
   // DELETE /devices - Delete all devices (requires delete permission)
   router.delete('/', requireAuth, requirePermission(Permission.DELETE_DEVICES), deleteAllDevices)
 
   // DELETE /devices/model/:id - Delete devices by model ID (requires delete permission)
   router.delete('/model/:id', validateObjectId, requireAuth, requirePermission(Permission.DELETE_DEVICES), deleteDevicesByModel)
-
-  // DELETE /devices/model/:id - Delete devices by model ID
-  router.delete('/model/:id', validateObjectId, deleteDevicesByModel)
 
   return router
 }
