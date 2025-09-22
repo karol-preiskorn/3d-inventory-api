@@ -8,7 +8,7 @@ process.env.NODE_ENV = 'test'
 
 // Use the existing ATLAS_URI if available, otherwise use a test default
 if (!process.env.ATLAS_URI) {
-  process.env.ATLAS_URI = 'mongodb://localhost:27017/test'
+  process.env.ATLAS_URI = 'mongodb+srv://user:50731BTLjF2wTKMA@cluster0.htgjako.mongodb.net/test?retryWrites=true&w=majority&tls=true'
 }
 
 process.env.DBNAME = process.env.DBNAME || '3d-inventory-test'

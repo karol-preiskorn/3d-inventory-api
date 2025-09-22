@@ -1,7 +1,8 @@
 import path from 'path'
 import dotenv from 'dotenv'
 import { RequestHandler } from 'express'
-import fetch from 'node-fetch'
+// Using built-in fetch (Node.js 18+) instead of node-fetch to avoid ES module issues
+// import fetch from 'node-fetch'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('github')

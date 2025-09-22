@@ -42,7 +42,7 @@ const config: import('jest').Config = {
       testRegex: '(/tests/.*\\.test\\.(mjs?|cjs?|js?|tsx?|ts?)$|(\\.|/)(test|spec))\\.(mjs?|cjs?|js?|tsx?|ts?)$',
       transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest'
-      }
+      },
     }
   ]
 }
