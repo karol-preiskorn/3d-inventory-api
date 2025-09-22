@@ -4,8 +4,8 @@
  * @module models
  */
 
-import { ObjectId } from 'mongodb'
-import { UserRole, Permission } from '../middlewares/auth'
+import { ObjectId } from 'mongodb';
+import { UserRole, Permission } from '../middlewares/auth';
 
 export interface Role {
   _id?: ObjectId;
@@ -51,44 +51,49 @@ export const DEFAULT_ROLES: Omit<Role, '_id' | 'createdAt' | 'updatedAt'>[] = [
     displayName: 'Administrator',
     description: 'Full system access with all permissions',
     permissions: [
-      Permission.READ_DEVICES, Permission.WRITE_DEVICES, Permission.DELETE_DEVICES,
-      Permission.READ_MODELS, Permission.WRITE_MODELS, Permission.DELETE_MODELS,
-      Permission.READ_CONNECTIONS, Permission.WRITE_CONNECTIONS, Permission.DELETE_CONNECTIONS,
-      Permission.READ_LOGS, Permission.DELETE_LOGS,
-      Permission.ADMIN_ACCESS
+      Permission.READ_DEVICES,
+      Permission.WRITE_DEVICES,
+      Permission.DELETE_DEVICES,
+      Permission.READ_MODELS,
+      Permission.WRITE_MODELS,
+      Permission.DELETE_MODELS,
+      Permission.READ_CONNECTIONS,
+      Permission.WRITE_CONNECTIONS,
+      Permission.DELETE_CONNECTIONS,
+      Permission.READ_LOGS,
+      Permission.DELETE_LOGS,
+      Permission.ADMIN_ACCESS,
     ],
-    isActive: true
+    isActive: true,
   },
   {
     name: UserRole.USER,
     displayName: 'User',
     description: 'Standard user with read/write access to most resources',
     permissions: [
-      Permission.READ_DEVICES, Permission.WRITE_DEVICES,
-      Permission.READ_MODELS, Permission.WRITE_MODELS,
-      Permission.READ_CONNECTIONS, Permission.WRITE_CONNECTIONS,
-      Permission.READ_LOGS
+      Permission.READ_DEVICES,
+      Permission.WRITE_DEVICES,
+      Permission.READ_MODELS,
+      Permission.WRITE_MODELS,
+      Permission.READ_CONNECTIONS,
+      Permission.WRITE_CONNECTIONS,
+      Permission.READ_LOGS,
     ],
-    isActive: true
+    isActive: true,
   },
   {
     name: UserRole.VIEWER,
     displayName: 'Viewer',
     description: 'Read-only access to system resources',
-    permissions: [
-      Permission.READ_DEVICES,
-      Permission.READ_MODELS,
-      Permission.READ_CONNECTIONS,
-      Permission.READ_LOGS
-    ],
-    isActive: true
-  }
-]
+    permissions: [Permission.READ_DEVICES, Permission.READ_MODELS, Permission.READ_CONNECTIONS, Permission.READ_LOGS],
+    isActive: true,
+  },
+];
 
 // Convert Role to RoleResponse
 export function toRoleResponse(role: Role): RoleResponse {
   if (!role._id) {
-    throw new Error('Role _id is required to create RoleResponse')
+    throw new Error('Role _id is required to create RoleResponse');
   }
 
   return {
@@ -99,6 +104,6 @@ export function toRoleResponse(role: Role): RoleResponse {
     permissions: role.permissions,
     isActive: role.isActive,
     createdAt: role.createdAt,
-    updatedAt: role.updatedAt
-  }
+    updatedAt: role.updatedAt,
+  };
 }

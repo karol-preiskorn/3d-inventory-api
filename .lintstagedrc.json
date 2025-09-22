@@ -1,19 +1,7 @@
 {
-  "src/**/*.{ts,js}": [
-    "eslint --fix --cache",
-    "prettier --write"
-  ],
-  "src/**/*.{json,md,yaml,yml}": [
-    "prettier --write"
-  ],
-  "*.{json,md,yaml,yml}": [
-    "prettier --write"
-  ],
-  ".github/**/*.{yml,yaml}": [
-    "prettier --write"
-  ],
-  "package.json": [
-    "sort-package-json",
-    "prettier --write"
-  ]
+  "src/**/*.{ts,js}": ["eslint --fix --cache", "prettier --write"],
+  "src/**/*.{json,md,yaml,yml}": ["prettier --write"],
+  "*.{json,md,yaml,yml}": ["prettier --write"],
+  ".github/**/*.{yml,yaml}": ["prettier --write"],
+  "package.json": ["sort-package-json", "prettier --write"]
 }

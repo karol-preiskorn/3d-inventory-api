@@ -21,7 +21,7 @@ env_variables:
 liveness_check:
   check_interval_sec: 30
   failure_threshold: 2
-  path: "/health"
+  path: '/health'
   success_threshold: 2
   timeout_sec: 4
 
@@ -34,7 +34,7 @@ PORT: 8080 # Add your MongoDB Atlas URI here or use Secret Manager
 readiness_check:
   check_interval_sec: 5
   failure_threshold: 2
-  path: "/health"
+  path: '/health'
   success_threshold: 2
   timeout_sec: 4
 

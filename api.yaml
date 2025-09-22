@@ -63,7 +63,7 @@ paths:
               required:
                 - username
       responses:
-        "200":
+        '200':
           description: JWT token issued
           content:
             application/json:
@@ -72,7 +72,7 @@ paths:
                 properties:
                   token:
                     type: string
-        "400":
+        '400':
           description: Invalid credentials
           content:
             application/json:
@@ -81,7 +81,7 @@ paths:
                 properties:
                   message:
                     type: string
-        "404":
+        '404':
           description: Not found
           content:
             application/json:
@@ -98,7 +98,7 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        "200":
+        '200':
           description: Success, returns protected data
           content:
             application/json:
@@ -109,7 +109,7 @@ paths:
                     type: string
                   user:
                     type: object
-        "401":
+        '401':
           description: Unauthorized, missing or invalid token
           content:
             application/json:
@@ -128,19 +128,19 @@ paths:
       description: List all issues. Requires admin privileges for security reasons.
       operationId: githubIssuesGet
       responses:
-        "200":
+        '200':
           description: List of issues
-        "401":
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Issues not found
-        "406":
+        '406':
           description: Not Acceptable
-        "429":
+        '429':
           description: Too Many Requests - Rate limit exceeded
-        "500":
+        '500':
           description: Unexpected server error
         default:
           description: Unexpected error
@@ -157,23 +157,23 @@ paths:
       security:
         - ViewerAuth: []
       responses:
-        "200":
+        '200':
           description: A list of attributes
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Attributes"
-        "401":
+                $ref: '#/components/schemas/Attributes'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (viewer role or higher required)
-        "404":
+        '404':
           description: Not found.
-        "406":
+        '406':
           description: Not Acceptable
-        "429":
+        '429':
           description: Too Many Requests
-        "500":
+        '500':
           description: Unexpected server error
         default:
           description: Unexpected error
@@ -204,26 +204,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Attribute"
+              $ref: '#/components/schemas/Attribute'
         required: true
       responses:
-        "200":
+        '200':
           description: Attribute updated successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Attribute"
-        "401":
+                $ref: '#/components/schemas/Attribute'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (user role or higher required)
-        "404":
+        '404':
           description: Attribute update data is inconsistent.
-        "406":
+        '406':
           description: Not Acceptable
-        "429":
+        '429':
           description: Too Many Requests
-        "500":
+        '500':
           description: Unexpected server error
         default:
           description: Unexpected error
@@ -241,21 +241,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Attribute"
+              $ref: '#/components/schemas/Attribute'
       responses:
-        "200":
+        '200':
           description: Attribute created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Attribute"
-        "400":
+                $ref: '#/components/schemas/Attribute'
+        '400':
           description: Bad request.
-        "401":
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (user role or higher required)
-        "500":
+        '500':
           description: Unexpected server error
       x-swagger-router-controller: Attributes
     delete:
@@ -267,17 +267,17 @@ paths:
       security:
         - AdminAuth: []
       responses:
-        "200":
+        '200':
           description: All attributes deleted successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "401":
+                $ref: '#/components/schemas/Confirmation'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: No attributes found to delete
       x-swagger-router-controller: Attributes
   /attributes/{id}:
@@ -302,17 +302,17 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: Attribute found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Attribute"
-        "404":
+                $ref: '#/components/schemas/Attribute'
+        '404':
           description: Attribute not found
-        "406":
+        '406':
           description: Not Acceptable
-        "429":
+        '429':
           description: Too Many Requests
         default:
           description: Unexpected error
@@ -342,19 +342,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Attribute"
+              $ref: '#/components/schemas/Attribute'
       responses:
-        "200":
+        '200':
           description: Attribute updated successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Attribute"
-        "404":
+                $ref: '#/components/schemas/Attribute'
+        '404':
           description: Attribute not found
-        "406":
+        '406':
           description: Not Acceptable
-        "429":
+        '429':
           description: Too Many Requests
         default:
           description: Unexpected error
@@ -380,13 +380,13 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: Attribute deleted successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "404":
+                $ref: '#/components/schemas/Confirmation'
+        '404':
           description: Attribute not found
       x-swagger-router-controller: Attributes
   /devices:
@@ -399,19 +399,19 @@ paths:
       security:
         - ViewerAuth: []
       responses:
-        "200":
+        '200':
           description: A list of devices
-        "401":
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (viewer role or higher required)
-        "404":
+        '404':
           description: No devices found.
-        "406":
+        '406':
           description: Not Acceptable
-        "429":
+        '429':
           description: Too Many Requests
-        "500":
+        '500':
           description: Unexpected server error
         default:
           description: Unexpected error
@@ -425,23 +425,23 @@ paths:
       security:
         - UserAuth: []
       responses:
-        "200":
+        '200':
           description: Device updated successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Device"
-        "401":
+                $ref: '#/components/schemas/Device'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (user role or higher required)
-        "404":
+        '404':
           description: Device update data is inconsistent.
-        "406":
+        '406':
           description: Not Acceptable
-        "429":
+        '429':
           description: Too Many Requests
-        "500":
+        '500':
           description: Unexpected server error
         default:
           description: Unexpected error
@@ -455,17 +455,17 @@ paths:
       security:
         - AdminAuth: []
       responses:
-        "200":
+        '200':
           description: All devices deleted successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "401":
+                $ref: '#/components/schemas/Confirmation'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: No devices found to delete
       x-swagger-router-controller: Devices
   /devices/{id}:
@@ -492,21 +492,21 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: List of devices
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Device"
-        "401":
+                $ref: '#/components/schemas/Device'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (viewer role or higher required)
-        "404":
+        '404':
           description: Devices not found
-        "406":
+        '406':
           description: Not Acceptable
-        "429":
+        '429':
           description: Too Many Requests
         default:
           description: Unexpected error
@@ -534,40 +534,40 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: Success update device
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Device"
-        "401":
+                $ref: '#/components/schemas/Device'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (user role or higher required)
-        "404":
+        '404':
           description: Devices not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-        "406":
+                $ref: '#/components/schemas/Error'
+        '406':
           description: Not Acceptable
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-        "429":
+                $ref: '#/components/schemas/Error'
+        '429':
           description: Too Many Requests
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
       x-swagger-router-controller: Devices
     delete:
       tags:
@@ -592,17 +592,17 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "401":
+                $ref: '#/components/schemas/Confirmation'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Not found device to delete
       x-swagger-router-controller: Devices
   /devices/model/{id}:
@@ -629,21 +629,21 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: List of devices with model
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Devices"
-        "401":
+                $ref: '#/components/schemas/Devices'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (viewer role or higher required)
-        "404":
+        '404':
           description: Devices not found with this model :id
-        "406":
+        '406':
           description: Not Acceptable
-        "429":
+        '429':
           description: Too Many Requests
         default:
           description: Unexpected error
@@ -671,17 +671,17 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "401":
+                $ref: '#/components/schemas/Confirmation'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Not found device to delete
       x-swagger-router-controller: Devices
   /logs:
@@ -694,19 +694,19 @@ paths:
       security:
         - ViewerAuth: []
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Logs"
-        "401":
+                $ref: '#/components/schemas/Logs'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (viewer role or higher required)
-        "404":
+        '404':
           description: No found
-        "500":
+        '500':
           description: Error
       x-swagger-router-controller: Logs
     put:
@@ -751,17 +751,17 @@ paths:
                   type: object
                   description: Log message
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Log"
-        "401":
+                $ref: '#/components/schemas/Log'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Id Not found
       x-swagger-router-controller: Logs
     post:
@@ -777,23 +777,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Log"
+              $ref: '#/components/schemas/Log'
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Log"
+                $ref: '#/components/schemas/Log'
               example:
-                $ref: "#/components/schemas/Log/example"
-        "401":
+                $ref: '#/components/schemas/Log/example'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (user role or higher required)
-        "404":
+        '404':
           description: Error log not found
-        "500":
+        '500':
           description: Error log not created
       x-swagger-router-controller: Logs
     delete:
@@ -805,13 +805,13 @@ paths:
       security:
         - AdminAuth: []
       responses:
-        "200":
+        '200':
           description: Success log deleted
-        "401":
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Error log not found
       x-swagger-router-controller: Logs
   /logs/{id}:
@@ -836,11 +836,11 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
-        "404":
+        '404':
           description: Error log not found
-        "500":
+        '500':
           description: Server error
       x-swagger-router-controller: Logs
   /logs/component/{component}:
@@ -865,19 +865,19 @@ paths:
             maxLength: 20
             x-42c-format: string
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Logs"
-        "300":
+                $ref: '#/components/schemas/Logs'
+        '300':
           description: Device logs fetched successfully
-        "400":
+        '400':
           description: Bad request
-        "404":
+        '404':
           description: Error log requested component not found
-        "500":
+        '500':
           description: Server error
       x-swagger-router-controller: Logs
     delete:
@@ -901,15 +901,15 @@ paths:
             maxLength: 20
             x-42c-format: string
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "400":
+                $ref: '#/components/schemas/Confirmation'
+        '400':
           description: Bad request
-        "404":
+        '404':
           description: Error log not found
       x-swagger-router-controller: Logs
   /logs/device/{id}:
@@ -934,13 +934,13 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Log"
-        "404":
+                $ref: '#/components/schemas/Log'
+        '404':
           description: Error log not found
       x-swagger-router-controller: Logs
     delete:
@@ -964,15 +964,15 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "400":
+                $ref: '#/components/schemas/Confirmation'
+        '400':
           description: Bad request
-        "404":
+        '404':
           description: Error log not found
       x-swagger-router-controller: Logs
   /logs/connection/{id}:
@@ -997,15 +997,15 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Log"
-        "400":
+                $ref: '#/components/schemas/Log'
+        '400':
           description: Bad request
-        "404":
+        '404':
           description: Error logs not found
       x-swagger-router-controller: Logs
     delete:
@@ -1029,15 +1029,15 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "400":
+                $ref: '#/components/schemas/Confirmation'
+        '400':
           description: Bad request
-        "404":
+        '404':
           description: Error log not found
       x-swagger-router-controller: Logs
   /logs/attributes/{id}:
@@ -1062,13 +1062,13 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Logs"
-        "400":
+                $ref: '#/components/schemas/Logs'
+        '400':
           description: Bad request
       x-swagger-router-controller: Logs
   /logs/model/{id}:
@@ -1093,18 +1093,18 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Logs"
-        "404":
+                $ref: '#/components/schemas/Logs'
+        '404':
           description: Not found. Indicates that the request has no logs.
-        "406":
+        '406':
           description: >-
             Not Acceptable. Indicates that the requested content type is not acceptable.
-        "500":
+        '500':
           description: Server side error.
       x-swagger-router-controller: Logs
     delete:
@@ -1128,14 +1128,14 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
-        "404":
+        '404':
           description: Error log not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Log"
+                $ref: '#/components/schemas/Log'
       x-swagger-router-controller: Logs
   /logs/attributesDictionary/{id}:
     get:
@@ -1159,18 +1159,18 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Logs"
-        "404":
+                $ref: '#/components/schemas/Logs'
+        '404':
           description: Error logs not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Log"
+                $ref: '#/components/schemas/Log'
       x-swagger-router-controller: Logs
     delete:
       tags:
@@ -1193,15 +1193,15 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
-        "404":
+        '404':
           description: Error log not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Log"
-        "406":
+                $ref: '#/components/schemas/Log'
+        '406':
           description: Not Acceptable
       x-swagger-router-controller: Logs
   /connections:
@@ -1215,15 +1215,15 @@ paths:
       security:
         - ViewerAuth: []
       responses:
-        "200":
+        '200':
           description: Success get connection between devices
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connections"
-        "401":
+                $ref: '#/components/schemas/Connections'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (viewer role or higher required)
       x-swagger-router-controller: Connections
     put:
@@ -1240,23 +1240,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Connections"
+              $ref: '#/components/schemas/Connections'
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connections"
+                $ref: '#/components/schemas/Connections'
               example:
-                $ref: "#/components/schemas/Connections/example"
-        "401":
+                $ref: '#/components/schemas/Connections/example'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (user role or higher required)
-        "404":
+        '404':
           description: Not found connection data
-        "500":
+        '500':
           description: Error
       x-swagger-router-controller: Connections
     post:
@@ -1273,23 +1273,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Connections"
+              $ref: '#/components/schemas/Connections'
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connection"
+                $ref: '#/components/schemas/Connection'
               example:
-                $ref: "#/components/schemas/Connection/example"
-        "401":
+                $ref: '#/components/schemas/Connection/example'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (user role or higher required)
-        "404":
+        '404':
           description: Not found connection data
-        "500":
+        '500':
           description: Error
       x-swagger-router-controller: Connections
     delete:
@@ -1302,19 +1302,19 @@ paths:
       security:
         - AdminAuth: []
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "401":
+                $ref: '#/components/schemas/Confirmation'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Not found connection to delete
-        "500":
+        '500':
           description: Error
       x-swagger-router-controller: Connections
   /connections/devices:
@@ -1325,11 +1325,11 @@ paths:
       description: Get all list Connection with information about devices and their attributes
       operationId: connectionGetAndDevices
       responses:
-        "200":
+        '200':
           description: Success get connection between devices
-        "404":
+        '404':
           description: Not found connection data
-        "500":
+        '500':
           description: Error
       x-swagger-router-controller: Connections
   /connections/{id}:
@@ -1354,12 +1354,12 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: Success get connection between devices
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connections"
+                $ref: '#/components/schemas/Connections'
       x-swagger-router-controller: Connections
     put:
       tags:
@@ -1386,20 +1386,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Connections"
+              $ref: '#/components/schemas/Connections'
         required: true
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connections"
+                $ref: '#/components/schemas/Connections'
               example:
-                $ref: "#/components/schemas/Connection/example"
-        "404":
+                $ref: '#/components/schemas/Connection/example'
+        '404':
           description: Not found connection data
-        "500":
+        '500':
           description: Error
       x-swagger-router-controller: Connections
     delete:
@@ -1423,13 +1423,13 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "404":
+                $ref: '#/components/schemas/Confirmation'
+        '404':
           description: Error log not found
       x-swagger-router-controller: Connections
   /connections/from/{id}:
@@ -1454,12 +1454,12 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: Success get connection between devices
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connections"
+                $ref: '#/components/schemas/Connections'
       x-swagger-router-controller: Connections
     delete:
       tags:
@@ -1482,13 +1482,13 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connections"
-        "404":
+                $ref: '#/components/schemas/Connections'
+        '404':
           description: Error log not found
       x-swagger-router-controller: Connections
   /connections/to/{id}:
@@ -1513,12 +1513,12 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: Success get connection between devices
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connections"
+                $ref: '#/components/schemas/Connections'
       x-swagger-router-controller: Connections
     delete:
       tags:
@@ -1541,9 +1541,9 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
-        "404":
+        '404':
           description: Error log not found
       x-swagger-router-controller: Connections
   /connections/from/{idFrom}/to/{idTo}:
@@ -1581,12 +1581,12 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: Success get connection between devices
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connections"
+                $ref: '#/components/schemas/Connections'
       x-swagger-router-controller: Connections
     delete:
       tags:
@@ -1622,12 +1622,12 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: Success get connection between devices
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connections"
+                $ref: '#/components/schemas/Connections'
       x-swagger-router-controller: Connections
   /attributesDictionary:
     get:
@@ -1638,17 +1638,17 @@ paths:
         Store information about what parameters can apply to what type of type objects.
       operationId: attributesDictionaryGet
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AttributesDictionaries"
-        "400":
+                $ref: '#/components/schemas/AttributesDictionaries'
+        '400':
           description: Bad request.
-        "404":
+        '404':
           description: Not found.
-        "500":
+        '500':
           description: Unexpected server error.
       x-swagger-router-controller: attributesDictionary
     put:
@@ -1661,15 +1661,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AttributesDictionary"
+              $ref: '#/components/schemas/AttributesDictionary'
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the update request has succeeded.
-        "400":
+        '400':
           description: Bad request.
-        "404":
+        '404':
           description: Not found.
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             fromfulfilling the request.
@@ -1684,19 +1684,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AttributesDictionary"
+              $ref: '#/components/schemas/AttributesDictionary'
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AttributesDictionary"
+                $ref: '#/components/schemas/AttributesDictionary'
               example:
-                $ref: "#/components/schemas/AttributesDictionary/example"
-        "400":
+                $ref: '#/components/schemas/AttributesDictionary/example'
+        '400':
           description: Bad request.
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             fromfulfilling the request.
@@ -1709,11 +1709,11 @@ paths:
         Delete a specific attribute in the attributes dictionary by ID. '200':
           description: OK. Indicates that the request has succeeded.
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
-        "404":
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             fromfulfilling the request.
@@ -1739,17 +1739,17 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AttributesDictionary"
-        "400":
+                $ref: '#/components/schemas/AttributesDictionary'
+        '400':
           description: Bad request.
-        "404":
+        '404':
           description: Not found.
-        "500":
+        '500':
           description: Unexpected server error.
       x-swagger-router-controller: attributesDictionary
     put:
@@ -1775,15 +1775,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AttributesDictionary"
+              $ref: '#/components/schemas/AttributesDictionary'
       responses:
-        "200":
+        '200':
           description: OK.
-        "400":
+        '400':
           description: Bad request.
-        "404":
+        '404':
           description: Not found.
-        "500":
+        '500':
           description: Unexpected server error.
       x-swagger-router-controller: attributesDictionary
     delete:
@@ -1808,15 +1808,15 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "404":
+                $ref: '#/components/schemas/Confirmation'
+        '404':
           description: Not found
-        "500":
+        '500':
           description: Unexpected server error.
         x-swagger-router-controller: attributesDictionary
   /attributesDictionary/models:
@@ -1827,17 +1827,17 @@ paths:
       description: Dictionary attributes dictionary for models.
       operationId: attributesDictionaryModelsGet
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AttributesDictionaries"
+                $ref: '#/components/schemas/AttributesDictionaries'
               example:
-                $ref: "#/components/schemas/AttributesDictionaries"
-        "400":
+                $ref: '#/components/schemas/AttributesDictionaries'
+        '400':
           description: Bad request.
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             fromfulfilling the request.
@@ -1850,17 +1850,17 @@ paths:
       description: Dictionary attributes dictionary for models.
       operationId: attributesDictionaryDevicesGet
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AttributesDictionaries"
+                $ref: '#/components/schemas/AttributesDictionaries'
               example:
-                $ref: "#/components/schemas/AttributesDictionaries"
-        "400":
+                $ref: '#/components/schemas/AttributesDictionaries'
+        '400':
           description: Bad request.
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             from  fulfilling the request.
@@ -1873,17 +1873,17 @@ paths:
       description: Dictionary attributes dictionary for connections.
       operationId: attributesDictionaryConnectionsGet
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AttributesDictionaries"
+                $ref: '#/components/schemas/AttributesDictionaries'
               example:
-                $ref: "#/components/schemas/AttributesDictionaries"
-        "400":
+                $ref: '#/components/schemas/AttributesDictionaries'
+        '400':
           description: Bad request.
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             from  fulfilling the request.
@@ -1898,21 +1898,21 @@ paths:
       security:
         - ViewerAuth: []
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Models"
+                $ref: '#/components/schemas/Models'
               example:
-                $ref: "#/components/schemas/Models/example"
-        "401":
+                $ref: '#/components/schemas/Models/example'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (viewer role or higher required)
-        "404":
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from
             fulfilling the request.
@@ -1930,21 +1930,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Model"
+              $ref: '#/components/schemas/Model'
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Model"
-        "401":
+                $ref: '#/components/schemas/Model'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (user role or higher required)
-        "404":
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from
             fulfilling the request.
@@ -1961,22 +1961,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Model"
+              $ref: '#/components/schemas/Model'
         required: true
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Model"
-        "400":
+                $ref: '#/components/schemas/Model'
+        '400':
           description: Bad request.
-        "401":
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (user role or higher required)
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from
             fulfilling the request.
@@ -1990,15 +1990,15 @@ paths:
       security:
         - AdminAuth: []
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
-        "401":
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from
             fulfilling the request.
@@ -2027,19 +2027,19 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Model"
-        "401":
+                $ref: '#/components/schemas/Model'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (viewer role or higher required)
-        "404":
+        '404':
           description: Not found
-        "500":
+        '500':
           description: Unexpected server error.
       x-swagger-router-controller: Models
     put:
@@ -2065,19 +2065,19 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Model"
-        "401":
+                $ref: '#/components/schemas/Model'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (user role or higher required)
-        "404":
+        '404':
           description: Not found model to update
-        "500":
+        '500':
           description: Unexpected server error.
       x-swagger-router-controller: Models
     delete:
@@ -2103,19 +2103,19 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "401":
+                $ref: '#/components/schemas/Confirmation'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Not found
-        "500":
+        '500':
           description: Unexpected server error.
       x-swagger-router-controller: Models
   /floors:
@@ -2126,9 +2126,9 @@ paths:
       description: Get all floors data
       operationId: floorsGet
       responses:
-        "200":
+        '200':
           description: OK
-        "404":
+        '404':
           description: Not found
       x-swagger-router-controller: Floors
     put:
@@ -2142,13 +2142,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Floor"
+              $ref: '#/components/schemas/Floor'
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
-        "404":
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             fromfulfilling the request.
@@ -2164,13 +2164,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Floor"
+              $ref: '#/components/schemas/Floor'
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
-        "400":
+        '400':
           description: Bad request.
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from
             fulfilling the request.
@@ -2182,11 +2182,11 @@ paths:
       description: Create floor
       operationId: floorDelete
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
-        "404":
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from
             fulfilling the request.
@@ -2213,15 +2213,15 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Floor"
-        "404":
+                $ref: '#/components/schemas/Floor'
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from
             fulfilling the request.
@@ -2247,15 +2247,15 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Floor"
-        "404":
+                $ref: '#/components/schemas/Floor'
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from
             fulfilling the request.
@@ -2281,15 +2281,15 @@ paths:
             maxLength: 24
             x-42c-format: o:uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Floor"
-        "404":
+                $ref: '#/components/schemas/Floor'
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it from
             fulfilling the request.
@@ -2304,17 +2304,17 @@ paths:
       security:
         - AdminAuth: []
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Users"
-        "401":
+                $ref: '#/components/schemas/Users'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Not found
       x-swagger-router-controller: Users
     put:
@@ -2330,21 +2330,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: '#/components/schemas/User'
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "401":
+                $ref: '#/components/schemas/User'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             fromfulfilling the request.
@@ -2362,21 +2362,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: '#/components/schemas/User'
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "400":
+                $ref: '#/components/schemas/User'
+        '400':
           description: Bad request.
-        "401":
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             fromfulfilling the request.
@@ -2390,19 +2390,19 @@ paths:
       security:
         - AdminAuth: []
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "401":
+                $ref: '#/components/schemas/Confirmation'
+        '401':
           description: Unauthorized - Missing or invalid authentication
-        "403":
+        '403':
           description: Forbidden - Insufficient privileges (admin role required)
-        "404":
+        '404':
           description: Not found
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             fromfulfilling the request.
@@ -2429,13 +2429,13 @@ paths:
             x-42c-format: o:uuid
             pattern: ^[0-9A-Fa-f]{24}$
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "404":
+                $ref: '#/components/schemas/User'
+        '404':
           description: Not found
       x-swagger-router-controller: Users
     post:
@@ -2463,17 +2463,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: '#/components/schemas/User'
       responses:
-        "200":
+        '200':
           description: OK. Indicates that the request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Confirmation"
-        "400":
+                $ref: '#/components/schemas/Confirmation'
+        '400':
           description: Bad request.
-        "500":
+        '500':
           description: >-
             Unexpected server error. The server encountered an unexpected condition that prevented it
             fromfulfilling the request.
@@ -2483,7 +2483,7 @@ paths:
       summary: Health check endpoint
       description: Returns API and database health status.
       responses:
-        "200":
+        '200':
           description: Healthy
           content:
             application/json:
@@ -2504,7 +2504,7 @@ paths:
                     type: string
                   error:
                     type: string
-        "503":
+        '503':
           description: Service unavailable
 
 components:
@@ -2567,7 +2567,7 @@ components:
       description: Array of User
       maxItems: 1000
       items:
-        $ref: "#/components/schemas/User"
+        $ref: '#/components/schemas/User'
     Floor:
       type: object
       properties:
@@ -2581,9 +2581,9 @@ components:
         name:
           type: string
         address:
-          $ref: "#/components/schemas/FloorAddress"
+          $ref: '#/components/schemas/FloorAddress'
         array:
-          $ref: "#/components/schemas/FloorArray"
+          $ref: '#/components/schemas/FloorArray'
       description: Floor object
       example:
         _id: 653e120577c067b6abbe5d26
@@ -2605,7 +2605,7 @@ components:
       description: Array of Floor
       maxItems: 1000
       items:
-        $ref: "#/components/schemas/Floor"
+        $ref: '#/components/schemas/Floor'
     Dimension:
       type: object
       properties:
@@ -2686,11 +2686,11 @@ components:
         category:
           type: string
         dimension:
-          $ref: "#/components/schemas/Dimension"
+          $ref: '#/components/schemas/Dimension'
         name:
           type: string
         texture:
-          $ref: "#/components/schemas/Texture"
+          $ref: '#/components/schemas/Texture'
         type:
           type: string
       description: Object of Models
@@ -2714,9 +2714,9 @@ components:
       example:
         type: array
         items:
-          $ref: "#/components/schemas/Model/example"
+          $ref: '#/components/schemas/Model/example'
       items:
-        $ref: "#/components/schemas/Model"
+        $ref: '#/components/schemas/Model'
     AttributesDictionary:
       required:
         - _id
@@ -2768,7 +2768,7 @@ components:
       description: List of Attribute Dictionary
       maxItems: 1000
       items:
-        $ref: "#/components/schemas/AttributesDictionary"
+        $ref: '#/components/schemas/AttributesDictionary'
     Attribute:
       description: >-
         Attribute is a key-value pair that can be associated with a device, model, or connection.
@@ -2828,20 +2828,20 @@ components:
           deviceId: 653e10ecd6025afb66017c77
           modelId: 653e10ecd6025afb66017c78
           name: year
-          value: "1999"
+          value: '1999'
       items:
-        $ref: "#/components/schemas/Attribute"
+        $ref: '#/components/schemas/Attribute'
     Position:
       required:
         - x
-        - "y"
+        - 'y'
         - h
       type: object
       properties:
         x:
           type: number
           description: Width
-        "y":
+        'y':
           type: number
           description: Depth
         h:
@@ -2872,9 +2872,9 @@ components:
           minLength: 24
           maxLength: 24
         position:
-          $ref: "#/components/schemas/Position"
+          $ref: '#/components/schemas/Position'
         attributes:
-          $ref: "#/components/schemas/Attributes"
+          $ref: '#/components/schemas/Attributes'
       description: Device it is basic structure 3d-inventory
       example:
         _id: 6566ed4ace63d42b25fbba19
@@ -2882,7 +2882,7 @@ components:
         modelId: 6566ed4ace63d42b25fbba19
         position:
           x: 4
-          "y": 3
+          'y': 3
           h: 0
         attributes:
           - _id: 653e10ecd6025afb66017c65
@@ -2893,7 +2893,7 @@ components:
       type: array
       maxItems: 1000
       items:
-        $ref: "#/components/schemas/Device"
+        $ref: '#/components/schemas/Device'
     Connection:
       required:
         - _id
@@ -2938,7 +2938,7 @@ components:
       description: Array of Connections
       maxItems: 1000
       items:
-        $ref: "#/components/schemas/Connection"
+        $ref: '#/components/schemas/Connection'
       example:
         - _id: 6566ed4ace63d42b25fbba19
           name: Connection 1
@@ -2974,13 +2974,13 @@ components:
           description: List of attributes
           maxItems: 1000
           items:
-            $ref: "#/components/schemas/Attribute"
+            $ref: '#/components/schemas/Attribute'
     Components:
       type: array
       description: Array of Components
       maxItems: 1000
       items:
-        $ref: "#/components/schemas/Component"
+        $ref: '#/components/schemas/Component'
     Error:
       type: object
       properties:
@@ -3052,7 +3052,7 @@ components:
       type: array
       maxItems: 1000
       items:
-        $ref: "#/components/schemas/Log"
+        $ref: '#/components/schemas/Log'
       additionalProperties: false
       example:
         - _id: 666f1f958237b346e54f2cd0
@@ -3091,7 +3091,7 @@ components:
           type: string
         x:
           type: number
-        "y":
+        'y':
           type: number
         h:
           type: number
@@ -3102,31 +3102,31 @@ components:
         hPos:
           type: number
   responses:
-    "200":
+    '200':
       description: OK. Indicates that the request has succeeded.
-    "400":
+    '400':
       description: Bad request.
-    "401":
+    '401':
       description: Authorization information is missing or invalid.
-    "404":
+    '404':
       description: Not found
-    "405":
+    '405':
       description: >-
         Method Not Allowed. The request HTTPS method is known by the server but has been disabled and cannot be
         used for that resource.
-    "500":
+    '500':
       description: >-
         Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
         the request.
-    "501":
+    '501':
       description: >-
         Not Implemented. The HTTPS method is not supported by the server and cannot be handled.
-    "502":
+    '502':
       description: >-
         Bad getaway. The server got an invalid response while working as a gateway to get the response needed to
         handle the request.
-    "503":
+    '503':
       description: Service Unavailable. The server is not ready to handle the request.
-    "504":
+    '504':
       description: >-
         Gateway Timeout. The server is acting as a gateway and cannot get a response in time for a request.

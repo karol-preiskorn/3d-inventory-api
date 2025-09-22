@@ -30,7 +30,7 @@ describe('prepare test data', () => {
       console.log('Attempting to connect to MongoDB...')
       connection = await MongoClient.connect(config.ATLAS_URI, {
         serverSelectionTimeoutMS: 15000, // 15 second timeout
-        connectTimeoutMS: 15000
+        connectTimeoutMS: 15000,
       })
       db = connection.db(config.DBNAME)
 
@@ -58,7 +58,6 @@ describe('prepare test data', () => {
       await connection.close()
     }
   })
-
 
   describe('delete all data', () => {
     it('should delete all devices', async () => {
@@ -101,15 +100,15 @@ describe('prepare test data', () => {
           dimension: {
             width: testGenerators.randomInt(1, 10),
             height: testGenerators.randomInt(1, 10),
-            depth: testGenerators.randomInt(1, 10)
+            depth: testGenerators.randomInt(1, 10),
           },
           texture: {
             front: '/assets/r710-2.5-nobezel__29341.png',
             back: '/assets/r710-2.5-nobezel__29341.png',
             side: '/assets/r710-2.5-nobezel__29341.png',
             top: '/assets/r710-2.5-nobezel__29341.png',
-            bottom: '/assets/r710-2.5-nobezel__29341.png'
-          }
+            bottom: '/assets/r710-2.5-nobezel__29341.png',
+          },
         }
         await model.insertOne(mockModel)
         insertedModel = await model.findOne(mockModel)
@@ -123,7 +122,7 @@ describe('prepare test data', () => {
           objectId: insertedModel ? insertedModel._id : null,
           operation: 'Create',
           component: 'Model',
-          message: mockModel
+          message: mockModel,
         }
 
         await logs.insertOne(mockLog)
@@ -139,8 +138,8 @@ describe('prepare test data', () => {
             position: {
               x: testGenerators.randomInt(1, 100),
               y: testGenerators.randomInt(1, 100),
-              h: testGenerators.randomInt(1, 10)
-            }
+              h: testGenerators.randomInt(1, 10),
+            },
           }
 
           await device.insertOne(mockDevice)
@@ -161,16 +160,16 @@ describe('prepare test data', () => {
               dimension: {
                 width: 0,
                 height: 0,
-                depth: 0
+                depth: 0,
               },
               texture: {
                 front: '',
                 back: '',
                 side: '',
                 top: '',
-                bottom: ''
-              }
-            }
+                bottom: '',
+              },
+            },
           }
           await logs.insertOne(mockLog)
           insertedLog = await logs.findOne(mockLog)

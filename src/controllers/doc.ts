@@ -1,51 +1,51 @@
-import fs from 'fs'
-import { RequestHandler } from 'express'
-import swaggerUi, { JsonObject } from 'swagger-ui-express'
-import YAML from 'yaml'
-import getLogger from '../utils/logger'
+import fs from 'fs';
+import { RequestHandler } from 'express';
+import swaggerUi, { JsonObject } from 'swagger-ui-express';
+import YAML from 'yaml';
+import getLogger from '../utils/logger';
 
-const logger = getLogger('doc')
+const logger = getLogger('doc');
 
 /**
  * Get the YAML filename from environment or default
  */
 export function getYamlFilename(): string {
-  return process.env.API_YAML_FILE ?? './api.yaml'
+  return process.env.API_YAML_FILE ?? './api.yaml';
 }
 
 /**
  * Load and parse the Swagger YAML document
  */
 export function loadSwaggerDocument(): JsonObject | null {
-  const yamlFilename = getYamlFilename()
+  const yamlFilename = getYamlFilename();
 
   try {
-    const file = fs.readFileSync(yamlFilename, 'utf8')
-    const swaggerDocument = YAML.parse(file) as JsonObject
+    const file = fs.readFileSync(yamlFilename, 'utf8');
+    const swaggerDocument = YAML.parse(file) as JsonObject;
 
-    logger.info(`✅ Swagger ${yamlFilename} loaded successfully (${JSON.stringify(swaggerDocument).length} bytes)`)
+    logger.info(`✅ Swagger ${yamlFilename} loaded successfully (${JSON.stringify(swaggerDocument).length} bytes)`);
 
-    return swaggerDocument
+    return swaggerDocument;
   } catch (err: unknown) {
     if (typeof err === 'object' && err !== null && 'code' in err) {
-      const errorWithCode = err as { code?: string }
+      const errorWithCode = err as { code?: string };
 
       if (errorWithCode.code === 'ENOENT') {
-        logger.error(`File not found: ${yamlFilename}`)
+        logger.error(`File not found: ${yamlFilename}`);
       } else if (errorWithCode.code === 'EACCES') {
-        logger.error(`No permission to file ${yamlFilename}`)
+        logger.error(`No permission to file ${yamlFilename}`);
       } else if (err instanceof Error) {
-        logger.error('Open swaggerUI exception: ' + err.message)
+        logger.error('Open swaggerUI exception: ' + err.message);
       } else {
-        logger.error('Unknown error occurred.')
+        logger.error('Unknown error occurred.');
       }
     } else if (err instanceof Error) {
-      logger.error('Open swaggerUI exception: ' + err.message)
+      logger.error('Open swaggerUI exception: ' + err.message);
     } else {
-      logger.error('Unknown error occurred.')
+      logger.error('Unknown error occurred.');
     }
 
-    return null
+    return null;
   }
 }
 
@@ -53,33 +53,33 @@ export function loadSwaggerDocument(): JsonObject | null {
  * Get Swagger UI serve middleware
  */
 export function getSwaggerServe(): RequestHandler[] {
-  return swaggerUi.serve
+  return swaggerUi.serve;
 }
 
 /**
  * Get Swagger UI setup middleware
  */
 export function getSwaggerSetup(): RequestHandler {
-  const swaggerDocument = loadSwaggerDocument()
+  const swaggerDocument = loadSwaggerDocument();
 
   if (!swaggerDocument) {
     // Return a middleware that serves an error page
     return (req, res) => {
-      logger.warn(`Swagger documentation unavailable for ${req.method} ${req.originalUrl}`)
+      logger.warn(`Swagger documentation unavailable for ${req.method} ${req.originalUrl}`);
       res.status(503).json({
         error: 'Service Unavailable',
-        message: 'Swagger documentation is currently unavailable. Please check server logs.'
-      })
-    }
+        message: 'Swagger documentation is currently unavailable. Please check server logs.',
+      });
+    };
   }
 
-  logger.info('Swagger UI setup configured successfully')
+  logger.info('Swagger UI setup configured successfully');
 
   return swaggerUi.setup(swaggerDocument, {
     customCss: '.swagger-ui .topbar { display: none }',
     customSiteTitle: '3D Inventory API Documentation',
-    customfavIcon: '/favicon.ico'
-  })
+    customfavIcon: '/favicon.ico',
+  });
 }
 
 /**
@@ -87,39 +87,39 @@ export function getSwaggerSetup(): RequestHandler {
  */
 export const getDocumentationHealth: RequestHandler = (req, res): void => {
   try {
-    const yamlFilename = getYamlFilename()
-    const exists = fs.existsSync(yamlFilename)
+    const yamlFilename = getYamlFilename();
+    const exists = fs.existsSync(yamlFilename);
 
     if (exists) {
-      const stats = fs.statSync(yamlFilename)
+      const stats = fs.statSync(yamlFilename);
 
-      logger.info(`Documentation health check passed for ${req.method} ${req.originalUrl}`)
+      logger.info(`Documentation health check passed for ${req.method} ${req.originalUrl}`);
 
       res.json({
         status: 'healthy',
         yamlFile: yamlFilename,
         fileSize: stats.size,
         lastModified: stats.mtime,
-        message: 'Swagger documentation is available'
-      })
+        message: 'Swagger documentation is available',
+      });
     } else {
-      logger.warn(`Documentation health check failed - file not found: ${yamlFilename}`)
+      logger.warn(`Documentation health check failed - file not found: ${yamlFilename}`);
 
       res.status(503).json({
         status: 'unhealthy',
         yamlFile: yamlFilename,
-        message: 'Swagger YAML file not found'
-      })
+        message: 'Swagger YAML file not found',
+      });
     }
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
-    logger.error(`Error in documentation health check: ${errorMessage}`)
+    logger.error(`Error in documentation health check: ${errorMessage}`);
 
     res.status(500).json({
       status: 'error',
       message: 'Error checking documentation health',
-      error: errorMessage
-    })
+      error: errorMessage,
+    });
   }
-}
+};

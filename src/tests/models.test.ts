@@ -52,17 +52,17 @@ describe('GET /models', () => {
           dimension: {
             depth: expect.any(Number),
             height: expect.any(Number),
-            width: expect.any(Number)
+            width: expect.any(Number),
           },
           texture: {
             back: expect.any(String),
             bottom: expect.any(String),
             front: expect.any(String),
             side: expect.any(String),
-            top: expect.any(String)
-          }
-        })
-      ])
+            top: expect.any(String),
+          },
+        }),
+      ]),
     )
 
     // Assuming the response body is an array of objects with an _id property
@@ -86,13 +86,13 @@ describe('GET /models', () => {
           dimension: {
             width: expect.any(Number),
             height: expect.any(Number),
-            depth: expect.any(Number)
+            depth: expect.any(Number),
           },
           texture: {
             front: expect.any(String),
-            back: expect.any(String)
-          }
-        })
+            back: expect.any(String),
+          },
+        }),
       )
     }
   })

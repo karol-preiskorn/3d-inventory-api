@@ -42,7 +42,7 @@ describe('PUT /devices/:id/attributes', () => {
       matchedCount: 0,
       modifiedCount: 0,
       upsertedCount: 0,
-      upsertedId: null
+      upsertedId: null,
     })
   })
 
@@ -65,7 +65,7 @@ describe('PUT /devices/:id/attributes', () => {
       matchedCount: 0,
       modifiedCount: 0,
       upsertedCount: 0,
-      upsertedId: null
+      upsertedId: null,
     })
 
     const response = await request(app).put('/devices/66af8c766f87d90fa87bb982/attributes').send({ attribute: 'value' })
@@ -79,7 +79,7 @@ describe('PUT /devices/:id/attributes', () => {
       matchedCount: 1,
       modifiedCount: 1,
       upsertedCount: 0,
-      upsertedId: null
+      upsertedId: null,
     })
 
     const response = await request(app)

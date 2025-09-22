@@ -4,85 +4,85 @@
  * @module models
  */
 
-import { ObjectId } from 'mongodb'
+import { ObjectId } from 'mongodb';
 
 export interface Dimension {
-  width: number
-  height: number
-  depth: number
+  width: number;
+  height: number;
+  depth: number;
 }
 
 export interface Texture {
-  front: string
-  back: string
-  side: string
-  top: string
-  bottom: string
+  front: string;
+  back: string;
+  side: string;
+  top: string;
+  bottom: string;
 }
 
 export interface Model {
-  _id?: ObjectId
-  name: string
-  dimension: Dimension
-  texture: Texture
-  type?: string
-  category?: string
-  description?: string
-  manufacturer?: string
-  modelNumber?: string
-  specifications?: ModelSpecification[]
-  isActive: boolean
-  createdAt: Date
-  updatedAt: Date
+  _id?: ObjectId;
+  name: string;
+  dimension: Dimension;
+  texture: Texture;
+  type?: string;
+  category?: string;
+  description?: string;
+  manufacturer?: string;
+  modelNumber?: string;
+  specifications?: ModelSpecification[];
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ModelSpecification {
-  key: string
-  value: string
-  unit?: string
-  description?: string
+  key: string;
+  value: string;
+  unit?: string;
+  description?: string;
 }
 
 export interface CreateModelRequest {
-  name: string
-  dimension: Dimension
-  texture: Texture
-  type?: string
-  category?: string
-  description?: string
-  manufacturer?: string
-  modelNumber?: string
-  specifications?: ModelSpecification[]
-  isActive?: boolean
+  name: string;
+  dimension: Dimension;
+  texture: Texture;
+  type?: string;
+  category?: string;
+  description?: string;
+  manufacturer?: string;
+  modelNumber?: string;
+  specifications?: ModelSpecification[];
+  isActive?: boolean;
 }
 
 export interface UpdateModelRequest {
-  name?: string
-  dimension?: Dimension
-  texture?: Texture
-  type?: string
-  category?: string
-  description?: string
-  manufacturer?: string
-  modelNumber?: string
-  specifications?: ModelSpecification[]
-  isActive?: boolean
+  name?: string;
+  dimension?: Dimension;
+  texture?: Texture;
+  type?: string;
+  category?: string;
+  description?: string;
+  manufacturer?: string;
+  modelNumber?: string;
+  specifications?: ModelSpecification[];
+  isActive?: boolean;
 }
 
 export interface ModelResponse {
-  _id: ObjectId
-  name: string
-  dimension: Dimension
-  texture: Texture
-  type?: string
-  category?: string
-  description?: string
-  manufacturer?: string
-  modelNumber?: string
-  specifications: ModelSpecification[]
-  isActive: boolean
-  createdAt: Date
-  updatedAt: Date
+  _id: ObjectId;
+  name: string;
+  dimension: Dimension;
+  texture: Texture;
+  type?: string;
+  category?: string;
+  description?: string;
+  manufacturer?: string;
+  modelNumber?: string;
+  specifications: ModelSpecification[];
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export enum ModelType {
@@ -97,7 +97,7 @@ export enum ModelType {
   CABLE = 'Cable',
   PATCH_PANEL = 'Patch Panel',
   KVM = 'KVM',
-  MONITOR = 'Monitor'
+  MONITOR = 'Monitor',
 }
 
 export enum ModelCategory {
@@ -106,7 +106,7 @@ export enum ModelCategory {
   STORAGE = 'Storage',
   POWER = 'Power',
   INFRASTRUCTURE = 'Infrastructure',
-  ACCESSORIES = 'Accessories'
+  ACCESSORIES = 'Accessories',
 }
 
 // Model validation constants
@@ -124,123 +124,123 @@ export const MODEL_VALIDATION = {
   MAX_SPECIFICATIONS: 50,
   SPEC_KEY_MAX_LENGTH: 100,
   SPEC_VALUE_MAX_LENGTH: 500,
-  SPEC_UNIT_MAX_LENGTH: 20
-}
+  SPEC_UNIT_MAX_LENGTH: 20,
+};
 
 // Validation functions
 export function validateModelInput(data: Partial<CreateModelRequest>): { isValid: boolean; error?: string } {
-  const { name, dimension, texture } = data
+  const { name, dimension, texture } = data;
 
   if (!name || typeof name !== 'string' || name.trim().length < MODEL_VALIDATION.NAME_MIN_LENGTH) {
-    return { isValid: false, error: `Name must be at least ${MODEL_VALIDATION.NAME_MIN_LENGTH} characters long` }
+    return { isValid: false, error: `Name must be at least ${MODEL_VALIDATION.NAME_MIN_LENGTH} characters long` };
   }
 
   if (name.length > MODEL_VALIDATION.NAME_MAX_LENGTH) {
-    return { isValid: false, error: `Name cannot exceed ${MODEL_VALIDATION.NAME_MAX_LENGTH} characters` }
+    return { isValid: false, error: `Name cannot exceed ${MODEL_VALIDATION.NAME_MAX_LENGTH} characters` };
   }
 
   if (!dimension || typeof dimension !== 'object') {
-    return { isValid: false, error: 'Dimension is required' }
+    return { isValid: false, error: 'Dimension is required' };
   }
 
-  const dimensionValidation = validateDimension(dimension)
+  const dimensionValidation = validateDimension(dimension);
 
   if (!dimensionValidation.isValid) {
-    return dimensionValidation
+    return dimensionValidation;
   }
 
   if (!texture || typeof texture !== 'object') {
-    return { isValid: false, error: 'Texture is required' }
+    return { isValid: false, error: 'Texture is required' };
   }
 
-  const textureValidation = validateTexture(texture)
+  const textureValidation = validateTexture(texture);
 
   if (!textureValidation.isValid) {
-    return textureValidation
+    return textureValidation;
   }
 
-  return { isValid: true }
+  return { isValid: true };
 }
 
 export function validateDimension(dimension: Dimension): { isValid: boolean; error?: string } {
-  const { width, height, depth } = dimension
+  const { width, height, depth } = dimension;
 
   if (typeof width !== 'number' || width < MODEL_VALIDATION.DIMENSION_MIN || width > MODEL_VALIDATION.DIMENSION_MAX) {
-    return { isValid: false, error: `Width must be a number between ${MODEL_VALIDATION.DIMENSION_MIN} and ${MODEL_VALIDATION.DIMENSION_MAX}` }
+    return { isValid: false, error: `Width must be a number between ${MODEL_VALIDATION.DIMENSION_MIN} and ${MODEL_VALIDATION.DIMENSION_MAX}` };
   }
 
   if (typeof height !== 'number' || height < MODEL_VALIDATION.DIMENSION_MIN || height > MODEL_VALIDATION.DIMENSION_MAX) {
-    return { isValid: false, error: `Height must be a number between ${MODEL_VALIDATION.DIMENSION_MIN} and ${MODEL_VALIDATION.DIMENSION_MAX}` }
+    return { isValid: false, error: `Height must be a number between ${MODEL_VALIDATION.DIMENSION_MIN} and ${MODEL_VALIDATION.DIMENSION_MAX}` };
   }
 
   if (typeof depth !== 'number' || depth < MODEL_VALIDATION.DIMENSION_MIN || depth > MODEL_VALIDATION.DIMENSION_MAX) {
-    return { isValid: false, error: `Depth must be a number between ${MODEL_VALIDATION.DIMENSION_MIN} and ${MODEL_VALIDATION.DIMENSION_MAX}` }
+    return { isValid: false, error: `Depth must be a number between ${MODEL_VALIDATION.DIMENSION_MIN} and ${MODEL_VALIDATION.DIMENSION_MAX}` };
   }
 
-  return { isValid: true }
+  return { isValid: true };
 }
 
 export function validateTexture(texture: Texture): { isValid: boolean; error?: string } {
-  const { front, back, side, top, bottom } = texture
+  const { front, back, side, top, bottom } = texture;
   const textureFields = [
     { name: 'front', value: front },
     { name: 'back', value: back },
     { name: 'side', value: side },
     { name: 'top', value: top },
-    { name: 'bottom', value: bottom }
-  ]
+    { name: 'bottom', value: bottom },
+  ];
 
   for (const field of textureFields) {
     if (!field.value || typeof field.value !== 'string' || field.value.trim().length === 0) {
-      return { isValid: false, error: `Texture ${field.name} is required and must be a non-empty string` }
+      return { isValid: false, error: `Texture ${field.name} is required and must be a non-empty string` };
     }
 
     if (field.value.length > MODEL_VALIDATION.TEXTURE_PATH_MAX_LENGTH) {
-      return { isValid: false, error: `Texture ${field.name} path cannot exceed ${MODEL_VALIDATION.TEXTURE_PATH_MAX_LENGTH} characters` }
+      return { isValid: false, error: `Texture ${field.name} path cannot exceed ${MODEL_VALIDATION.TEXTURE_PATH_MAX_LENGTH} characters` };
     }
   }
 
-  return { isValid: true }
+  return { isValid: true };
 }
 
 export function validateModelSpecifications(specifications: ModelSpecification[]): { isValid: boolean; error?: string } {
   if (!Array.isArray(specifications)) {
-    return { isValid: false, error: 'Specifications must be an array' }
+    return { isValid: false, error: 'Specifications must be an array' };
   }
 
   if (specifications.length > MODEL_VALIDATION.MAX_SPECIFICATIONS) {
-    return { isValid: false, error: `Cannot exceed ${MODEL_VALIDATION.MAX_SPECIFICATIONS} specifications` }
+    return { isValid: false, error: `Cannot exceed ${MODEL_VALIDATION.MAX_SPECIFICATIONS} specifications` };
   }
 
   for (const spec of specifications) {
     if (!spec.key || typeof spec.key !== 'string' || spec.key.trim().length === 0) {
-      return { isValid: false, error: 'Specification key is required and must be a non-empty string' }
+      return { isValid: false, error: 'Specification key is required and must be a non-empty string' };
     }
 
     if (spec.key.length > MODEL_VALIDATION.SPEC_KEY_MAX_LENGTH) {
-      return { isValid: false, error: `Specification key cannot exceed ${MODEL_VALIDATION.SPEC_KEY_MAX_LENGTH} characters` }
+      return { isValid: false, error: `Specification key cannot exceed ${MODEL_VALIDATION.SPEC_KEY_MAX_LENGTH} characters` };
     }
 
     if (!spec.value || typeof spec.value !== 'string') {
-      return { isValid: false, error: 'Specification value is required and must be a string' }
+      return { isValid: false, error: 'Specification value is required and must be a string' };
     }
 
     if (spec.value.length > MODEL_VALIDATION.SPEC_VALUE_MAX_LENGTH) {
-      return { isValid: false, error: `Specification value cannot exceed ${MODEL_VALIDATION.SPEC_VALUE_MAX_LENGTH} characters` }
+      return { isValid: false, error: `Specification value cannot exceed ${MODEL_VALIDATION.SPEC_VALUE_MAX_LENGTH} characters` };
     }
 
     if (spec.unit && (typeof spec.unit !== 'string' || spec.unit.length > MODEL_VALIDATION.SPEC_UNIT_MAX_LENGTH)) {
-      return { isValid: false, error: `Specification unit cannot exceed ${MODEL_VALIDATION.SPEC_UNIT_MAX_LENGTH} characters` }
+      return { isValid: false, error: `Specification unit cannot exceed ${MODEL_VALIDATION.SPEC_UNIT_MAX_LENGTH} characters` };
     }
   }
 
-  return { isValid: true }
+  return { isValid: true };
 }
 
 // Convert Model to ModelResponse
 export function toModelResponse(model: Model): ModelResponse {
   if (!model._id) {
-    throw new Error('Model _id is required to create ModelResponse')
+    throw new Error('Model _id is required to create ModelResponse');
   }
 
   return {
@@ -256,8 +256,8 @@ export function toModelResponse(model: Model): ModelResponse {
     specifications: model.specifications || [],
     isActive: model.isActive,
     createdAt: model.createdAt,
-    updatedAt: model.updatedAt
-  }
+    updatedAt: model.updatedAt,
+  };
 }
 
 // Helper functions
@@ -270,7 +270,7 @@ export function createModelFromRequest(request: CreateModelRequest): Omit<Model,
       back: request.texture.back.trim(),
       side: request.texture.side.trim(),
       top: request.texture.top.trim(),
-      bottom: request.texture.bottom.trim()
+      bottom: request.texture.bottom.trim(),
     },
     type: request.type?.trim(),
     category: request.category?.trim(),
@@ -278,35 +278,35 @@ export function createModelFromRequest(request: CreateModelRequest): Omit<Model,
     manufacturer: request.manufacturer?.trim(),
     modelNumber: request.modelNumber?.trim(),
     specifications: request.specifications || [],
-    isActive: request.isActive !== undefined ? request.isActive : true
-  }
+    isActive: request.isActive !== undefined ? request.isActive : true,
+  };
 }
 
 export function updateModelFromRequest(currentModel: Model, request: UpdateModelRequest): Partial<Model> {
   const updates: Partial<Model> = {
-    updatedAt: new Date()
-  }
+    updatedAt: new Date(),
+  };
 
-  if (request.name !== undefined) updates.name = request.name.trim()
-  if (request.dimension !== undefined) updates.dimension = request.dimension
+  if (request.name !== undefined) updates.name = request.name.trim();
+  if (request.dimension !== undefined) updates.dimension = request.dimension;
   if (request.texture !== undefined) {
     updates.texture = {
       front: request.texture.front.trim(),
       back: request.texture.back.trim(),
       side: request.texture.side.trim(),
       top: request.texture.top.trim(),
-      bottom: request.texture.bottom.trim()
-    }
+      bottom: request.texture.bottom.trim(),
+    };
   }
-  if (request.type !== undefined) updates.type = request.type?.trim()
-  if (request.category !== undefined) updates.category = request.category?.trim()
-  if (request.description !== undefined) updates.description = request.description?.trim()
-  if (request.manufacturer !== undefined) updates.manufacturer = request.manufacturer?.trim()
-  if (request.modelNumber !== undefined) updates.modelNumber = request.modelNumber?.trim()
-  if (request.specifications !== undefined) updates.specifications = request.specifications
-  if (request.isActive !== undefined) updates.isActive = request.isActive
+  if (request.type !== undefined) updates.type = request.type?.trim();
+  if (request.category !== undefined) updates.category = request.category?.trim();
+  if (request.description !== undefined) updates.description = request.description?.trim();
+  if (request.manufacturer !== undefined) updates.manufacturer = request.manufacturer?.trim();
+  if (request.modelNumber !== undefined) updates.modelNumber = request.modelNumber?.trim();
+  if (request.specifications !== undefined) updates.specifications = request.specifications;
+  if (request.isActive !== undefined) updates.isActive = request.isActive;
 
-  return updates
+  return updates;
 }
 
 // Default texture paths
@@ -315,20 +315,21 @@ export const DEFAULT_TEXTURE_PATHS = {
   NETWORK: '/assets/textures/network-default.png',
   STORAGE: '/assets/textures/storage-default.png',
   POWER: '/assets/textures/power-default.png',
-  RACK: '/assets/textures/rack-default.png'
-}
+  RACK: '/assets/textures/rack-default.png',
+};
 
 // Get default texture for model type
 export function getDefaultTexture(modelType?: string): Texture {
-  const defaultPath = modelType && DEFAULT_TEXTURE_PATHS[modelType as keyof typeof DEFAULT_TEXTURE_PATHS]
-    ? DEFAULT_TEXTURE_PATHS[modelType as keyof typeof DEFAULT_TEXTURE_PATHS]
-    : '/assets/textures/generic-default.png'
+  const defaultPath =
+    modelType && DEFAULT_TEXTURE_PATHS[modelType as keyof typeof DEFAULT_TEXTURE_PATHS]
+      ? DEFAULT_TEXTURE_PATHS[modelType as keyof typeof DEFAULT_TEXTURE_PATHS]
+      : '/assets/textures/generic-default.png';
 
   return {
     front: defaultPath,
     back: defaultPath,
     side: defaultPath,
     top: defaultPath,
-    bottom: defaultPath
-  }
+    bottom: defaultPath,
+  };
 }

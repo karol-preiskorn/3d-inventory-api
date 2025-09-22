@@ -33,11 +33,7 @@
         "httpStatusExpected": true,
         "mustBeConformant": true
       },
-      "httpStatusExpected": [
-        "2XX",
-        "400",
-        "404"
-      ]
+      "httpStatusExpected": ["2XX", "400", "404"]
     },
     "tests": {
       "responsePolicy": {

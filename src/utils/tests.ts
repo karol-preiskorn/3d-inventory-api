@@ -8,11 +8,10 @@ export class NoErrorThrownError extends Error {}
 
 export async function getError(call: () => Promise<unknown>): Promise<unknown> {
   try {
-    await call()
+    await call();
 
-    throw new NoErrorThrownError()
-  }
-  catch (error) {
-    return error
+    throw new NoErrorThrownError();
+  } catch (error) {
+    return error;
   }
 }

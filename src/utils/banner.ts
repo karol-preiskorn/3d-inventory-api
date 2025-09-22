@@ -3,11 +3,11 @@
  * @version: 2024-01-07  C2RLO  Initial
  */
 
-import fs from 'fs/promises'
-import figlet from 'figlet'
-import { logger } from './logger'
+import fs from 'fs/promises';
+import figlet from 'figlet';
+import { logger } from './logger';
 
-let fontLoaded = false
+let fontLoaded = false;
 
 /**
  * Loads the font used for rendering ASCII art.
@@ -16,10 +16,10 @@ let fontLoaded = false
  */
 async function loadFont(): Promise<void> {
   if (!fontLoaded) {
-    const data = await fs.readFile('src/assets/font.flf', 'utf8')
+    const data = await fs.readFile('src/assets/font.flf', 'utf8');
 
-    figlet.parseFont('myfont', data)
-    fontLoaded = true
+    figlet.parseFont('myfont', data);
+    fontLoaded = true;
   }
 }
 
@@ -28,6 +28,6 @@ async function loadFont(): Promise<void> {
  * @returns {Promise<void>} A promise that resolves when the banner is displayed.
  */
 export async function banner(): Promise<void> {
-  await loadFont()
-  logger.warn('\n' + figlet.textSync('3d-inv API', { font: 'myfont' }))
+  await loadFont();
+  logger.warn('\n' + figlet.textSync('3d-inv API', { font: 'myfont' }));
 }

@@ -31,7 +31,8 @@ describe('create 3 models', () => {
   })
 
   it('should insert a 10 models', async () => {
-    for (let index = 0; index < 3; index++) { // Reduced from 10 to 3 for faster testing
+    for (let index = 0; index < 3; index++) {
+      // Reduced from 10 to 3 for faster testing
       const models = db.collection('models')
       const deviceData = testGenerators.deviceSimple()
 
@@ -43,8 +44,8 @@ describe('create 3 models', () => {
           back: '/assets/texture/r710-2.5-nobezel__29341.png',
           side: '/assets/texture/r710-2.5-nobezel__29341.png',
           top: '/assets/texture/r710-2.5-nobezel__29341.png',
-          bottom: '/assets/texture/r710-2.5-nobezel__29341.png'
-        }
+          bottom: '/assets/texture/r710-2.5-nobezel__29341.png',
+        },
       }
 
       const insertResult = await models.insertOne(mockModel)

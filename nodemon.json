@@ -1,11 +1,5 @@
 ﻿{
-  "ignore": [
-    "tests/**/*.ts",
-    ".git",
-    "doc/**/*",
-    "coverage/**/*",
-    "node_modules/**/*"
-  ],
+  "ignore": ["tests/**/*.ts", ".git", "doc/**/*", "coverage/**/*", "node_modules/**/*"],
   "watch": [
     "src/api/openapi.yaml",
     "src/index.ts",

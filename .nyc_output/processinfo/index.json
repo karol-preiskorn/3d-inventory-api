@@ -4,48 +4,20 @@
     "8ef3aa82-5b3d-4ad9-a90c-7f28216e8465": { "parent": null, "children": [] }
   },
   "files": {
-    "/home/karol/GitHub/3d-inventory-mongo-api/api/json2openapi.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/db/conn.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/db/mongo/insertOneDevice.mongodb.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/db/mongo/insertOneModel.mongodb.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/gcs/authenticateImplicitWithAdc.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/index.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/routers/devices.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/routers/models.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/routers/readme.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/schema/3d-inventory/functions/resetFunc.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/schema/functions/resetFunc.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/utils/banner.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/utils/loadEnvironment.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ],
-    "/home/karol/GitHub/3d-inventory-mongo-api/utils/logger.js": [
-      "4c6a51ed-e808-40d7-acec-6137e5f2b106"
-    ]
+    "/home/karol/GitHub/3d-inventory-mongo-api/api/json2openapi.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/db/conn.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/db/mongo/insertOneDevice.mongodb.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/db/mongo/insertOneModel.mongodb.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/gcs/authenticateImplicitWithAdc.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/index.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/routers/devices.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/routers/models.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/routers/readme.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/schema/3d-inventory/functions/resetFunc.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/schema/functions/resetFunc.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/utils/banner.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/utils/loadEnvironment.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"],
+    "/home/karol/GitHub/3d-inventory-mongo-api/utils/logger.js": ["4c6a51ed-e808-40d7-acec-6137e5f2b106"]
   },
   "externalIds": {}
 }

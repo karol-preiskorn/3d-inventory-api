@@ -1,8 +1,5 @@
 {
-  "plugins": [
-    "./plugins/markdown",
-    "./plugins/summarize"
-  ],
+  "plugins": ["./plugins/markdown", "./plugins/summarize"],
   "source": {
     // Exclude unnecessary directories like 'node_modules' and 'docs' from processing
     // Regex pattern to exclude 'node_modules' and 'docs' directories from processing
@@ -11,10 +8,7 @@
   "sourceType": "module",
   // Allow non-standard JSDoc tags (e.g., @customTag, @anotherTag) to support custom project-specific annotations
   "allowUnknownTags": true,
-  "dictionaries": [
-    "jsdoc",
-    "closure"
-  ],
+  "dictionaries": ["jsdoc", "closure"],
   // Disabling automatic linking of URLs to avoid unintended behavior
   "cleverLinks": false,
   "monospaceLinks": false

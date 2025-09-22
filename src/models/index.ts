@@ -5,134 +5,52 @@
  */
 
 // User and Role models
-export * from './User'
-export * from './Role'
+export * from './User';
+export * from './Role';
 
 // Core inventory models
-export * from './Device'
-export * from './Model'
-export * from './Connection'
-export * from './Attribute'
-export * from './Floor'
-export * from './Log'
+export * from './Device';
+export * from './Model';
+export * from './Connection';
+export * from './Attribute';
+export * from './Floor';
+export * from './Log';
 
 // Shared types and utilities
-export * from './types'
-export * from './validation'
+export * from './types';
+export * from './validation';
 
 // Re-export commonly used interfaces with clear naming
-export type {
-  User,
-  UserResponse,
-  CreateUserRequest,
-  UpdateUserRequest,
-  LoginRequest,
-  LoginResponse
-} from './User'
+export type { User, UserResponse, CreateUserRequest, UpdateUserRequest, LoginRequest, LoginResponse } from './User';
 
-export type {
-  Role,
-  RoleResponse,
-  CreateRoleRequest,
-  UpdateRoleRequest
-} from './Role'
+export type { Role, RoleResponse, CreateRoleRequest, UpdateRoleRequest } from './Role';
 
-export type {
-  Device,
-  DeviceResponse,
-  CreateDeviceRequest,
-  UpdateDeviceRequest,
-  Position,
-  DeviceAttribute
-} from './Device'
+export type { Device, DeviceResponse, CreateDeviceRequest, UpdateDeviceRequest, Position, DeviceAttribute } from './Device';
 
-export type {
-  Model,
-  ModelResponse,
-  CreateModelRequest,
-  UpdateModelRequest,
-  Dimension,
-  Texture,
-  ModelSpecification
-} from './Model'
+export type { Model, ModelResponse, CreateModelRequest, UpdateModelRequest, Dimension, Texture, ModelSpecification } from './Model';
 
-export type {
-  Connection,
-  ConnectionResponse,
-  CreateConnectionRequest,
-  UpdateConnectionRequest,
-  ConnectionAttribute
-} from './Connection'
+export type { Connection, ConnectionResponse, CreateConnectionRequest, UpdateConnectionRequest, ConnectionAttribute } from './Connection';
 
-export type {
-  Attribute,
-  AttributeResponse,
-  CreateAttributeRequest,
-  UpdateAttributeRequest,
-  AttributeValidation
-} from './Attribute'
+export type { Attribute, AttributeResponse, CreateAttributeRequest, UpdateAttributeRequest, AttributeValidation } from './Attribute';
 
-export type {
-  Floor,
-  FloorResponse,
-  CreateFloorRequest,
-  UpdateFloorRequest,
-  Address,
-  FloorDimension,
-  FloorCapacity,
-  EnvironmentalConditions
-} from './Floor'
+export type { Floor, FloorResponse, CreateFloorRequest, UpdateFloorRequest, Address, FloorDimension, FloorCapacity, EnvironmentalConditions } from './Floor';
 
-export type {
-  Log,
-  LogResponse,
-  CreateLogRequest,
-  LogQueryParams,
-  LogDetails
-} from './Log'
+export type { Log, LogResponse, CreateLogRequest, LogQueryParams, LogDetails } from './Log';
 
 // Re-export key enums for easy access
-export {
-  UserRole,
-  Permission
-} from '../middlewares/auth'
+export { UserRole, Permission } from '../middlewares/auth';
 
-export {
-  DeviceStatus,
-  DeviceType,
-  DeviceCategory
-} from './Device'
+export { DeviceStatus, DeviceType, DeviceCategory } from './Device';
 
-export {
-  ModelType,
-  ModelCategory
-} from './Model'
+export { ModelType, ModelCategory } from './Model';
 
-export {
-  ConnectionType,
-  ConnectionCategory,
-  ConnectionStatus,
-  NetworkProtocol
-} from './Connection'
+export { ConnectionType, ConnectionCategory, ConnectionStatus, NetworkProtocol } from './Connection';
 
-export {
-  AttributeValueType,
-  AttributeComponent,
-  AttributeCategory
-} from './Attribute'
+export { AttributeValueType, AttributeComponent, AttributeCategory } from './Attribute';
 
-export {
-  FloorType,
-  FloorStatus,
-  DimensionType
-} from './Floor'
+export { FloorType, FloorStatus, DimensionType } from './Floor';
 
-export {
-  LogOperation,
-  LogComponent,
-  LogStatus,
-  LogSeverity
-} from './Log'
+export { LogOperation, LogComponent, LogStatus, LogSeverity } from './Log';
 
 export {
   CommonStatus,
@@ -150,8 +68,8 @@ export {
   ResponseStatus,
   ErrorType,
   SortOrder,
-  HealthStatus
-} from './types'
+  HealthStatus,
+} from './types';
 
 // Re-export validation utilities
 export {
@@ -176,12 +94,10 @@ export {
   validateSortParams,
   validateSearchParams,
   validateBatch,
-  FieldValidators
-} from './validation'
+  FieldValidators,
+} from './validation';
 
-export type {
-  ValidationResult
-} from './validation'
+export type { ValidationResult } from './validation';
 
 // Re-export commonly used types
 export type {
@@ -194,14 +110,11 @@ export type {
   AuditInfo,
   HealthCheck,
   SearchFilters,
-  SortOption
-} from './types'
+  SortOption,
+} from './types';
 
 // Export validation constants and patterns
-export {
-  VALIDATION_PATTERNS,
-  VALIDATION_CONSTANTS
-} from './types'
+export { VALIDATION_PATTERNS, VALIDATION_CONSTANTS } from './types';
 
 // Export utility functions
 export {
@@ -215,25 +128,21 @@ export {
   sanitizeString,
   truncateString,
   capitalizeFirstLetter,
-  formatTimestamp
-} from './types'
+  formatTimestamp,
+} from './types';
 
 // Model transformation utilities
-export {
-  toUserResponse
-} from './User'
+export { toUserResponse } from './User';
 
-export {
-  toRoleResponse as transformRoleResponse
-} from './Role'
+export { toRoleResponse as transformRoleResponse } from './Role';
 
 export {
   toDeviceResponse as transformDeviceResponse,
   createDeviceFromRequest,
   updateDeviceFromRequest,
   validateDeviceInput,
-  validateDeviceAttributes
-} from './Device'
+  validateDeviceAttributes,
+} from './Device';
 
 export {
   toModelResponse as transformModelResponse,
@@ -243,8 +152,8 @@ export {
   validateDimension,
   validateTexture,
   validateModelSpecifications,
-  getDefaultTexture
-} from './Model'
+  getDefaultTexture,
+} from './Model';
 
 export {
   toConnectionResponse as transformConnectionResponse,
@@ -254,8 +163,8 @@ export {
   validateConnectionAttributes,
   getConnectionDisplayName,
   isConnectionBidirectional,
-  getConnectionCapacity
-} from './Connection'
+  getConnectionCapacity,
+} from './Connection';
 
 export {
   toAttributeResponse as transformAttributeResponse,
@@ -265,8 +174,8 @@ export {
   validateAttributeValue,
   validateAttributeValidation,
   getFormattedValue,
-  sortAttributesByDisplayOrder
-} from './Attribute'
+  sortAttributesByDisplayOrder,
+} from './Attribute';
 
 export {
   toFloorResponse as transformFloorResponse,
@@ -278,8 +187,8 @@ export {
   validateSingleDimension,
   getFloorDisplayName,
   calculateFloorUtilization,
-  getAvailableSpace
-} from './Floor'
+  getAvailableSpace,
+} from './Floor';
 
 export {
   toLogResponse as transformLogResponse,
@@ -292,39 +201,22 @@ export {
   getLogDurationFormatted,
   isLogCritical,
   groupLogsByComponent,
-  getLogStatistics
-} from './Log'
+  getLogStatistics,
+} from './Log';
 
 // Model validation constants for easy access
-export {
-  USER_VALIDATION
-} from './User'
+export { USER_VALIDATION } from './User';
 
-export {
-  DEFAULT_ROLES
-} from './Role'
+export { DEFAULT_ROLES } from './Role';
 
-export {
-  DEVICE_VALIDATION
-} from './Device'
+export { DEVICE_VALIDATION } from './Device';
 
-export {
-  MODEL_VALIDATION,
-  DEFAULT_TEXTURE_PATHS
-} from './Model'
+export { MODEL_VALIDATION, DEFAULT_TEXTURE_PATHS } from './Model';
 
-export {
-  CONNECTION_VALIDATION
-} from './Connection'
+export { CONNECTION_VALIDATION } from './Connection';
 
-export {
-  ATTRIBUTE_VALIDATION
-} from './Attribute'
+export { ATTRIBUTE_VALIDATION } from './Attribute';
 
-export {
-  FLOOR_VALIDATION
-} from './Floor'
+export { FLOOR_VALIDATION } from './Floor';
 
-export {
-  LOG_VALIDATION
-} from './Log'
+export { LOG_VALIDATION } from './Log';

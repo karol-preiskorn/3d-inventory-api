@@ -9,7 +9,7 @@ const config: import('jest').Config = {
   rootDir: '.',
   fakeTimers: {
     doNotFake: ['nextTick'],
-    timerLimit: 30000
+    timerLimit: 30000,
   },
   bail: 1,
   verbose: true,
@@ -22,8 +22,8 @@ const config: import('jest').Config = {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: -10
-    }
+      statements: -10,
+    },
   },
   testEnvironment: 'node',
   roots: ['<rootDir>'],
@@ -34,17 +34,24 @@ const config: import('jest').Config = {
       clearMocks: true,
       setupFilesAfterEnv: ['<rootDir>/src/tests/jest.setup.ts'],
       globals: {
-        __DEV__: true
+        __DEV__: true,
+        'ts-jest': {
+          useESM: true,
+        },
       },
       moduleFileExtensions: ['js', 'ts', 'yaml', 'json'],
       preset: 'ts-jest',
       testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/docs/', '<rootDir>/dist/', '<rootDir>/logs/', '<rootDir>/coverage/'],
       testRegex: '(/tests/.*\\.test\\.(mjs?|cjs?|js?|tsx?|ts?)$|(\\.|/)(test|spec))\\.(mjs?|cjs?|js?|tsx?|ts?)$',
+      extensionsToTreatAsEsm: ['.ts'],
+      moduleNameMapper: {
+        '^(\\.{1,2}/.*)\\.js$': '$1',
+      },
       transform: {
-        '^.+\\.(ts|tsx)$': 'ts-jest'
-      }
-    }
-  ]
-}
+        '^.+\\.(ts|tsx)$': 'ts-jest',
+      },
+    },
+  ],
+};
 
-export default config
+export default config;

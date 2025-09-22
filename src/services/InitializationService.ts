@@ -4,28 +4,28 @@
  * @module services
  */
 
-import getLogger from '../utils/logger'
-import { RoleService } from './RoleService'
-import { UserService } from './UserService'
+import getLogger from '../utils/logger';
+import { RoleService } from './RoleService';
+import { UserService } from './UserService';
 
-const logger = getLogger('InitializationService')
+const logger = getLogger('InitializationService');
 
 export class InitializationService {
-  private static instance: InitializationService
-  private userService: UserService
-  private roleService: RoleService
+  private static instance: InitializationService;
+  private userService: UserService;
+  private roleService: RoleService;
 
   private constructor() {
-    this.userService = UserService.getInstance()
-    this.roleService = RoleService.getInstance()
+    this.userService = UserService.getInstance();
+    this.roleService = RoleService.getInstance();
   }
 
   public static getInstance(): InitializationService {
     if (!InitializationService.instance) {
-      InitializationService.instance = new InitializationService()
+      InitializationService.instance = new InitializationService();
     }
 
-    return InitializationService.instance
+    return InitializationService.instance;
   }
 
   /**
@@ -33,19 +33,18 @@ export class InitializationService {
    */
   async initializeApplication(): Promise<void> {
     try {
-      logger.info('Starting application initialization...')
+      logger.info('Starting application initialization...');
 
       // Initialize default roles first
-      await this.initializeRoles()
+      await this.initializeRoles();
 
       // Then initialize default users
-      await this.initializeUsers()
+      await this.initializeUsers();
 
-      logger.info('Application initialization completed successfully')
-
+      logger.info('Application initialization completed successfully');
     } catch (error) {
-      logger.error(`Application initialization failed: ${error instanceof Error ? error.message : String(error)}`)
-      throw error
+      logger.error(`Application initialization failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
     }
   }
 
@@ -54,15 +53,14 @@ export class InitializationService {
    */
   private async initializeRoles(): Promise<void> {
     try {
-      logger.info('Initializing default roles...')
+      logger.info('Initializing default roles...');
 
-      await this.roleService.initializeDefaultRoles()
+      await this.roleService.initializeDefaultRoles();
 
-      logger.info('Default roles initialized successfully')
-
+      logger.info('Default roles initialized successfully');
     } catch (error) {
-      logger.error(`Failed to initialize default roles: ${error instanceof Error ? error.message : String(error)}`)
-      throw error
+      logger.error(`Failed to initialize default roles: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
     }
   }
 
@@ -71,15 +69,14 @@ export class InitializationService {
    */
   private async initializeUsers(): Promise<void> {
     try {
-      logger.info('Initializing default users...')
+      logger.info('Initializing default users...');
 
-      await this.userService.initializeDefaultUsers()
+      await this.userService.initializeDefaultUsers();
 
-      logger.info('Default users initialized successfully')
-
+      logger.info('Default users initialized successfully');
     } catch (error) {
-      logger.error(`Failed to initialize default users: ${error instanceof Error ? error.message : String(error)}`)
-      throw error
+      logger.error(`Failed to initialize default users: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
     }
   }
 
@@ -89,32 +86,31 @@ export class InitializationService {
   async isInitializationNeeded(): Promise<boolean> {
     try {
       // Check if any users exist
-      const users = await this.userService.getAllUsers()
+      const users = await this.userService.getAllUsers();
 
       if (users.length === 0) {
-        logger.info('No users found - initialization needed')
+        logger.info('No users found - initialization needed');
 
-        return true
+        return true;
       }
 
       // Check if any roles exist
-      const roles = await this.roleService.getAllRoles()
+      const roles = await this.roleService.getAllRoles();
 
       if (roles.length === 0) {
-        logger.info('No roles found - initialization needed')
+        logger.info('No roles found - initialization needed');
 
-        return true
+        return true;
       }
 
-      logger.info('Application already initialized')
+      logger.info('Application already initialized');
 
-      return false
-
+      return false;
     } catch (error) {
-      logger.warn(`Failed to check initialization status: ${error instanceof Error ? error.message : String(error)}`)
+      logger.warn(`Failed to check initialization status: ${error instanceof Error ? error.message : String(error)}`);
 
       // If we can't check, assume initialization is needed
-      return true
+      return true;
     }
   }
 
@@ -123,16 +119,15 @@ export class InitializationService {
    */
   async resetApplication(): Promise<void> {
     try {
-      logger.warn('Resetting application data...')
+      logger.warn('Resetting application data...');
 
       // Note: This is a destructive operation and should only be used in development
       // In production, implement proper backup and restore mechanisms
 
-      logger.warn('Application reset completed')
-
+      logger.warn('Application reset completed');
     } catch (error) {
-      logger.error(`Application reset failed: ${error instanceof Error ? error.message : String(error)}`)
-      throw error
+      logger.error(`Application reset failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
     }
   }
 }

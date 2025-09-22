@@ -19,28 +19,10 @@
     "sourceMap": true,
     "strict": true,
     "noImplicitAny": true,
-    "types": [
-      "node",
-      "jest"
-    ],
-    "lib": [
-      "ES2020"
-    ],
+    "types": ["node", "jest"],
+    "lib": ["ES2020"],
     "resolveJsonModule": true
   },
-  "exclude": [
-    "node_modules",
-    "tests",
-    "dist",
-    "coverage",
-    "build",
-    "scripts",
-    "src/__tests__",
-    "src/__mocks__",
-    "jest.config.ts",
-    "*.config.ts"
-  ],
-  "include": [
-    "src/**/*.ts"
-  ]
+  "exclude": ["node_modules", "tests", "dist", "coverage", "build", "scripts", "src/__tests__", "src/__mocks__", "jest.config.ts", "*.config.ts"],
+  "include": ["src/**/*.ts"]
 }

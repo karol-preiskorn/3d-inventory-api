@@ -4,10 +4,10 @@
  * @version 2024-08-04 C2RLO - Initial
  **/
 
-import { format } from 'date-fns'
-import { Collection, Db, InsertOneResult, ObjectId, Document } from 'mongodb'
-import { Observable, of } from 'rxjs'
-import { connectToCluster, connectToDb } from '../utils/db'
+import { format } from 'date-fns';
+import { Collection, Db, InsertOneResult, ObjectId, Document } from 'mongodb';
+import { Observable, of } from 'rxjs';
+import { connectToCluster, connectToDb } from '../utils/db';
 
 /**
  * Represents a log entry.
@@ -38,19 +38,19 @@ export interface LogCreate {
  * @returns An Observable that emits a Log or LogIn object.
  */
 export async function CreateLog(objectId: string, message: object, operation: string, component: string): Promise<Observable<InsertOneResult<Document>>> {
-  const client = await connectToCluster()
-  const db: Db = connectToDb(client)
-  const collection: Collection = db.collection('logs')
+  const client = await connectToCluster();
+  const db: Db = connectToDb(client);
+  const collection: Collection = db.collection('logs');
   const log: LogCreate = {
     date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
     message: message,
     operation: operation,
     component: component,
-    objectId: objectId
-  }
+    objectId: objectId,
+  };
 
-  console.log('LogCreate: ' + JSON.stringify(log, null, ' '))
-  const result: InsertOneResult<Document> = await collection.insertOne(log) // Replace 'collection' with the correct collection name
+  console.log('LogCreate: ' + JSON.stringify(log, null, ' '));
+  const result: InsertOneResult<Document> = await collection.insertOne(log); // Replace 'collection' with the correct collection name
 
-  return of(result)
+  return of(result);
 }

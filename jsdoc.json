@@ -4,21 +4,14 @@
   "recurse": true,
   "recurseDepth": 10,
   "source": {
-    "include": [
-      "src",
-      "realm",
-      "schema"
-    ],
+    "include": ["src", "realm", "schema"],
     "excludePattern": "(^|\\/|\\\\)_",
     "includePattern": ".+\\.(j|t)s(doc|x)?$"
   },
   "sourceType": "module",
   "tags": {
     "allowUnknownTags": true,
-    "dictionaries": [
-      "jsdoc",
-      "closure"
-    ]
+    "dictionaries": ["jsdoc", "closure"]
   },
   "templates": {
     "cleverLinks": false,
