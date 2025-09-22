@@ -4,14 +4,14 @@
  * @description This module exports a MongoDB client and a database connection.
  */
 
-import type { NextFunction, Request, Response } from 'express';
-import { MongoClient, type Db, type MongoClientOptions } from 'mongodb';
-import config from './config';
-import log from './logger';
+import type { NextFunction, Request, Response } from 'express'
+import { MongoClient, type Db, type MongoClientOptions } from 'mongodb'
+import config from './config'
+import log from './logger'
 
-const logger = log('db');
+const logger = log('db')
 // Configurable emoji usage for logs and errors
-const useEmoji = config.USE_EMOJI ?? true;
+const useEmoji = config.USE_EMOJI ?? true
 /**
  * MongoDB connection options.
  * @type {MongoClientOptions}
@@ -32,8 +32,8 @@ const mongoOptions: MongoClientOptions = {
   minPoolSize: 1,
 
   // Retry configuration
-  w: 'majority',
-};
+  w: 'majority'
+}
 
 /**
  * Connects to the MongoDB Atlas cluster.
@@ -41,27 +41,27 @@ const mongoOptions: MongoClientOptions = {
  * @throws {Error} If the connection fails or ATLAS_URI is not set.
  */
 export async function connectToCluster(): Promise<MongoClient> {
-  const mongoUri = config.ATLAS_URI;
+  const mongoUri = config.ATLAS_URI
 
   if (!mongoUri || typeof mongoUri !== 'string') {
-    const msg = `${useEmoji ? '❌ ' : ''}ATLAS_URI environment variable is not set or invalid.`;
+    const msg = `${useEmoji ? '❌ ' : ''}ATLAS_URI environment variable is not set or invalid.`
 
-    logger.error(msg);
-    throw new Error(msg);
+    logger.error(msg)
+    throw new Error(msg)
   }
 
   try {
-    const client = new MongoClient(mongoUri, mongoOptions);
+    const client = new MongoClient(mongoUri, mongoOptions)
 
-    await client.connect();
-    logger.info(`${useEmoji ? '✅ ' : ''}Connected to MongoDB Atlas Cluster`);
+    await client.connect()
+    logger.info(`${useEmoji ? '✅ ' : ''}Connected to MongoDB Atlas Cluster`)
 
-    return client;
+    return client
   } catch (error) {
-    const errMsg = `${useEmoji ? '❌ ' : ''}MongoDB connection to ${config.DBNAME} failed: ${error instanceof Error ? error.message : String(error)}`;
+    const errMsg = `${useEmoji ? '❌ ' : ''}MongoDB connection to ${config.DBNAME} failed: ${error instanceof Error ? error.message : String(error)}`
 
-    logger.error(errMsg);
-    throw new Error(errMsg);
+    logger.error(errMsg)
+    throw new Error(errMsg)
   }
 }
 
@@ -72,17 +72,17 @@ export async function connectToCluster(): Promise<MongoClient> {
  */
 export function connectToDb(client: MongoClient): Db {
   if (!config.DBNAME || typeof config.DBNAME !== 'string') {
-    throw new Error('Invalid or undefined DBNAME in configuration.');
+    throw new Error('Invalid or undefined DBNAME in configuration.')
   }
   try {
-    const db = client.db(config.DBNAME);
+    const db = client.db(config.DBNAME)
 
-    logger.info(`✅ Successfully connected to Atlas DB ${config.DBNAME}`);
+    logger.info(`✅ Successfully connected to Atlas DB ${config.DBNAME}`)
 
-    return db;
+    return db
   } catch (error) {
-    logger.error(`❌ Connection to Atlas DB failed (${config.DBNAME}): ${error instanceof Error ? error.message : error}`);
-    throw new Error(`❌ Connection to Atlas DB failed (${config.DBNAME}): ${error}`);
+    logger.error(`❌ Connection to Atlas DB failed (${config.DBNAME}): ${error instanceof Error ? error.message : error}`)
+    throw new Error(`❌ Connection to Atlas DB failed (${config.DBNAME}): ${error}`)
   }
 }
 
@@ -93,56 +93,56 @@ export function connectToDb(client: MongoClient): Db {
  */
 export async function closeConnection(client: MongoClient): Promise<void> {
   try {
-    await client.close();
-    logger.info('✅ MongoDB connection closed successfully.');
+    await client.close()
+    logger.info('✅ MongoDB connection closed successfully.')
   } catch (error) {
-    logger.error(`❌ Failed to close MongoDB connection: ${error}`);
+    logger.error(`❌ Failed to close MongoDB connection: ${error}`)
     // Optionally, rethrow or handle the error as needed
-    throw error;
+    throw error
   }
 }
 
-let lastPingTime = 0;
+let lastPingTime = 0
 
-export let cachedDb: Db | null = null;
+export let cachedDb: Db | null = null
 
-export let cachedMongoClient: MongoClient | null = null;
+export let cachedMongoClient: MongoClient | null = null
 
-const PING_INTERVAL_MS = 60000; // 60 seconds
+const PING_INTERVAL_MS = 60000 // 60 seconds
 
 export async function getDb(): Promise<Db | null> {
-  const now = Date.now();
+  const now = Date.now()
 
   if (cachedDb && now - lastPingTime < PING_INTERVAL_MS) {
-    return cachedDb;
+    return cachedDb
   }
   try {
     if (config.ATLAS_URI) {
       if (!cachedMongoClient) {
-        cachedMongoClient = await connectToCluster();
-        cachedDb = connectToDb(cachedMongoClient);
+        cachedMongoClient = await connectToCluster()
+        cachedDb = connectToDb(cachedMongoClient)
       }
       if (cachedDb) {
-        await cachedDb.admin().ping();
-        lastPingTime = Date.now();
+        await cachedDb.admin().ping()
+        lastPingTime = Date.now()
 
-        return cachedDb;
+        return cachedDb
       } else {
-        logger.error('No cachedDb instance available for ping.');
+        logger.error('No cachedDb instance available for ping.')
 
-        return null;
+        return null
       }
     } else {
-      logger.warn('⚠️ No MongoDB URI provided, running without database');
+      logger.warn('⚠️ No MongoDB URI provided, running without database')
 
-      return null;
+      return null
     }
   } catch (error) {
-    logger.error(`Failed to connect to the database: ${error instanceof Error ? error.message : String(error)}`);
-    cachedDb = null;
-    cachedMongoClient = null;
+    logger.error(`Failed to connect to the database: ${error instanceof Error ? error.message : String(error)}`)
+    cachedDb = null
+    cachedMongoClient = null
 
-    return null;
+    return null
   }
 }
 
@@ -150,10 +150,10 @@ export async function getDb(): Promise<Db | null> {
 export const dbConnection = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Attach the db instance to req.app.locals for access in routes
-    req.app.locals.db = await getDb();
+    req.app.locals.db = await getDb()
 
-    return next();
+    return next()
   } catch (error) {
-    return next(error);
+    return next(error)
   }
-};
+}

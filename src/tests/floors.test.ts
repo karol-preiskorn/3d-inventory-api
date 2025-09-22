@@ -39,7 +39,7 @@ describe('create 10 floors', () => {
     } = {
       name: testGenerators.floorName(),
       address: testGenerators.address(),
-      dimension: [testGenerators.floorDimension()],
+      dimension: [testGenerators.floorDimension()]
     }
     const insertResult = await floors.insertOne(mockFloors)
 

@@ -30,10 +30,10 @@ describe('GET /devices', () => {
           position: {
             x: expect.any(Number),
             y: expect.any(Number),
-            h: expect.any(Number),
-          },
-        }),
-      ]),
+            h: expect.any(Number)
+          }
+        })
+      ])
     )
 
     const responseGetId = await request(app)
@@ -49,10 +49,10 @@ describe('GET /devices', () => {
           position: {
             x: expect.any(Number),
             y: expect.any(Number),
-            h: expect.any(Number),
-          },
-        }),
-      ]),
+            h: expect.any(Number)
+          }
+        })
+      ])
     )
   })
 })

@@ -8,8 +8,8 @@
  * @public
  */
 
-import fs from 'fs';
-import path from 'path';
+import fs from 'fs'
+import path from 'path'
 
 /**
  * Deletes all files in a given directory.
@@ -21,18 +21,18 @@ import path from 'path';
 export function deleteFilesInDirectory(directory: string) {
   fs.readdir(directory, (err, files) => {
     if (err) {
-      console.error(`read dir: ${directory} - ${err.message}`);
+      console.error(`read dir: ${directory} - ${err.message}`)
 
-      return;
+      return
     }
     for (const file of files) {
       fs.unlink(path.join(directory, file), (error) => {
         if (error) {
-          console.error(`unlink ${file}: ${error.message}`);
+          console.error(`unlink ${file}: ${error.message}`)
         }
-      }); // Add closing parenthesis here
+      }) // Add closing parenthesis here
     }
-  });
+  })
 }
 
-export default deleteFilesInDirectory;
+export default deleteFilesInDirectory

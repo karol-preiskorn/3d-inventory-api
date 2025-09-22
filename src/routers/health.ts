@@ -1,6 +1,6 @@
-import express from 'express';
-import { healthController } from '../controllers/health';
-import { dbConnection } from '../utils/db';
+import express from 'express'
+import { healthController } from '../controllers/health'
+import { dbConnection } from '../utils/db'
 
 /**
  * Creates and returns an Express router for health check endpoints.
@@ -13,9 +13,9 @@ import { dbConnection } from '../utils/db';
  * @returns {import('express').Router} An Express router configured for health checks.
  */
 export default function createHealthRouter(): import('express').Router {
-  const router = express.Router();
+  const router = express.Router()
 
-  router.get('/', dbConnection, (req, res) => healthController(req, res, req.app.locals.db));
+  router.get('/', dbConnection, (req, res) => healthController(req, res, req.app.locals.db))
 
-  return router;
+  return router
 }

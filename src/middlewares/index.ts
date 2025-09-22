@@ -1,5 +1,5 @@
 // Authentication middlewares
-export { requireAuth, optionalAuth, requireRole, requirePermission, requireAdmin, UserRole, Permission } from './auth';
+export { requireAuth, optionalAuth, requireRole, requirePermission, requireAdmin, UserRole, Permission } from './auth'
 
 // Validation middlewares
 export {
@@ -10,11 +10,11 @@ export {
   validateStringFields,
   validateObjectIdFields,
   validateAttributeInput,
-  validateConnectionInput,
-} from './validation';
+  validateConnectionInput
+} from './validation'
 
 // Logging middlewares
-export { requestLogger, errorLogger, performanceMonitor } from './logging';
+export { requestLogger, errorLogger, performanceMonitor } from './logging'
 
 // Security middlewares
-export { securityHeaders, apiRateLimit, authRateLimit, corsOptions, sanitizeInput, requestTimeout, ipWhitelist } from './security';
+export { securityHeaders, apiRateLimit, authRateLimit, corsOptions, sanitizeInput, requestTimeout, ipWhitelist } from './security'

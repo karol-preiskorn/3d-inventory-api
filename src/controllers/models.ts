@@ -1,12 +1,12 @@
-import { Request, Response } from 'express';
-import sanitize from 'mongo-sanitize';
-import { Collection, Db, InsertOneResult, UpdateResult, DeleteResult, ObjectId } from 'mongodb';
-import { closeConnection, connectToCluster, connectToDb } from '../utils/db';
-import getLogger from '../utils/logger';
+import { Request, Response } from 'express'
+import sanitize from 'mongo-sanitize'
+import { Collection, Db, InsertOneResult, UpdateResult, DeleteResult, ObjectId } from 'mongodb'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
+import getLogger from '../utils/logger'
 
-const logger = getLogger('models');
-const proc = '[models]';
-const collectionName = 'models';
+const logger = getLogger('models')
+const proc = '[models]'
+const collectionName = 'models'
 
 export interface Dimension {
   width: number;
@@ -40,19 +40,19 @@ export interface ModelInput {
 }
 
 // Constants
-const DEFAULT_LIMIT = 100;
-const MAX_LIMIT = 1000;
+const DEFAULT_LIMIT = 100
+const MAX_LIMIT = 1000
 
 // Validation helper functions
 function validateObjectId(id: string): boolean {
-  return ObjectId.isValid(id);
+  return ObjectId.isValid(id)
 }
 
 function validateModelInput(data: Partial<ModelInput>): { isValid: boolean; error?: string } {
-  const { name, dimension, texture } = data;
+  const { name, dimension, texture } = data
 
   if (typeof name !== 'string' || name.trim().length === 0) {
-    return { isValid: false, error: 'name must be a non-empty string' };
+    return { isValid: false, error: 'name must be a non-empty string' }
   }
 
   if (
@@ -65,7 +65,7 @@ function validateModelInput(data: Partial<ModelInput>): { isValid: boolean; erro
     typeof dimension.depth !== 'number' ||
     dimension.depth <= 0
   ) {
-    return { isValid: false, error: 'dimension must be an object with width, height, and depth as positive numbers' };
+    return { isValid: false, error: 'dimension must be an object with width, height, and depth as positive numbers' }
   }
 
   if (
@@ -82,294 +82,294 @@ function validateModelInput(data: Partial<ModelInput>): { isValid: boolean; erro
     typeof texture.bottom !== 'string' ||
     texture.bottom.trim().length === 0
   ) {
-    return { isValid: false, error: 'texture must be an object with front, back, side, top, and bottom as non-empty strings' };
+    return { isValid: false, error: 'texture must be an object with front, back, side, top, and bottom as non-empty strings' }
   }
 
-  return { isValid: true };
+  return { isValid: true }
 }
 
 // Get all models
 export async function getAllModels(req: Request, res: Response) {
-  let limit = DEFAULT_LIMIT;
+  let limit = DEFAULT_LIMIT
 
   if (req.query.limit) {
-    const parsed = parseInt(req.query.limit as string, 10);
+    const parsed = parseInt(req.query.limit as string, 10)
 
     if (!isNaN(parsed) && parsed > 0) {
-      limit = Math.min(parsed, MAX_LIMIT);
+      limit = Math.min(parsed, MAX_LIMIT)
     }
   }
 
-  const client = await connectToCluster();
+  const client = await connectToCluster()
 
   try {
-    const db: Db = connectToDb(client);
-    const collection: Collection = db.collection(collectionName);
-    const results = await collection.find({}).limit(limit).toArray();
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const results = await collection.find({}).limit(limit).toArray()
 
     if (!results.length) {
-      logger.info(`${proc} No models found`);
-      res.status(200).json({ message: 'No models found', data: [] });
+      logger.info(`${proc} No models found`)
+      res.status(200).json({ message: 'No models found', data: [] })
 
-      return;
+      return
     }
 
-    logger.info(`${proc} Retrieved ${results.length} models`);
-    res.status(200).json({ data: results, count: results.length });
+    logger.info(`${proc} Retrieved ${results.length} models`)
+    res.status(200).json({ data: results, count: results.length })
   } catch (error) {
-    logger.error(`${proc} Error fetching models: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(`${proc} Error fetching models: ${error instanceof Error ? error.message : String(error)}`)
     res.status(500).json({
       module: 'models',
       procedure: 'getAllModels',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
   } finally {
-    await closeConnection(client);
+    await closeConnection(client)
   }
 }
 
 // Get model by ID
 export async function getModelById(req: Request, res: Response) {
-  const { id } = req.params;
+  const { id } = req.params
 
   if (!validateObjectId(id)) {
-    logger.warn(`${proc} Invalid ObjectId: ${id}`);
+    logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'The provided ID is not a valid ObjectId',
-    });
+      message: 'The provided ID is not a valid ObjectId'
+    })
 
-    return;
+    return
   }
 
-  const query = { _id: new ObjectId(id) };
-  const client = await connectToCluster();
+  const query = { _id: new ObjectId(id) }
+  const client = await connectToCluster()
 
   try {
-    const db: Db = connectToDb(client);
-    const collection: Collection = db.collection(collectionName);
-    const model = await collection.findOne(query);
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const model = await collection.findOne(query)
 
     if (!model) {
-      logger.warn(`${proc} Model not found: ${id}`);
-      res.status(404).json({ message: 'Model not found' });
+      logger.warn(`${proc} Model not found: ${id}`)
+      res.status(404).json({ message: 'Model not found' })
 
-      return;
+      return
     }
 
-    logger.info(`${proc} Retrieved model: ${id}`);
-    res.status(200).json(model);
+    logger.info(`${proc} Retrieved model: ${id}`)
+    res.status(200).json(model)
   } catch (error) {
-    logger.error(`${proc} Error fetching model ${id}: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(`${proc} Error fetching model ${id}: ${error instanceof Error ? error.message : String(error)}`)
     res.status(500).json({
       module: 'models',
       procedure: 'getModelById',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
   } finally {
-    await closeConnection(client);
+    await closeConnection(client)
   }
 }
 
 // Create new model
 export async function createModel(req: Request, res: Response) {
-  const { name, dimension, texture, type, category } = req.body;
+  const { name, dimension, texture, type, category } = req.body
   // Validate input
-  const validation = validateModelInput({ name, dimension, texture });
+  const validation = validateModelInput({ name, dimension, texture })
 
   if (!validation.isValid) {
-    logger.warn(`${proc} ${validation.error}`);
+    logger.warn(`${proc} ${validation.error}`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: validation.error,
-    });
+      message: validation.error
+    })
 
-    return;
+    return
   }
 
-  const sanitizedName = sanitize(name).trim();
-  const sanitizedType = type ? sanitize(type).trim() : undefined;
-  const sanitizedCategory = category ? sanitize(category).trim() : undefined;
+  const sanitizedName = sanitize(name).trim()
+  const sanitizedType = type ? sanitize(type).trim() : undefined
+  const sanitizedCategory = category ? sanitize(category).trim() : undefined
   const newModel: Model = {
     name: sanitizedName,
     dimension: {
       width: Number(dimension.width),
       height: Number(dimension.height),
-      depth: Number(dimension.depth),
+      depth: Number(dimension.depth)
     },
     texture: {
       front: texture.front.trim(),
       back: texture.back.trim(),
       side: texture.side.trim(),
       top: texture.top.trim(),
-      bottom: texture.bottom.trim(),
+      bottom: texture.bottom.trim()
     },
     ...(sanitizedType && { type: sanitizedType }),
-    ...(sanitizedCategory && { category: sanitizedCategory }),
-  };
-  const client = await connectToCluster();
+    ...(sanitizedCategory && { category: sanitizedCategory })
+  }
+  const client = await connectToCluster()
 
   try {
-    const db: Db = connectToDb(client);
-    const collection: Collection = db.collection(collectionName);
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
     // Check for duplicate name
-    const existingModel = await collection.findOne({ name: sanitizedName });
+    const existingModel = await collection.findOne({ name: sanitizedName })
 
     if (existingModel) {
-      logger.warn(`${proc} Model with name '${sanitizedName}' already exists`);
+      logger.warn(`${proc} Model with name '${sanitizedName}' already exists`)
       res.status(409).json({
         error: 'Conflict',
-        message: 'A model with this name already exists',
-      });
+        message: 'A model with this name already exists'
+      })
 
-      return;
+      return
     }
 
-    const result: InsertOneResult<Model> = await collection.insertOne(newModel);
+    const result: InsertOneResult<Model> = await collection.insertOne(newModel)
 
     if (!result.acknowledged) {
-      res.status(500).json({ message: 'Failed to create model' });
+      res.status(500).json({ message: 'Failed to create model' })
 
-      return;
+      return
     }
 
-    const insertedModel = { _id: result.insertedId, ...newModel };
+    const insertedModel = { _id: result.insertedId, ...newModel }
 
-    logger.info(`${proc} Created model: ${result.insertedId}`);
-    res.status(201).json(insertedModel);
+    logger.info(`${proc} Created model: ${result.insertedId}`)
+    res.status(201).json(insertedModel)
   } catch (error) {
-    logger.error(`${proc} Error creating model: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(`${proc} Error creating model: ${error instanceof Error ? error.message : String(error)}`)
     res.status(500).json({
       module: 'models',
       procedure: 'createModel',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
   } finally {
-    await closeConnection(client);
+    await closeConnection(client)
   }
 }
 
 // Update model by ID
 export async function updateModel(req: Request, res: Response) {
-  const { id } = req.params;
-  const { name, dimension, texture, type, category } = req.body;
+  const { id } = req.params
+  const { name, dimension, texture, type, category } = req.body
 
   if (!validateObjectId(id)) {
-    logger.warn(`${proc} Invalid ObjectId: ${id}`);
+    logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'The provided ID is not a valid ObjectId',
-    });
+      message: 'The provided ID is not a valid ObjectId'
+    })
 
-    return;
+    return
   }
 
   // Validate input
-  const validation = validateModelInput({ name, dimension, texture });
+  const validation = validateModelInput({ name, dimension, texture })
 
   if (!validation.isValid) {
-    logger.warn(`${proc} ${validation.error}`);
+    logger.warn(`${proc} ${validation.error}`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: validation.error,
-    });
+      message: validation.error
+    })
 
-    return;
+    return
   }
 
-  const sanitizedName = sanitize(name).trim();
-  const sanitizedType = type ? sanitize(type).trim() : undefined;
-  const sanitizedCategory = category ? sanitize(category).trim() : undefined;
-  const query = { _id: new ObjectId(id) };
+  const sanitizedName = sanitize(name).trim()
+  const sanitizedType = type ? sanitize(type).trim() : undefined
+  const sanitizedCategory = category ? sanitize(category).trim() : undefined
+  const query = { _id: new ObjectId(id) }
   const updates = {
     $set: {
       name: sanitizedName,
       dimension: {
         width: Number(dimension.width),
         height: Number(dimension.height),
-        depth: Number(dimension.depth),
+        depth: Number(dimension.depth)
       },
       texture: {
         front: texture.front.trim(),
         back: texture.back.trim(),
         side: texture.side.trim(),
         top: texture.top.trim(),
-        bottom: texture.bottom.trim(),
+        bottom: texture.bottom.trim()
       },
       ...(sanitizedType && { type: sanitizedType }),
-      ...(sanitizedCategory && { category: sanitizedCategory }),
-    },
-  };
-  const client = await connectToCluster();
+      ...(sanitizedCategory && { category: sanitizedCategory })
+    }
+  }
+  const client = await connectToCluster()
 
   try {
-    const db: Db = connectToDb(client);
-    const collection: Collection = db.collection(collectionName);
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
     // Check if model exists
-    const existingModel = await collection.findOne(query);
+    const existingModel = await collection.findOne(query)
 
     if (!existingModel) {
-      logger.warn(`${proc} Model not found for update: ${id}`);
-      res.status(404).json({ message: 'Model not found' });
+      logger.warn(`${proc} Model not found for update: ${id}`)
+      res.status(404).json({ message: 'Model not found' })
 
-      return;
+      return
     }
 
     // Check for name conflict (if name is changing)
     if (sanitizedName !== existingModel.name) {
       const nameConflict = await collection.findOne({
         name: sanitizedName,
-        _id: { $ne: new ObjectId(id) },
-      });
+        _id: { $ne: new ObjectId(id) }
+      })
 
       if (nameConflict) {
-        logger.warn(`${proc} Model with name '${sanitizedName}' already exists`);
+        logger.warn(`${proc} Model with name '${sanitizedName}' already exists`)
         res.status(409).json({
           error: 'Conflict',
-          message: 'A model with this name already exists',
-        });
+          message: 'A model with this name already exists'
+        })
 
-        return;
+        return
       }
     }
 
-    const result: UpdateResult = await collection.updateOne(query, updates);
+    const result: UpdateResult = await collection.updateOne(query, updates)
 
-    logger.info(`${proc} Updated model: ${id}`);
+    logger.info(`${proc} Updated model: ${id}`)
     res.status(200).json({
       message: 'Model updated successfully',
       matchedCount: result.matchedCount,
-      modifiedCount: result.modifiedCount,
-    });
+      modifiedCount: result.modifiedCount
+    })
   } catch (error) {
-    logger.error(`${proc} Error updating model ${id}: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(`${proc} Error updating model ${id}: ${error instanceof Error ? error.message : String(error)}`)
     res.status(500).json({
       module: 'models',
       procedure: 'updateModel',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
   } finally {
-    await closeConnection(client);
+    await closeConnection(client)
   }
 }
 
 // Update model dimension by ID
 export async function updateModelDimension(req: Request, res: Response) {
-  const { id } = req.params;
-  const { dimension } = req.body;
+  const { id } = req.params
+  const { dimension } = req.body
 
   if (!validateObjectId(id)) {
-    logger.warn(`${proc} Invalid ObjectId: ${id}`);
+    logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'The provided ID is not a valid ObjectId',
-    });
+      message: 'The provided ID is not a valid ObjectId'
+    })
 
-    return;
+    return
   }
 
   // Validate dimension
@@ -383,71 +383,71 @@ export async function updateModelDimension(req: Request, res: Response) {
     typeof dimension.depth !== 'number' ||
     dimension.depth <= 0
   ) {
-    logger.warn(`${proc} Invalid dimension data for update`);
+    logger.warn(`${proc} Invalid dimension data for update`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: 'dimension must be an object with width, height, and depth as positive numbers',
-    });
+      message: 'dimension must be an object with width, height, and depth as positive numbers'
+    })
 
-    return;
+    return
   }
 
-  const query = { _id: new ObjectId(id) };
+  const query = { _id: new ObjectId(id) }
   const updates = {
     $set: {
       dimension: {
         width: Number(dimension.width),
         height: Number(dimension.height),
-        depth: Number(dimension.depth),
-      },
-    },
-  };
-  const client = await connectToCluster();
+        depth: Number(dimension.depth)
+      }
+    }
+  }
+  const client = await connectToCluster()
 
   try {
-    const db: Db = connectToDb(client);
-    const collection: Collection = db.collection(collectionName);
-    const result: UpdateResult = await collection.updateOne(query, updates);
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const result: UpdateResult = await collection.updateOne(query, updates)
 
     if (result.matchedCount === 0) {
-      logger.warn(`${proc} Model not found for dimension update: ${id}`);
-      res.status(404).json({ message: 'Model not found' });
+      logger.warn(`${proc} Model not found for dimension update: ${id}`)
+      res.status(404).json({ message: 'Model not found' })
 
-      return;
+      return
     }
 
-    logger.info(`${proc} Updated model dimension: ${id}`);
+    logger.info(`${proc} Updated model dimension: ${id}`)
     res.status(200).json({
       message: 'Model dimension updated successfully',
       matchedCount: result.matchedCount,
-      modifiedCount: result.modifiedCount,
-    });
+      modifiedCount: result.modifiedCount
+    })
   } catch (error) {
-    logger.error(`${proc} Error updating model dimension ${id}: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(`${proc} Error updating model dimension ${id}: ${error instanceof Error ? error.message : String(error)}`)
     res.status(500).json({
       module: 'models',
       procedure: 'updateModelDimension',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
   } finally {
-    await closeConnection(client);
+    await closeConnection(client)
   }
 }
 
 // Update model texture by ID
 export async function updateModelTexture(req: Request, res: Response) {
-  const { id } = req.params;
-  const { texture } = req.body;
+  const { id } = req.params
+  const { texture } = req.body
 
   if (!validateObjectId(id)) {
-    logger.warn(`${proc} Invalid ObjectId: ${id}`);
+    logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'The provided ID is not a valid ObjectId',
-    });
+      message: 'The provided ID is not a valid ObjectId'
+    })
 
-    return;
+    return
   }
 
   // Validate texture
@@ -465,16 +465,16 @@ export async function updateModelTexture(req: Request, res: Response) {
     typeof texture.bottom !== 'string' ||
     texture.bottom.trim().length === 0
   ) {
-    logger.warn(`${proc} Invalid texture data for update`);
+    logger.warn(`${proc} Invalid texture data for update`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: 'texture must be an object with front, back, side, top, and bottom as non-empty strings',
-    });
+      message: 'texture must be an object with front, back, side, top, and bottom as non-empty strings'
+    })
 
-    return;
+    return
   }
 
-  const query = { _id: new ObjectId(id) };
+  const query = { _id: new ObjectId(id) }
   const updates = {
     $set: {
       texture: {
@@ -482,87 +482,87 @@ export async function updateModelTexture(req: Request, res: Response) {
         back: texture.back.trim(),
         side: texture.side.trim(),
         top: texture.top.trim(),
-        bottom: texture.bottom.trim(),
-      },
-    },
-  };
-  const client = await connectToCluster();
+        bottom: texture.bottom.trim()
+      }
+    }
+  }
+  const client = await connectToCluster()
 
   try {
-    const db: Db = connectToDb(client);
-    const collection: Collection = db.collection(collectionName);
-    const result: UpdateResult = await collection.updateOne(query, updates);
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const result: UpdateResult = await collection.updateOne(query, updates)
 
     if (result.matchedCount === 0) {
-      logger.warn(`${proc} Model not found for texture update: ${id}`);
-      res.status(404).json({ message: 'Model not found' });
+      logger.warn(`${proc} Model not found for texture update: ${id}`)
+      res.status(404).json({ message: 'Model not found' })
 
-      return;
+      return
     }
 
-    logger.info(`${proc} Updated model texture: ${id}`);
+    logger.info(`${proc} Updated model texture: ${id}`)
     res.status(200).json({
       message: 'Model texture updated successfully',
       matchedCount: result.matchedCount,
-      modifiedCount: result.modifiedCount,
-    });
+      modifiedCount: result.modifiedCount
+    })
   } catch (error) {
-    logger.error(`${proc} Error updating model texture ${id}: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(`${proc} Error updating model texture ${id}: ${error instanceof Error ? error.message : String(error)}`)
     res.status(500).json({
       module: 'models',
       procedure: 'updateModelTexture',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
   } finally {
-    await closeConnection(client);
+    await closeConnection(client)
   }
 }
 
 // Delete model by ID
 export async function deleteModel(req: Request, res: Response) {
-  const { id } = req.params;
+  const { id } = req.params
 
   if (!validateObjectId(id)) {
-    logger.warn(`${proc} Invalid ObjectId: ${id}`);
+    logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'The provided ID is not a valid ObjectId',
-    });
+      message: 'The provided ID is not a valid ObjectId'
+    })
 
-    return;
+    return
   }
 
-  const query = { _id: new ObjectId(id) };
-  const client = await connectToCluster();
+  const query = { _id: new ObjectId(id) }
+  const client = await connectToCluster()
 
   try {
-    const db: Db = connectToDb(client);
-    const collection: Collection = db.collection(collectionName);
-    const result: DeleteResult = await collection.deleteOne(query);
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const result: DeleteResult = await collection.deleteOne(query)
 
     if (result.deletedCount === 0) {
-      logger.warn(`${proc} Model not found for deletion: ${id}`);
-      res.status(404).json({ message: 'Model not found' });
+      logger.warn(`${proc} Model not found for deletion: ${id}`)
+      res.status(404).json({ message: 'Model not found' })
 
-      return;
+      return
     }
 
-    logger.info(`${proc} Deleted model: ${id}`);
+    logger.info(`${proc} Deleted model: ${id}`)
     res.status(200).json({
       message: 'Model deleted successfully',
-      deletedCount: result.deletedCount,
-    });
+      deletedCount: result.deletedCount
+    })
   } catch (error) {
-    logger.error(`${proc} Error deleting model ${id}: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(`${proc} Error deleting model ${id}: ${error instanceof Error ? error.message : String(error)}`)
     res.status(500).json({
       module: 'models',
       procedure: 'deleteModel',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
   } finally {
-    await closeConnection(client);
+    await closeConnection(client)
   }
 }
 
@@ -570,46 +570,46 @@ export async function deleteModel(req: Request, res: Response) {
 export async function deleteAllModels(req: Request, res: Response) {
   // Production safety check
   if (process.env.NODE_ENV === 'production') {
-    logger.warn(`${proc} Attempt to delete all models in production environment`);
+    logger.warn(`${proc} Attempt to delete all models in production environment`)
     res.status(403).json({
       error: 'Forbidden in production environment',
-      message: 'This operation is not allowed in production',
-    });
+      message: 'This operation is not allowed in production'
+    })
 
-    return;
+    return
   }
 
   if (req.query.confirm !== 'true') {
-    logger.warn(`${proc} Missing confirmation for delete all models`);
+    logger.warn(`${proc} Missing confirmation for delete all models`)
     res.status(400).json({
       error: 'Confirmation required',
-      message: 'Add ?confirm=true to proceed with deleting all models',
-    });
+      message: 'Add ?confirm=true to proceed with deleting all models'
+    })
 
-    return;
+    return
   }
 
-  const client = await connectToCluster();
+  const client = await connectToCluster()
 
   try {
-    const db: Db = connectToDb(client);
-    const collection: Collection = db.collection(collectionName);
-    const result: DeleteResult = await collection.deleteMany({});
+    const db: Db = connectToDb(client)
+    const collection: Collection = db.collection(collectionName)
+    const result: DeleteResult = await collection.deleteMany({})
 
-    logger.warn(`${proc} Deleted all ${result.deletedCount} models`);
+    logger.warn(`${proc} Deleted all ${result.deletedCount} models`)
     res.status(200).json({
       message: 'All models deleted successfully',
-      deletedCount: result.deletedCount,
-    });
+      deletedCount: result.deletedCount
+    })
   } catch (error) {
-    logger.error(`${proc} Error deleting all models: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(`${proc} Error deleting all models: ${error instanceof Error ? error.message : String(error)}`)
     res.status(500).json({
       module: 'models',
       procedure: 'deleteAllModels',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
   } finally {
-    await closeConnection(client);
+    await closeConnection(client)
   }
 }

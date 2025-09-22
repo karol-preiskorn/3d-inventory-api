@@ -11,7 +11,7 @@ import {
   deleteAttributesByModelId,
   getAllAttributes,
   getAttributeById,
-  updateAttribute,
+  updateAttribute
 } from '../controllers/attributes'
 import { testGenerators } from './testGenerators'
 
@@ -19,7 +19,7 @@ import { testGenerators } from './testGenerators'
 jest.mock('../utils/db', () => ({
   connectToCluster: jest.fn(),
   connectToDb: jest.fn(),
-  closeConnection: jest.fn().mockResolvedValue(undefined),
+  closeConnection: jest.fn().mockResolvedValue(undefined)
 }))
 
 // Mock the logger
@@ -28,8 +28,8 @@ jest.mock('../utils/logger', () => ({
   default: jest.fn(() => ({
     info: jest.fn(),
     warn: jest.fn(),
-    error: jest.fn(),
-  })),
+    error: jest.fn()
+  }))
 }))
 
 describe('Attributes API Controller Tests', () => {
@@ -44,7 +44,7 @@ describe('Attributes API Controller Tests', () => {
     mockRequest = {
       params: {},
       body: {},
-      query: {},
+      query: {}
     }
 
     mockResponse = {
@@ -52,7 +52,7 @@ describe('Attributes API Controller Tests', () => {
       json: jest.fn().mockReturnThis(),
       send: jest.fn().mockReturnThis(),
       sendStatus: jest.fn().mockReturnThis(),
-      type: jest.fn().mockReturnThis(),
+      type: jest.fn().mockReturnThis()
     }
 
     mockCollection = {
@@ -63,7 +63,7 @@ describe('Attributes API Controller Tests', () => {
       deleteOne: jest.fn(),
       deleteMany: jest.fn(),
       limit: jest.fn().mockReturnThis(),
-      toArray: jest.fn(),
+      toArray: jest.fn()
     }
 
     mockDb = { collection: jest.fn().mockReturnValue(mockCollection) }
@@ -83,8 +83,8 @@ describe('Attributes API Controller Tests', () => {
 
       mockCollection.find.mockReturnValue({
         limit: mockCollection.limit.mockReturnValue({
-          toArray: mockCollection.toArray.mockResolvedValue(attributes),
-        }),
+          toArray: mockCollection.toArray.mockResolvedValue(attributes)
+        })
       })
 
       await getAllAttributes(mockRequest, mockResponse, jest.fn())
@@ -96,8 +96,8 @@ describe('Attributes API Controller Tests', () => {
     it('should return 404 when no attributes found', async () => {
       mockCollection.find.mockReturnValue({
         limit: mockCollection.limit.mockReturnValue({
-          toArray: mockCollection.toArray.mockResolvedValue([]),
-        }),
+          toArray: mockCollection.toArray.mockResolvedValue([])
+        })
       })
 
       await getAllAttributes(mockRequest, mockResponse, jest.fn())
@@ -109,8 +109,8 @@ describe('Attributes API Controller Tests', () => {
     it('should handle database errors', async () => {
       mockCollection.find.mockReturnValue({
         limit: mockCollection.limit.mockReturnValue({
-          toArray: mockCollection.toArray.mockRejectedValue(new Error('Database error')),
-        }),
+          toArray: mockCollection.toArray.mockRejectedValue(new Error('Database error'))
+        })
       })
 
       await getAllAttributes(mockRequest, mockResponse, jest.fn())
@@ -120,7 +120,7 @@ describe('Attributes API Controller Tests', () => {
         module: 'attributes',
         procedure: 'getAllAttributes',
         status: 'Internal Server Error',
-        message: 'Database error',
+        message: 'Database error'
       })
     })
   })
@@ -166,13 +166,13 @@ describe('Attributes API Controller Tests', () => {
       const attributeData = {
         attributeDictionaryId: new ObjectId().toString(),
         deviceId: new ObjectId().toString(),
-        value: 'test value',
+        value: 'test value'
       }
 
       mockRequest.body = attributeData
       mockCollection.insertOne.mockResolvedValue({
         acknowledged: true,
-        insertedId: newAttributeId,
+        insertedId: newAttributeId
       })
 
       await createAttribute(mockRequest, mockResponse, jest.fn())
@@ -184,21 +184,21 @@ describe('Attributes API Controller Tests', () => {
         connectionId: null,
         deviceId: expect.any(ObjectId),
         modelId: null,
-        value: 'test value',
+        value: 'test value'
       })
     })
 
     it('should require value field', async () => {
       mockRequest.body = {
         attributeDictionaryId: new ObjectId().toString(),
-        deviceId: new ObjectId().toString(),
+        deviceId: new ObjectId().toString()
       }
 
       await createAttribute(mockRequest, mockResponse, jest.fn())
 
       expect(mockResponse.status).toHaveBeenCalledWith(400)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Missing or invalid "value", "attributeDictionaryId", or at least one of "connectionId", "deviceId", "modelId" must be provided',
+        error: 'Missing or invalid "value", "attributeDictionaryId", or at least one of "connectionId", "deviceId", "modelId" must be provided'
       })
     })
 
@@ -206,14 +206,14 @@ describe('Attributes API Controller Tests', () => {
       mockRequest.body = {
         attributeDictionaryId: 'invalid_id',
         deviceId: new ObjectId().toString(),
-        value: 'test value',
+        value: 'test value'
       }
 
       await createAttribute(mockRequest, mockResponse, jest.fn())
 
       expect(mockResponse.status).toHaveBeenCalledWith(400)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: '"attributeDictionaryId" must be a valid ObjectId string',
+        error: '"attributeDictionaryId" must be a valid ObjectId string'
       })
     })
   })
@@ -223,7 +223,7 @@ describe('Attributes API Controller Tests', () => {
       const attributeId = new ObjectId().toString()
       const updateData = {
         value: 'updated value',
-        attributeDictionaryId: new ObjectId().toString(),
+        attributeDictionaryId: new ObjectId().toString()
       }
 
       mockRequest.params.id = attributeId

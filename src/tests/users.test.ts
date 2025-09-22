@@ -29,7 +29,7 @@ describe('Test Mongo Atlas DB users', () => {
       console.log('Attempting to connect to MongoDB...')
       client = await MongoClient.connect(config.ATLAS_URI, {
         serverSelectionTimeoutMS: 15000, // 15 second timeout
-        connectTimeoutMS: 15000,
+        connectTimeoutMS: 15000
       })
       db = client.db(config.DBNAME)
 
@@ -82,7 +82,7 @@ describe('Test Mongo Atlas DB users', () => {
       password: userData.password,
       permissions: testGenerators.randomArrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
       token: userData.token,
-      _id: new ObjectId(),
+      _id: new ObjectId()
     }
 
     await users.insertOne(mockUser)
@@ -121,7 +121,7 @@ describe('Test Mongo Atlas DB users', () => {
         email: userData.email,
         password: userData.password,
         rights: testGenerators.randomArrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
-        token: userData.token,
+        token: userData.token
       }
       await users.insertOne(mockUser)
       const insertedUser = await users.findOne(mockUser)

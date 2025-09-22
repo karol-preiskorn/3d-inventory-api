@@ -25,10 +25,10 @@ jest.mock('../utils/db', () => ({
       insertOne: jest.fn(),
       deleteOne: jest.fn(),
       deleteMany: jest.fn(),
-      countDocuments: jest.fn(),
-    }),
+      countDocuments: jest.fn()
+    })
   }),
-  closeConnection: jest.fn().mockResolvedValue(undefined),
+  closeConnection: jest.fn().mockResolvedValue(undefined)
 }))
 
 // Now define our test mocks that will use the same structure
@@ -40,20 +40,20 @@ const mockCollection = {
   insertOne: jest.fn(),
   deleteOne: jest.fn(),
   deleteMany: jest.fn(),
-  countDocuments: jest.fn(),
+  countDocuments: jest.fn()
 }
 const mockDb = {
-  collection: jest.fn().mockReturnValue(mockCollection),
+  collection: jest.fn().mockReturnValue(mockCollection)
 } as unknown as Db
 // Mock Express request and response objects
 const mockRequest = {
   query: {},
   params: {},
-  body: {},
+  body: {}
 } as any
 const mockResponse = {
   status: jest.fn().mockReturnThis(),
-  json: jest.fn(),
+  json: jest.fn()
 } as any
 
 describe('Logs Controller', () => {
@@ -125,7 +125,7 @@ describe('Logs Controller', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(404)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'No logs found',
+        error: 'No logs found'
       })
     })
 
@@ -136,7 +136,7 @@ describe('Logs Controller', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(500)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Internal server error',
+        error: 'Internal server error'
       })
     })
   })
@@ -166,7 +166,7 @@ describe('Logs Controller', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(404)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'No logs found for object ID: non-existent-id',
+        error: 'No logs found for object ID: non-existent-id'
       })
     })
   })
@@ -207,14 +207,14 @@ describe('Logs Controller', () => {
         objectId: 'test-object-123',
         operation: 'CREATE',
         component: 'devices',
-        message: { test: 'data' },
+        message: { test: 'data' }
       }
 
       mockRequest.body = logData
 
       const mockInsertResult = {
         insertedId: new ObjectId(),
-        acknowledged: true,
+        acknowledged: true
       }
 
       mockCollection.insertOne.mockResolvedValue(mockInsertResult)
@@ -227,13 +227,13 @@ describe('Logs Controller', () => {
           operation: logData.operation,
           component: logData.component,
           message: logData.message,
-          date: expect.any(String),
-        }),
+          date: expect.any(String)
+        })
       )
       expect(mockResponse.status).toHaveBeenCalledWith(201)
       expect(mockResponse.json).toHaveBeenCalledWith({
         message: 'Log created successfully',
-        insertedId: mockInsertResult.insertedId,
+        insertedId: mockInsertResult.insertedId
       })
     })
 
@@ -245,8 +245,8 @@ describe('Logs Controller', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(400)
       expect(mockResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          error: expect.stringContaining('Missing required fields'),
-        }),
+          error: expect.stringContaining('Missing required fields')
+        })
       )
     })
 
@@ -255,7 +255,7 @@ describe('Logs Controller', () => {
         objectId: 'test',
         operation: 'CREATE',
         component: 'invalid-component',
-        message: {},
+        message: {}
       }
 
       await createLog(mockRequest, mockResponse, jest.fn())
@@ -263,8 +263,8 @@ describe('Logs Controller', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(400)
       expect(mockResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          error: expect.stringContaining('Invalid component'),
-        }),
+          error: expect.stringContaining('Invalid component')
+        })
       )
     })
 
@@ -273,14 +273,14 @@ describe('Logs Controller', () => {
         objectId: 'test-object-123',
         operation: 'CREATE',
         component: 'devices',
-        message: { $where: 'malicious code' }, // MongoDB injection attempt
+        message: { $where: 'malicious code' } // MongoDB injection attempt
       }
 
       mockRequest.body = logData
 
       const mockInsertResult = {
         insertedId: new ObjectId(),
-        acknowledged: true,
+        acknowledged: true
       }
 
       mockCollection.insertOne.mockResolvedValue(mockInsertResult)
@@ -290,8 +290,8 @@ describe('Logs Controller', () => {
       // Should sanitize the message object
       expect(mockCollection.insertOne).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: {}, // $where should be removed by mongo-sanitize
-        }),
+          message: {} // $where should be removed by mongo-sanitize
+        })
       )
     })
   })
@@ -304,17 +304,17 @@ describe('Logs Controller', () => {
 
       mockCollection.deleteOne.mockResolvedValue({
         deletedCount: 1,
-        acknowledged: true,
+        acknowledged: true
       })
 
       await deleteLog(mockRequest, mockResponse, jest.fn())
 
       expect(mockCollection.deleteOne).toHaveBeenCalledWith({
-        _id: new ObjectId(logId),
+        _id: new ObjectId(logId)
       })
       expect(mockResponse.status).toHaveBeenCalledWith(200)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        message: 'Log deleted successfully',
+        message: 'Log deleted successfully'
       })
     })
 
@@ -325,14 +325,14 @@ describe('Logs Controller', () => {
 
       mockCollection.deleteOne.mockResolvedValue({
         deletedCount: 0,
-        acknowledged: true,
+        acknowledged: true
       })
 
       await deleteLog(mockRequest, mockResponse, jest.fn())
 
       expect(mockResponse.status).toHaveBeenCalledWith(404)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Log not found',
+        error: 'Log not found'
       })
     })
 
@@ -343,7 +343,7 @@ describe('Logs Controller', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Invalid ObjectId format',
+        error: 'Invalid ObjectId format'
       })
     })
   })
@@ -352,7 +352,7 @@ describe('Logs Controller', () => {
     it('should delete all logs successfully', async () => {
       mockCollection.deleteMany.mockResolvedValue({
         deletedCount: 100,
-        acknowledged: true,
+        acknowledged: true
       })
 
       await deleteAllLogs(mockRequest, mockResponse, jest.fn())
@@ -361,14 +361,14 @@ describe('Logs Controller', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(200)
       expect(mockResponse.json).toHaveBeenCalledWith({
         message: 'All logs deleted successfully',
-        deletedCount: 100,
+        deletedCount: 100
       })
     })
 
     it('should handle case when no logs to delete', async () => {
       mockCollection.deleteMany.mockResolvedValue({
         deletedCount: 0,
-        acknowledged: true,
+        acknowledged: true
       })
 
       await deleteAllLogs(mockRequest, mockResponse, jest.fn())
@@ -376,7 +376,7 @@ describe('Logs Controller', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(200)
       expect(mockResponse.json).toHaveBeenCalledWith({
         message: 'No logs found to delete',
-        deletedCount: 0,
+        deletedCount: 0
       })
     })
   })

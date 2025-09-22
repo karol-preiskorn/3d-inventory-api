@@ -10,12 +10,12 @@
  * - Structured: test-data-bot for complex object generation
  */
 
-import { build, sequence } from '@jackfranklin/test-data-bot';
-import casual from 'casual';
-import { ObjectId } from 'mongodb';
+import { build, sequence } from '@jackfranklin/test-data-bot'
+import casual from 'casual'
+import { ObjectId } from 'mongodb'
 
 // Configure casual for deterministic tests
-casual.seed(12345);
+casual.seed(12345)
 
 // Structured builders using test-data-bot for complex objects
 const userBuilder = build('User', {
@@ -31,10 +31,10 @@ const userBuilder = build('User', {
       firstName: casual.first_name,
       lastName: casual.last_name,
       avatar: casual.url,
-      bio: casual.sentence,
-    }),
-  },
-});
+      bio: casual.sentence
+    })
+  }
+})
 const deviceBuilder = build('Device', {
   fields: {
     _id: () => casual.uuid,
@@ -43,42 +43,42 @@ const deviceBuilder = build('Device', {
     position: () => ({
       x: casual.integer(0, 1000),
       y: casual.integer(0, 1000),
-      h: casual.integer(0, 100),
+      h: casual.integer(0, 100)
     }),
     attributes: () => [
       {
         key: 'type',
-        value: casual.random_element(['server', 'switch', 'router', 'storage']),
+        value: casual.random_element(['server', 'switch', 'router', 'storage'])
       },
       {
         key: 'status',
-        value: casual.random_element(['active', 'inactive', 'maintenance']),
+        value: casual.random_element(['active', 'inactive', 'maintenance'])
       },
       {
         key: 'serialNumber',
-        value: casual.uuid.slice(0, 12),
-      },
-    ],
-  },
-});
+        value: casual.uuid.slice(0, 12)
+      }
+    ]
+  }
+})
 const roleBuilder = build('Role', {
   fields: {
     name: sequence((x) => `Role${x}`),
     description: () => casual.sentence,
     permissions: () => casual.array_of_words(3),
     isActive: () => casual.boolean,
-    level: () => casual.integer(1, 10),
-  },
-});
+    level: () => casual.integer(1, 10)
+  }
+})
 const attributeBuilder = build('Attribute', {
   fields: {
     attributeDictionaryId: () => new ObjectId().toString(),
     connectionId: () => (casual.boolean ? new ObjectId().toString() : null),
     deviceId: () => (casual.boolean ? new ObjectId().toString() : null),
     modelId: () => (casual.boolean ? new ObjectId().toString() : null),
-    value: () => casual.word,
-  },
-});
+    value: () => casual.word
+  }
+})
 const logBuilder = build('Log', {
   fields: {
     action: () => casual.random_element(['CREATE', 'UPDATE', 'DELETE', 'VIEW']),
@@ -88,14 +88,14 @@ const logBuilder = build('Log', {
     timestamp: () => new Date(),
     details: () => casual.sentence,
     ipAddress: () => casual.ip,
-    userAgent: () => 'Mozilla/5.0 Test Agent',
-  },
-});
+    userAgent: () => 'Mozilla/5.0 Test Agent'
+  }
+})
 const position3d = () => ({
   x: casual.integer(0, 100),
   y: casual.integer(0, 100),
-  z: casual.integer(0, 100),
-});
+  z: casual.integer(0, 100)
+})
 
 export const testGenerators = {
   // Basic data types
@@ -110,7 +110,7 @@ export const testGenerators = {
     token: casual.password + casual.uuid.slice(0, 20),
     username: casual.username,
     roles: [casual.random_element(['admin', 'user', 'moderator'])],
-    isActive: casual.boolean,
+    isActive: casual.boolean
   }),
 
   // Role data
@@ -119,7 +119,7 @@ export const testGenerators = {
     name: casual.word + 'Role',
     description: casual.sentence,
     permissions: casual.array_of_words(3),
-    isActive: casual.boolean,
+    isActive: casual.boolean
   }),
 
   // Attribute data
@@ -129,7 +129,7 @@ export const testGenerators = {
     connectionId: casual.boolean ? new ObjectId().toString() : null,
     deviceId: casual.boolean ? new ObjectId().toString() : null,
     modelId: casual.boolean ? new ObjectId().toString() : null,
-    value: casual.word,
+    value: casual.word
   }),
 
   // Log data
@@ -139,20 +139,20 @@ export const testGenerators = {
     entity: casual.random_element(['device', 'user', 'connection']),
     entityId: casual.uuid,
     userId: casual.uuid,
-    timestamp: new Date(),
+    timestamp: new Date()
   }),
 
   // Dimensions and coordinates
   dimension: () => ({
     width: casual.integer(1, 10),
     height: casual.integer(1, 10),
-    depth: casual.integer(1, 10),
+    depth: casual.integer(1, 10)
   }),
 
   coordinates: () => ({
     x: casual.integer(1, 100),
     y: casual.integer(1, 100),
-    h: casual.integer(1, 10),
+    h: casual.integer(1, 10)
   }),
 
   position3d,
@@ -164,15 +164,15 @@ export const testGenerators = {
       street: casual.street,
       city: casual.city,
       country: casual.country,
-      postcode: casual.integer(10000, 99999),
-    },
+      postcode: casual.integer(10000, 99999)
+    }
   }),
 
   // Floor name specifically (with capitalization)
   floorName: () => {
-    const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+    const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 
-    return capitalize(casual.first_name) + ' ' + casual.word;
+    return capitalize(casual.first_name) + ' ' + casual.word
   },
 
   // Address data
@@ -180,7 +180,7 @@ export const testGenerators = {
     street: casual.street,
     city: casual.city,
     country: casual.country,
-    postcode: casual.integer(10000, 99999),
+    postcode: casual.integer(10000, 99999)
   }),
 
   // Floor dimension data
@@ -191,7 +191,7 @@ export const testGenerators = {
     h: casual.integer(10, 100),
     xPos: casual.integer(10, 100),
     yPos: casual.integer(10, 100),
-    hPos: casual.integer(10, 100),
+    hPos: casual.integer(10, 100)
   }),
 
   // Device/Model data - enhanced with test-data-bot
@@ -201,10 +201,10 @@ export const testGenerators = {
     dimensions: {
       width: casual.integer(1, 10),
       height: casual.integer(1, 10),
-      depth: casual.integer(1, 10),
+      depth: casual.integer(1, 10)
     },
     model: casual.word + 'Model',
-    serialNumber: casual.uuid.slice(0, 12),
+    serialNumber: casual.uuid.slice(0, 12)
   }),
 
   // Model data
@@ -215,12 +215,12 @@ export const testGenerators = {
     dimensions: {
       width: casual.integer(1, 10),
       height: casual.integer(1, 10),
-      depth: casual.integer(1, 10),
+      depth: casual.integer(1, 10)
     },
     specifications: {
       power: casual.integer(100, 1000) + 'W',
-      weight: casual.integer(5, 50) + 'kg',
-    },
+      weight: casual.integer(5, 50) + 'kg'
+    }
   }),
 
   // Connection data
@@ -229,13 +229,13 @@ export const testGenerators = {
     type: casual.random_element(['ethernet', 'fiber', 'power']),
     source: {
       deviceId: casual.uuid,
-      port: casual.integer(1, 48),
+      port: casual.integer(1, 48)
     },
     destination: {
       deviceId: casual.uuid,
-      port: casual.integer(1, 48),
+      port: casual.integer(1, 48)
     },
-    status: casual.random_element(['active', 'inactive', 'error']),
+    status: casual.random_element(['active', 'inactive', 'error'])
   }),
 
   // GitHub integration data
@@ -244,7 +244,7 @@ export const testGenerators = {
     branch: casual.random_element(['main', 'develop', 'feature/test']),
     commit: casual.uuid.slice(0, 8),
     author: casual.full_name,
-    message: casual.sentence,
+    message: casual.sentence
   }),
 
   // Health check data
@@ -254,10 +254,10 @@ export const testGenerators = {
       database: casual.random_element(['ok', 'error']),
       memory: casual.integer(50, 90) + '%',
       cpu: casual.integer(10, 80) + '%',
-      disk: casual.integer(20, 95) + '%',
+      disk: casual.integer(20, 95) + '%'
     },
     uptime: casual.integer(1000, 100000),
-    version: '1.0.' + casual.integer(0, 99),
+    version: '1.0.' + casual.integer(0, 99)
   }),
 
   // Documentation data
@@ -267,7 +267,7 @@ export const testGenerators = {
     category: casual.random_element(['api', 'user-guide', 'technical']),
     tags: casual.array_of_words(3),
     version: '1.' + casual.integer(0, 9),
-    lastModified: new Date(),
+    lastModified: new Date()
   }),
 
   // Login/Auth data
@@ -276,7 +276,7 @@ export const testGenerators = {
     password: casual.password,
     email: casual.email,
     remember: casual.boolean,
-    token: casual.password + casual.uuid.slice(0, 20),
+    token: casual.password + casual.uuid.slice(0, 20)
   }),
 
   // Attributes Dictionary data
@@ -286,7 +286,7 @@ export const testGenerators = {
     attributes: casual.array_of_words(5),
     description: casual.sentence,
     isActive: casual.boolean,
-    version: casual.integer(1, 10),
+    version: casual.integer(1, 10)
   }),
 
   // Error and validation data for testing edge cases
@@ -298,37 +298,37 @@ export const testGenerators = {
     negativeNumber: -casual.integer(1, 1000),
     invalidEmail: 'invalid-email',
     invalidUuid: 'not-a-uuid',
-    sqlInjection: "'; DROP TABLE users; --",
+    sqlInjection: '\'; DROP TABLE users; --',
     scriptInjection: '<script>alert("xss")</script>',
-    nosqlInjection: { $where: 'this.name == "admin"' },
+    nosqlInjection: { $where: 'this.name == "admin"' }
   },
 
   // Utility functions
   randomInt: (min: number, max: number) => casual.integer(min, max),
   randomArrayElement: <T>(array: T[]): T => {
-    return array[casual.integer(0, array.length - 1)];
+    return array[casual.integer(0, array.length - 1)]
   },
   randomArrayElements: <T>(array: T[], count?: { min?: number; max?: number }): T[] => {
-    const min = count?.min ?? 1;
-    const max = count?.max ?? array.length;
-    const numElements = casual.integer(min, Math.min(max, array.length));
-    const result: T[] = [];
-    const usedIndices = new Set<number>();
+    const min = count?.min ?? 1
+    const max = count?.max ?? array.length
+    const numElements = casual.integer(min, Math.min(max, array.length))
+    const result: T[] = []
+    const usedIndices = new Set<number>()
 
     while (result.length < numElements && result.length < array.length) {
-      const index = casual.integer(0, array.length - 1);
+      const index = casual.integer(0, array.length - 1)
 
       if (!usedIndices.has(index)) {
-        usedIndices.add(index);
-        result.push(array[index]);
+        usedIndices.add(index)
+        result.push(array[index])
       }
     }
 
-    return result;
+    return result
   },
 
   // Generate test data arrays
   generateArray: <T>(generator: () => T, count: number): T[] => {
-    return Array.from({ length: count }, generator);
-  },
-};
+    return Array.from({ length: count }, generator)
+  }
+}

@@ -15,7 +15,7 @@ import { healthController, HealthStatus } from '../controllers/health'
 const mockRequest = {} as any
 const mockResponse = {
   status: jest.fn().mockReturnThis(),
-  json: jest.fn(),
+  json: jest.fn()
 } as any
 
 describe('Health Controller', () => {
@@ -28,8 +28,8 @@ describe('Health Controller', () => {
   it('should return healthy status with connected database', async () => {
     const mockDb = {
       admin: () => ({
-        ping: jest.fn().mockResolvedValue({}),
-      }),
+        ping: jest.fn().mockResolvedValue({})
+      })
     } as unknown as Db
 
     await healthController(mockRequest, mockResponse, mockDb)
@@ -39,8 +39,8 @@ describe('Health Controller', () => {
       expect.objectContaining({
         status: 'healthy',
         database: 'connected',
-        error: null,
-      }),
+        error: null
+      })
     )
   })
 
@@ -52,16 +52,16 @@ describe('Health Controller', () => {
       expect.objectContaining({
         status: 'degraded',
         database: 'not_initialized',
-        error: 'Database connection is not initialized.',
-      }),
+        error: 'Database connection is not initialized.'
+      })
     )
   })
 
   it('should return degraded status when database ping fails', async () => {
     const mockDb = {
       admin: () => ({
-        ping: jest.fn().mockRejectedValue(new Error('Connection failed')),
-      }),
+        ping: jest.fn().mockRejectedValue(new Error('Connection failed'))
+      })
     } as unknown as Db
 
     await healthController(mockRequest, mockResponse, mockDb)
@@ -71,16 +71,16 @@ describe('Health Controller', () => {
       expect.objectContaining({
         status: 'degraded',
         database: 'disconnected',
-        error: 'Connection failed',
-      }),
+        error: 'Connection failed'
+      })
     )
   })
 
   it('should include all required health status properties', async () => {
     const mockDb = {
       admin: () => ({
-        ping: jest.fn().mockResolvedValue({}),
-      }),
+        ping: jest.fn().mockResolvedValue({})
+      })
     } as unknown as Db
 
     await healthController(mockRequest, mockResponse, mockDb)
@@ -100,8 +100,8 @@ describe('Health Controller', () => {
   it('should have valid timestamp format', async () => {
     const mockDb = {
       admin: () => ({
-        ping: jest.fn().mockResolvedValue({}),
-      }),
+        ping: jest.fn().mockResolvedValue({})
+      })
     } as unknown as Db
 
     await healthController(mockRequest, mockResponse, mockDb)
@@ -115,8 +115,8 @@ describe('Health Controller', () => {
   it('should have valid uptime information', async () => {
     const mockDb = {
       admin: () => ({
-        ping: jest.fn().mockResolvedValue({}),
-      }),
+        ping: jest.fn().mockResolvedValue({})
+      })
     } as unknown as Db
 
     await healthController(mockRequest, mockResponse, mockDb)
@@ -131,8 +131,8 @@ describe('Health Controller', () => {
   it('should have correct port configuration', async () => {
     const mockDb = {
       admin: () => ({
-        ping: jest.fn().mockResolvedValue({}),
-      }),
+        ping: jest.fn().mockResolvedValue({})
+      })
     } as unknown as Db
 
     await healthController(mockRequest, mockResponse, mockDb)

@@ -48,7 +48,7 @@ describe('create 10 connections', () => {
       mockConnection = {
         name: testGenerators.connection().name,
         deviceIdTo: to,
-        deviceIdFrom: from,
+        deviceIdFrom: from
       }
       await connections.insertOne(mockConnection)
       insertedConnection = await connections.findOne(mockConnection)

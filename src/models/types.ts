@@ -118,8 +118,8 @@ export const VALIDATION_PATTERNS = {
   ALPHANUMERIC_WITH_SPACES: /^[a-zA-Z0-9\s]+$/,
   HOSTNAME: /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
   SEMANTIC_VERSION:
-    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/,
-};
+    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+}
 
 // Common validation constants
 export const VALIDATION_CONSTANTS = {
@@ -152,8 +152,8 @@ export const VALIDATION_CONSTANTS = {
   // Database limits
   MAX_PAGINATION_LIMIT: 1000,
   DEFAULT_PAGINATION_LIMIT: 50,
-  MIN_PAGINATION_LIMIT: 1,
-};
+  MIN_PAGINATION_LIMIT: 1
+}
 
 // Response status codes
 export enum ResponseStatus {
@@ -277,151 +277,151 @@ export interface SearchFilters {
 // Unit conversion utilities
 export class UnitConverter {
   static temperature(value: number, from: TemperatureUnit, to: TemperatureUnit): number {
-    if (from === to) return value;
+    if (from === to) return value
 
     // Convert to Celsius first
-    let celsius: number;
+    let celsius: number
 
     switch (from) {
-      case TemperatureUnit.FAHRENHEIT:
-        celsius = ((value - 32) * 5) / 9;
-        break;
-      case TemperatureUnit.KELVIN:
-        celsius = value - 273.15;
-        break;
-      default:
-        celsius = value;
+    case TemperatureUnit.FAHRENHEIT:
+      celsius = ((value - 32) * 5) / 9
+      break
+    case TemperatureUnit.KELVIN:
+      celsius = value - 273.15
+      break
+    default:
+      celsius = value
     }
 
     // Convert from Celsius to target
     switch (to) {
-      case TemperatureUnit.FAHRENHEIT:
-        return (celsius * 9) / 5 + 32;
-      case TemperatureUnit.KELVIN:
-        return celsius + 273.15;
-      default:
-        return celsius;
+    case TemperatureUnit.FAHRENHEIT:
+      return (celsius * 9) / 5 + 32
+    case TemperatureUnit.KELVIN:
+      return celsius + 273.15
+    default:
+      return celsius
     }
   }
 
   static distance(value: number, from: DistanceUnit, to: DistanceUnit): number {
-    if (from === to) return value;
+    if (from === to) return value
 
     // Convert to meters first
-    let meters: number;
+    let meters: number
 
     switch (from) {
-      case DistanceUnit.MILLIMETERS:
-        meters = value / 1000;
-        break;
-      case DistanceUnit.CENTIMETERS:
-        meters = value / 100;
-        break;
-      case DistanceUnit.INCHES:
-        meters = value * 0.0254;
-        break;
-      case DistanceUnit.FEET:
-        meters = value * 0.3048;
-        break;
-      default:
-        meters = value;
+    case DistanceUnit.MILLIMETERS:
+      meters = value / 1000
+      break
+    case DistanceUnit.CENTIMETERS:
+      meters = value / 100
+      break
+    case DistanceUnit.INCHES:
+      meters = value * 0.0254
+      break
+    case DistanceUnit.FEET:
+      meters = value * 0.3048
+      break
+    default:
+      meters = value
     }
 
     // Convert from meters to target
     switch (to) {
-      case DistanceUnit.MILLIMETERS:
-        return meters * 1000;
-      case DistanceUnit.CENTIMETERS:
-        return meters * 100;
-      case DistanceUnit.INCHES:
-        return meters / 0.0254;
-      case DistanceUnit.FEET:
-        return meters / 0.3048;
-      default:
-        return meters;
+    case DistanceUnit.MILLIMETERS:
+      return meters * 1000
+    case DistanceUnit.CENTIMETERS:
+      return meters * 100
+    case DistanceUnit.INCHES:
+      return meters / 0.0254
+    case DistanceUnit.FEET:
+      return meters / 0.3048
+    default:
+      return meters
     }
   }
 
   static weight(value: number, from: WeightUnit, to: WeightUnit): number {
-    if (from === to) return value;
+    if (from === to) return value
 
     // Convert to kilograms first
-    let kilograms: number;
+    let kilograms: number
 
     switch (from) {
-      case WeightUnit.GRAMS:
-        kilograms = value / 1000;
-        break;
-      case WeightUnit.POUNDS:
-        kilograms = value * 0.453592;
-        break;
-      case WeightUnit.OUNCES:
-        kilograms = value * 0.0283495;
-        break;
-      default:
-        kilograms = value;
+    case WeightUnit.GRAMS:
+      kilograms = value / 1000
+      break
+    case WeightUnit.POUNDS:
+      kilograms = value * 0.453592
+      break
+    case WeightUnit.OUNCES:
+      kilograms = value * 0.0283495
+      break
+    default:
+      kilograms = value
     }
 
     // Convert from kilograms to target
     switch (to) {
-      case WeightUnit.GRAMS:
-        return kilograms * 1000;
-      case WeightUnit.POUNDS:
-        return kilograms / 0.453592;
-      case WeightUnit.OUNCES:
-        return kilograms / 0.0283495;
-      default:
-        return kilograms;
+    case WeightUnit.GRAMS:
+      return kilograms * 1000
+    case WeightUnit.POUNDS:
+      return kilograms / 0.453592
+    case WeightUnit.OUNCES:
+      return kilograms / 0.0283495
+    default:
+      return kilograms
     }
   }
 }
 
 // Utility functions
 export function generateId(): string {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 }
 
 export function formatBytes(bytes: number, decimals = 2): string {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) return '0 Bytes'
 
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const k = 1024
+  const dm = decimals < 0 ? 0 : decimals
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 
 export function isValidEmail(email: string): boolean {
-  return VALIDATION_PATTERNS.EMAIL.test(email);
+  return VALIDATION_PATTERNS.EMAIL.test(email)
 }
 
 export function isValidUrl(url: string): boolean {
-  return VALIDATION_PATTERNS.URL.test(url);
+  return VALIDATION_PATTERNS.URL.test(url)
 }
 
 export function isValidIPv4(ip: string): boolean {
-  return VALIDATION_PATTERNS.IPV4.test(ip);
+  return VALIDATION_PATTERNS.IPV4.test(ip)
 }
 
 export function isValidMacAddress(mac: string): boolean {
-  return VALIDATION_PATTERNS.MAC_ADDRESS.test(mac);
+  return VALIDATION_PATTERNS.MAC_ADDRESS.test(mac)
 }
 
 export function sanitizeString(str: string): string {
-  return str.trim().replace(/[<>"/\\&]/g, '');
+  return str.trim().replace(/[<>"/\\&]/g, '')
 }
 
 export function truncateString(str: string, maxLength: number): string {
-  if (str.length <= maxLength) return str;
+  if (str.length <= maxLength) return str
 
-  return str.substring(0, maxLength - 3) + '...';
+  return str.substring(0, maxLength - 3) + '...'
 }
 
 export function capitalizeFirstLetter(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }
 
 export function formatTimestamp(date: Date): string {
-  return date.toISOString().replace('T', ' ').substring(0, 19);
+  return date.toISOString().replace('T', ' ').substring(0, 19)
 }
