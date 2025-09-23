@@ -11,13 +11,13 @@ import { validateObjectId } from '../middlewares'
 import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 
 export interface AttributesTypes {
-  _id: ObjectId;
-  component: string;
-  description: string;
-  length: number;
-  name: string;
-  type: string;
-  value: string;
+  _id: ObjectId
+  component: string
+  description: string
+  length: number
+  name: string
+  type: string
+  value: string
 }
 
 const collectionName = 'attributesDictionary'

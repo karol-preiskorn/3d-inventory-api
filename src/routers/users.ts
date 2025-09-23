@@ -11,15 +11,15 @@ import { validateObjectId } from '../middlewares'
 import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 
 export interface User {
-  _id: ObjectId;
-  name: string;
-  email: string;
-  password: string;
-  token: string;
-  permissions: string[]; // Fix: Replace Array<Object> with Array<object>
+  _id: ObjectId
+  name: string
+  email: string
+  password: string
+  token: string
+  permissions: string[] // Fix: Replace Array<Object> with Array<object>
 }
 
-export type Users = User[];
+export type Users = User[]
 
 const collectionName = 'attributes'
 const router: express.Router = express.Router()

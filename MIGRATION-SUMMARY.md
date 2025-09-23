@@ -27,16 +27,16 @@
 
 ```typescript
 // Available generators in testGenerators.ts
-testGenerators.user(); // Complete user objects
-testGenerators.device(); // Device/model with dimensions
-testGenerators.floor(); // Floor with address
-testGenerators.connection(); // Connection names
-testGenerators.productName(); // Product naming
-testGenerators.dimension(); // Dimensional data
-testGenerators.coordinates(); // 3D coordinates
-testGenerators.randomInt(min, max); // Random integers
-testGenerators.randomArrayElement(array); // Single element
-testGenerators.randomArrayElements(array, options); // Multiple elements
+testGenerators.user() // Complete user objects
+testGenerators.device() // Device/model with dimensions
+testGenerators.floor() // Floor with address
+testGenerators.connection() // Connection names
+testGenerators.productName() // Product naming
+testGenerators.dimension() // Dimensional data
+testGenerators.coordinates() // 3D coordinates
+testGenerators.randomInt(min, max) // Random integers
+testGenerators.randomArrayElement(array) // Single element
+testGenerators.randomArrayElements(array, options) // Multiple elements
 ```
 
 ### Before vs After:
@@ -55,9 +55,9 @@ dimensions: {
 **After (Casual + Generators):**
 
 ```typescript
-import { testGenerators } from './testGenerators';
-name: testGenerators.productName();
-dimensions: testGenerators.dimension();
+import { testGenerators } from './testGenerators'
+name: testGenerators.productName()
+dimensions: testGenerators.dimension()
 ```
 
 ### Verification:

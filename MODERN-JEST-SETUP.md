@@ -28,21 +28,21 @@ Created a comprehensive test data generation system:
 
 ```typescript
 // Simple generators (casual-based)
-testGenerators.userSimple(); // Fast user generation
-testGenerators.deviceSimple(); // Simple device objects
-testGenerators.productName(); // Product naming
-testGenerators.floorName(); // Capitalized floor names
-testGenerators.address(); // Address objects
-testGenerators.floorDimension(); // Floor-specific dimensions
+testGenerators.userSimple() // Fast user generation
+testGenerators.deviceSimple() // Simple device objects
+testGenerators.productName() // Product naming
+testGenerators.floorName() // Capitalized floor names
+testGenerators.address() // Address objects
+testGenerators.floorDimension() // Floor-specific dimensions
 
 // Structured generators (test-data-bot)
-testGenerators.user(); // Sequential users (User1, User2...)
-testGenerators.device(); // Sequential devices with proper structure
+testGenerators.user() // Sequential users (User1, User2...)
+testGenerators.device() // Sequential devices with proper structure
 
 // Utility functions
-testGenerators.randomInt(min, max);
-testGenerators.randomArrayElement(array);
-testGenerators.randomArrayElements(array, options);
+testGenerators.randomInt(min, max)
+testGenerators.randomArrayElement(array)
+testGenerators.randomArrayElements(array, options)
 ```
 
 ## ✅ **Files Successfully Updated**
@@ -100,7 +100,7 @@ testGenerators.randomArrayElements(array, options);
 ### **Before (Faker.js)**
 
 ```typescript
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker'
 
 // Heavy, complex, type issues
 const user = {
@@ -110,18 +110,18 @@ const user = {
     street: faker.location.street(),
     city: faker.location.city(),
   },
-};
+}
 ```
 
 ### **After (Modern Stack)**
 
 ```typescript
-import { testGenerators } from './testGenerators';
+import { testGenerators } from './testGenerators'
 
 // Lightweight, typed, consistent
-const user = testGenerators.userSimple();
-const address = testGenerators.address();
-const device = testGenerators.device(); // Sequential: Device1, Device2...
+const user = testGenerators.userSimple()
+const address = testGenerators.address()
+const device = testGenerators.device() // Sequential: Device1, Device2...
 ```
 
 ## 🛡️ **Quality Assurance**

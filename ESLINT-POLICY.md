@@ -71,17 +71,17 @@ For issues that can't be auto-fixed:
 
 ```typescript
 // ❌ Error: unused variable
-const { _id, name } = user;
+const { _id, name } = user
 
 // ✅ Fix 1: Use underscore prefix
-const { _id: _unused, name } = user;
+const { _id: _unused, name } = user
 
 // ✅ Fix 2: ESLint disable comment
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { _id, name } = user;
+const { _id, name } = user
 
 // ✅ Fix 3: Remove if truly unused
-const { name } = user;
+const { name } = user
 ```
 
 #### Type Issues

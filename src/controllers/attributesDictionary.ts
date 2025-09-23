@@ -8,11 +8,11 @@ const logger = getLogger('attributesDictionary')
 const proc = '[attributesDictionary]'
 
 export interface AttributesDictionary {
-  _id: ObjectId | null;
-  componentName: string;
-  name: string;
-  type: string;
-  unit: string;
+  _id: ObjectId | null
+  componentName: string
+  name: string
+  type: string
+  unit: string
 }
 
 const collectionName = 'attributesDictionary'

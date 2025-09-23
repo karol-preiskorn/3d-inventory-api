@@ -9,15 +9,15 @@ import dotenv from 'dotenv'
 dotenv.config({ path: path.resolve('./.env') })
 
 interface Config {
-  API_YAML_FILE: string;
-  ATLAS_URI: string;
-  COOKIE_EXPIRESIN: number;
-  DBNAME: string;
-  HOST: string;
-  JWT_SECRET: string;
-  NODE_ENV: string;
-  PORT: number;
-  USE_EMOJI: boolean;
+  API_YAML_FILE: string
+  ATLAS_URI: string
+  COOKIE_EXPIRESIN: number
+  DBNAME: string
+  HOST: string
+  JWT_SECRET: string
+  NODE_ENV: string
+  PORT: number
+  USE_EMOJI: boolean
 }
 
 const DEFAULTS = {

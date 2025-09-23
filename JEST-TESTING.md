@@ -28,10 +28,10 @@ npm install --save-dev casual
 **Usage:**
 
 ```typescript
-import casual from 'casual';
+import casual from 'casual'
 
 // Configure for consistent test data
-casual.seed(12345);
+casual.seed(12345)
 
 // Generate test data
 const generators = {
@@ -42,7 +42,7 @@ const generators = {
     country: casual.country,
     postcode: casual.integer(10000, 99999),
   }),
-};
+}
 ```
 
 #### 2. Jest Mock Extended (Optional)
@@ -62,27 +62,27 @@ npm install --save-dev jest-mock-extended
 **Before (Faker.js):**
 
 ```typescript
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker'
 
 const mockData = {
   name: faker.name.fullName(),
   email: faker.internet.email(),
   age: faker.number.int({ min: 18, max: 65 }),
-};
+}
 ```
 
 **After (Casual):**
 
 ```typescript
-import casual from 'casual';
+import casual from 'casual'
 
-casual.seed(12345); // For deterministic tests
+casual.seed(12345) // For deterministic tests
 
 const mockData = {
   name: casual.full_name,
   email: casual.email,
   age: casual.integer(18, 65),
-};
+}
 ```
 
 ### Test Data Generators Pattern
@@ -103,11 +103,11 @@ const generators = {
     country: casual.country,
     postcode: casual.integer(10000, 99999),
   }),
-};
+}
 
 // Usage in tests
-const testUser = generators.user();
-const testAddress = generators.address();
+const testUser = generators.user()
+const testAddress = generators.address()
 ```
 
 ### Performance Comparison
@@ -123,7 +123,7 @@ const testAddress = generators.address();
 1. **Seed your generators** for deterministic tests:
 
    ```typescript
-   casual.seed(12345);
+   casual.seed(12345)
    ```
 
 2. **Create generator functions** for reusable test data:
@@ -133,7 +133,7 @@ const testAddress = generators.address();
      name: generators.floorName(),
      address: generators.address(),
      dimension: [generators.dimension()],
-   });
+   })
    ```
 
 3. **Keep test data simple** - only generate what you need for the test

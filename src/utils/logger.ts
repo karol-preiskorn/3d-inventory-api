@@ -7,15 +7,15 @@ import pino from 'pino'
 
 // Cloud Run/Production configuration
 const isProduction = process.env.NODE_ENV === 'production'
-const logger = pino({
+const logger: pino.Logger = pino({
   level: process.env.LOG_LEVEL || (isProduction ? 'info' : 'debug'),
 
   // Cloud Run structured logging
   ...(isProduction && {
     formatters: {
-      level: (label) => ({ severity: label.toUpperCase() })
+      level: (label: string) => ({ severity: label.toUpperCase() })
     },
-    timestamp: () => `,"time":"${new Date().toISOString()}"`
+    timestamp: pino.stdTimeFunctions.isoTime
   }),
 
   // Development pretty printing

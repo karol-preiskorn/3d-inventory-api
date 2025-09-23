@@ -52,6 +52,6 @@ const config: import('jest').Config = {
       },
     },
   ],
-};
+}
 
-export default config;
+export default config

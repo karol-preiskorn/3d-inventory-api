@@ -7,82 +7,82 @@
 import { ObjectId } from 'mongodb'
 
 export interface Connection {
-  _id?: ObjectId;
-  name: string;
-  type: ConnectionType;
-  category: ConnectionCategory;
-  deviceIdFrom: ObjectId;
-  deviceIdTo: ObjectId;
-  portFrom?: string;
-  portTo?: string;
-  bandwidth?: number;
-  protocol?: string;
-  status: ConnectionStatus;
-  isActive: boolean;
-  attributes?: ConnectionAttribute[];
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  lastVerified?: Date;
+  _id?: ObjectId
+  name: string
+  type: ConnectionType
+  category: ConnectionCategory
+  deviceIdFrom: ObjectId
+  deviceIdTo: ObjectId
+  portFrom?: string
+  portTo?: string
+  bandwidth?: number
+  protocol?: string
+  status: ConnectionStatus
+  isActive: boolean
+  attributes?: ConnectionAttribute[]
+  description?: string
+  createdAt: Date
+  updatedAt: Date
+  lastVerified?: Date
 }
 
 export interface ConnectionAttribute {
-  key: string;
-  value: string;
-  type?: 'String' | 'Number' | 'Boolean';
-  description?: string;
+  key: string
+  value: string
+  type?: 'String' | 'Number' | 'Boolean'
+  description?: string
 }
 
 export interface CreateConnectionRequest {
-  name: string;
-  type: ConnectionType;
-  category: ConnectionCategory;
-  deviceIdFrom: string;
-  deviceIdTo: string;
-  portFrom?: string;
-  portTo?: string;
-  bandwidth?: number;
-  protocol?: string;
-  status?: ConnectionStatus;
-  isActive?: boolean;
-  attributes?: ConnectionAttribute[];
-  description?: string;
+  name: string
+  type: ConnectionType
+  category: ConnectionCategory
+  deviceIdFrom: string
+  deviceIdTo: string
+  portFrom?: string
+  portTo?: string
+  bandwidth?: number
+  protocol?: string
+  status?: ConnectionStatus
+  isActive?: boolean
+  attributes?: ConnectionAttribute[]
+  description?: string
 }
 
 export interface UpdateConnectionRequest {
-  name?: string;
-  type?: ConnectionType;
-  category?: ConnectionCategory;
-  deviceIdFrom?: string;
-  deviceIdTo?: string;
-  portFrom?: string;
-  portTo?: string;
-  bandwidth?: number;
-  protocol?: string;
-  status?: ConnectionStatus;
-  isActive?: boolean;
-  attributes?: ConnectionAttribute[];
-  description?: string;
+  name?: string
+  type?: ConnectionType
+  category?: ConnectionCategory
+  deviceIdFrom?: string
+  deviceIdTo?: string
+  portFrom?: string
+  portTo?: string
+  bandwidth?: number
+  protocol?: string
+  status?: ConnectionStatus
+  isActive?: boolean
+  attributes?: ConnectionAttribute[]
+  description?: string
 }
 
 export interface ConnectionResponse {
-  _id: ObjectId;
-  name: string;
-  type: ConnectionType;
-  category: ConnectionCategory;
-  deviceIdFrom: ObjectId;
-  deviceIdTo: ObjectId;
-  portFrom?: string;
-  portTo?: string;
-  bandwidth?: number;
-  protocol?: string;
-  status: ConnectionStatus;
-  isActive: boolean;
-  attributes: ConnectionAttribute[];
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  lastVerified?: Date;
+  _id: ObjectId
+  name: string
+  type: ConnectionType
+  category: ConnectionCategory
+  deviceIdFrom: ObjectId
+  deviceIdTo: ObjectId
+  portFrom?: string
+  portTo?: string
+  bandwidth?: number
+  protocol?: string
+  status: ConnectionStatus
+  isActive: boolean
+  attributes: ConnectionAttribute[]
+  description?: string
+  createdAt: Date
+  updatedAt: Date
+  lastVerified?: Date
 }
 
 export enum ConnectionType {

@@ -8,9 +8,9 @@ const logger = getLogger('validation-middleware')
  * Standard error response format
  */
 interface ErrorResponse {
-  error: string;
-  message: string;
-  field?: string;
+  error: string
+  message: string
+  field?: string
 }
 
 /**

@@ -6,12 +6,12 @@ import getLogger from '../utils/logger'
 const logger = getLogger('auth-middleware')
 
 export interface JwtPayload {
-  id: string;
-  username: string;
-  role?: string;
-  permissions?: string[];
-  iat?: number;
-  exp?: number;
+  id: string
+  username: string
+  role?: string
+  permissions?: string[]
+  iat?: number
+  exp?: number
 }
 
 // Define user roles and their permissions
@@ -67,7 +67,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
 // Extend Express Request interface to include 'user' property
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: JwtPayload;
+    user?: JwtPayload
   }
 }
 

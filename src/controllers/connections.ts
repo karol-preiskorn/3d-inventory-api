@@ -9,16 +9,16 @@ const proc = '[connections]'
 const collectionName = 'connections'
 
 export interface Connection {
-  _id?: ObjectId;
-  name: string;
-  deviceIdFrom: ObjectId;
-  deviceIdTo: ObjectId;
+  _id?: ObjectId
+  name: string
+  deviceIdFrom: ObjectId
+  deviceIdTo: ObjectId
 }
 
 export interface ConnectionInput {
-  name: string;
-  deviceIdFrom: string;
-  deviceIdTo: string;
+  name: string
+  deviceIdFrom: string
+  deviceIdTo: string
 }
 
 // Constants

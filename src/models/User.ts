@@ -8,57 +8,57 @@ import { ObjectId } from 'mongodb'
 import { UserRole, Permission } from '../middlewares/auth'
 
 export interface User {
-  _id?: ObjectId;
-  username: string;
-  email: string;
-  password: string; // Will be hashed
-  role: UserRole;
-  permissions?: Permission[];
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  lastLogin?: Date;
-  loginAttempts?: number;
-  lockUntil?: Date;
+  _id?: ObjectId
+  username: string
+  email: string
+  password: string // Will be hashed
+  role: UserRole
+  permissions?: Permission[]
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+  lastLogin?: Date
+  loginAttempts?: number
+  lockUntil?: Date
 }
 
 export interface CreateUserRequest {
-  username: string;
-  email: string;
-  password: string;
-  role: UserRole;
-  isActive?: boolean;
+  username: string
+  email: string
+  password: string
+  role: UserRole
+  isActive?: boolean
 }
 
 export interface UpdateUserRequest {
-  username?: string;
-  email?: string;
-  password?: string;
-  role?: UserRole;
-  isActive?: boolean;
+  username?: string
+  email?: string
+  password?: string
+  role?: UserRole
+  isActive?: boolean
 }
 
 export interface UserResponse {
-  _id: ObjectId;
-  username: string;
-  email: string;
-  role: UserRole;
-  permissions: Permission[];
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  lastLogin?: Date;
+  _id: ObjectId
+  username: string
+  email: string
+  role: UserRole
+  permissions: Permission[]
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+  lastLogin?: Date
 }
 
 export interface LoginRequest {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
 
 export interface LoginResponse {
-  token: string;
-  user: UserResponse;
-  expiresIn: string;
+  token: string
+  user: UserResponse
+  expiresIn: string
 }
 
 // User validation constants

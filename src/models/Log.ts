@@ -7,92 +7,92 @@
 import { ObjectId } from 'mongodb'
 
 export interface Log {
-  _id?: ObjectId;
-  objectId: ObjectId;
-  operation: LogOperation;
-  component: LogComponent;
-  timestamp: Date;
-  userId?: ObjectId;
-  username?: string;
-  userIP?: string;
-  userAgent?: string;
-  details?: LogDetails;
-  oldData?: Record<string, unknown>;
-  newData?: Record<string, unknown>;
-  status: LogStatus;
-  severity: LogSeverity;
-  duration?: number;
-  error?: string;
-  metadata?: Record<string, unknown>;
-  sessionId?: string;
-  requestId?: string;
-  createdAt: Date;
+  _id?: ObjectId
+  objectId: ObjectId
+  operation: LogOperation
+  component: LogComponent
+  timestamp: Date
+  userId?: ObjectId
+  username?: string
+  userIP?: string
+  userAgent?: string
+  details?: LogDetails
+  oldData?: Record<string, unknown>
+  newData?: Record<string, unknown>
+  status: LogStatus
+  severity: LogSeverity
+  duration?: number
+  error?: string
+  metadata?: Record<string, unknown>
+  sessionId?: string
+  requestId?: string
+  createdAt: Date
 }
 
 export interface LogDetails {
-  description?: string;
-  affectedFields?: string[];
-  reason?: string;
-  source?: string;
-  additionalInfo?: Record<string, unknown>;
+  description?: string
+  affectedFields?: string[]
+  reason?: string
+  source?: string
+  additionalInfo?: Record<string, unknown>
 }
 
 export interface CreateLogRequest {
-  objectId: string;
-  operation: LogOperation;
-  component: LogComponent;
-  userId?: string;
-  username?: string;
-  userIP?: string;
-  userAgent?: string;
-  details?: LogDetails;
-  oldData?: Record<string, unknown>;
-  newData?: Record<string, unknown>;
-  status?: LogStatus;
-  severity?: LogSeverity;
-  duration?: number;
-  error?: string;
-  metadata?: Record<string, unknown>;
-  sessionId?: string;
-  requestId?: string;
+  objectId: string
+  operation: LogOperation
+  component: LogComponent
+  userId?: string
+  username?: string
+  userIP?: string
+  userAgent?: string
+  details?: LogDetails
+  oldData?: Record<string, unknown>
+  newData?: Record<string, unknown>
+  status?: LogStatus
+  severity?: LogSeverity
+  duration?: number
+  error?: string
+  metadata?: Record<string, unknown>
+  sessionId?: string
+  requestId?: string
 }
 
 export interface LogResponse {
-  _id: ObjectId;
-  objectId: ObjectId;
-  operation: LogOperation;
-  component: LogComponent;
-  timestamp: Date;
-  userId?: ObjectId;
-  username?: string;
-  userIP?: string;
-  userAgent?: string;
-  details?: LogDetails;
-  oldData?: Record<string, unknown>;
-  newData?: Record<string, unknown>;
-  status: LogStatus;
-  severity: LogSeverity;
-  duration?: number;
-  error?: string;
-  metadata?: Record<string, unknown>;
-  sessionId?: string;
-  requestId?: string;
-  createdAt: Date;
+  _id: ObjectId
+  objectId: ObjectId
+  operation: LogOperation
+  component: LogComponent
+  timestamp: Date
+  userId?: ObjectId
+  username?: string
+  userIP?: string
+  userAgent?: string
+  details?: LogDetails
+  oldData?: Record<string, unknown>
+  newData?: Record<string, unknown>
+  status: LogStatus
+  severity: LogSeverity
+  duration?: number
+  error?: string
+  metadata?: Record<string, unknown>
+  sessionId?: string
+  requestId?: string
+  createdAt: Date
 }
 
 export interface LogQueryParams {
-  component?: LogComponent;
-  operation?: LogOperation;
-  status?: LogStatus;
-  severity?: LogSeverity;
-  objectId?: string;
-  userId?: string;
-  startDate?: Date;
-  endDate?: Date;
-  limit?: number;
-  offset?: number;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  component?: LogComponent
+  operation?: LogOperation
+  status?: LogStatus
+  severity?: LogSeverity
+  objectId?: string
+  userId?: string
+  startDate?: Date
+  endDate?: Date
+  limit?: number
+  offset?: number
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
 }
 
 export enum LogOperation {
@@ -423,12 +423,12 @@ export function groupLogsByComponent(logs: Log[]): Record<LogComponent, Log[]> {
 }
 
 export function getLogStatistics(logs: Log[]): {
-  total: number;
-  byStatus: Record<LogStatus, number>;
-  bySeverity: Record<LogSeverity, number>;
-  byComponent: Record<LogComponent, number>;
-  averageDuration: number;
-  errorRate: number;
+  total: number
+  byStatus: Record<LogStatus, number>
+  bySeverity: Record<LogSeverity, number>
+  byComponent: Record<LogComponent, number>
+  averageDuration: number
+  errorRate: number
 } {
   const stats = {
     total: logs.length,

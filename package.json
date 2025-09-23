@@ -1,6 +1,6 @@
 {
   "name": "d-inventory-api",
-  "version": "0.96.133",
+  "version": "0.96.134",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -64,7 +64,10 @@
     "version:major": "npm version minor --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:patch": "npm version patch --no-git-tag-version",
-    "version:yaml": "node ./yaml-num.js"
+    "version:yaml": "node ./scripts/yaml-num.js",
+    "version:yaml:major": "node ./scripts/yaml-num.js major",
+    "version:yaml:minor": "node ./scripts/yaml-num.js minor",
+    "version:yaml:patch": "node ./scripts/yaml-num.js patch"
   },
   "dependencies": {
     "@types/bcrypt": "^6.0.0",

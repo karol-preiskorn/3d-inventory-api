@@ -10,20 +10,20 @@ const proc = '[github]'
 dotenv.config({ path: path.resolve('./.env') })
 
 export interface GitHubIssue {
-  id: number;
-  number: number;
-  title: string;
-  state: string;
-  body: string;
+  id: number
+  number: number
+  title: string
+  state: string
+  body: string
   user: {
-    login: string;
-    id: number;
-    avatar_url: string;
-    html_url: string;
-  };
-  html_url: string;
-  created_at: string;
-  updated_at: string;
+    login: string
+    id: number
+    avatar_url: string
+    html_url: string
+  }
+  html_url: string
+  created_at: string
+  updated_at: string
 }
 
 const githubIssuesUrl = 'https://api.github.com/repos/karol-preiskorn/3d-inventory-angular-ui/issues'

@@ -8,40 +8,40 @@ import { ObjectId } from 'mongodb'
 import { UserRole, Permission } from '../middlewares/auth'
 
 export interface Role {
-  _id?: ObjectId;
-  name: UserRole;
-  displayName: string;
-  description: string;
-  permissions: Permission[];
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  _id?: ObjectId
+  name: UserRole
+  displayName: string
+  description: string
+  permissions: Permission[]
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface CreateRoleRequest {
-  name: UserRole;
-  displayName: string;
-  description: string;
-  permissions: Permission[];
-  isActive?: boolean;
+  name: UserRole
+  displayName: string
+  description: string
+  permissions: Permission[]
+  isActive?: boolean
 }
 
 export interface UpdateRoleRequest {
-  displayName?: string;
-  description?: string;
-  permissions?: Permission[];
-  isActive?: boolean;
+  displayName?: string
+  description?: string
+  permissions?: Permission[]
+  isActive?: boolean
 }
 
 export interface RoleResponse {
-  _id: ObjectId;
-  name: UserRole;
-  displayName: string;
-  description: string;
-  permissions: Permission[];
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  _id: ObjectId
+  name: UserRole
+  displayName: string
+  description: string
+  permissions: Permission[]
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 
 // Default roles configuration

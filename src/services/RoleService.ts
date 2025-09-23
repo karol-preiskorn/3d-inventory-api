@@ -180,10 +180,10 @@ export class RoleService {
   async updateRole(
     name: UserRole,
     updateData: {
-      permissions?: Permission[];
-      displayName?: string;
-      description?: string;
-      isActive?: boolean;
+      permissions?: Permission[]
+      displayName?: string
+      description?: string
+      isActive?: boolean
     }
   ): Promise<RoleResponse> {
     let client: MongoClient | null = null

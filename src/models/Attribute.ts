@@ -7,86 +7,86 @@
 import { ObjectId } from 'mongodb'
 
 export interface Attribute {
-  _id?: ObjectId;
-  name: string;
-  key: string;
-  value: string;
-  type: AttributeValueType;
-  component: AttributeComponent;
-  entityId: ObjectId;
-  category?: string;
-  unit?: string;
-  description?: string;
-  isRequired: boolean;
-  isSystem: boolean;
-  isActive: boolean;
-  validation?: AttributeValidation;
-  displayOrder?: number;
-  createdAt: Date;
-  updatedAt: Date;
+  _id?: ObjectId
+  name: string
+  key: string
+  value: string
+  type: AttributeValueType
+  component: AttributeComponent
+  entityId: ObjectId
+  category?: string
+  unit?: string
+  description?: string
+  isRequired: boolean
+  isSystem: boolean
+  isActive: boolean
+  validation?: AttributeValidation
+  displayOrder?: number
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface AttributeValidation {
-  minLength?: number;
-  maxLength?: number;
-  minValue?: number;
-  maxValue?: number;
-  pattern?: string;
-  allowedValues?: string[];
+  minLength?: number
+  maxLength?: number
+  minValue?: number
+  maxValue?: number
+  pattern?: string
+  allowedValues?: string[]
 }
 
 export interface CreateAttributeRequest {
-  name: string;
-  key: string;
-  value: string;
-  type: AttributeValueType;
-  component: AttributeComponent;
-  entityId: string;
-  category?: string;
-  unit?: string;
-  description?: string;
-  isRequired?: boolean;
-  isSystem?: boolean;
-  isActive?: boolean;
-  validation?: AttributeValidation;
-  displayOrder?: number;
+  name: string
+  key: string
+  value: string
+  type: AttributeValueType
+  component: AttributeComponent
+  entityId: string
+  category?: string
+  unit?: string
+  description?: string
+  isRequired?: boolean
+  isSystem?: boolean
+  isActive?: boolean
+  validation?: AttributeValidation
+  displayOrder?: number
 }
 
 export interface UpdateAttributeRequest {
-  name?: string;
-  key?: string;
-  value?: string;
-  type?: AttributeValueType;
-  component?: AttributeComponent;
-  entityId?: string;
-  category?: string;
-  unit?: string;
-  description?: string;
-  isRequired?: boolean;
-  isSystem?: boolean;
-  isActive?: boolean;
-  validation?: AttributeValidation;
-  displayOrder?: number;
+  name?: string
+  key?: string
+  value?: string
+  type?: AttributeValueType
+  component?: AttributeComponent
+  entityId?: string
+  category?: string
+  unit?: string
+  description?: string
+  isRequired?: boolean
+  isSystem?: boolean
+  isActive?: boolean
+  validation?: AttributeValidation
+  displayOrder?: number
 }
 
 export interface AttributeResponse {
-  _id: ObjectId;
-  name: string;
-  key: string;
-  value: string;
-  type: AttributeValueType;
-  component: AttributeComponent;
-  entityId: ObjectId;
-  category?: string;
-  unit?: string;
-  description?: string;
-  isRequired: boolean;
-  isSystem: boolean;
-  isActive: boolean;
-  validation?: AttributeValidation;
-  displayOrder?: number;
-  createdAt: Date;
-  updatedAt: Date;
+  _id: ObjectId
+  name: string
+  key: string
+  value: string
+  type: AttributeValueType
+  component: AttributeComponent
+  entityId: ObjectId
+  category?: string
+  unit?: string
+  description?: string
+  isRequired: boolean
+  isSystem: boolean
+  isActive: boolean
+  validation?: AttributeValidation
+  displayOrder?: number
+  createdAt: Date
+  updatedAt: Date
 }
 
 export enum AttributeValueType {

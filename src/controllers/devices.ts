@@ -8,26 +8,26 @@ const logger = getLogger('devices')
 const collectionName = 'devices'
 
 export interface Device {
-  _id: string;
-  name: string;
-  modelId: string;
+  _id: string
+  name: string
+  modelId: string
   position: {
-    x: number;
-    y: number;
-    h: number;
-  };
-  attributes: Attribute[];
+    x: number
+    y: number
+    h: number
+  }
+  attributes: Attribute[]
 }
 
 export interface Attribute {
-  key: string;
-  value: string;
+  key: string
+  value: string
 }
 
 export interface Position {
-  x: number;
-  y: number;
-  h: number;
+  x: number
+  y: number
+  h: number
 }
 
 // Get all devices

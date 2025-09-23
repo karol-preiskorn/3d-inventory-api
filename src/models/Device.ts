@@ -7,75 +7,75 @@
 import { ObjectId } from 'mongodb'
 
 export interface Position {
-  x: number;
-  y: number;
-  h: number;
-  floorId?: ObjectId;
+  x: number
+  y: number
+  h: number
+  floorId?: ObjectId
 }
 
 export interface DeviceAttribute {
-  key: string;
-  value: string;
-  type?: 'String' | 'Number' | 'Boolean' | 'Object';
-  description?: string;
+  key: string
+  value: string
+  type?: 'String' | 'Number' | 'Boolean' | 'Object'
+  description?: string
 }
 
 export interface Device {
-  _id?: ObjectId;
-  name: string;
-  type: string;
-  category: string;
-  modelId: ObjectId;
-  position: Position;
-  attributes: DeviceAttribute[];
-  connections?: ObjectId[];
-  status: DeviceStatus;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  lastMaintenance?: Date;
-  description?: string;
+  _id?: ObjectId
+  name: string
+  type: string
+  category: string
+  modelId: ObjectId
+  position: Position
+  attributes: DeviceAttribute[]
+  connections?: ObjectId[]
+  status: DeviceStatus
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+  lastMaintenance?: Date
+  description?: string
 }
 
 export interface CreateDeviceRequest {
-  name: string;
-  type: string;
-  category: string;
-  modelId: string;
-  position: Position;
-  attributes?: DeviceAttribute[];
-  status?: DeviceStatus;
-  isActive?: boolean;
-  description?: string;
+  name: string
+  type: string
+  category: string
+  modelId: string
+  position: Position
+  attributes?: DeviceAttribute[]
+  status?: DeviceStatus
+  isActive?: boolean
+  description?: string
 }
 
 export interface UpdateDeviceRequest {
-  name?: string;
-  type?: string;
-  category?: string;
-  modelId?: string;
-  position?: Position;
-  attributes?: DeviceAttribute[];
-  status?: DeviceStatus;
-  isActive?: boolean;
-  description?: string;
+  name?: string
+  type?: string
+  category?: string
+  modelId?: string
+  position?: Position
+  attributes?: DeviceAttribute[]
+  status?: DeviceStatus
+  isActive?: boolean
+  description?: string
 }
 
 export interface DeviceResponse {
-  _id: ObjectId;
-  name: string;
-  type: string;
-  category: string;
-  modelId: ObjectId;
-  position: Position;
-  attributes: DeviceAttribute[];
-  connections: ObjectId[];
-  status: DeviceStatus;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  lastMaintenance?: Date;
-  description?: string;
+  _id: ObjectId
+  name: string
+  type: string
+  category: string
+  modelId: ObjectId
+  position: Position
+  attributes: DeviceAttribute[]
+  connections: ObjectId[]
+  status: DeviceStatus
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+  lastMaintenance?: Date
+  description?: string
 }
 
 export enum DeviceStatus {

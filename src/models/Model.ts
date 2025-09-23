@@ -7,82 +7,82 @@
 import { ObjectId } from 'mongodb'
 
 export interface Dimension {
-  width: number;
-  height: number;
-  depth: number;
+  width: number
+  height: number
+  depth: number
 }
 
 export interface Texture {
-  front: string;
-  back: string;
-  side: string;
-  top: string;
-  bottom: string;
+  front: string
+  back: string
+  side: string
+  top: string
+  bottom: string
 }
 
 export interface Model {
-  _id?: ObjectId;
-  name: string;
-  dimension: Dimension;
-  texture: Texture;
-  type?: string;
-  category?: string;
-  description?: string;
-  manufacturer?: string;
-  modelNumber?: string;
-  specifications?: ModelSpecification[];
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  _id?: ObjectId
+  name: string
+  dimension: Dimension
+  texture: Texture
+  type?: string
+  category?: string
+  description?: string
+  manufacturer?: string
+  modelNumber?: string
+  specifications?: ModelSpecification[]
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface ModelSpecification {
-  key: string;
-  value: string;
-  unit?: string;
-  description?: string;
+  key: string
+  value: string
+  unit?: string
+  description?: string
 }
 
 export interface CreateModelRequest {
-  name: string;
-  dimension: Dimension;
-  texture: Texture;
-  type?: string;
-  category?: string;
-  description?: string;
-  manufacturer?: string;
-  modelNumber?: string;
-  specifications?: ModelSpecification[];
-  isActive?: boolean;
+  name: string
+  dimension: Dimension
+  texture: Texture
+  type?: string
+  category?: string
+  description?: string
+  manufacturer?: string
+  modelNumber?: string
+  specifications?: ModelSpecification[]
+  isActive?: boolean
 }
 
 export interface UpdateModelRequest {
-  name?: string;
-  dimension?: Dimension;
-  texture?: Texture;
-  type?: string;
-  category?: string;
-  description?: string;
-  manufacturer?: string;
-  modelNumber?: string;
-  specifications?: ModelSpecification[];
-  isActive?: boolean;
+  name?: string
+  dimension?: Dimension
+  texture?: Texture
+  type?: string
+  category?: string
+  description?: string
+  manufacturer?: string
+  modelNumber?: string
+  specifications?: ModelSpecification[]
+  isActive?: boolean
 }
 
 export interface ModelResponse {
-  _id: ObjectId;
-  name: string;
-  dimension: Dimension;
-  texture: Texture;
-  type?: string;
-  category?: string;
-  description?: string;
-  manufacturer?: string;
-  modelNumber?: string;
-  specifications: ModelSpecification[];
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  _id: ObjectId
+  name: string
+  dimension: Dimension
+  texture: Texture
+  type?: string
+  category?: string
+  description?: string
+  manufacturer?: string
+  modelNumber?: string
+  specifications: ModelSpecification[]
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 
 export enum ModelType {

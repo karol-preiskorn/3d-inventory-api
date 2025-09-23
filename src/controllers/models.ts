@@ -9,34 +9,34 @@ const proc = '[models]'
 const collectionName = 'models'
 
 export interface Dimension {
-  width: number;
-  height: number;
-  depth: number;
+  width: number
+  height: number
+  depth: number
 }
 
 export interface Texture {
-  front: string;
-  back: string;
-  side: string;
-  top: string;
-  bottom: string;
+  front: string
+  back: string
+  side: string
+  top: string
+  bottom: string
 }
 
 export interface Model {
-  _id?: ObjectId;
-  name: string;
-  dimension: Dimension;
-  texture: Texture;
-  type?: string;
-  category?: string;
+  _id?: ObjectId
+  name: string
+  dimension: Dimension
+  texture: Texture
+  type?: string
+  category?: string
 }
 
 export interface ModelInput {
-  name: string;
-  dimension: Dimension;
-  texture: Texture;
-  type?: string;
-  category?: string;
+  name: string
+  dimension: Dimension
+  texture: Texture
+  type?: string
+  category?: string
 }
 
 // Constants

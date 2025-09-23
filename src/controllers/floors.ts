@@ -9,29 +9,29 @@ const logger = getLogger('floors')
 const proc = '[floors]'
 
 export interface Floor {
-  _id: ObjectId;
-  name: string;
-  address: Address;
-  dimension: Dimension[];
+  _id: ObjectId
+  name: string
+  address: Address
+  dimension: Dimension[]
 }
 
-export type NewFloor = Omit<Floor, '_id'>;
+export type NewFloor = Omit<Floor, '_id'>
 
 export interface Address {
-  street: string;
-  city: string;
-  country: string;
-  postcode: string;
+  street: string
+  city: string
+  country: string
+  postcode: string
 }
 
 export interface Dimension {
-  description: string;
-  x: number;
-  y: number;
-  h: number;
-  xPos: number;
-  yPos: number;
-  hPos: number;
+  description: string
+  x: number
+  y: number
+  h: number
+  xPos: number
+  yPos: number
+  hPos: number
 }
 
 const collectionName = 'floors'

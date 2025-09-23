@@ -7,128 +7,128 @@
 import { ObjectId } from 'mongodb'
 
 export interface Address {
-  street: string;
-  city: string;
-  country: string;
-  postcode: string;
-  state?: string;
-  region?: string;
+  street: string
+  city: string
+  country: string
+  postcode: string
+  state?: string
+  region?: string
 }
 
 export interface FloorDimension {
-  description: string;
-  x: number;
-  y: number;
-  h: number;
-  xPos: number;
-  yPos: number;
-  hPos: number;
-  type?: DimensionType;
-  isActive?: boolean;
+  description: string
+  x: number
+  y: number
+  h: number
+  xPos: number
+  yPos: number
+  hPos: number
+  type?: DimensionType
+  isActive?: boolean
 }
 
 export interface Floor {
-  _id?: ObjectId;
-  name: string;
-  address: Address;
-  dimension: FloorDimension[];
-  level: number;
-  buildingId?: ObjectId;
-  totalArea?: number;
-  usableArea?: number;
-  ceilingHeight?: number;
-  floorType: FloorType;
-  status: FloorStatus;
-  isActive: boolean;
-  capacity?: FloorCapacity;
-  environmentalConditions?: EnvironmentalConditions;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  _id?: ObjectId
+  name: string
+  address: Address
+  dimension: FloorDimension[]
+  level: number
+  buildingId?: ObjectId
+  totalArea?: number
+  usableArea?: number
+  ceilingHeight?: number
+  floorType: FloorType
+  status: FloorStatus
+  isActive: boolean
+  capacity?: FloorCapacity
+  environmentalConditions?: EnvironmentalConditions
+  description?: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface FloorCapacity {
-  maxDevices: number;
-  maxWeight: number;
-  maxPowerConsumption: number;
-  currentDevices?: number;
-  currentWeight?: number;
-  currentPowerConsumption?: number;
+  maxDevices: number
+  maxWeight: number
+  maxPowerConsumption: number
+  currentDevices?: number
+  currentWeight?: number
+  currentPowerConsumption?: number
 }
 
 export interface EnvironmentalConditions {
-  temperature?: TemperatureRange;
-  humidity?: HumidityRange;
-  powerRedundancy?: string;
-  coolingType?: string;
-  fireSuppressionType?: string;
+  temperature?: TemperatureRange
+  humidity?: HumidityRange
+  powerRedundancy?: string
+  coolingType?: string
+  fireSuppressionType?: string
 }
 
 export interface TemperatureRange {
-  min: number;
-  max: number;
-  optimal: number;
-  unit: 'C' | 'F';
+  min: number
+  max: number
+  optimal: number
+  unit: 'C' | 'F'
 }
 
 export interface HumidityRange {
-  min: number;
-  max: number;
-  optimal: number;
+  min: number
+  max: number
+  optimal: number
 }
 
 export interface CreateFloorRequest {
-  name: string;
-  address: Address;
-  dimension?: FloorDimension[];
-  level: number;
-  buildingId?: string;
-  totalArea?: number;
-  usableArea?: number;
-  ceilingHeight?: number;
-  floorType: FloorType;
-  status?: FloorStatus;
-  isActive?: boolean;
-  capacity?: FloorCapacity;
-  environmentalConditions?: EnvironmentalConditions;
-  description?: string;
+  name: string
+  address: Address
+  dimension?: FloorDimension[]
+  level: number
+  buildingId?: string
+  totalArea?: number
+  usableArea?: number
+  ceilingHeight?: number
+  floorType: FloorType
+  status?: FloorStatus
+  isActive?: boolean
+  capacity?: FloorCapacity
+  environmentalConditions?: EnvironmentalConditions
+  description?: string
 }
 
 export interface UpdateFloorRequest {
-  name?: string;
-  address?: Address;
-  dimension?: FloorDimension[];
-  level?: number;
-  buildingId?: string;
-  totalArea?: number;
-  usableArea?: number;
-  ceilingHeight?: number;
-  floorType?: FloorType;
-  status?: FloorStatus;
-  isActive?: boolean;
-  capacity?: FloorCapacity;
-  environmentalConditions?: EnvironmentalConditions;
-  description?: string;
+  name?: string
+  address?: Address
+  dimension?: FloorDimension[]
+  level?: number
+  buildingId?: string
+  totalArea?: number
+  usableArea?: number
+  ceilingHeight?: number
+  floorType?: FloorType
+  status?: FloorStatus
+  isActive?: boolean
+  capacity?: FloorCapacity
+  environmentalConditions?: EnvironmentalConditions
+  description?: string
 }
 
 export interface FloorResponse {
-  _id: ObjectId;
-  name: string;
-  address: Address;
-  dimension: FloorDimension[];
-  level: number;
-  buildingId?: ObjectId;
-  totalArea?: number;
-  usableArea?: number;
-  ceilingHeight?: number;
-  floorType: FloorType;
-  status: FloorStatus;
-  isActive: boolean;
-  capacity?: FloorCapacity;
-  environmentalConditions?: EnvironmentalConditions;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  _id: ObjectId
+  name: string
+  address: Address
+  dimension: FloorDimension[]
+  level: number
+  buildingId?: ObjectId
+  totalArea?: number
+  usableArea?: number
+  ceilingHeight?: number
+  floorType: FloorType
+  status: FloorStatus
+  isActive: boolean
+  capacity?: FloorCapacity
+  environmentalConditions?: EnvironmentalConditions
+  description?: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export enum FloorType {

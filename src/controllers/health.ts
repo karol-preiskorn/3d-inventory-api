@@ -8,15 +8,15 @@ const proc = '[health]'
 const PORT = config.PORT
 
 export type HealthStatus = {
-  status: string;
-  timestamp: string;
-  port: typeof PORT;
-  environment: string | undefined;
-  uptime: number;
-  uptimeString: string;
-  database: 'unknown' | 'connected' | 'not_initialized' | 'disconnected';
-  error: string | null;
-};
+  status: string
+  timestamp: string
+  port: typeof PORT
+  environment: string | undefined
+  uptime: number
+  uptimeString: string
+  database: 'unknown' | 'connected' | 'not_initialized' | 'disconnected'
+  error: string | null
+}
 
 function formatUptime(seconds: number): string {
   const hrs = Math.floor(seconds / 3600)

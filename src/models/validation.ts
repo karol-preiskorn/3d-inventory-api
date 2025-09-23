@@ -9,9 +9,9 @@ import { VALIDATION_PATTERNS, VALIDATION_CONSTANTS } from './types'
 
 // Generic validation result interface
 export interface ValidationResult {
-  isValid: boolean;
-  error?: string;
-  field?: string;
+  isValid: boolean
+  error?: string
+  field?: string
 }
 
 // Base validation functions

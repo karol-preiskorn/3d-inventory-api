@@ -1,14 +1,5 @@
 import { Router, RequestHandler } from 'express'
-import {
-  getAllLogs,
-  getLogsByObjectId,
-  getLogsByComponent,
-  getLogsByModelId,
-  createLog,
-  deleteLog,
-  deleteAllLogs,
-  VALID_COMPONENTS
-} from '../controllers/logs'
+import { getAllLogs, getLogsByObjectId, getLogsByComponent, getLogsByModelId, createLog, deleteLog, deleteAllLogs, VALID_COMPONENTS } from '../controllers/logs'
 import { validateObjectId } from '../middlewares'
 import getLogger from '../utils/logger'
 

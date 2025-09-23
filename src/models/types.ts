@@ -190,63 +190,63 @@ export enum SortOrder {
 }
 
 export interface SortOption {
-  field: string;
-  order: SortOrder;
+  field: string
+  order: SortOrder
 }
 
 // Pagination interface
 export interface PaginationParams {
-  page?: number;
-  limit?: number;
-  offset?: number;
+  page?: number
+  limit?: number
+  offset?: number
 }
 
 export interface PaginatedResponse<T> {
-  data: T[];
+  data: T[]
   pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+    hasNext: boolean
+    hasPrev: boolean
+  }
 }
 
 // Date range interface
 export interface DateRange {
-  startDate: Date;
-  endDate: Date;
+  startDate: Date
+  endDate: Date
 }
 
 // Coordinate system
 export interface Coordinates {
-  x: number;
-  y: number;
-  z?: number;
+  x: number
+  y: number
+  z?: number
 }
 
 export interface Position extends Coordinates {
-  rotation?: number;
-  scale?: number;
+  rotation?: number
+  scale?: number
 }
 
 // Common metadata structure
 export interface Metadata {
-  version?: string;
-  tags?: string[];
-  labels?: Record<string, string>;
-  annotations?: Record<string, string>;
-  customFields?: Record<string, unknown>;
+  version?: string
+  tags?: string[]
+  labels?: Record<string, string>
+  annotations?: Record<string, string>
+  customFields?: Record<string, unknown>
 }
 
 // Audit trail interface
 export interface AuditInfo {
-  createdAt: Date;
-  updatedAt: Date;
-  createdBy?: string;
-  updatedBy?: string;
-  version?: number;
+  createdAt: Date
+  updatedAt: Date
+  createdBy?: string
+  updatedBy?: string
+  version?: number
 }
 
 // Health status for monitoring
@@ -258,20 +258,20 @@ export enum HealthStatus {
 }
 
 export interface HealthCheck {
-  status: HealthStatus;
-  message?: string;
-  timestamp: Date;
-  details?: Record<string, unknown>;
+  status: HealthStatus
+  message?: string
+  timestamp: Date
+  details?: Record<string, unknown>
 }
 
 // Common search filters
 export interface SearchFilters {
-  query?: string;
-  status?: string[];
-  category?: string[];
-  tags?: string[];
-  dateRange?: DateRange;
-  isActive?: boolean;
+  query?: string
+  status?: string[]
+  category?: string[]
+  tags?: string[]
+  dateRange?: DateRange
+  isActive?: boolean
 }
 
 // Unit conversion utilities

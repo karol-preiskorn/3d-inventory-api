@@ -253,10 +253,10 @@ gcloud run services update 3d-inventory-api \
 
    ```js
    // Example for Express.js
-   const PORT = process.env.PORT || 8080;
+   const PORT = process.env.PORT || 8080
    app.listen(PORT, () => {
-     console.log(`Server listening on port ${PORT}`);
-   });
+     console.log(`Server listening on port ${PORT}`)
+   })
    ```
 
 ## Local Testing

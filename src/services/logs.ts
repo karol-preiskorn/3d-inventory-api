@@ -13,23 +13,23 @@ import { connectToCluster, connectToDb } from '../utils/db'
  * Represents a log entry.
  */
 export interface Log {
-  _id: ObjectId;
-  date: string;
-  objectId?: string;
-  operation: string; // [create, update, delete, clone]
-  component: string; // [device, model, category, floor]
-  message: object; // object json
+  _id: ObjectId
+  date: string
+  objectId?: string
+  operation: string // [create, update, delete, clone]
+  component: string // [device, model, category, floor]
+  message: object // object json
 }
 
 /**
  * Represents the input for creating a log entry.
  */
 export interface LogCreate {
-  objectId?: string;
-  operation: string;
-  component: string;
-  date: string;
-  message: object;
+  objectId?: string
+  operation: string
+  component: string
+  date: string
+  message: object
 }
 
 /**

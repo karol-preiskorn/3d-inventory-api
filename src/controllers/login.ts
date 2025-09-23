@@ -12,7 +12,7 @@ const JWT_SECRET = config.JWT_SECRET
 // Extend Express Request interface to include 'user' property using module augmentation
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: JwtPayload;
+    user?: JwtPayload
   }
 }
 

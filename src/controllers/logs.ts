@@ -9,12 +9,12 @@ const logger = getLogger('logs')
 const proc = '[logs]'
 
 export interface Logs {
-  _id?: ObjectId;
-  objectId: string;
-  date: string;
-  operation: string;
-  component: string;
-  message: string;
+  _id?: ObjectId
+  objectId: string
+  date: string
+  operation: string
+  component: string
+  message: string
 }
 
 const collectionName = 'logs'

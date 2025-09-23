@@ -8,12 +8,12 @@ const logger = getLogger('attributes')
 const proc = '[attributes]'
 
 export interface Attributes {
-  _id: ObjectId;
-  attributeDictionaryId: ObjectId | null;
-  connectionId: ObjectId | null;
-  deviceId: ObjectId | null;
-  modelId: ObjectId | null;
-  value: string;
+  _id: ObjectId
+  attributeDictionaryId: ObjectId | null
+  connectionId: ObjectId | null
+  deviceId: ObjectId | null
+  modelId: ObjectId | null
+  value: string
 }
 
 const collectionName = 'attributes'
