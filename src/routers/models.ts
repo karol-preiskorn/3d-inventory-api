@@ -1,13 +1,13 @@
-import { Router, RequestHandler } from 'express'
+import { RequestHandler, Router } from 'express'
 import {
+  createModel,
+  deleteAllModels,
+  deleteModel,
   getAllModels,
   getModelById,
-  createModel,
   updateModel,
   updateModelDimension,
-  updateModelTexture,
-  deleteModel,
-  deleteAllModels
+  updateModelTexture
 } from '../controllers/models'
 import { validateObjectId } from '../middlewares'
 
@@ -38,4 +38,3 @@ export function createModelsRouter(): Router {
 
   return router
 }
-``
