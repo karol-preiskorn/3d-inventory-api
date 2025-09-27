@@ -39,6 +39,7 @@
     "clean:cache": "npm cache clean --force && rimraf dist",
     "cp": "cpy README.md src/assets --flat",
     "doc": "npx typedoc",
+    "doc:fix": "tsx scripts/documentation-fixer.ts",
     "docker:build": "npm run version:patch && ./build.sh",
     "docker:run": "docker rm -f 3d-inventory-api && docker build -t 3d-inventory-api . && docker run -p 8080:8080 -e PORT=8080 -e HOST=172.17.0.2 3d-inventory-api",
     "docker:test": "docker run --rm -p 8080:8080 -e PORT=8080 3d-inventory-api",
@@ -51,6 +52,8 @@
     "lint": "eslint --fix src",
     "lint:check": "eslint src",
     "lint:format": "eslint --fix src --format compact",
+    "lint:md": "markdownlint-cli2 \"**/*.md\" --fix",
+    "lint:md:check": "markdownlint-cli2 \"**/*.md\"",
     "openapi:build": "node scripts/build-openapi-spec.js build-and-validate",
     "openapi:format": "npx openapi-format api/openapi.yaml --output api/openapi-formatted.yaml",
     "prepare:husky": "husky",
@@ -148,6 +151,7 @@
     "jest-mock-extended": "^4.0.0",
     "jiti": "^2.6.0",
     "lint-staged": "^16.2.0",
+    "markdownlint-cli2": "^0.18.1",
     "nodemon": "^3.1.10",
     "npm-check-updates": "^18.3.0",
     "rimraf": "^6.0.1",
@@ -169,7 +173,11 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{json,yaml,yml,md}": [
+    "*.{json,yaml,yml}": [
+      "prettier --write"
+    ],
+    "*.md": [
+      "markdownlint-cli2 --fix",
       "prettier --write"
     ],
     "package.json": [

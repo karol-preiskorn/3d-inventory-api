@@ -4,23 +4,49 @@
 
 ### What was implemented:
 
-1. **Removed @faker-js/faker** (2.5MB package) and replaced with **casual** (~100KB)
+
+
+1. **Removed @faker-js/faker** (2.5MB package) and replaced with **casual**
+
+  (~100KB)
+
+
 2. **Created centralized test generators** in `src/tests/testGenerators.ts`
+
+
 3. **Updated all test files** to use the new generator system:
+
    - `floors.test.ts` - Floor data generation
+
    - `users.test.ts` - User data generation
+
    - `connections.test.ts` - Connection data generation
+
    - `model.test.ts` - Device/model data generation
+
    - `attributesDictionary.gen.test.ts` - Attribute data generation
+
    - `prepare-data.test.ts` - Bulk test data preparation
 
 ### Key improvements:
 
+
+
 - **97% size reduction**: From 2.5MB faker.js to 100KB casual
+
+
 - **Better Jest compatibility**: No module resolution issues
+
+
 - **Deterministic tests**: Seeded random generation for consistent results
+
+
 - **Type safety**: Proper TypeScript integration
+
+
 - **ESLint compliance**: All code quality checks passing
+
+
 - **Centralized generators**: Reusable test data patterns
 
 ### New Test Generator Features:
@@ -44,6 +70,7 @@ testGenerators.randomArrayElements(array, options) // Multiple elements
 **Before (Faker.js):**
 
 ```typescript
+
 import { faker } from '@faker-js/faker'
 name: faker.commerce.product() + ' ' + faker.color.human()
 dimensions: {
@@ -55,6 +82,7 @@ dimensions: {
 **After (Casual + Generators):**
 
 ```typescript
+
 import { testGenerators } from './testGenerators'
 name: testGenerators.productName()
 dimensions: testGenerators.dimension()
@@ -70,8 +98,15 @@ dimensions: testGenerators.dimension()
 
 ### Next Steps:
 
+
+
 - Run test suite to verify functionality
+
+
 - Consider adding more specialized generators as needed
+
+
 - Document test data patterns for team
 
-The migration successfully maintains all testing functionality while improving performance, reducing bundle size, and maintaining code quality standards.
+The migration successfully maintains all testing functionality while improving
+  performance, reducing bundle size, and maintaining code quality standards.

@@ -4,9 +4,17 @@
 
 ### Why Replace Faker.js?
 
+
+
 1. **Bundle Size**: @faker-js/faker is quite large (~2.5MB)
+
+
 2. **Jest Compatibility**: Can have module resolution issues with Jest
+
+
 3. **Performance**: Casual is lighter and faster for simple test data
+
+
 4. **Simplicity**: Cleaner API for basic test data generation
 
 ### New Testing Stack
@@ -19,15 +27,26 @@ npm install --save-dev casual
 
 **Benefits:**
 
+
+
 - Lightweight (~100KB vs 2.5MB)
+
+
 - Better Jest compatibility
+
+
 - Deterministic with seeding
+
+
 - Simple API
+
+
 - No TypeScript issues
 
 **Usage:**
 
 ```typescript
+
 import casual from 'casual'
 
 // Configure for consistent test data
@@ -53,8 +72,14 @@ npm install --save-dev jest-mock-extended
 
 **Benefits:**
 
+
+
 - Type-safe mocking
+
+
 - Better TypeScript integration
+
+
 - Advanced mock features
 
 ### Migration from Faker.js
@@ -62,6 +87,7 @@ npm install --save-dev jest-mock-extended
 **Before (Faker.js):**
 
 ```typescript
+
 import { faker } from '@faker-js/faker'
 
 const mockData = {
@@ -74,6 +100,7 @@ const mockData = {
 **After (Casual):**
 
 ```typescript
+
 import casual from 'casual'
 
 casual.seed(12345) // For deterministic tests
@@ -113,18 +140,36 @@ const testAddress = generators.address()
 ### Performance Comparison
 
 | Package                     | Size   | Jest Compatible | TypeScript  | Deterministic |
+
+
+
 | --------------------------- | ------ | --------------- | ----------- | ------------- |
+
+
+
 | @faker-js/faker             | ~2.5MB | ⚠️ Issues       | ✅ Yes      | ✅ Yes        |
+
+
+
 | casual                      | ~100KB | ✅ Yes          | ⚠️ No types | ✅ Yes        |
+
+
+
 | @jackfranklin/test-data-bot | ~50KB  | ✅ Yes          | ✅ Yes      | ✅ Yes        |
 
+
+
 ### Best Practices
+
+
 
 1. **Seed your generators** for deterministic tests:
 
    ```typescript
    casual.seed(12345)
    ```
+
+
 
 2. **Create generator functions** for reusable test data:
 
@@ -136,7 +181,11 @@ const testAddress = generators.address()
    })
    ```
 
+
+
 3. **Keep test data simple** - only generate what you need for the test
+
+
 
 4. **Use const for mock data** unless you need to reassign
 
@@ -144,15 +193,34 @@ const testAddress = generators.address()
 
 If you need more features, consider:
 
+
+
 - **@jackfranklin/test-data-bot**: More structured approach
+
+
 - **fishery**: Factory pattern for test data
+
+
 - **rosie**: Ruby-inspired factories for JavaScript
 
 ### Migration Checklist
 
+
+
 - [x] Remove @faker-js/faker dependency
+
+
 - [x] Install casual
+
+
 - [x] Update test files to use casual
+
+
 - [x] Fix ESLint errors
+
+
 - [x] Verify tests still pass
+
+
 - [x] Update documentation
+
