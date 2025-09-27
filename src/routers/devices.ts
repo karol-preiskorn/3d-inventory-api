@@ -1,16 +1,25 @@
 import express from 'express'
 import {
+  createDevice,
+  deleteAllDevices,
+  deleteDevice,
+  deleteDevicesByModel,
   getAllDevices,
   getDeviceById,
-  updateDevice,
-  createDevice,
   getDevicesByModel,
-  updateDevicePosition,
-  deleteDevice,
-  deleteAllDevices,
-  deleteDevicesByModel
+  updateDevice,
+  updateDevicePosition
 } from '../controllers/devices'
-import { validateObjectId, requireAuth, requirePermission, Permission, optionalAuth } from '../middlewares'
+import {
+  Permission,
+  optionalAuth,
+  requireAuth,
+  requirePermission,
+  validateDeviceInput,
+  validateDeviceUpdate,
+  validateObjectId,
+  validatePositionUpdate
+} from '../middlewares'
 
 // Create devices router with enhanced security
 export default function createDevicesRouter() {
@@ -23,16 +32,16 @@ export default function createDevicesRouter() {
   router.get('/:id', validateObjectId, optionalAuth, getDeviceById)
 
   // PUT /devices/:id - Update device by ID (requires write permission)
-  router.put('/:id', validateObjectId, requireAuth, requirePermission(Permission.WRITE_DEVICES), updateDevice)
+  router.put('/:id', validateObjectId, validateDeviceUpdate, requireAuth, requirePermission(Permission.WRITE_DEVICES), updateDevice)
 
   // POST /devices - Create new device (requires write permission)
-  router.post('/', requireAuth, requirePermission(Permission.WRITE_DEVICES), createDevice)
+  router.post('/', validateDeviceInput, requireAuth, requirePermission(Permission.WRITE_DEVICES), createDevice)
 
   // GET /devices/model/:id - Get devices by model ID (public read access)
   router.get('/model/:id', validateObjectId, optionalAuth, getDevicesByModel)
 
   // PATCH /devices/position/:id - Update device position (requires write permission)
-  router.patch('/position/:id', validateObjectId, requireAuth, requirePermission(Permission.WRITE_DEVICES), updateDevicePosition)
+  router.patch('/position/:id', validateObjectId, validatePositionUpdate, requireAuth, requirePermission(Permission.WRITE_DEVICES), updateDevicePosition)
 
   // DELETE /devices/:id - Delete device by ID (requires delete permission)
   router.delete('/:id', validateObjectId, requireAuth, requirePermission(Permission.DELETE_DEVICES), deleteDevice)

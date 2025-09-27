@@ -20,10 +20,11 @@ import {
 jest.mock('../utils/db', () => ({
   connectToCluster: jest.fn(),
   connectToDb: jest.fn(),
-  closeConnection: jest.fn().mockResolvedValue(undefined)
+  closeConnection: jest.fn().mockResolvedValue(undefined),
+  getDatabase: jest.fn()
 }))
 
-const { connectToCluster, connectToDb } = jest.requireMock('../utils/db')
+const { connectToCluster, connectToDb, getDatabase } = jest.requireMock('../utils/db')
 
 describe('Models Controller', () => {
   let mockRequest: any
@@ -75,6 +76,7 @@ describe('Models Controller', () => {
 
     connectToCluster.mockResolvedValue(mockClient)
     connectToDb.mockReturnValue(mockDb)
+    getDatabase.mockResolvedValue(mockDb)
   })
 
   afterEach(() => {

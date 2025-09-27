@@ -27,6 +27,7 @@ describe('GET /', () => {
     expect(response.status).toBe(200)
     expect(response.text).toContain('<h2>Purposes</h2>') // Match actual README content
     expect(response.text).toContain('3d-inventory-mongo-api')
+    expect(response.type).toBe('text/html')
   })
 
   it('should return 404 if README.md file is not found', async () => {

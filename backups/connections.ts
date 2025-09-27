@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import sanitize from 'mongo-sanitize'
 import { Collection, Db, InsertOneResult, UpdateResult, DeleteResult, ObjectId } from 'mongodb'
-import { getDatabase } from '../utils/db'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('connections')
@@ -37,9 +37,10 @@ export async function getAllConnections(req: Request, res: Response) {
     }
   }
 
-  try {
+  const client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+  try {
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const results = await collection.find({}).limit(limit).toArray()
 
@@ -60,6 +61,8 @@ export async function getAllConnections(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -67,10 +70,10 @@ export async function getAllConnections(req: Request, res: Response) {
 export async function getConnectionById(req: Request, res: Response) {
   const { id } = req.params
   const query = { _id: new ObjectId(id) }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const connection = await collection.findOne(query)
 
@@ -91,6 +94,8 @@ export async function getConnectionById(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -98,10 +103,10 @@ export async function getConnectionById(req: Request, res: Response) {
 export async function getConnectionsFrom(req: Request, res: Response) {
   const { id } = req.params
   const query = { deviceIdFrom: new ObjectId(id) }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const connections = await collection.find(query).toArray()
 
@@ -122,6 +127,8 @@ export async function getConnectionsFrom(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -129,10 +136,10 @@ export async function getConnectionsFrom(req: Request, res: Response) {
 export async function getConnectionsTo(req: Request, res: Response) {
   const { id } = req.params
   const query = { deviceIdTo: new ObjectId(id) }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const connections = await collection.find(query).toArray()
 
@@ -153,6 +160,8 @@ export async function getConnectionsTo(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -174,10 +183,10 @@ export async function getConnectionBetweenDevices(req: Request, res: Response) {
     deviceIdFrom: new ObjectId(idFrom),
     deviceIdTo: new ObjectId(idTo)
   }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const connection = await collection.findOne(query)
 
@@ -198,6 +207,8 @@ export async function getConnectionBetweenDevices(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -229,10 +240,10 @@ export async function createConnection(req: Request, res: Response) {
     deviceIdFrom: new ObjectId(sanitizedDeviceIdFrom),
     deviceIdTo: new ObjectId(sanitizedDeviceIdTo)
   }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: InsertOneResult<Connection> = await collection.insertOne(newConnection)
 
@@ -254,6 +265,8 @@ export async function createConnection(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -289,10 +302,10 @@ export async function updateConnection(req: Request, res: Response) {
       deviceIdTo: new ObjectId(sanitizedDeviceIdTo)
     }
   }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: UpdateResult = await collection.updateOne(query, updates)
 
@@ -317,6 +330,8 @@ export async function updateConnection(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -324,10 +339,10 @@ export async function updateConnection(req: Request, res: Response) {
 export async function deleteConnection(req: Request, res: Response) {
   const { id } = req.params
   const query = { _id: new ObjectId(id) }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteOne(query)
 
@@ -351,6 +366,8 @@ export async function deleteConnection(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -358,10 +375,10 @@ export async function deleteConnection(req: Request, res: Response) {
 export async function deleteConnectionsFrom(req: Request, res: Response) {
   const { id } = req.params
   const query = { deviceIdFrom: new ObjectId(id) }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany(query)
 
@@ -378,6 +395,8 @@ export async function deleteConnectionsFrom(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -385,10 +404,10 @@ export async function deleteConnectionsFrom(req: Request, res: Response) {
 export async function deleteConnectionsTo(req: Request, res: Response) {
   const { id } = req.params
   const query = { deviceIdTo: new ObjectId(id) }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany(query)
 
@@ -405,6 +424,8 @@ export async function deleteConnectionsTo(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -426,10 +447,10 @@ export async function deleteConnectionsBetweenDevices(req: Request, res: Respons
     deviceIdFrom: new ObjectId(idFrom),
     deviceIdTo: new ObjectId(idTo)
   }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany(query)
 
@@ -446,6 +467,8 @@ export async function deleteConnectionsBetweenDevices(req: Request, res: Respons
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -472,9 +495,10 @@ export async function deleteAllConnections(req: Request, res: Response) {
     return
   }
 
-  try {
+  const client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+  try {
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany({})
 
@@ -491,5 +515,7 @@ export async function deleteAllConnections(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }

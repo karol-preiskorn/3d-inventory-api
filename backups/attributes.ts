@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import mongoSanitize from 'mongo-sanitize'
 import { Collection, Db, ObjectId } from 'mongodb'
-import { getDatabase } from '../utils/db'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('attributes')
@@ -25,8 +25,9 @@ export const getAllAttributes: RequestHandler = async (_req, res) => {
   let client
 
   try {
+    client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const results: object[] = await collection.find({}).limit(100).toArray()
 
@@ -46,7 +47,9 @@ export const getAllAttributes: RequestHandler = async (_req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -66,8 +69,9 @@ export const getAttributeById: RequestHandler = async (req, res) => {
   let client
 
   try {
+    client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result = await collection.findOne({ _id: new ObjectId(id) })
 
@@ -87,7 +91,9 @@ export const getAttributeById: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -107,8 +113,9 @@ export const getAttributesByModelId: RequestHandler = async (req, res) => {
   let client
 
   try {
+    client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const query = { modelId: new ObjectId(id) }
     const result = await collection.find(query).toArray()
@@ -129,7 +136,9 @@ export const getAttributesByModelId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -149,8 +158,9 @@ export const getAttributesByDeviceId: RequestHandler = async (req, res) => {
   let client
 
   try {
+    client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const query = { deviceId: new ObjectId(id) }
     const result = await collection.find(query).toArray()
@@ -171,7 +181,9 @@ export const getAttributesByDeviceId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -191,8 +203,9 @@ export const getAttributesByConnectionId: RequestHandler = async (req, res) => {
   let client
 
   try {
+    client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const query = { connectionId: new ObjectId(id) }
     const result = await collection.find(query).toArray()
@@ -213,7 +226,9 @@ export const getAttributesByConnectionId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -224,8 +239,9 @@ export const createAttribute: RequestHandler = async (req, res) => {
   let client
 
   try {
+    client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     // Sanitize input
     const sanitizedBody = mongoSanitize(req.body)
@@ -278,7 +294,9 @@ export const createAttribute: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -298,8 +316,9 @@ export const updateAttribute: RequestHandler = async (req, res) => {
   let client
 
   try {
+    client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     // Sanitize input
     const sanitizedBody = mongoSanitize(req.body)
@@ -341,7 +360,9 @@ export const updateAttribute: RequestHandler = async (req, res) => {
       message: errorMessage
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -361,8 +382,9 @@ export const deleteAttribute: RequestHandler = async (req, res) => {
   let client
 
   try {
+    client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const query = { _id: new ObjectId(id) }
     const result = await collection.deleteOne(query)
@@ -383,7 +405,9 @@ export const deleteAttribute: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -394,8 +418,9 @@ export const deleteAllAttributes: RequestHandler = async (_req, res) => {
   let client
 
   try {
+    client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const query = {}
     const result = await collection.deleteMany(query)
@@ -416,7 +441,9 @@ export const deleteAllAttributes: RequestHandler = async (_req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -436,8 +463,9 @@ export const deleteAttributesByModelId: RequestHandler = async (req, res) => {
   let client
 
   try {
+    client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const query = { modelId: new ObjectId(id) }
     const result = await collection.deleteMany(query)
@@ -458,6 +486,8 @@ export const deleteAttributesByModelId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }

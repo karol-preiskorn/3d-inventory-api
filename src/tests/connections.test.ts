@@ -10,49 +10,100 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
-import { Db, MongoClient } from 'mongodb'
-import config from '../utils/config'
+import { Db, ObjectId } from 'mongodb'
+import { getDatabase } from '../utils/db'
 import { testGenerators } from './testGenerators'
 
+// Mock the database connection utilities
+jest.mock('../utils/db', () => ({
+  getDatabase: jest.fn(),
+  connectToCluster: jest.fn().mockResolvedValue({}),
+  closeConnection: jest.fn().mockResolvedValue(undefined)
+}))
+
 describe('create 10 connections', () => {
-  let connection: MongoClient
-  let db: Db
-  let mockConnection
-  let insertedConnection
+  let mockDb: Db
+  let mockDevicesCollection: any
+  let mockConnectionsCollection: any
 
   beforeAll(async () => {
-    const atlasUri = config.ATLAS_URI ?? ''
+    // Setup mock collections
+    mockDevicesCollection = {
+      find: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      toArray: jest.fn(),
+      countDocuments: jest.fn()
+    }
 
-    connection = await MongoClient.connect(atlasUri, {})
-    db = connection.db(config.DBNAME)
+    mockConnectionsCollection = {
+      insertOne: jest.fn(),
+      findOne: jest.fn()
+    }
+
+    mockDb = {
+      collection: jest.fn().mockImplementation((name: string) => {
+        if (name === 'devices') return mockDevicesCollection
+        if (name === 'connections') return mockConnectionsCollection
+
+        return {}
+      })
+    } as unknown as Db
+
+    // Setup getDatabase mock
+    ;(getDatabase as jest.MockedFunction<typeof getDatabase>).mockResolvedValue(mockDb)
   })
 
   afterAll(async () => {
-    await connection.close()
+    jest.clearAllMocks()
   })
 
   it('should insert a 10 connections', async () => {
+    // Mock device data
+    const mockDevicesData = Array.from({ length: 11 }, (_, i) => ({
+      _id: new ObjectId(),
+      name: `Device ${i}`,
+      model: `Model ${i}`
+    }))
+
+    mockDevicesCollection.countDocuments.mockResolvedValue(mockDevicesData.length)
+    mockDevicesCollection.toArray.mockResolvedValue(mockDevicesData)
+
+    const db = await getDatabase()
     const devices = db.collection('devices')
-    const devicesCursor = devices.find({}).limit(11)
     const countDevices = await devices.countDocuments({})
 
     expect(countDevices).not.toBe(0)
+
+    const devicesCursor = devices.find({}).limit(11)
     const devicesData = await devicesCursor.toArray()
     const connections = db.collection('connections')
 
-    console.log(JSON.stringify(devicesData[testGenerators.randomInt(0, 11)]._id))
+    expect(devicesData).toHaveLength(11)
+
+    // Test creating 10 connections
     for (let index = 0; index < 10; index++) {
       const to = devicesData[testGenerators.randomInt(0, 10)]._id
       const from = devicesData[testGenerators.randomInt(0, 10)]._id
-
-      mockConnection = {
+      const mockConnection = {
         name: testGenerators.connection().name,
         deviceIdTo: to,
         deviceIdFrom: from
       }
+
+      // Mock the insertion and retrieval
+      mockConnectionsCollection.insertOne.mockResolvedValue({ insertedId: new ObjectId() })
+      mockConnectionsCollection.findOne.mockResolvedValue(mockConnection)
+
       await connections.insertOne(mockConnection)
-      insertedConnection = await connections.findOne(mockConnection)
+      const insertedConnection = await connections.findOne(mockConnection)
+
       expect(insertedConnection).toEqual(mockConnection)
     }
+
+    // Verify all database calls were made
+    expect(devices.countDocuments).toHaveBeenCalledWith({})
+    expect(devices.find).toHaveBeenCalledWith({})
+    expect(mockConnectionsCollection.insertOne).toHaveBeenCalledTimes(10)
+    expect(mockConnectionsCollection.findOne).toHaveBeenCalledTimes(10)
   })
 })

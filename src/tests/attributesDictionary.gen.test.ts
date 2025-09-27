@@ -9,26 +9,45 @@
  * @version 2024-09-21 Enhanced with comprehensive attribute dictionary testing
  */
 
-import { Collection, Document, MongoClient, ObjectId } from 'mongodb'
-import config from '../utils/config'
+import { Collection, Document, ObjectId } from 'mongodb'
+import { getDatabase } from '../utils/db'
 import { valueAttributeCategory } from '../utils/types'
 import { testGenerators } from './testGenerators'
 
+// Mock the database connection utilities
+jest.mock('../utils/db', () => ({
+  getDatabase: jest.fn(),
+  connectToCluster: jest.fn().mockResolvedValue({}),
+  closeConnection: jest.fn().mockResolvedValue(undefined)
+}))
+
 describe('test create attributesDictionary', () => {
-  let connection: MongoClient
-  let db
-  let mockModel
-  let mockLog
-  let logs: Collection<Document>
+  let mockDb
+  let mockLogsCollection: Collection<Document>
+  let logs: any
+  let mockModel: any
+  let mockLog: any
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(config.ATLAS_URI ?? '', {})
-    db = connection.db(config.DBNAME)
-    logs = db.collection('logs')
+    // Setup mock collection
+    mockLogsCollection = {
+      insertOne: jest.fn().mockResolvedValue({ acknowledged: true }),
+      findOne: jest.fn()
+    } as unknown as Collection<Document>
+
+    mockDb = {
+      collection: jest.fn().mockReturnValue(mockLogsCollection)
+    }
+
+    // Assign logs for test usage
+    logs = mockLogsCollection
+
+    // Setup getDatabase mock
+    ;(getDatabase as jest.MockedFunction<typeof getDatabase>).mockResolvedValue(mockDb as any)
   })
 
   afterAll(async () => {
-    await connection.close()
+    jest.clearAllMocks()
   })
 
   // Create test models by mongo driver
@@ -62,10 +81,15 @@ describe('test create attributesDictionary', () => {
           message: mockModel
         }
 
+        // Mock the findOne to return the mockLog for verification
+        ;(logs.findOne as jest.Mock).mockResolvedValue(mockLog)
+
         await logs.insertOne(mockLog)
         const insertedLog = await logs.findOne(mockLog)
 
         expect(insertedLog).toEqual(mockLog)
+        expect(logs.insertOne).toHaveBeenCalledWith(mockLog)
+        expect(logs.findOne).toHaveBeenCalledWith(mockLog)
       }
     })
   })

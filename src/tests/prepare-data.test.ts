@@ -10,48 +10,67 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
-import { Db, MongoClient } from 'mongodb'
-import config from '../utils/config'
+import { Db } from 'mongodb'
+import { getDatabase } from '../utils/db'
 import { testGenerators } from './testGenerators'
 
+// Mock the database connection utilities
+jest.mock('../utils/db', () => ({
+  getDatabase: jest.fn(),
+  connectToCluster: jest.fn().mockResolvedValue({}),
+  closeConnection: jest.fn().mockResolvedValue(undefined)
+}))
+
 describe('prepare test data', () => {
-  let connection: MongoClient
-  let db: Db
-  let mockModel
-  let insertedModel
-  let insertedLog
+  let mockDb: Db
+  let mockDevicesCollection: any
+  let mockModelsCollection: any
+  let mockLogsCollection: any
+  let db: any
+  let connection: any
+  let mockModel: any
+  let mockLog: any
+  let insertedModel: any
+  let insertedLog: any
 
   beforeAll(async () => {
-    try {
-      if (!config.ATLAS_URI) {
-        throw new Error('ATLAS_URI not configured')
-      }
-
-      console.log('Attempting to connect to MongoDB...')
-      connection = await MongoClient.connect(config.ATLAS_URI, {
-        serverSelectionTimeoutMS: 15000, // 15 second timeout
-        connectTimeoutMS: 15000
-      })
-      db = connection.db(config.DBNAME)
-
-      // Test the connection
-      await db.admin().ping()
-      console.log('MongoDB connection successful')
-    } catch (error) {
-      console.error('Database connection failed:', error)
-
-      // Skip all tests if database is not available
-      const errorMessage = error instanceof Error ? error.message : String(error)
-
-      if (errorMessage.includes('timeout') || errorMessage.includes('ENOTFOUND')) {
-        console.warn('Skipping database tests - database not accessible')
-
-        return
-      }
-
-      throw error
+    // Setup mock collections
+    mockDevicesCollection = {
+      deleteMany: jest.fn().mockResolvedValue({ deletedCount: 0 }),
+      insertOne: jest.fn().mockResolvedValue({ acknowledged: true }),
+      findOne: jest.fn().mockResolvedValue(null)
     }
-  }, 20000) // 20 second timeout for this specific beforeAll
+
+    mockModelsCollection = {
+      deleteMany: jest.fn().mockResolvedValue({ deletedCount: 0 }),
+      insertOne: jest.fn().mockResolvedValue({ acknowledged: true }),
+      findOne: jest.fn().mockResolvedValue(null)
+    }
+
+    mockLogsCollection = {
+      deleteMany: jest.fn().mockResolvedValue({ deletedCount: 0 }),
+      insertOne: jest.fn().mockResolvedValue({ acknowledged: true }),
+      findOne: jest.fn().mockResolvedValue(null)
+    }
+
+    mockDb = {
+      collection: jest.fn().mockImplementation((name: string) => {
+        if (name === 'devices') return mockDevicesCollection
+        if (name === 'models') return mockModelsCollection
+        if (name === 'logs') return mockLogsCollection
+
+        return {}
+      })
+    } as unknown as Db
+
+    // Set db reference for tests
+    db = mockDb
+    // Mock connection for cleanup
+    connection = { close: jest.fn() }
+
+    // Setup getDatabase mock
+    ;(getDatabase as jest.MockedFunction<typeof getDatabase>).mockResolvedValue(mockDb)
+  })
 
   afterAll(async () => {
     if (connection) {
@@ -110,6 +129,10 @@ describe('prepare test data', () => {
             bottom: '/assets/r710-2.5-nobezel__29341.png'
           }
         }
+
+        // Mock the findOne to return the mockModel for verification
+        ;(model.findOne as jest.Mock).mockResolvedValue(mockModel)
+
         await model.insertOne(mockModel)
         insertedModel = await model.findOne(mockModel)
         expect(insertedModel).toEqual(mockModel)
@@ -117,13 +140,17 @@ describe('prepare test data', () => {
         const logs = db.collection('logs')
         let currentDateLogs = new Date()
         let formattedDate = currentDateLogs.toISOString().replace(/T/, ' ').replace(/\..+/, '')
-        let mockLog = {
+
+        mockLog = {
           date: formattedDate,
           objectId: insertedModel ? insertedModel._id : null,
           operation: 'Create',
           component: 'Model',
           message: mockModel
         }
+
+        // Mock the findOne to return the mockLog for verification
+        ;(logs.findOne as jest.Mock).mockResolvedValue(mockLog)
 
         await logs.insertOne(mockLog)
         insertedLog = await logs.findOne(mockLog)
@@ -141,6 +168,9 @@ describe('prepare test data', () => {
               h: testGenerators.randomInt(1, 10)
             }
           }
+
+          // Mock the device findOne to return the mockDevice
+          ;(device.findOne as jest.Mock).mockResolvedValue(mockDevice)
 
           await device.insertOne(mockDevice)
           const insertedDevice = await device.findOne(mockDevice)
@@ -171,6 +201,10 @@ describe('prepare test data', () => {
               }
             }
           }
+
+          // Mock the logs findOne to return the mockLog
+          ;(logs.findOne as jest.Mock).mockResolvedValue(mockLog)
+
           await logs.insertOne(mockLog)
           insertedLog = await logs.findOne(mockLog)
           expect(insertedLog).toEqual(mockLog)

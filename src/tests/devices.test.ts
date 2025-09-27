@@ -33,6 +33,9 @@ jest.mock('../controllers/devices', () => ({
 // Mock middleware modules
 jest.mock('../middlewares', () => ({
   validateObjectId: jest.fn((req: any, res: any, next: any) => next()),
+  validateDeviceInput: jest.fn((req: any, res: any, next: any) => next()),
+  validateDeviceUpdate: jest.fn((req: any, res: any, next: any) => next()),
+  validatePositionUpdate: jest.fn((req: any, res: any, next: any) => next()),
   requireAuth: jest.fn((req: any, res: any, next: any) => next()),
   requirePermission: jest.fn(() => (req: any, res: any, next: any) => next()),
   optionalAuth: jest.fn((req: any, res: any, next: any) => next()),

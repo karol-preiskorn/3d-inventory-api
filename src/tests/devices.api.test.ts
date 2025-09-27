@@ -10,7 +10,8 @@ import { createDevice, deleteAllDevices, deleteDevice, getAllDevices, getDeviceB
 jest.mock('../utils/db', () => ({
   connectToCluster: jest.fn(),
   connectToDb: jest.fn(),
-  closeConnection: jest.fn().mockResolvedValue(undefined)
+  closeConnection: jest.fn().mockResolvedValue(undefined),
+  getDatabase: jest.fn()
 }))
 
 // Mock logging service
@@ -18,7 +19,7 @@ jest.mock('../services/logs', () => ({
   CreateLog: jest.fn().mockResolvedValue({ status: 'success' })
 }))
 
-const { connectToCluster, connectToDb } = jest.requireMock('../utils/db')
+const { connectToCluster, connectToDb, getDatabase } = jest.requireMock('../utils/db')
 
 describe('Devices Controller', () => {
   let mockRequest: any
@@ -52,6 +53,7 @@ describe('Devices Controller', () => {
 
     connectToCluster.mockResolvedValue(mockClient)
     connectToDb.mockReturnValue(mockDb)
+    getDatabase.mockResolvedValue(mockDb)
   })
 
   afterEach(() => {
@@ -61,6 +63,7 @@ describe('Devices Controller', () => {
   describe('getAllDevices', () => {
     it('should return all devices successfully', async () => {
       const devices = [{ name: 'Device-1' }, { name: 'Device-2' }]
+      const mockNext = jest.fn()
 
       mockCollection.find.mockReturnValue({
         limit: mockCollection.limit.mockReturnValue({
@@ -68,23 +71,33 @@ describe('Devices Controller', () => {
         })
       })
 
-      await getAllDevices(mockRequest, mockResponse)
+      await getAllDevices(mockRequest, mockResponse, mockNext)
 
       expect(mockResponse.status).toHaveBeenCalledWith(200)
-      expect(mockResponse.json).toHaveBeenCalledWith(devices)
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        data: devices,
+        meta: { timestamp: expect.any(String), version: 'v1' }
+      })
     })
 
-    it('should return 404 when no devices found', async () => {
+    it('should return empty array when no devices found', async () => {
+      const mockNext = jest.fn()
+
       mockCollection.find.mockReturnValue({
         limit: mockCollection.limit.mockReturnValue({
           toArray: mockCollection.toArray.mockResolvedValue([])
         })
       })
 
-      await getAllDevices(mockRequest, mockResponse)
+      await getAllDevices(mockRequest, mockResponse, mockNext)
 
-      expect(mockResponse.status).toHaveBeenCalledWith(404)
-      expect(mockResponse.send).toHaveBeenCalledWith('Not found')
+      expect(mockResponse.status).toHaveBeenCalledWith(200)
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        data: [],
+        meta: { timestamp: expect.any(String), version: 'v1' }
+      })
     })
   })
 
@@ -92,26 +105,32 @@ describe('Devices Controller', () => {
     it('should return device when found', async () => {
       const deviceId = '68d14f8ebbb778f8dd556130'
       const device = { _id: deviceId, name: 'Test Device' }
+      const mockNext = jest.fn()
 
       mockRequest.params = { id: deviceId }
       mockCollection.findOne.mockResolvedValue(device)
 
-      await getDeviceById(mockRequest, mockResponse)
+      await getDeviceById(mockRequest, mockResponse, mockNext)
 
       expect(mockResponse.status).toHaveBeenCalledWith(200)
-      expect(mockResponse.json).toHaveBeenCalledWith(device)
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        data: device,
+        meta: { timestamp: expect.any(String), version: 'v1' }
+      })
     })
 
-    it('should return 404 when device not found', async () => {
+    it('should call next with NotFoundError when device not found', async () => {
       const deviceId = '68d14f8ebbb778f8dd556130'
+      const mockNext = jest.fn()
 
       mockRequest.params = { id: deviceId }
       mockCollection.findOne.mockResolvedValue(null)
 
-      await getDeviceById(mockRequest, mockResponse)
+      await getDeviceById(mockRequest, mockResponse, mockNext)
 
-      expect(mockResponse.status).toHaveBeenCalledWith(404)
-      expect(mockResponse.send).toHaveBeenCalledWith('Not found')
+      expect(mockNext).toHaveBeenCalledWith(expect.any(Error))
+      expect(mockNext.mock.calls[0][0].message).toContain('not found')
     })
   })
 

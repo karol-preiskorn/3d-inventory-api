@@ -9,50 +9,104 @@
  * @version 2024-09-21 Enhanced with comprehensive device API validation testing
  */
 
-import { afterAll, describe, expect, it } from '@jest/globals'
-import request from 'supertest'
-import app from '../main'
+import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { Request, Response } from 'express'
+import { ObjectId } from 'mongodb'
+import { getAllDevices, getDeviceById } from '../controllers/devices'
+import { getDatabase } from '../utils/db'
+
+// Mock the database
+jest.mock('../utils/db')
 
 describe('GET /devices', () => {
-  afterAll(function () {
-    app.listen().close()
+  let mockRequest: Partial<Request>
+  let mockResponse: Partial<Response>
+  let mockCollection: any
+
+  beforeEach(() => {
+    mockRequest = {
+      query: {},
+      params: {}
+    }
+
+    mockResponse = {
+      status: jest.fn().mockReturnThis() as any,
+      json: jest.fn() as any
+    }
+
+    mockCollection = {
+      find: jest.fn().mockReturnThis(),
+      sort: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      toArray: jest.fn(),
+      findOne: jest.fn()
+    }
+
+    const mockDb = {
+      collection: jest.fn().mockReturnValue(mockCollection)
+    }
+    // Mock getDatabase
+    const mockGetDatabase = getDatabase as jest.MockedFunction<typeof getDatabase>
+
+    mockGetDatabase.mockResolvedValue(mockDb as any)
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   it('GET /devices => array of devices', async () => {
-    const response = await request(app).get('/devices').set('Accept', 'application/json; charset=utf-8').expect(200)
+    const mockDevices = [
+      {
+        _id: new ObjectId(),
+        name: 'Test Device 1',
+        modelId: 'model123',
+        position: {
+          x: 10,
+          y: 20,
+          h: 5
+        }
+      },
+      {
+        _id: new ObjectId(),
+        name: 'Test Device 2',
+        modelId: 'model456',
+        position: {
+          x: 15,
+          y: 25,
+          h: 8
+        }
+      }
+    ]
 
-    expect(response.body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          _id: expect.stringMatching(/.+/),
-          name: expect.any(String),
-          modelId: expect.any(String),
-          position: {
-            x: expect.any(Number),
-            y: expect.any(Number),
-            h: expect.any(Number)
-          }
-        })
-      ])
-    )
+    mockCollection.toArray.mockResolvedValue(mockDevices)
 
-    const responseGetId = await request(app)
-      .get('/devices/' + (response.body as { _id: string }[])[0]._id)
-      .expect(200)
+    await getAllDevices(mockRequest as Request, mockResponse as Response, jest.fn())
 
-    expect(responseGetId.body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          _id: expect.any(String),
-          name: expect.any(String),
-          modelId: expect.any(String),
-          position: {
-            x: expect.any(Number),
-            y: expect.any(Number),
-            h: expect.any(Number)
-          }
-        })
-      ])
-    )
+    expect(mockResponse.status).toHaveBeenCalledWith(200)
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      success: true,
+      data: mockDevices,
+      meta: {
+        timestamp: expect.any(String),
+        version: 'v1'
+      }
+    })
+
+    // Test individual device retrieval
+    mockRequest.params = { id: mockDevices[0]._id.toString() }
+    mockCollection.findOne.mockResolvedValue(mockDevices[0])
+
+    await getDeviceById(mockRequest as Request, mockResponse as Response, jest.fn())
+
+    expect(mockCollection.findOne).toHaveBeenCalledWith({ _id: mockDevices[0]._id })
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      success: true,
+      data: mockDevices[0],
+      meta: {
+        timestamp: expect.any(String),
+        version: 'v1'
+      }
+    })
   })
 })

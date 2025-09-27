@@ -19,7 +19,8 @@ import { testGenerators } from './testGenerators'
 jest.mock('../utils/db', () => ({
   connectToCluster: jest.fn(),
   connectToDb: jest.fn(),
-  closeConnection: jest.fn().mockResolvedValue(undefined)
+  closeConnection: jest.fn().mockResolvedValue(undefined),
+  getDatabase: jest.fn()
 }))
 
 // Mock the logger
@@ -38,7 +39,7 @@ describe('Attributes API Controller Tests', () => {
   let mockCollection: any
   let mockDb: any
   let mockClient: any
-  const { connectToCluster, connectToDb } = jest.requireMock('../utils/db')
+  const { connectToCluster, connectToDb, getDatabase } = jest.requireMock('../utils/db')
 
   beforeEach(() => {
     mockRequest = {
@@ -71,6 +72,7 @@ describe('Attributes API Controller Tests', () => {
 
     connectToCluster.mockResolvedValue(mockClient)
     connectToDb.mockReturnValue(mockDb)
+    getDatabase.mockResolvedValue(mockDb)
   })
 
   afterEach(() => {

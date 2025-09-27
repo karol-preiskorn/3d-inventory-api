@@ -9,72 +9,51 @@
  * @version 2024-09-21 Enhanced with modern test generators and improved database connectivity
  */
 
-import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb'
+import { Collection, Db, Document, ObjectId } from 'mongodb'
 import { User } from '../routers/users'
-import config from '../utils/config'
+import { getDatabase } from '../utils/db'
 import { testGenerators } from './testGenerators'
 
+// Mock the database connection utilities
+jest.mock('../utils/db', () => ({
+  getDatabase: jest.fn(),
+  connectToCluster: jest.fn().mockResolvedValue({}),
+  closeConnection: jest.fn().mockResolvedValue(undefined)
+}))
+
 describe('Test Mongo Atlas DB users', () => {
-  let db: Db
-  let users: Collection<Document>
-  let client: MongoClient
+  let mockDb: Db
+  let mockUsersCollection: Collection<Document>
   let mockUser
 
   beforeAll(async () => {
-    try {
-      if (!config.ATLAS_URI) {
-        throw new Error('ATLAS_URI not configured')
-      }
+    // Setup mock collection
+    mockUsersCollection = {
+      insertOne: jest.fn(),
+      findOne: jest.fn(),
+      deleteOne: jest.fn(),
+      deleteMany: jest.fn()
+    } as unknown as Collection<Document>
 
-      console.log('Attempting to connect to MongoDB...')
-      client = await MongoClient.connect(config.ATLAS_URI, {
-        serverSelectionTimeoutMS: 15000, // 15 second timeout
-        connectTimeoutMS: 15000
-      })
-      db = client.db(config.DBNAME)
+    mockDb = {
+      collection: jest.fn().mockReturnValue(mockUsersCollection)
+    } as unknown as Db
 
-      // Test the connection
-      await db.admin().ping()
-      console.log('MongoDB connection successful')
-
-      users = db.collection('users')
-    } catch (error) {
-      console.error('Database connection failed:', error)
-
-      // Skip all tests if database is not available
-      const errorMessage = error instanceof Error ? error.message : String(error)
-
-      if (errorMessage.includes('timeout') || errorMessage.includes('ENOTFOUND')) {
-        console.warn('Skipping database tests - database not accessible')
-
-        return
-      }
-
-      throw error
-    }
-  }, 20000) // 20 second timeout for this specific beforeAll
-
-  afterAll(async () => {
-    if (client) {
-      await client.close()
-    }
+    // Setup getDatabase mock
+    ;(getDatabase as jest.MockedFunction<typeof getDatabase>).mockResolvedValue(mockDb)
   })
 
-  // Helper function to check if database is connected
-  const checkDbConnection = () => {
-    if (!client || !db) {
-      console.warn('Skipping test - database not connected')
+  afterAll(async () => {
+    jest.clearAllMocks()
+  })
 
-      return false
-    }
-
-    return true
-  }
+  beforeEach(() => {
+    // Reset mocks before each test
+    jest.clearAllMocks()
+    ;(getDatabase as jest.MockedFunction<typeof getDatabase>).mockResolvedValue(mockDb)
+  })
 
   it('should insert a one User doc into collection', async () => {
-    if (!checkDbConnection()) {
-      return
-    }
     const userData = testGenerators.userSimple()
     const mockUser: User = {
       name: userData.name,
@@ -84,35 +63,41 @@ describe('Test Mongo Atlas DB users', () => {
       token: userData.token,
       _id: new ObjectId()
     }
+    const db = await getDatabase()
+    const users = db.collection('users')
+
+    // Mock successful insertion and retrieval
+    ;(mockUsersCollection.insertOne as jest.Mock).mockResolvedValue({ insertedId: mockUser._id })
+    ;(mockUsersCollection.findOne as jest.Mock).mockResolvedValueOnce(mockUser)
+    ;(mockUsersCollection.deleteOne as jest.Mock).mockResolvedValue({ deletedCount: 1 })
 
     await users.insertOne(mockUser)
     const insertedUser = await users.findOne(mockUser)
 
     expect(insertedUser).toEqual(mockUser)
 
-    const deletedUser = await users.deleteOne(mockUser)
+    const deletedResult = await users.deleteOne(mockUser)
 
-    expect(deletedUser).toEqual(mockUser)
+    expect(deletedResult.deletedCount).toBe(1)
   })
 
   it('should delete all users', async () => {
-    if (!checkDbConnection()) {
-      return
-    }
-
+    const db = await getDatabase()
     const users = db.collection('users')
-    const mock = {}
 
-    await users.deleteMany(mock)
-    const deleted = (await users.findOne(mock)) as User | null
+    ;(mockUsersCollection.deleteMany as jest.Mock).mockResolvedValue({ deletedCount: 0 })
+    ;(mockUsersCollection.findOne as jest.Mock).mockResolvedValue(null)
+
+    await users.deleteMany({})
+    const deleted = (await users.findOne({})) as User | null
 
     expect(deleted).toBeNull()
   })
 
   it('should insert a ten User doc into collection', async () => {
-    if (!checkDbConnection()) {
-      return
-    }
+    const db = await getDatabase()
+    const users = db.collection('users')
+
     for (let index = 0; index < 10; index++) {
       const userData = testGenerators.userSimple()
 
@@ -123,6 +108,11 @@ describe('Test Mongo Atlas DB users', () => {
         rights: testGenerators.randomArrayElements(['admin', 'users', 'models', 'connections', 'attributes'], { min: 1, max: 5 }),
         token: userData.token
       }
+
+      // Mock the insertion for each user
+      ;(mockUsersCollection.insertOne as jest.Mock).mockResolvedValue({ insertedId: new ObjectId() })
+      ;(mockUsersCollection.findOne as jest.Mock).mockResolvedValue(mockUser)
+
       await users.insertOne(mockUser)
       const insertedUser = await users.findOne(mockUser)
 

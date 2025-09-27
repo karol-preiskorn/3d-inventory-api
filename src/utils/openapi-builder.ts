@@ -1,0 +1,181 @@
+import fs from 'fs'
+import path from 'path'
+import yaml from 'js-yaml'
+
+/**
+ * Utility to build and merge OpenAPI specification files
+ */
+export class OpenAPIBuilder {
+  private baseDir: string
+  private spec: any = {}
+
+  constructor(baseDir: string) {
+    this.baseDir = baseDir
+  }
+
+  /**
+   * Load the main API specification file
+   */
+  async loadMainSpec(filePath: string): Promise<this> {
+    const fullPath = path.join(this.baseDir, filePath)
+    const content = fs.readFileSync(fullPath, 'utf8')
+
+    this.spec = yaml.load(content)
+
+    return this
+  }
+
+  /**
+   * Resolve all $ref references in the specification
+   */
+  async resolveReferences(): Promise<this> {
+    await this.resolveObjectRefs(this.spec)
+
+    return this
+  }
+
+  /**
+   * Recursively resolve $ref references
+   */
+  private async resolveObjectRefs(obj: any): Promise<void> {
+    if (typeof obj !== 'object' || obj === null) {
+      return
+    }
+
+    if (Array.isArray(obj)) {
+      for (const item of obj) {
+        await this.resolveObjectRefs(item)
+      }
+
+      return
+    }
+
+    for (const [key, value] of Object.entries(obj)) {
+      if (key === '$ref' && typeof value === 'string') {
+        const resolved = await this.loadReference(value)
+
+        // Replace the $ref with the resolved content
+        Object.assign(obj, resolved)
+        delete obj.$ref
+      } else {
+        await this.resolveObjectRefs(value)
+      }
+    }
+  }
+
+  /**
+   * Load a reference file
+   */
+  private async loadReference(ref: string): Promise<any> {
+    // Handle both file references and fragment references
+    const [filePath, fragment] = ref.split('#')
+
+    if (!filePath || filePath.startsWith('#')) {
+      // Internal reference - already in spec
+      return this.resolveFragment(fragment, this.spec)
+    }
+
+    // External file reference
+    const fullPath = path.join(this.baseDir, filePath)
+    const content = fs.readFileSync(fullPath, 'utf8')
+    const fileSpec = yaml.load(content)
+
+    if (fragment) {
+      return this.resolveFragment(fragment, fileSpec)
+    }
+
+    return fileSpec
+  }
+
+  /**
+   * Resolve a fragment path like '/components/schemas/Device'
+   */
+  private resolveFragment(fragment: string, spec: any): any {
+    if (!fragment) return spec
+
+    const path = fragment.split('/').filter(p => p !== '')
+    let current = spec
+
+    for (const segment of path) {
+      if (current && typeof current === 'object') {
+        current = current[segment]
+      } else {
+        throw new Error(`Cannot resolve fragment ${fragment}`)
+      }
+    }
+
+    return current
+  }
+
+  /**
+   * Get the built specification
+   */
+  getSpec(): any {
+    return this.spec
+  }
+
+  /**
+   * Save the built specification to a file
+   */
+  async saveToFile(outputPath: string): Promise<void> {
+    const yamlContent = yaml.dump(this.spec, {
+      indent: 2,
+      lineWidth: 120,
+      noRefs: true
+    })
+
+    fs.writeFileSync(outputPath, yamlContent)
+  }
+
+  /**
+   * Validate the specification
+   */
+  validate(): string[] {
+    const errors: string[] = []
+
+    if (!this.spec.openapi) {
+      errors.push('Missing openapi version')
+    }
+
+    if (!this.spec.info || !this.spec.info.title) {
+      errors.push('Missing API title')
+    }
+
+    if (!this.spec.info || !this.spec.info.version) {
+      errors.push('Missing API version')
+    }
+
+    if (!this.spec.paths || Object.keys(this.spec.paths).length === 0) {
+      errors.push('No paths defined')
+    }
+
+    return errors
+  }
+}
+
+/**
+ * Build the complete OpenAPI specification from modular files
+ */
+export async function buildOpenAPISpec(
+  sourceDir: string,
+  outputPath: string
+): Promise<void> {
+  const builder = new OpenAPIBuilder(sourceDir)
+
+  await builder
+    .loadMainSpec('api.yaml')
+    .then(b => b.resolveReferences())
+
+  // Validate the built spec
+  const errors = builder.validate()
+
+  if (errors.length > 0) {
+    throw new Error(`OpenAPI validation errors:\n${errors.join('\n')}`)
+  }
+
+  // Save the built specification
+  await builder.saveToFile(outputPath)
+
+  console.log(`✅ OpenAPI specification built successfully: ${outputPath}`)
+  console.log(`📊 Specification contains ${Object.keys(builder.getSpec().paths || {}).length} paths`)
+}

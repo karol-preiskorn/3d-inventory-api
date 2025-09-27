@@ -135,11 +135,14 @@ export const testGenerators = {
   // Log data
   log: () => logBuilder(),
   logSimple: () => ({
-    action: casual.random_element(['CREATE', 'UPDATE', 'DELETE']),
-    entity: casual.random_element(['device', 'user', 'connection']),
+    action: casual.random_element(['CREATE', 'UPDATE', 'DELETE', 'VIEW']),
+    entity: casual.random_element(['device', 'user', 'connection', 'model']),
     entityId: casual.uuid,
     userId: casual.uuid,
-    timestamp: new Date()
+    timestamp: new Date(),
+    details: casual.sentence,
+    ipAddress: casual.ip,
+    userAgent: 'Mozilla/5.0 Test Agent'
   }),
 
   // Dimensions and coordinates

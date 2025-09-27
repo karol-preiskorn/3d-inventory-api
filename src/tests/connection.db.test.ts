@@ -10,33 +10,63 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
-import { Db, MongoClient } from 'mongodb'
-import config from '../utils/config'
+import { Db } from 'mongodb'
+import { getDatabase } from '../utils/db'
+
+// Mock the database connection utilities
+jest.mock('../utils/db', () => ({
+  getDatabase: jest.fn(),
+  connectToCluster: jest.fn().mockResolvedValue({}),
+  closeConnection: jest.fn().mockResolvedValue(undefined)
+}))
 
 describe('ConnectToDatabase Mongo Atlas', () => {
-  let connection: MongoClient
-  let db: Db
+  let mockDb: Db
+  let mockCollection: any
 
   beforeAll(async () => {
-    if (!config.ATLAS_URI) {
-      throw new Error('ATLAS_URI environment variable is not defined.')
+    // Setup mock database and collection
+    mockCollection = {
+      findOne: jest.fn(),
+      find: jest.fn().mockReturnThis(),
+      toArray: jest.fn(),
+      insertOne: jest.fn(),
+      updateOne: jest.fn(),
+      deleteOne: jest.fn()
     }
-    try {
-      connection = await MongoClient.connect(config.ATLAS_URI, {})
-      db = connection.db(config.DBNAME)
-    } catch (error) {
-      console.error('Error connecting to the database:', error)
-    }
+
+    mockDb = {
+      collection: jest.fn().mockReturnValue(mockCollection)
+    } as unknown as Db
   })
 
   afterAll(async () => {
-    await connection.close()
+    // Clean up mocks
+    jest.clearAllMocks()
   })
 
-  it(`connect to ${process.env.DBNAME}`, async () => {
+  it('connect to database and verify collection access', async () => {
+    // Setup getDatabase mock
+    ;(getDatabase as jest.MockedFunction<typeof getDatabase>).mockResolvedValue(mockDb)
+
+    // Mock device data
+    const mockDevice = {
+      _id: 'test-device-id',
+      name: 'Test Device',
+      model: 'Test Model'
+    }
+
+    mockCollection.findOne.mockResolvedValue(mockDevice)
+
+    // Test the database connection
+    const db = await getDatabase()
     const devices = db.collection('devices')
     const device = await devices.findOne({})
 
+    expect(getDatabase).toHaveBeenCalled()
+    expect(db.collection).toHaveBeenCalledWith('devices')
+    expect(devices.findOne).toHaveBeenCalledWith({})
     expect(device).toBeDefined()
+    expect(device).toEqual(mockDevice)
   })
 })

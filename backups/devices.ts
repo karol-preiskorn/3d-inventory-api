@@ -127,8 +127,10 @@ export async function updateDevice(req: Request, res: Response) {
 
 // Create new device
 export async function createDevice(req: Request, res: Response) {
+  const client = await connectToCluster()
+
   try {
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
 
     logger.error(`POST /devices - body: ${JSON.stringify(req.body)}`)
@@ -155,24 +157,24 @@ export async function createDevice(req: Request, res: Response) {
 
       res.status(200).json(resultLog)
     }
-  } catch (error) {
-    logger.error(`Error creating device: ${String(error)}`)
-    res.status(500).json({ error: 'Internal server error' })
+  } finally {
+    await closeConnection(client)
   }
 }
 
 // Get devices by model ID
 export async function getDevicesByModel(req: Request, res: Response) {
+  const client = await connectToCluster()
+
   try {
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const query = { modelId: req.params.id }
     const result = await collection.find(query).toArray()
 
     res.status(200).json(result)
-  } catch (error) {
-    logger.error(`Error getting devices by model: ${String(error)}`)
-    res.status(500).json({ error: 'Internal server error' })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -184,9 +186,10 @@ export async function updateDevicePosition(req: Request, res: Response) {
       $set: { position: req.body as Position }
     }
   ]
+  const client = await connectToCluster()
 
   try {
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result = await collection.updateOne(query, updates)
 
@@ -205,15 +208,18 @@ export async function updateDevicePosition(req: Request, res: Response) {
       status: 'Internal Server Error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
 // Delete device by ID
 export async function deleteDevice(req: Request, res: Response) {
   const query = { _id: new MongoObjectId(req.params.id) }
+  const client = await connectToCluster()
 
   try {
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result = await collection.deleteOne(query)
 
@@ -224,38 +230,38 @@ export async function deleteDevice(req: Request, res: Response) {
       logger.info(`DELETE /devices/${req.params.id} - device deleted successfully.`)
       res.status(200).json(result)
     }
-  } catch (error) {
-    logger.error(`Error deleting device: ${String(error)}`)
-    res.status(500).json({ error: 'Internal server error' })
+  } finally {
+    await closeConnection(client)
   }
 }
 
 // Delete all devices (requires auth)
 export async function deleteAllDevices(_req: Request, res: Response) {
+  const client = await connectToCluster()
+
   try {
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result = await collection.deleteMany({})
 
     res.status(200).json(result)
-  } catch (error) {
-    logger.error(`Error deleting all devices: ${String(error)}`)
-    res.status(500).json({ error: 'Internal server error' })
+  } finally {
+    await closeConnection(client)
   }
 }
 
 // Delete devices by model ID
 export async function deleteDevicesByModel(req: Request, res: Response) {
   const query = { modelId: req.params.id }
+  const client = await connectToCluster()
 
   try {
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result = await collection.deleteMany(query)
 
     res.status(200).json(result)
-  } catch (error) {
-    logger.error(`Error deleting devices by model: ${String(error)}`)
-    res.status(500).json({ error: 'Internal server error' })
+  } finally {
+    await closeConnection(client)
   }
 }

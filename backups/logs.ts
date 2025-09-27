@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { RequestHandler } from 'express'
 import mongoSanitize from 'mongo-sanitize'
 import { Collection, Db, Document, Filter, InsertOneResult, DeleteResult, ObjectId } from 'mongodb'
-import { getDatabase } from '../utils/db'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('logs')
@@ -41,7 +41,8 @@ export const getAllLogs: RequestHandler = async (req, res) => {
   }
 
   try {
-    const db: Db = await getDatabase()
+    client = await connectToCluster()
+    const db: Db = connectToDb(client)
     const collection = db.collection(collectionName)
     const results: Document[] = await collection.find({}).sort({ date: -1 }).limit(limit).toArray()
 
@@ -61,7 +62,9 @@ export const getAllLogs: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -73,7 +76,8 @@ export const getLogsByObjectId: RequestHandler = async (req, res) => {
   let client
 
   try {
-    const db: Db = await getDatabase()
+    client = await connectToCluster()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const query = { objectId: id }
 
@@ -96,7 +100,9 @@ export const getLogsByObjectId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -108,7 +114,8 @@ export const getLogsByComponent: RequestHandler = async (req, res) => {
   let client
 
   try {
-    const db: Db = await getDatabase()
+    client = await connectToCluster()
+    const db: Db = connectToDb(client)
     const collection: Collection<Document> = db.collection(collectionName)
     const operation = req.query.operation as string
     const query: Filter<Document> = { component: component }
@@ -136,7 +143,9 @@ export const getLogsByComponent: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -158,7 +167,8 @@ export const getLogsByModelId: RequestHandler = async (req, res) => {
       return
     }
 
-    const db: Db = await getDatabase()
+    client = await connectToCluster()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     // Fixed: Use objectId field instead of modelId to match log structure
     const query = { objectId: id, component: 'models' }
@@ -180,7 +190,9 @@ export const getLogsByModelId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -234,7 +246,9 @@ export const createLog: RequestHandler = async (req, res) => {
       message: sanitizedMessage,
       date: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
     }
-    const db: Db = await getDatabase()
+
+    client = await connectToCluster()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: InsertOneResult<Document> = await collection.insertOne(newDocument)
 
@@ -258,7 +272,9 @@ export const createLog: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -280,7 +296,8 @@ export const deleteLog: RequestHandler = async (req, res) => {
       return
     }
 
-    const db: Db = await getDatabase()
+    client = await connectToCluster()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const query = { _id: new ObjectId(id) }
     const result: DeleteResult = await collection.deleteOne(query)
@@ -304,7 +321,9 @@ export const deleteLog: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }
 
@@ -336,7 +355,8 @@ export const deleteAllLogs: RequestHandler = async (req, res) => {
       return
     }
 
-    const db: Db = await getDatabase()
+    client = await connectToCluster()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany({})
 
@@ -359,6 +379,8 @@ export const deleteAllLogs: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+      await closeConnection(client)
+    }
   }
 }

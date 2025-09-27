@@ -36,7 +36,8 @@ import rolesRouter from './routers/roles'
 import userManagementRouter from './routers/user-management'
 import { InitializationService } from './services/InitializationService'
 import config from './utils/config'
-import { getDb } from './utils/db'
+import { getDb, initializeDatabase as initDbConnection, shutdownDatabase } from './utils/db'
+import { errorHandler, NotFoundError } from './utils/errors'
 import getLogger from './utils/logger'
 
 const logger = getLogger('main')
@@ -255,39 +256,14 @@ app.use(
 )
 
 // Error-related middleware (404 and error handlers) grouped together for clarity
-app.use((req: Request, res: Response) => {
-  logger.warn(`${proc} 404 Not Found: ${req.method} ${req.originalUrl} `)
-  res.status(404).json({
-    message: `${proc} Endpoint not found: ${req.method} ${req.originalUrl} `,
-    error: 'Not Found',
-    status: 404
-  })
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const notFoundError = new NotFoundError(`Endpoint not found: ${req.method} ${req.originalUrl}`)
+
+  next(notFoundError)
 })
 
-// XHR client error handler
-function xhrClientErrorHandler(err: Error, req: Request, res: Response, next: NextFunction): void {
-  if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
-    logger.error(`[main / xhrClientErrorHandler] Something failed.${err.message} `)
-    res.status(500).json({
-      message: `[main / xhrClientErrorHandler] Something failed.${err.message} `
-    })
-    next(err)
-  } else {
-    next(err)
-  }
-}
-
-app.use(xhrClientErrorHandler)
-
-app.use((err: Error, req: Request, res: Response) => {
-  logger.error(`Unhandled error exception: ${err.message}.Stack: ${err.stack} `)
-  res.status(500).json({
-    module: 'main',
-    procedure: 'unhandledError',
-    message: `Internal Server Error Unhandled error - ${req.method} ${req.originalUrl} `,
-    error: err.message
-  })
-})
+// Use centralized error handling middleware
+app.use(errorHandler)
 
 app.set('trust proxy', 1) // or true, or the number of proxies in front of your app
 
@@ -327,21 +303,45 @@ if (process.env.NODE_ENV === 'production') {
     logger.info(`Server on GCP https://${HOST}:${PORT}/doc (Swagger UI)`)
     logger.info(`Server on GCP https://${HOST}:${PORT}/health (Status)`)
 
-    // Initialize database after server starts
+    // Initialize database connection pool
+    try {
+      logger.info('Initializing database connection pool...')
+      await initDbConnection()
+      logger.info('Database connection pool initialized successfully')
+    } catch (error) {
+      logger.error(`Database connection initialization failed: ${error instanceof Error ? error.message : String(error)}`)
+      process.exit(1)
+    }
+
+    // Initialize database with default users and roles
     await initializeDatabase()
   })
 
-  // Update signal handlers for HTTP server
-  process.on('SIGINT', () => {
-    logger.info('SIGINT signal received: closing HTTP server.')
+  // Signal handlers for HTTP server
+  process.on('SIGINT', async () => {
+    logger.info('SIGINT signal received: closing HTTP server and database connections.')
+
+    try {
+      await shutdownDatabase()
+    } catch (error) {
+      logger.error(`Error during database shutdown: ${error instanceof Error ? error.message : String(error)}`)
+    }
+
     server.close(() => {
       logger.debug('HTTP server closed')
       process.exit(0)
     })
   })
 
-  process.on('SIGTERM', () => {
-    logger.info('SIGTERM signal received: closing HTTP server.')
+  process.on('SIGTERM', async () => {
+    logger.info('SIGTERM signal received: closing HTTP server and database connections.')
+
+    try {
+      await shutdownDatabase()
+    } catch (error) {
+      logger.error(`Error during database shutdown: ${error instanceof Error ? error.message : String(error)}`)
+    }
+
     server.close(() => {
       logger.debug('HTTP server closed')
       process.exit(0)
@@ -365,7 +365,17 @@ if (process.env.NODE_ENV === 'production') {
     logger.info(`✅ ${kleur.green(`https://${HOST}:${PORT}/doc  - Swagger UI`)}`)
     logger.info(`✅ ${kleur.green(`https://${HOST}:${PORT}/health  - Status`)}`)
 
-    // Initialize database after server starts
+    // Initialize database connection pool
+    try {
+      logger.info('Initializing database connection pool...')
+      await initDbConnection()
+      logger.info('Database connection pool initialized successfully')
+    } catch (error) {
+      logger.error(`Database connection initialization failed: ${error instanceof Error ? error.message : String(error)}`)
+      process.exit(1)
+    }
+
+    // Initialize database with default users and roles
     await initializeDatabase()
   })
 
@@ -374,16 +384,30 @@ if (process.env.NODE_ENV === 'production') {
   })
 
   // Signal handlers for HTTPS server
-  process.on('SIGINT', () => {
-    logger.info('SIGINT signal received: closing HTTPS server.')
+  process.on('SIGINT', async () => {
+    logger.info('SIGINT signal received: closing HTTPS server and database connections.')
+
+    try {
+      await shutdownDatabase()
+    } catch (error) {
+      logger.error(`Error during database shutdown: ${error instanceof Error ? error.message : String(error)}`)
+    }
+
     server.close(() => {
       logger.debug('HTTPS server closed')
       process.exit(0)
     })
   })
 
-  process.on('SIGTERM', () => {
-    logger.info('SIGTERM signal received: closing HTTPS server.')
+  process.on('SIGTERM', async () => {
+    logger.info('SIGTERM signal received: closing HTTPS server and database connections.')
+
+    try {
+      await shutdownDatabase()
+    } catch (error) {
+      logger.error(`Error during database shutdown: ${error instanceof Error ? error.message : String(error)}`)
+    }
+
     server.close(() => {
       logger.debug('HTTPS server closed')
       process.exit(0)

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import sanitize from 'mongo-sanitize'
 import { Collection, Db, InsertOneResult, UpdateResult, DeleteResult, ObjectId } from 'mongodb'
-import { getDatabase } from '../utils/db'
+import { closeConnection, connectToCluster, connectToDb } from '../utils/db'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('models')
@@ -100,9 +100,10 @@ export async function getAllModels(req: Request, res: Response) {
     }
   }
 
-  try {
+  const client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+  try {
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const results = await collection.find({}).limit(limit).toArray()
 
@@ -123,6 +124,8 @@ export async function getAllModels(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -141,10 +144,10 @@ export async function getModelById(req: Request, res: Response) {
   }
 
   const query = { _id: new ObjectId(id) }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const model = await collection.findOne(query)
 
@@ -165,6 +168,8 @@ export async function getModelById(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -204,10 +209,10 @@ export async function createModel(req: Request, res: Response) {
     ...(sanitizedType && { type: sanitizedType }),
     ...(sanitizedCategory && { category: sanitizedCategory })
   }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     // Check for duplicate name
     const existingModel = await collection.findOne({ name: sanitizedName })
@@ -242,6 +247,8 @@ export async function createModel(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -296,10 +303,10 @@ export async function updateModel(req: Request, res: Response) {
       ...(sanitizedCategory && { category: sanitizedCategory })
     }
   }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     // Check if model exists
     const existingModel = await collection.findOne(query)
@@ -345,6 +352,8 @@ export async function updateModel(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -393,10 +402,10 @@ export async function updateModelDimension(req: Request, res: Response) {
       }
     }
   }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: UpdateResult = await collection.updateOne(query, updates)
 
@@ -421,6 +430,8 @@ export async function updateModelDimension(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -475,10 +486,10 @@ export async function updateModelTexture(req: Request, res: Response) {
       }
     }
   }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: UpdateResult = await collection.updateOne(query, updates)
 
@@ -503,6 +514,8 @@ export async function updateModelTexture(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -521,10 +534,10 @@ export async function deleteModel(req: Request, res: Response) {
   }
 
   const query = { _id: new ObjectId(id) }
+  const client = await connectToCluster()
 
   try {
-
-    const db: Db = await getDatabase()
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteOne(query)
 
@@ -548,6 +561,8 @@ export async function deleteModel(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }
 
@@ -574,9 +589,10 @@ export async function deleteAllModels(req: Request, res: Response) {
     return
   }
 
-  try {
+  const client = await connectToCluster()
 
-    const db: Db = await getDatabase()
+  try {
+    const db: Db = connectToDb(client)
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany({})
 
@@ -593,5 +609,7 @@ export async function deleteAllModels(req: Request, res: Response) {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     })
+  } finally {
+    await closeConnection(client)
   }
 }

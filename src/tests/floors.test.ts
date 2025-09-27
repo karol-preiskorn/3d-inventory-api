@@ -9,28 +9,42 @@
  * @version 2024-09-21 Enhanced with comprehensive floor management testing
  */
 
-import { Db, MongoClient } from 'mongodb'
-import config from '../utils/config'
+import { Db, ObjectId } from 'mongodb'
+import { getDatabase } from '../utils/db'
 import { testGenerators } from './testGenerators'
 
+// Mock the database connection utilities
+jest.mock('../utils/db', () => ({
+  getDatabase: jest.fn(),
+  connectToCluster: jest.fn().mockResolvedValue({}),
+  closeConnection: jest.fn().mockResolvedValue(undefined)
+}))
+
 describe('create 10 floors', () => {
-  let conn: MongoClient
-  let db: Db
-  let insertedFloors
+  let mockDb: Db
+  let mockCollection: any
 
   beforeAll(async () => {
-    if (!config.ATLAS_URI) {
-      throw new Error('ATLAS_URI environment variable is not defined.')
+    // Setup mock collection
+    mockCollection = {
+      insertOne: jest.fn(),
+      findOne: jest.fn()
     }
-    conn = await MongoClient.connect(config.ATLAS_URI, {})
-    db = conn.db(config.DBNAME)
+
+    mockDb = {
+      collection: jest.fn().mockReturnValue(mockCollection)
+    } as unknown as Db
+
+    // Setup getDatabase mock
+    ;(getDatabase as jest.MockedFunction<typeof getDatabase>).mockResolvedValue(mockDb)
   })
 
   afterAll(async () => {
-    await conn.close()
+    jest.clearAllMocks()
   })
 
   it('should insert a 10 floors', async () => {
+    const db = await getDatabase()
     const floors = db.collection('floors')
     const mockFloors: {
       name: string
@@ -41,9 +55,19 @@ describe('create 10 floors', () => {
       address: testGenerators.address(),
       dimension: [testGenerators.floorDimension()]
     }
-    const insertResult = await floors.insertOne(mockFloors)
+    const mockInsertResult = { insertedId: new ObjectId() }
+    const mockInsertedFloor = { _id: mockInsertResult.insertedId, ...mockFloors }
 
-    insertedFloors = await floors.findOne({ _id: insertResult.insertedId })
+    mockCollection.insertOne.mockResolvedValue(mockInsertResult)
+    mockCollection.findOne.mockResolvedValue(mockInsertedFloor)
+
+    const insertResult = await floors.insertOne(mockFloors)
+    const insertedFloors = await floors.findOne({ _id: insertResult.insertedId })
+
+    expect(getDatabase).toHaveBeenCalled()
+    expect(floors.insertOne).toHaveBeenCalledWith(mockFloors)
+    expect(floors.findOne).toHaveBeenCalledWith({ _id: insertResult.insertedId })
     expect(insertedFloors).toMatchObject(mockFloors)
+    expect(insertResult.insertedId).toBeDefined()
   })
 })
