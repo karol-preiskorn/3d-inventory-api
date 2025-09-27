@@ -20,6 +20,7 @@ import kleur from 'kleur'
 import methodOverride from 'method-override'
 import morgan from 'morgan'
 import morganBody from 'morgan-body'
+import { correlationMiddleware, databaseMonitor, metricsMiddleware } from './middlewares'
 import { createAttributesRouter } from './routers/attributes'
 import createAttributesDictionaryRouter from './routers/attributesDictionary'
 import { createConnectionsRouter } from './routers/connections'
@@ -31,6 +32,7 @@ import createHealthRouter from './routers/health'
 import createLoginRouter from './routers/login'
 import { createLogsRouter } from './routers/logs'
 import { createModelsRouter } from './routers/models'
+import monitoringRouter from './routers/monitoring'
 import { createReadmeRouter } from './routers/readme'
 import rolesRouter from './routers/roles'
 import userManagementRouter from './routers/user-management'
@@ -153,6 +155,14 @@ export let db: Awaited<ReturnType<typeof getDb>> | null = null
     } else {
       logger.warn('⚠️ No MongoDB URI provided, running without database')
     }
+  } else {
+    // Initialize database monitoring
+    try {
+      databaseMonitor.monitorConnectionPool(db.client)
+      logger.info('✅ Database monitoring initialized')
+    } catch (error) {
+      logger.warn(`⚠️ Failed to initialize database monitoring: ${error instanceof Error ? error.message : String(error)}`)
+    }
   }
 })()
 
@@ -224,7 +234,12 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use(methodOverride())
 
+// Add monitoring and observability middleware
+app.use(correlationMiddleware)
+app.use(metricsMiddleware)
+
 // Register API routers
+app.use('/monitoring', monitoringRouter)
 app.use('/readme', createReadmeRouter())
 app.use('/logs', createLogsRouter())
 app.use('/devices', createDevicesRouter())
