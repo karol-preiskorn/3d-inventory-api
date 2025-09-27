@@ -101,7 +101,6 @@ export async function getAllModels(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const results = await collection.find({}).limit(limit).toArray()
@@ -143,7 +142,6 @@ export async function getModelById(req: Request, res: Response) {
   const query = { _id: new ObjectId(id) }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const model = await collection.findOne(query)
@@ -206,7 +204,6 @@ export async function createModel(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     // Check for duplicate name
@@ -298,7 +295,6 @@ export async function updateModel(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     // Check if model exists
@@ -395,7 +391,6 @@ export async function updateModelDimension(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: UpdateResult = await collection.updateOne(query, updates)
@@ -477,7 +472,6 @@ export async function updateModelTexture(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: UpdateResult = await collection.updateOne(query, updates)
@@ -523,7 +517,6 @@ export async function deleteModel(req: Request, res: Response) {
   const query = { _id: new ObjectId(id) }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteOne(query)
@@ -575,7 +568,6 @@ export async function deleteAllModels(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany({})

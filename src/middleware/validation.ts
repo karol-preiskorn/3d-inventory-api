@@ -17,7 +17,7 @@ addFormats(ajv)
 /**
  * Standardized API response format
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   error?: {
@@ -62,11 +62,7 @@ export function createSuccessResponse<T>(
 /**
  * Create a standardized error response
  */
-export function createErrorResponse(
-  code: string,
-  message: string,
-  details?: Array<{ field?: string; message: string }>
-): ApiResponse {
+export function createErrorResponse(code: string, message: string, details?: Array<{ field?: string; message: string }>): ApiResponse {
   return {
     success: false,
     error: {
@@ -85,7 +81,7 @@ export function createErrorResponse(
  * Convert AJV validation errors to our standard format
  */
 function formatValidationErrors(errors: ErrorObject[]): Array<{ field?: string; message: string }> {
-  return errors.map(error => ({
+  return errors.map((error) => ({
     field: error.instancePath ? error.instancePath.substring(1) : error.schemaPath,
     message: `${error.instancePath || 'root'} ${error.message}`
   }))
@@ -101,11 +97,7 @@ export function validateBody<T>(schema: JSONSchemaType<T>) {
     if (!validate(req.body)) {
       logger.warn(`Request body validation failed: ${req.method} ${req.url}`)
 
-      const errorResponse = createErrorResponse(
-        'VALIDATION_ERROR',
-        'Request body validation failed',
-        formatValidationErrors(validate.errors || [])
-      )
+      const errorResponse = createErrorResponse('VALIDATION_ERROR', 'Request body validation failed', formatValidationErrors(validate.errors || []))
 
       return res.status(400).json(errorResponse)
     }
@@ -124,11 +116,7 @@ export function validateQuery<T>(schema: JSONSchemaType<T>) {
     if (!validate(req.query)) {
       logger.warn(`Query parameters validation failed: ${req.method} ${req.url}`)
 
-      const errorResponse = createErrorResponse(
-        'VALIDATION_ERROR',
-        'Query parameters validation failed',
-        formatValidationErrors(validate.errors || [])
-      )
+      const errorResponse = createErrorResponse('VALIDATION_ERROR', 'Query parameters validation failed', formatValidationErrors(validate.errors || []))
 
       return res.status(400).json(errorResponse)
     }
@@ -147,11 +135,7 @@ export function validateParams<T>(schema: JSONSchemaType<T>) {
     if (!validate(req.params)) {
       logger.warn(`URL parameters validation failed: ${req.method} ${req.url}`)
 
-      const errorResponse = createErrorResponse(
-        'VALIDATION_ERROR',
-        'URL parameters validation failed',
-        formatValidationErrors(validate.errors || [])
-      )
+      const errorResponse = createErrorResponse('VALIDATION_ERROR', 'URL parameters validation failed', formatValidationErrors(validate.errors || []))
 
       return res.status(400).json(errorResponse)
     }
@@ -168,7 +152,7 @@ export function responseFormatter(req: Request, res: Response, next: NextFunctio
   const originalJson = res.json
 
   // Override the json method to format responses
-  res.json = function(data: any) {
+  res.json = function (data: unknown) {
     // If data is already in our standard format, don't modify it
     if (data && typeof data === 'object' && 'success' in data && 'meta' in data) {
       return originalJson.call(this, data)
@@ -239,7 +223,7 @@ export const CommonSchemas = {
     limit?: number
     sort?: string | null
     search?: string | null
-    [key: string]: any
+    [key: string]: unknown
   }>,
 
   /**

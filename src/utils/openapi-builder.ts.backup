@@ -20,6 +20,11 @@ export class OpenAPIBuilder {
   constructor(baseDir: string) {
     this.baseDir = baseDir
   }
+  private spec: Record<string, unknown> = {}
+
+  constructor(baseDir: string) {
+    this.baseDir = baseDir
+  }
 
   /**
    * Load the main API specification file
@@ -28,7 +33,7 @@ export class OpenAPIBuilder {
     const fullPath = path.join(this.baseDir, filePath)
     const content = fs.readFileSync(fullPath, 'utf8')
 
-    this.spec = yaml.load(content) as OpenAPISpec
+    this.spec = yaml.load(content)
 
     return this
   }
@@ -45,7 +50,7 @@ export class OpenAPIBuilder {
   /**
    * Recursively resolve $ref references
    */
-  private async resolveObjectRefs(obj: Record<string, unknown>): Promise<void> {
+  private async resolveObjectRefs(obj: any): Promise<void> {
     if (typeof obj !== 'object' || obj === null) {
       return
     }
@@ -66,7 +71,7 @@ export class OpenAPIBuilder {
         Object.assign(obj, resolved)
         delete obj.$ref
       } else {
-        await this.resolveObjectRefs(value as Record<string, unknown>)
+        await this.resolveObjectRefs(value)
       }
     }
   }
@@ -74,7 +79,7 @@ export class OpenAPIBuilder {
   /**
    * Load a reference file
    */
-  private async loadReference(ref: string): Promise<Record<string, unknown>> {
+  private async loadReference(ref: string): Promise<any> {
     // Handle both file references and fragment references
     const [filePath, fragment] = ref.split('#')
 
@@ -89,36 +94,36 @@ export class OpenAPIBuilder {
     const fileSpec = yaml.load(content)
 
     if (fragment) {
-      return this.resolveFragment(fragment, fileSpec as Record<string, unknown>)
+      return this.resolveFragment(fragment, fileSpec)
     }
 
-    return fileSpec as Record<string, unknown>
+    return fileSpec
   }
 
   /**
    * Resolve a fragment path like '/components/schemas/Device'
    */
-  private resolveFragment(fragment: string, spec: Record<string, unknown>): Record<string, unknown> {
+  private resolveFragment(fragment: string, spec: any): any {
     if (!fragment) return spec
 
-    const path = fragment.split('/').filter((p) => p !== '')
-    let current: unknown = spec
+    const path = fragment.split('/').filter(p => p !== '')
+    let current = spec
 
     for (const segment of path) {
-      if (current && typeof current === 'object' && segment in current) {
-        current = (current as Record<string, unknown>)[segment]
+      if (current && typeof current === 'object') {
+        current = current[segment]
       } else {
         throw new Error(`Cannot resolve fragment ${fragment}`)
       }
     }
 
-    return current as Record<string, unknown>
+    return current
   }
 
   /**
    * Get the built specification
    */
-  getSpec(): OpenAPISpec {
+  getSpec(): any {
     return this.spec
   }
 
@@ -164,10 +169,15 @@ export class OpenAPIBuilder {
 /**
  * Build the complete OpenAPI specification from modular files
  */
-export async function buildOpenAPISpec(sourceDir: string, outputPath: string): Promise<void> {
+export async function buildOpenAPISpec(
+  sourceDir: string,
+  outputPath: string
+): Promise<void> {
   const builder = new OpenAPIBuilder(sourceDir)
 
-  await builder.loadMainSpec('api.yaml').then((b) => b.resolveReferences())
+  await builder
+    .loadMainSpec('api.yaml')
+    .then(b => b.resolveReferences())
 
   // Validate the built spec
   const errors = builder.validate()

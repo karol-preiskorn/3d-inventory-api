@@ -192,9 +192,7 @@ describe('Models Router', () => {
         })
       })
 
-      const response = await request(app)
-        .post('/models')
-        .send(newModelData)
+      const response = await request(app).post('/models').send(newModelData)
 
       expect(mockedCreateModel).toHaveBeenCalledTimes(1)
       expect(response.status).toBe(201)
@@ -218,7 +216,7 @@ describe('Models Router', () => {
       const response = await request(app)
         .post('/models')
         .send({
-          name: 123,  // Invalid: should be string
+          name: 123, // Invalid: should be string
           type: 'furniture',
           dimension: { width: 120, height: 180, depth: 60 }
         })
@@ -263,9 +261,7 @@ describe('Models Router', () => {
         })
       })
 
-      const response = await request(app)
-        .put(`/models/${modelId}`)
-        .send(updateData)
+      const response = await request(app).put(`/models/${modelId}`).send(updateData)
 
       expect(mockedUpdateModel).toHaveBeenCalledTimes(1)
       expect(response.status).toBe(200)
@@ -274,11 +270,9 @@ describe('Models Router', () => {
     })
 
     it('should validate name field for updates', async () => {
-      const response = await request(app)
-        .put(`/models/${modelId}`)
-        .send({
-          type: 'furniture'  // Missing required name
-        })
+      const response = await request(app).put(`/models/${modelId}`).send({
+        type: 'furniture' // Missing required name
+      })
 
       expect(response.status).toBe(400)
       expect(response.body.error).toBe('Name is required and must be a string')
@@ -289,12 +283,10 @@ describe('Models Router', () => {
         res.status(404).json({ error: 'Model not found for update' })
       })
 
-      const response = await request(app)
-        .put(`/models/${modelId}`)
-        .send({
-          name: 'Updated Model',
-          type: 'furniture'
-        })
+      const response = await request(app).put(`/models/${modelId}`).send({
+        name: 'Updated Model',
+        type: 'furniture'
+      })
 
       expect(response.status).toBe(404)
       expect(response.body.error).toBe('Model not found for update')
@@ -314,9 +306,7 @@ describe('Models Router', () => {
         })
       })
 
-      const response = await request(app)
-        .patch(`/models/dimension/${modelId}`)
-        .send(dimensionData)
+      const response = await request(app).patch(`/models/dimension/${modelId}`).send(dimensionData)
 
       expect(mockedUpdateModelDimension).toHaveBeenCalledTimes(1)
       expect(response.status).toBe(200)
@@ -328,9 +318,7 @@ describe('Models Router', () => {
         res.status(400).json({ error: 'Invalid dimension data' })
       })
 
-      const response = await request(app)
-        .patch(`/models/dimension/${modelId}`)
-        .send({ invalid: 'data' })
+      const response = await request(app).patch(`/models/dimension/${modelId}`).send({ invalid: 'data' })
 
       expect(response.status).toBe(400)
       expect(response.body.error).toBe('Invalid dimension data')
@@ -356,9 +344,7 @@ describe('Models Router', () => {
         })
       })
 
-      const response = await request(app)
-        .patch(`/models/texture/${modelId}`)
-        .send(textureData)
+      const response = await request(app).patch(`/models/texture/${modelId}`).send(textureData)
 
       expect(mockedUpdateModelTexture).toHaveBeenCalledTimes(1)
       expect(response.status).toBe(200)
@@ -375,9 +361,7 @@ describe('Models Router', () => {
         })
       })
 
-      const response = await request(app)
-        .patch(`/models/texture/${modelId}`)
-        .send(partialTextureData)
+      const response = await request(app).patch(`/models/texture/${modelId}`).send(partialTextureData)
 
       expect(response.status).toBe(200)
       expect(response.body.model.texture).toEqual(partialTextureData)
@@ -438,10 +422,7 @@ describe('Models Router', () => {
 
   describe('Error Handling & Edge Cases', () => {
     it('should handle malformed JSON in POST requests', async () => {
-      const response = await request(app)
-        .post('/models')
-        .set('Content-Type', 'application/json')
-        .send('{ malformed json }')
+      const response = await request(app).post('/models').set('Content-Type', 'application/json').send('{ malformed json }')
 
       expect(response.status).toBe(400)
     })
@@ -480,9 +461,7 @@ describe('Models Router', () => {
       })
 
       const modelData = { name: 'Test Model', type: 'furniture' }
-      const response = await request(app)
-        .post('/models')
-        .send(modelData)
+      const response = await request(app).post('/models').send(modelData)
 
       expect(response.status).toBe(201)
       expect(response.body.receivedBody).toEqual(modelData)

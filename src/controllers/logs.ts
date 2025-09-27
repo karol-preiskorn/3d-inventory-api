@@ -61,7 +61,8 @@ export const getAllLogs: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -96,7 +97,8 @@ export const getLogsByObjectId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -136,7 +138,8 @@ export const getLogsByComponent: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -180,7 +183,8 @@ export const getLogsByModelId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -258,7 +262,8 @@ export const createLog: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -304,7 +309,8 @@ export const deleteLog: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -359,6 +365,7 @@ export const deleteAllLogs: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }

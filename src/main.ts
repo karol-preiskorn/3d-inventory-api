@@ -142,7 +142,6 @@ app.use(limiter)
 app.use(cors(corsOptions))
 
 export let db: Awaited<ReturnType<typeof getDb>> | null = null
-
 ;(async () => {
   db = await getDb()
 

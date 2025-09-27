@@ -44,7 +44,7 @@ export const getAllAttributes: RequestHandler = async (_req, res) => {
       module: 'attributes',
       procedure: 'getAllAttributes',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -88,7 +88,7 @@ export const getAttributeById: RequestHandler = async (req, res) => {
       module: 'attributes',
       procedure: 'getAttributeById',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -133,7 +133,7 @@ export const getAttributesByModelId: RequestHandler = async (req, res) => {
       module: 'attributes',
       procedure: 'getAttributesByModelId',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -178,7 +178,7 @@ export const getAttributesByDeviceId: RequestHandler = async (req, res) => {
       module: 'attributes',
       procedure: 'getAttributesByDeviceId',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -223,7 +223,7 @@ export const getAttributesByConnectionId: RequestHandler = async (req, res) => {
       module: 'attributes',
       procedure: 'getAttributesByConnectionId',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -255,7 +255,7 @@ export const createAttribute: RequestHandler = async (req, res) => {
       (!connectionId && !deviceId && !modelId)
     ) {
       return res.status(400).json({
-        error: 'Missing or invalid "value", "attributeDictionaryId", or at least one of "connectionId", "deviceId", "modelId" must be provided'
+        error: 'Missing or invalid "value", "attributeDictionaryId", or at least one of "connectionId", "deviceId", "modelId" must be provided',
       })
     }
 
@@ -273,7 +273,7 @@ export const createAttribute: RequestHandler = async (req, res) => {
       connectionId: toObjectIdOrNull(connectionId),
       deviceId: toObjectIdOrNull(deviceId),
       modelId: toObjectIdOrNull(modelId),
-      value
+      value,
     }
     const result = await collection.insertOne(newAttribute)
     const createdAttribute = { _id: result.insertedId, ...newAttribute }
@@ -291,7 +291,7 @@ export const createAttribute: RequestHandler = async (req, res) => {
       module: 'attributes',
       procedure: 'createAttribute',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     if (client) {
@@ -335,8 +335,8 @@ export const updateAttribute: RequestHandler = async (req, res) => {
         connectionId: updateBody.connectionId || null,
         deviceId: updateBody.deviceId || null,
         modelId: updateBody.modelId || null,
-        value: updateBody.value
-      }
+        value: updateBody.value,
+      },
     }
     const query = { _id: new ObjectId(id) }
     const result = await collection.updateOne(query, updates)
@@ -357,7 +357,7 @@ export const updateAttribute: RequestHandler = async (req, res) => {
       module: 'attributes',
       procedure: 'updateAttribute',
       status: 'Internal Server Error',
-      message: errorMessage
+      message: errorMessage,
     })
   } finally {
     if (client) {
@@ -402,7 +402,7 @@ export const deleteAttribute: RequestHandler = async (req, res) => {
       module: 'attributes',
       procedure: 'deleteAttribute',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -438,7 +438,7 @@ export const deleteAllAttributes: RequestHandler = async (_req, res) => {
       module: 'attributes',
       procedure: 'deleteAllAttributes',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -483,7 +483,7 @@ export const deleteAttributesByModelId: RequestHandler = async (req, res) => {
       module: 'attributes',
       procedure: 'deleteAttributesByModelId',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {

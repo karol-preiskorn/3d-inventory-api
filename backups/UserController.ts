@@ -28,7 +28,7 @@ export class UserController {
       if (!userData.username || !userData.email || !userData.password || !userData.role) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Missing required fields: username, email, password, role'
+          message: 'Missing required fields: username, email, password, role',
         })
 
         return
@@ -38,7 +38,7 @@ export class UserController {
       if (!Object.values(UserRole).includes(userData.role)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Invalid role. Must be one of: ADMIN, USER, VIEWER'
+          message: 'Invalid role. Must be one of: ADMIN, USER, VIEWER',
         })
 
         return
@@ -50,7 +50,7 @@ export class UserController {
 
       res.status(201).json({
         message: 'User created successfully',
-        user: newUser
+        user: newUser,
       })
     } catch (error) {
       logger.error(`Error creating user: ${error instanceof Error ? error.message : String(error)}`)
@@ -58,7 +58,7 @@ export class UserController {
       if (error instanceof Error && error.message.includes('already exists')) {
         res.status(409).json({
           error: 'Conflict',
-          message: error.message
+          message: error.message,
         })
 
         return
@@ -66,7 +66,7 @@ export class UserController {
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to create user'
+        message: 'Failed to create user',
       })
     }
   }
@@ -81,14 +81,14 @@ export class UserController {
       res.status(200).json({
         message: 'Users retrieved successfully',
         users,
-        count: users.length
+        count: users.length,
       })
     } catch (error) {
       logger.error(`Error getting all users: ${error instanceof Error ? error.message : String(error)}`)
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to retrieve users'
+        message: 'Failed to retrieve users',
       })
     }
   }
@@ -104,7 +104,7 @@ export class UserController {
       if (!id) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'User ID is required'
+          message: 'User ID is required',
         })
 
         return
@@ -114,7 +114,7 @@ export class UserController {
       if (requestingUser?.role !== UserRole.ADMIN && requestingUser?.id.toString() !== id) {
         res.status(403).json({
           error: 'Forbidden',
-          message: 'You can only access your own profile'
+          message: 'You can only access your own profile',
         })
 
         return
@@ -125,7 +125,7 @@ export class UserController {
       if (!user) {
         res.status(404).json({
           error: 'Not Found',
-          message: 'User not found'
+          message: 'User not found',
         })
 
         return
@@ -133,14 +133,14 @@ export class UserController {
 
       res.status(200).json({
         message: 'User retrieved successfully',
-        user
+        user,
       })
     } catch (error) {
       logger.error(`Error getting user by ID: ${error instanceof Error ? error.message : String(error)}`)
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to retrieve user'
+        message: 'Failed to retrieve user',
       })
     }
   }
@@ -157,7 +157,7 @@ export class UserController {
       if (!id) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'User ID is required'
+          message: 'User ID is required',
         })
 
         return
@@ -170,7 +170,7 @@ export class UserController {
       if (!isAdmin && !isOwnProfile) {
         res.status(403).json({
           error: 'Forbidden',
-          message: 'You can only update your own profile'
+          message: 'You can only update your own profile',
         })
 
         return
@@ -180,7 +180,7 @@ export class UserController {
       if (!isAdmin && updateData.role) {
         res.status(403).json({
           error: 'Forbidden',
-          message: 'Only administrators can change user roles'
+          message: 'Only administrators can change user roles',
         })
 
         return
@@ -190,7 +190,7 @@ export class UserController {
       if (updateData.role && !Object.values(UserRole).includes(updateData.role)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Invalid role. Must be one of: ADMIN, USER, VIEWER'
+          message: 'Invalid role. Must be one of: ADMIN, USER, VIEWER',
         })
 
         return
@@ -202,7 +202,7 @@ export class UserController {
 
       res.status(200).json({
         message: 'User updated successfully',
-        user: updatedUser
+        user: updatedUser,
       })
     } catch (error) {
       logger.error(`Error updating user: ${error instanceof Error ? error.message : String(error)}`)
@@ -210,7 +210,7 @@ export class UserController {
       if (error instanceof Error && error.message.includes('not found')) {
         res.status(404).json({
           error: 'Not Found',
-          message: 'User not found'
+          message: 'User not found',
         })
 
         return
@@ -218,7 +218,7 @@ export class UserController {
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to update user'
+        message: 'Failed to update user',
       })
     }
   }
@@ -233,7 +233,7 @@ export class UserController {
       if (!id) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'User ID is required'
+          message: 'User ID is required',
         })
 
         return
@@ -243,7 +243,7 @@ export class UserController {
       if (req.user?.id.toString() === id) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'You cannot delete your own account'
+          message: 'You cannot delete your own account',
         })
 
         return
@@ -254,7 +254,7 @@ export class UserController {
       if (!deleted) {
         res.status(404).json({
           error: 'Not Found',
-          message: 'User not found'
+          message: 'User not found',
         })
 
         return
@@ -263,14 +263,14 @@ export class UserController {
       logger.info(`User deleted by ${req.user?.username}: ${id}`)
 
       res.status(200).json({
-        message: 'User deleted successfully'
+        message: 'User deleted successfully',
       })
     } catch (error) {
       logger.error(`Error deleting user: ${error instanceof Error ? error.message : String(error)}`)
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to delete user'
+        message: 'Failed to delete user',
       })
     }
   }
@@ -285,7 +285,7 @@ export class UserController {
       if (!userId) {
         res.status(401).json({
           error: 'Unauthorized',
-          message: 'User not authenticated'
+          message: 'User not authenticated',
         })
 
         return
@@ -296,7 +296,7 @@ export class UserController {
       if (!user) {
         res.status(404).json({
           error: 'Not Found',
-          message: 'User profile not found'
+          message: 'User profile not found',
         })
 
         return
@@ -304,14 +304,14 @@ export class UserController {
 
       res.status(200).json({
         message: 'Current user profile retrieved successfully',
-        user
+        user,
       })
     } catch (error) {
       logger.error(`Error getting current user: ${error instanceof Error ? error.message : String(error)}`)
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to retrieve user profile'
+        message: 'Failed to retrieve user profile',
       })
     }
   }
@@ -327,7 +327,7 @@ export class UserController {
       if (!userId) {
         res.status(401).json({
           error: 'Unauthorized',
-          message: 'User not authenticated'
+          message: 'User not authenticated',
         })
 
         return
@@ -337,7 +337,7 @@ export class UserController {
       if (updateData.role) {
         res.status(403).json({
           error: 'Forbidden',
-          message: 'You cannot change your own role'
+          message: 'You cannot change your own role',
         })
 
         return
@@ -349,14 +349,14 @@ export class UserController {
 
       res.status(200).json({
         message: 'Profile updated successfully',
-        user: updatedUser
+        user: updatedUser,
       })
     } catch (error) {
       logger.error(`Error updating current user: ${error instanceof Error ? error.message : String(error)}`)
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to update profile'
+        message: 'Failed to update profile',
       })
     }
   }

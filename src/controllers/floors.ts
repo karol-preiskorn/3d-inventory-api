@@ -43,7 +43,6 @@ export const getAllFloors: RequestHandler = async (_req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const results: object[] = await collection.find({}).limit(10).toArray()
@@ -84,7 +83,8 @@ export const getAllFloors: RequestHandler = async (_req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -96,7 +96,6 @@ export const getFloorById: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { _id: new ObjectId(id) }
@@ -118,7 +117,8 @@ export const getFloorById: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -130,7 +130,6 @@ export const getFloorByModelId: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const sanitizedModelId = sanitize(id)
@@ -153,7 +152,8 @@ export const getFloorByModelId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -164,7 +164,6 @@ export const createFloor: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     // Sanitize input
@@ -210,7 +209,8 @@ export const createFloor: RequestHandler = async (req, res) => {
       error: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -222,7 +222,6 @@ export const updateFloor: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     // Sanitize input
@@ -265,7 +264,8 @@ export const updateFloor: RequestHandler = async (req, res) => {
       error: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -277,7 +277,6 @@ export const addFloorDimension: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { _id: new ObjectId(id) }
@@ -300,7 +299,8 @@ export const addFloorDimension: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -312,7 +312,6 @@ export const deleteFloor: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { _id: new ObjectId(id) }
@@ -334,7 +333,8 @@ export const deleteFloor: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -351,7 +351,6 @@ export const deleteAllFloors: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result = await collection.deleteMany({})
@@ -372,7 +371,8 @@ export const deleteAllFloors: RequestHandler = async (req, res) => {
       error: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -384,7 +384,6 @@ export const deleteFloorsByModelId: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { modelId: new ObjectId(id) }
@@ -406,6 +405,7 @@ export const deleteFloorsByModelId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }

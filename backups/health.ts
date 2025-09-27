@@ -37,7 +37,7 @@ export async function healthController(_req: Request, res: Response, db: Db) {
     uptime: process.uptime(),
     uptimeString: humanReadableUptime,
     database: 'unknown',
-    error: null
+    error: null,
   }
 
   try {

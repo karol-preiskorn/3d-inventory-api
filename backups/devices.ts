@@ -93,9 +93,9 @@ export async function updateDevice(req: Request, res: Response) {
         name: (req.body as { name: string }).name,
         modelId: (req.body as { modelId: string }).modelId,
         position: (req.body as { position: Position }).position,
-        attributes: (req.body as { attributes: Attribute[] }).attributes
-      }
-    }
+        attributes: (req.body as { attributes: Attribute[] }).attributes,
+      },
+    },
   ]
 
   try {
@@ -120,7 +120,7 @@ export async function updateDevice(req: Request, res: Response) {
       module: 'devices',
       procedure: 'updateDevice',
       status: 'Internal Server Error',
-      message: errorMessage
+      message: errorMessage,
     })
   }
 }
@@ -183,8 +183,8 @@ export async function updateDevicePosition(req: Request, res: Response) {
   const query = { _id: new MongoObjectId(req.params.id) }
   const updates: UpdateFilter<Document>[] = [
     {
-      $set: { position: req.body as Position }
-    }
+      $set: { position: req.body as Position },
+    },
   ]
   const client = await connectToCluster()
 
@@ -206,7 +206,7 @@ export async function updateDevicePosition(req: Request, res: Response) {
       module: 'devices',
       procedure: 'updateDevicePosition',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)

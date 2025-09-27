@@ -68,7 +68,7 @@ export function getSwaggerSetup(): RequestHandler {
       logger.warn(`Swagger documentation unavailable for ${req.method} ${req.originalUrl}`)
       res.status(503).json({
         error: 'Service Unavailable',
-        message: 'Swagger documentation is currently unavailable. Please check server logs.'
+        message: 'Swagger documentation is currently unavailable. Please check server logs.',
       })
     }
   }
@@ -78,7 +78,7 @@ export function getSwaggerSetup(): RequestHandler {
   return swaggerUi.setup(swaggerDocument, {
     customCss: '.swagger-ui .topbar { display: none }',
     customSiteTitle: '3D Inventory API Documentation',
-    customfavIcon: '/favicon.ico'
+    customfavIcon: '/favicon.ico',
   })
 }
 
@@ -100,7 +100,7 @@ export const getDocumentationHealth: RequestHandler = (req, res): void => {
         yamlFile: yamlFilename,
         fileSize: stats.size,
         lastModified: stats.mtime,
-        message: 'Swagger documentation is available'
+        message: 'Swagger documentation is available',
       })
     } else {
       logger.warn(`Documentation health check failed - file not found: ${yamlFilename}`)
@@ -108,7 +108,7 @@ export const getDocumentationHealth: RequestHandler = (req, res): void => {
       res.status(503).json({
         status: 'unhealthy',
         yamlFile: yamlFilename,
-        message: 'Swagger YAML file not found'
+        message: 'Swagger YAML file not found',
       })
     }
   } catch (error) {
@@ -119,7 +119,7 @@ export const getDocumentationHealth: RequestHandler = (req, res): void => {
     res.status(500).json({
       status: 'error',
       message: 'Error checking documentation health',
-      error: errorMessage
+      error: errorMessage,
     })
   }
 }

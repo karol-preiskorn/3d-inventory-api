@@ -29,44 +29,45 @@ const migrations = [
     pattern: /import\s+{([^}]*)}\s+from\s+['"][^'"]*\/utils\/db['"](\s*;?)/g,
     replacement: (match, imports, semicolon) => {
       // Replace old imports with new getDatabase import
-      const currentImports = imports.split(',').map(i => i.trim()).filter(Boolean)
-      const newImports = currentImports
-        .filter(imp => !['connectToCluster', 'connectToDb', 'closeConnection'].includes(imp))
-        .concat(['getDatabase'])
+      const currentImports = imports
+        .split(',')
+        .map((i) => i.trim())
+        .filter(Boolean)
+      const newImports = currentImports.filter((imp) => !['connectToCluster', 'connectToDb', 'closeConnection'].includes(imp)).concat(['getDatabase'])
 
       return `import { ${[...new Set(newImports)].join(', ')} } from '../utils/db'${semicolon}`
-    }
+    },
   },
 
   // Pattern 1: Simple function with try/finally
   {
     pattern: /(\s+)const client = await connectToCluster\(\)\s*\n\s*try\s*{\s*\n\s*const db:\s*Db\s*=\s*connectToDb\(client\)\s*\n/g,
-    replacement: '$1try {\n$1  const db: Db = await getDatabase()\n'
+    replacement: '$1try {\n$1  const db: Db = await getDatabase()\n',
   },
 
   // Pattern 2: Remove finally blocks with closeConnection
   {
     pattern: /\s*}\s*finally\s*{\s*\n\s*await\s+closeConnection\(client\)\s*\n\s*}/g,
-    replacement: '\n  }'
+    replacement: '\n  }',
   },
 
   // Pattern 3: Remove client variable declarations at the beginning of functions
   {
     pattern: /(\s+)const client = await connectToCluster\(\)\s*\n/g,
-    replacement: ''
+    replacement: '',
   },
 
   // Pattern 4: Replace connectToDb calls
   {
     pattern: /const db:\s*Db\s*=\s*connectToDb\(client\)/g,
-    replacement: 'const db: Db = await getDatabase()'
+    replacement: 'const db: Db = await getDatabase()',
   },
 
   // Pattern 5: Remove standalone closeConnection calls
   {
     pattern: /\s*await closeConnection\(client\)\s*\n/g,
-    replacement: ''
-  }
+    replacement: '',
+  },
 ]
 
 // Function to migrate a single file
@@ -123,7 +124,7 @@ async function main() {
   const controllerFiles = await glob(CONTROLLERS_PATH)
 
   console.log(`Found ${controllerFiles.length} controller files to migrate:`)
-  controllerFiles.forEach(file => console.log(`  - ${path.basename(file)}`))
+  controllerFiles.forEach((file) => console.log(`  - ${path.basename(file)}`))
   console.log()
 
   controllerFiles.forEach(migrateFile)

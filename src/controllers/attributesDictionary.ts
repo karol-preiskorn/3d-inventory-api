@@ -24,7 +24,6 @@ export const getAllAttributesDictionary: RequestHandler = async (_req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const results: object[] = await collection.find({}).limit(1000).toArray()
@@ -45,7 +44,8 @@ export const getAllAttributesDictionary: RequestHandler = async (_req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -57,7 +57,6 @@ export const getAttributesDictionaryById: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { _id: new ObjectId(id) }
@@ -79,7 +78,8 @@ export const getAttributesDictionaryById: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -91,7 +91,6 @@ export const getAttributesDictionaryByModelId: RequestHandler = async (req, res)
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { modelId: new ObjectId(id) }
@@ -113,7 +112,8 @@ export const getAttributesDictionaryByModelId: RequestHandler = async (req, res)
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -124,7 +124,6 @@ export const createAttributesDictionary: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     // Sanitize input
@@ -148,7 +147,8 @@ export const createAttributesDictionary: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -160,7 +160,6 @@ export const updateAttributesDictionary: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     // Sanitize input
@@ -201,7 +200,8 @@ export const updateAttributesDictionary: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -213,7 +213,6 @@ export const deleteAttributesDictionary: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { _id: new ObjectId(id) }
@@ -235,7 +234,8 @@ export const deleteAttributesDictionary: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -246,7 +246,6 @@ export const deleteAllAttributesDictionary: RequestHandler = async (_req, res) =
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = {}
@@ -268,7 +267,8 @@ export const deleteAllAttributesDictionary: RequestHandler = async (_req, res) =
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -280,7 +280,6 @@ export const deleteAttributesDictionaryByModelId: RequestHandler = async (req, r
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { modelId: new ObjectId(id) }
@@ -302,6 +301,7 @@ export const deleteAttributesDictionaryByModelId: RequestHandler = async (req, r
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }

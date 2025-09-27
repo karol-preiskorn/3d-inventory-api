@@ -64,12 +64,12 @@ export const getAllFloors: RequestHandler = async (_req, res) => {
             street: sanitize(floor.address.street),
             city: sanitize(floor.address.city),
             country: sanitize(floor.address.country),
-            postcode: sanitize(floor.address.postcode)
+            postcode: sanitize(floor.address.postcode),
           },
           dimension: floor.dimension.map((dim: Dimension) => ({
             ...dim,
-            description: sanitize(dim.description)
-          }))
+            description: sanitize(dim.description),
+          })),
         }
       })
 
@@ -82,7 +82,7 @@ export const getAllFloors: RequestHandler = async (_req, res) => {
       module: 'floors',
       procedure: 'getAllFloors',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -119,7 +119,7 @@ export const getFloorById: RequestHandler = async (req, res) => {
       module: 'floors',
       procedure: 'getFloorById',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -157,7 +157,7 @@ export const getFloorByModelId: RequestHandler = async (req, res) => {
       module: 'floors',
       procedure: 'getFloorByModelId',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -186,7 +186,7 @@ export const createFloor: RequestHandler = async (req, res) => {
         street: sanitize(address.street),
         city: sanitize(address.city),
         country: sanitize(address.country),
-        postcode: sanitize(address.postcode)
+        postcode: sanitize(address.postcode),
       },
       dimension: dimension.map((dim: Dimension) => ({
         description: sanitize(dim.description),
@@ -195,8 +195,8 @@ export const createFloor: RequestHandler = async (req, res) => {
         h: dim.h,
         xPos: dim.xPos,
         yPos: dim.yPos,
-        hPos: dim.hPos
-      }))
+        hPos: dim.hPos,
+      })),
     }
     const result = await collection.insertOne(sanitizedDocument)
 
@@ -217,7 +217,7 @@ export const createFloor: RequestHandler = async (req, res) => {
       module: 'floors',
       procedure: 'createFloor',
       message: 'Error inserting document',
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -247,7 +247,7 @@ export const updateFloor: RequestHandler = async (req, res) => {
         street: sanitize(sanitizedBody.address.street),
         city: sanitize(sanitizedBody.address.city),
         country: sanitize(sanitizedBody.address.country),
-        postcode: sanitize(sanitizedBody.address.postcode)
+        postcode: sanitize(sanitizedBody.address.postcode),
       },
       dimension: sanitizedBody.dimension.map((dim: Dimension) => ({
         description: sanitize(dim.description),
@@ -256,8 +256,8 @@ export const updateFloor: RequestHandler = async (req, res) => {
         h: dim.h,
         xPos: dim.xPos,
         yPos: dim.yPos,
-        hPos: dim.hPos
-      }))
+        hPos: dim.hPos,
+      })),
     }
     const updates: UpdateFilter<Document>[] = [{ $set: sanitizedDocument }]
     const result = await collection.updateOne(query, updates)
@@ -275,7 +275,7 @@ export const updateFloor: RequestHandler = async (req, res) => {
       module: 'floors',
       procedure: 'updateFloor',
       message: 'Error updating document',
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -313,7 +313,7 @@ export const addFloorDimension: RequestHandler = async (req, res) => {
       module: 'floors',
       procedure: 'addFloorDimension',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -350,7 +350,7 @@ export const deleteFloor: RequestHandler = async (req, res) => {
       module: 'floors',
       procedure: 'deleteFloor',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -391,7 +391,7 @@ export const deleteAllFloors: RequestHandler = async (req, res) => {
       module: 'floors',
       procedure: 'deleteAllFloors',
       message: 'Error deleting documents',
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -428,7 +428,7 @@ export const deleteFloorsByModelId: RequestHandler = async (req, res) => {
       module: 'floors',
       procedure: 'deleteFloorsByModelId',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {

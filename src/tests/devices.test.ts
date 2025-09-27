@@ -178,9 +178,7 @@ describe('Devices Router', () => {
         })
       })
 
-      const response = await request(app)
-        .put(`/devices/${deviceId}`)
-        .send(updateData)
+      const response = await request(app).put(`/devices/${deviceId}`).send(updateData)
 
       expect(mockedUpdateDevice).toHaveBeenCalledTimes(1)
       expect(response.status).toBe(200)
@@ -193,9 +191,7 @@ describe('Devices Router', () => {
         res.status(400).json({ error: 'Invalid device data provided' })
       })
 
-      const response = await request(app)
-        .put(`/devices/${deviceId}`)
-        .send({ invalidField: 'invalid value' })
+      const response = await request(app).put(`/devices/${deviceId}`).send({ invalidField: 'invalid value' })
 
       expect(response.status).toBe(400)
       expect(response.body.error).toBe('Invalid device data provided')
@@ -206,9 +202,7 @@ describe('Devices Router', () => {
         res.status(404).json({ error: 'Device not found for update' })
       })
 
-      const response = await request(app)
-        .put(`/devices/${deviceId}`)
-        .send({ name: 'Updated Device' })
+      const response = await request(app).put(`/devices/${deviceId}`).send({ name: 'Updated Device' })
 
       expect(response.status).toBe(404)
       expect(response.body.error).toBe('Device not found for update')
@@ -231,9 +225,7 @@ describe('Devices Router', () => {
         })
       })
 
-      const response = await request(app)
-        .post('/devices')
-        .send(newDeviceData)
+      const response = await request(app).post('/devices').send(newDeviceData)
 
       expect(mockedCreateDevice).toHaveBeenCalledTimes(1)
       expect(response.status).toBe(201)
@@ -246,9 +238,7 @@ describe('Devices Router', () => {
         res.status(400).json({ error: 'Missing required fields: name, modelId' })
       })
 
-      const response = await request(app)
-        .post('/devices')
-        .send({})
+      const response = await request(app).post('/devices').send({})
 
       expect(response.status).toBe(400)
       expect(response.body.error).toBe('Missing required fields: name, modelId')
@@ -259,9 +249,7 @@ describe('Devices Router', () => {
         res.status(409).json({ error: 'Device with this name already exists' })
       })
 
-      const response = await request(app)
-        .post('/devices')
-        .send({ name: 'Duplicate Device', modelId: '507f1f77bcf86cd799439012' })
+      const response = await request(app).post('/devices').send({ name: 'Duplicate Device', modelId: '507f1f77bcf86cd799439012' })
 
       expect(response.status).toBe(409)
       expect(response.body.error).toBe('Device with this name already exists')
@@ -333,9 +321,7 @@ describe('Devices Router', () => {
         })
       })
 
-      const response = await request(app)
-        .patch(`/devices/position/${deviceId}`)
-        .send(positionData)
+      const response = await request(app).patch(`/devices/position/${deviceId}`).send(positionData)
 
       expect(mockedUpdateDevicePosition).toHaveBeenCalledTimes(1)
       expect(response.status).toBe(200)
@@ -347,9 +333,7 @@ describe('Devices Router', () => {
         res.status(400).json({ error: 'Invalid position coordinates' })
       })
 
-      const response = await request(app)
-        .patch(`/devices/position/${deviceId}`)
-        .send({ invalid: 'data' })
+      const response = await request(app).patch(`/devices/position/${deviceId}`).send({ invalid: 'data' })
 
       expect(response.status).toBe(400)
       expect(response.body.error).toBe('Invalid position coordinates')
@@ -389,7 +373,7 @@ describe('Devices Router', () => {
         res.status(200).json({
           message: 'Devices deleted by model',
           deletedCount: 3,
-          modelId: req.params.id  // The router parameter is :id, not :modelId
+          modelId: req.params.id // The router parameter is :id, not :modelId
         })
       })
 
@@ -404,10 +388,7 @@ describe('Devices Router', () => {
 
   describe('Error Handling & Edge Cases', () => {
     it('should handle malformed JSON in POST requests', async () => {
-      const response = await request(app)
-        .post('/devices')
-        .set('Content-Type', 'application/json')
-        .send('{ malformed json }')
+      const response = await request(app).post('/devices').set('Content-Type', 'application/json').send('{ malformed json }')
 
       expect(response.status).toBe(400)
     })
@@ -453,9 +434,7 @@ describe('Devices Router', () => {
       })
 
       const deviceData = { name: 'Test Device', modelId: '507f1f77bcf86cd799439012' }
-      const response = await request(app)
-        .post('/devices')
-        .send(deviceData)
+      const response = await request(app).post('/devices').send(deviceData)
 
       expect(response.status).toBe(201)
       expect(response.body.receivedBody).toEqual(deviceData)

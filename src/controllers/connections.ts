@@ -38,7 +38,6 @@ export async function getAllConnections(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const results = await collection.find({}).limit(limit).toArray()
@@ -69,7 +68,6 @@ export async function getConnectionById(req: Request, res: Response) {
   const query = { _id: new ObjectId(id) }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const connection = await collection.findOne(query)
@@ -100,7 +98,6 @@ export async function getConnectionsFrom(req: Request, res: Response) {
   const query = { deviceIdFrom: new ObjectId(id) }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const connections = await collection.find(query).toArray()
@@ -131,7 +128,6 @@ export async function getConnectionsTo(req: Request, res: Response) {
   const query = { deviceIdTo: new ObjectId(id) }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const connections = await collection.find(query).toArray()
@@ -176,7 +172,6 @@ export async function getConnectionBetweenDevices(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const connection = await collection.findOne(query)
@@ -231,7 +226,6 @@ export async function createConnection(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: InsertOneResult<Connection> = await collection.insertOne(newConnection)
@@ -291,7 +285,6 @@ export async function updateConnection(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: UpdateResult = await collection.updateOne(query, updates)
@@ -326,7 +319,6 @@ export async function deleteConnection(req: Request, res: Response) {
   const query = { _id: new ObjectId(id) }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteOne(query)
@@ -360,7 +352,6 @@ export async function deleteConnectionsFrom(req: Request, res: Response) {
   const query = { deviceIdFrom: new ObjectId(id) }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany(query)
@@ -387,7 +378,6 @@ export async function deleteConnectionsTo(req: Request, res: Response) {
   const query = { deviceIdTo: new ObjectId(id) }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany(query)
@@ -428,7 +418,6 @@ export async function deleteConnectionsBetweenDevices(req: Request, res: Respons
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany(query)
@@ -473,7 +462,6 @@ export async function deleteAllConnections(req: Request, res: Response) {
   }
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result: DeleteResult = await collection.deleteMany({})

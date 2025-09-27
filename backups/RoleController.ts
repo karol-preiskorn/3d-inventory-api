@@ -23,14 +23,14 @@ export class RoleController {
       res.status(200).json({
         message: 'Roles retrieved successfully',
         roles,
-        count: roles.length
+        count: roles.length,
       })
     } catch (error) {
       logger.error(`Error getting all roles: ${error instanceof Error ? error.message : String(error)}`)
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to retrieve roles'
+        message: 'Failed to retrieve roles',
       })
     }
   }
@@ -45,7 +45,7 @@ export class RoleController {
       if (!name || !Object.values(UserRole).includes(name as UserRole)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER'
+          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER',
         })
 
         return
@@ -56,7 +56,7 @@ export class RoleController {
       if (!role) {
         res.status(404).json({
           error: 'Not Found',
-          message: 'Role not found'
+          message: 'Role not found',
         })
 
         return
@@ -64,14 +64,14 @@ export class RoleController {
 
       res.status(200).json({
         message: 'Role retrieved successfully',
-        role
+        role,
       })
     } catch (error) {
       logger.error(`Error getting role by name: ${error instanceof Error ? error.message : String(error)}`)
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to retrieve role'
+        message: 'Failed to retrieve role',
       })
     }
   }
@@ -86,7 +86,7 @@ export class RoleController {
       if (!name || !permissions || !Array.isArray(permissions)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Name and permissions array are required'
+          message: 'Name and permissions array are required',
         })
 
         return
@@ -96,7 +96,7 @@ export class RoleController {
       if (!Object.values(UserRole).includes(name)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER'
+          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER',
         })
 
         return
@@ -109,7 +109,7 @@ export class RoleController {
       if (invalidPermissions.length > 0) {
         res.status(400).json({
           error: 'Bad Request',
-          message: `Invalid permissions: ${invalidPermissions.join(', ')}`
+          message: `Invalid permissions: ${invalidPermissions.join(', ')}`,
         })
 
         return
@@ -121,7 +121,7 @@ export class RoleController {
 
       res.status(201).json({
         message: 'Role created successfully',
-        role: newRole
+        role: newRole,
       })
     } catch (error) {
       logger.error(`Error creating role: ${error instanceof Error ? error.message : String(error)}`)
@@ -129,7 +129,7 @@ export class RoleController {
       if (error instanceof Error && error.message.includes('already exists')) {
         res.status(409).json({
           error: 'Conflict',
-          message: error.message
+          message: error.message,
         })
 
         return
@@ -137,7 +137,7 @@ export class RoleController {
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to create role'
+        message: 'Failed to create role',
       })
     }
   }
@@ -153,7 +153,7 @@ export class RoleController {
       if (!name || !Object.values(UserRole).includes(name as UserRole)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER'
+          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER',
         })
 
         return
@@ -162,7 +162,7 @@ export class RoleController {
       if (!permissions || !Array.isArray(permissions)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Permissions array is required'
+          message: 'Permissions array is required',
         })
 
         return
@@ -175,7 +175,7 @@ export class RoleController {
       if (invalidPermissions.length > 0) {
         res.status(400).json({
           error: 'Bad Request',
-          message: `Invalid permissions: ${invalidPermissions.join(', ')}`
+          message: `Invalid permissions: ${invalidPermissions.join(', ')}`,
         })
 
         return
@@ -187,7 +187,7 @@ export class RoleController {
 
       res.status(200).json({
         message: 'Role updated successfully',
-        role: updatedRole
+        role: updatedRole,
       })
     } catch (error) {
       logger.error(`Error updating role: ${error instanceof Error ? error.message : String(error)}`)
@@ -195,7 +195,7 @@ export class RoleController {
       if (error instanceof Error && error.message.includes('not found')) {
         res.status(404).json({
           error: 'Not Found',
-          message: 'Role not found'
+          message: 'Role not found',
         })
 
         return
@@ -203,7 +203,7 @@ export class RoleController {
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to update role'
+        message: 'Failed to update role',
       })
     }
   }
@@ -218,7 +218,7 @@ export class RoleController {
       if (!name || !Object.values(UserRole).includes(name as UserRole)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER'
+          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER',
         })
 
         return
@@ -229,7 +229,7 @@ export class RoleController {
       if (!deleted) {
         res.status(404).json({
           error: 'Not Found',
-          message: 'Role not found'
+          message: 'Role not found',
         })
 
         return
@@ -238,7 +238,7 @@ export class RoleController {
       logger.info(`Role deleted by ${req.user?.username}: ${name}`)
 
       res.status(200).json({
-        message: 'Role deleted successfully'
+        message: 'Role deleted successfully',
       })
     } catch (error) {
       logger.error(`Error deleting role: ${error instanceof Error ? error.message : String(error)}`)
@@ -246,7 +246,7 @@ export class RoleController {
       if (error instanceof Error && error.message.includes('Cannot delete')) {
         res.status(400).json({
           error: 'Bad Request',
-          message: error.message
+          message: error.message,
         })
 
         return
@@ -254,7 +254,7 @@ export class RoleController {
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to delete role'
+        message: 'Failed to delete role',
       })
     }
   }
@@ -269,7 +269,7 @@ export class RoleController {
       if (!name || !Object.values(UserRole).includes(name as UserRole)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER'
+          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER',
         })
 
         return
@@ -280,14 +280,14 @@ export class RoleController {
       res.status(200).json({
         message: 'Role permissions retrieved successfully',
         role: name,
-        permissions
+        permissions,
       })
     } catch (error) {
       logger.error(`Error getting role permissions: ${error instanceof Error ? error.message : String(error)}`)
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to retrieve role permissions'
+        message: 'Failed to retrieve role permissions',
       })
     }
   }
@@ -303,7 +303,7 @@ export class RoleController {
       if (!name || !Object.values(UserRole).includes(name as UserRole)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER'
+          message: 'Invalid role name. Must be one of: ADMIN, USER, VIEWER',
         })
 
         return
@@ -312,7 +312,7 @@ export class RoleController {
       if (!permission || !Object.values(Permission).includes(permission as Permission)) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Valid permission parameter is required'
+          message: 'Valid permission parameter is required',
         })
 
         return
@@ -324,14 +324,14 @@ export class RoleController {
         message: 'Permission check completed',
         role: name,
         permission,
-        hasPermission
+        hasPermission,
       })
     } catch (error) {
       logger.error(`Error checking permission: ${error instanceof Error ? error.message : String(error)}`)
 
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to check permission'
+        message: 'Failed to check permission',
       })
     }
   }

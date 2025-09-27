@@ -10,6 +10,7 @@
  * - Structured: test-data-bot for complex object generation
  */
 
+import crypto from 'crypto'
 import { build, sequence } from '@jackfranklin/test-data-bot'
 import casual from 'casual'
 import { ObjectId } from 'mongodb'
@@ -17,13 +18,31 @@ import { ObjectId } from 'mongodb'
 // Configure casual for deterministic tests
 casual.seed(12345)
 
+/**
+ * Generate secure test passwords
+ * Uses crypto.randomBytes for secure random generation
+ */
+function generateSecureTestPassword(): string {
+  const randomBytes = crypto.randomBytes(8).toString('hex')
+
+  return `Test_${randomBytes}_${Date.now()}`
+}
+
+/**
+ * Generate secure test tokens
+ * Uses crypto.randomUUID for secure token generation
+ */
+function generateSecureTestToken(): string {
+  return `test_token_${crypto.randomUUID()}`
+}
+
 // Structured builders using test-data-bot for complex objects
 const userBuilder = build('User', {
   fields: {
     name: sequence((x) => `User${x}`),
     email: sequence((x) => `user${x}@test.com`),
-    password: () => casual.password,
-    token: () => casual.password + casual.uuid.slice(0, 20),
+    password: () => generateSecureTestPassword(),
+    token: () => generateSecureTestToken(),
     username: sequence((x) => `username${x}`),
     roles: () => [casual.random_element(['admin', 'user', 'moderator'])],
     isActive: () => casual.boolean,
@@ -106,8 +125,8 @@ export const testGenerators = {
   userSimple: () => ({
     name: casual.full_name,
     email: casual.email,
-    password: casual.password,
-    token: casual.password + casual.uuid.slice(0, 20),
+    password: generateSecureTestPassword(),
+    token: generateSecureTestToken(),
     username: casual.username,
     roles: [casual.random_element(['admin', 'user', 'moderator'])],
     isActive: casual.boolean

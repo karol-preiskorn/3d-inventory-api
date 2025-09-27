@@ -25,7 +25,6 @@ export const getAllAttributes: RequestHandler = async (_req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const results: object[] = await collection.find({}).limit(100).toArray()
@@ -46,7 +45,8 @@ export const getAllAttributes: RequestHandler = async (_req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -66,7 +66,6 @@ export const getAttributeById: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const result = await collection.findOne({ _id: new ObjectId(id) })
@@ -87,7 +86,8 @@ export const getAttributeById: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -107,7 +107,6 @@ export const getAttributesByModelId: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { modelId: new ObjectId(id) }
@@ -129,7 +128,8 @@ export const getAttributesByModelId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -149,7 +149,6 @@ export const getAttributesByDeviceId: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { deviceId: new ObjectId(id) }
@@ -171,7 +170,8 @@ export const getAttributesByDeviceId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -191,7 +191,6 @@ export const getAttributesByConnectionId: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { connectionId: new ObjectId(id) }
@@ -213,7 +212,8 @@ export const getAttributesByConnectionId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -224,7 +224,6 @@ export const createAttribute: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     // Sanitize input
@@ -278,7 +277,8 @@ export const createAttribute: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -298,7 +298,6 @@ export const updateAttribute: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     // Sanitize input
@@ -341,7 +340,8 @@ export const updateAttribute: RequestHandler = async (req, res) => {
       message: errorMessage
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -361,7 +361,6 @@ export const deleteAttribute: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { _id: new ObjectId(id) }
@@ -383,7 +382,8 @@ export const deleteAttribute: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -394,7 +394,6 @@ export const deleteAllAttributes: RequestHandler = async (_req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = {}
@@ -416,7 +415,8 @@ export const deleteAllAttributes: RequestHandler = async (_req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }
 
@@ -436,7 +436,6 @@ export const deleteAttributesByModelId: RequestHandler = async (req, res) => {
   let client
 
   try {
-
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
     const query = { modelId: new ObjectId(id) }
@@ -458,6 +457,7 @@ export const deleteAttributesByModelId: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : String(error)
     })
   } finally {
-    if (client) {    }
+    if (client) {
+    }
   }
 }

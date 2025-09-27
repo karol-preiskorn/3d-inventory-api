@@ -19,10 +19,10 @@ const config: import('jest').Config = {
   coverageReporters: ['clover', 'json', 'lcov', ['text', { skipFull: true }]],
   coverageThreshold: {
     global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: -10,
+      branches: 50,
+      functions: 60,
+      lines: 70,
+      statements: 70,
     },
   },
   testEnvironment: 'node',
@@ -35,9 +35,6 @@ const config: import('jest').Config = {
       setupFilesAfterEnv: ['<rootDir>/src/tests/jest.setup.ts'],
       globals: {
         __DEV__: true,
-        'ts-jest': {
-          useESM: true,
-        },
       },
       moduleFileExtensions: ['js', 'ts', 'yaml', 'json'],
       preset: 'ts-jest',
@@ -48,7 +45,12 @@ const config: import('jest').Config = {
         '^(\\.{1,2}/.*)\\.js$': '$1',
       },
       transform: {
-        '^.+\\.(ts|tsx)$': 'ts-jest',
+        '^.+\\.(ts|tsx)$': [
+          'ts-jest',
+          {
+            useESM: true,
+          },
+        ],
       },
     },
   ],

@@ -43,7 +43,7 @@ export const getAllAttributesDictionary: RequestHandler = async (_req, res) => {
       module: 'attributesDictionary',
       procedure: 'getAllAttributesDictionary',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -80,7 +80,7 @@ export const getAttributesDictionaryById: RequestHandler = async (req, res) => {
       module: 'attributesDictionary',
       procedure: 'getAttributesDictionaryById',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -117,7 +117,7 @@ export const getAttributesDictionaryByModelId: RequestHandler = async (req, res)
       module: 'attributesDictionary',
       procedure: 'getAttributesDictionaryByModelId',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -155,7 +155,7 @@ export const createAttributesDictionary: RequestHandler = async (req, res) => {
       module: 'attributesDictionary',
       procedure: 'createAttributesDictionary',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -211,7 +211,7 @@ export const updateAttributesDictionary: RequestHandler = async (req, res) => {
       module: 'attributesDictionary',
       procedure: 'updateAttributesDictionary',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -248,7 +248,7 @@ export const deleteAttributesDictionary: RequestHandler = async (req, res) => {
       module: 'attributesDictionary',
       procedure: 'deleteAttributesDictionary',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -284,7 +284,7 @@ export const deleteAllAttributesDictionary: RequestHandler = async (_req, res) =
       module: 'attributesDictionary',
       procedure: 'deleteAllAttributesDictionary',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {
@@ -321,7 +321,7 @@ export const deleteAttributesDictionaryByModelId: RequestHandler = async (req, r
       module: 'attributesDictionary',
       procedure: 'deleteAttributesDictionaryByModelId',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   } finally {
     if (client) {

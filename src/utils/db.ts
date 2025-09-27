@@ -170,7 +170,6 @@ class DatabaseService {
       // Setup connection monitoring
       this._setupConnectionMonitoring()
       this._startHealthChecks()
-
     } catch (error) {
       const errMsg = `${useEmoji ? '❌ ' : ''}MongoDB connection failed: ${error instanceof Error ? error.message : String(error)}`
 
@@ -262,7 +261,9 @@ class DatabaseService {
       logger.error(`${useEmoji ? '❌ ' : ''}Database health check failed: ${error instanceof Error ? error.message : String(error)}`)
       // Attempt reconnection on health check failure
       this._reconnect().catch((reconnectError) => {
-        logger.error(`${useEmoji ? '❌ ' : ''}Database reconnection failed: ${reconnectError instanceof Error ? reconnectError.message : String(reconnectError)}`)
+        logger.error(
+          `${useEmoji ? '❌ ' : ''}Database reconnection failed: ${reconnectError instanceof Error ? reconnectError.message : String(reconnectError)}`
+        )
       })
     }
   }

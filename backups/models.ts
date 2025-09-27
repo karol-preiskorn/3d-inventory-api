@@ -122,7 +122,7 @@ export async function getAllModels(req: Request, res: Response) {
       module: 'models',
       procedure: 'getAllModels',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -137,7 +137,7 @@ export async function getModelById(req: Request, res: Response) {
     logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'The provided ID is not a valid ObjectId'
+      message: 'The provided ID is not a valid ObjectId',
     })
 
     return
@@ -166,7 +166,7 @@ export async function getModelById(req: Request, res: Response) {
       module: 'models',
       procedure: 'getModelById',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -183,7 +183,7 @@ export async function createModel(req: Request, res: Response) {
     logger.warn(`${proc} ${validation.error}`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: validation.error
+      message: validation.error,
     })
 
     return
@@ -197,17 +197,17 @@ export async function createModel(req: Request, res: Response) {
     dimension: {
       width: Number(dimension.width),
       height: Number(dimension.height),
-      depth: Number(dimension.depth)
+      depth: Number(dimension.depth),
     },
     texture: {
       front: texture.front.trim(),
       back: texture.back.trim(),
       side: texture.side.trim(),
       top: texture.top.trim(),
-      bottom: texture.bottom.trim()
+      bottom: texture.bottom.trim(),
     },
     ...(sanitizedType && { type: sanitizedType }),
-    ...(sanitizedCategory && { category: sanitizedCategory })
+    ...(sanitizedCategory && { category: sanitizedCategory }),
   }
   const client = await connectToCluster()
 
@@ -221,7 +221,7 @@ export async function createModel(req: Request, res: Response) {
       logger.warn(`${proc} Model with name '${sanitizedName}' already exists`)
       res.status(409).json({
         error: 'Conflict',
-        message: 'A model with this name already exists'
+        message: 'A model with this name already exists',
       })
 
       return
@@ -245,7 +245,7 @@ export async function createModel(req: Request, res: Response) {
       module: 'models',
       procedure: 'createModel',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -261,7 +261,7 @@ export async function updateModel(req: Request, res: Response) {
     logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'The provided ID is not a valid ObjectId'
+      message: 'The provided ID is not a valid ObjectId',
     })
 
     return
@@ -274,7 +274,7 @@ export async function updateModel(req: Request, res: Response) {
     logger.warn(`${proc} ${validation.error}`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: validation.error
+      message: validation.error,
     })
 
     return
@@ -290,18 +290,18 @@ export async function updateModel(req: Request, res: Response) {
       dimension: {
         width: Number(dimension.width),
         height: Number(dimension.height),
-        depth: Number(dimension.depth)
+        depth: Number(dimension.depth),
       },
       texture: {
         front: texture.front.trim(),
         back: texture.back.trim(),
         side: texture.side.trim(),
         top: texture.top.trim(),
-        bottom: texture.bottom.trim()
+        bottom: texture.bottom.trim(),
       },
       ...(sanitizedType && { type: sanitizedType }),
-      ...(sanitizedCategory && { category: sanitizedCategory })
-    }
+      ...(sanitizedCategory && { category: sanitizedCategory }),
+    },
   }
   const client = await connectToCluster()
 
@@ -322,14 +322,14 @@ export async function updateModel(req: Request, res: Response) {
     if (sanitizedName !== existingModel.name) {
       const nameConflict = await collection.findOne({
         name: sanitizedName,
-        _id: { $ne: new ObjectId(id) }
+        _id: { $ne: new ObjectId(id) },
       })
 
       if (nameConflict) {
         logger.warn(`${proc} Model with name '${sanitizedName}' already exists`)
         res.status(409).json({
           error: 'Conflict',
-          message: 'A model with this name already exists'
+          message: 'A model with this name already exists',
         })
 
         return
@@ -342,7 +342,7 @@ export async function updateModel(req: Request, res: Response) {
     res.status(200).json({
       message: 'Model updated successfully',
       matchedCount: result.matchedCount,
-      modifiedCount: result.modifiedCount
+      modifiedCount: result.modifiedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error updating model ${id}: ${error instanceof Error ? error.message : String(error)}`)
@@ -350,7 +350,7 @@ export async function updateModel(req: Request, res: Response) {
       module: 'models',
       procedure: 'updateModel',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -366,7 +366,7 @@ export async function updateModelDimension(req: Request, res: Response) {
     logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'The provided ID is not a valid ObjectId'
+      message: 'The provided ID is not a valid ObjectId',
     })
 
     return
@@ -386,7 +386,7 @@ export async function updateModelDimension(req: Request, res: Response) {
     logger.warn(`${proc} Invalid dimension data for update`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: 'dimension must be an object with width, height, and depth as positive numbers'
+      message: 'dimension must be an object with width, height, and depth as positive numbers',
     })
 
     return
@@ -398,9 +398,9 @@ export async function updateModelDimension(req: Request, res: Response) {
       dimension: {
         width: Number(dimension.width),
         height: Number(dimension.height),
-        depth: Number(dimension.depth)
-      }
-    }
+        depth: Number(dimension.depth),
+      },
+    },
   }
   const client = await connectToCluster()
 
@@ -420,7 +420,7 @@ export async function updateModelDimension(req: Request, res: Response) {
     res.status(200).json({
       message: 'Model dimension updated successfully',
       matchedCount: result.matchedCount,
-      modifiedCount: result.modifiedCount
+      modifiedCount: result.modifiedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error updating model dimension ${id}: ${error instanceof Error ? error.message : String(error)}`)
@@ -428,7 +428,7 @@ export async function updateModelDimension(req: Request, res: Response) {
       module: 'models',
       procedure: 'updateModelDimension',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -444,7 +444,7 @@ export async function updateModelTexture(req: Request, res: Response) {
     logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'The provided ID is not a valid ObjectId'
+      message: 'The provided ID is not a valid ObjectId',
     })
 
     return
@@ -468,7 +468,7 @@ export async function updateModelTexture(req: Request, res: Response) {
     logger.warn(`${proc} Invalid texture data for update`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: 'texture must be an object with front, back, side, top, and bottom as non-empty strings'
+      message: 'texture must be an object with front, back, side, top, and bottom as non-empty strings',
     })
 
     return
@@ -482,9 +482,9 @@ export async function updateModelTexture(req: Request, res: Response) {
         back: texture.back.trim(),
         side: texture.side.trim(),
         top: texture.top.trim(),
-        bottom: texture.bottom.trim()
-      }
-    }
+        bottom: texture.bottom.trim(),
+      },
+    },
   }
   const client = await connectToCluster()
 
@@ -504,7 +504,7 @@ export async function updateModelTexture(req: Request, res: Response) {
     res.status(200).json({
       message: 'Model texture updated successfully',
       matchedCount: result.matchedCount,
-      modifiedCount: result.modifiedCount
+      modifiedCount: result.modifiedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error updating model texture ${id}: ${error instanceof Error ? error.message : String(error)}`)
@@ -512,7 +512,7 @@ export async function updateModelTexture(req: Request, res: Response) {
       module: 'models',
       procedure: 'updateModelTexture',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -527,7 +527,7 @@ export async function deleteModel(req: Request, res: Response) {
     logger.warn(`${proc} Invalid ObjectId: ${id}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'The provided ID is not a valid ObjectId'
+      message: 'The provided ID is not a valid ObjectId',
     })
 
     return
@@ -551,7 +551,7 @@ export async function deleteModel(req: Request, res: Response) {
     logger.info(`${proc} Deleted model: ${id}`)
     res.status(200).json({
       message: 'Model deleted successfully',
-      deletedCount: result.deletedCount
+      deletedCount: result.deletedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error deleting model ${id}: ${error instanceof Error ? error.message : String(error)}`)
@@ -559,7 +559,7 @@ export async function deleteModel(req: Request, res: Response) {
       module: 'models',
       procedure: 'deleteModel',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -573,7 +573,7 @@ export async function deleteAllModels(req: Request, res: Response) {
     logger.warn(`${proc} Attempt to delete all models in production environment`)
     res.status(403).json({
       error: 'Forbidden in production environment',
-      message: 'This operation is not allowed in production'
+      message: 'This operation is not allowed in production',
     })
 
     return
@@ -583,7 +583,7 @@ export async function deleteAllModels(req: Request, res: Response) {
     logger.warn(`${proc} Missing confirmation for delete all models`)
     res.status(400).json({
       error: 'Confirmation required',
-      message: 'Add ?confirm=true to proceed with deleting all models'
+      message: 'Add ?confirm=true to proceed with deleting all models',
     })
 
     return
@@ -599,7 +599,7 @@ export async function deleteAllModels(req: Request, res: Response) {
     logger.warn(`${proc} Deleted all ${result.deletedCount} models`)
     res.status(200).json({
       message: 'All models deleted successfully',
-      deletedCount: result.deletedCount
+      deletedCount: result.deletedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error deleting all models: ${error instanceof Error ? error.message : String(error)}`)
@@ -607,7 +607,7 @@ export async function deleteAllModels(req: Request, res: Response) {
       module: 'models',
       procedure: 'deleteAllModels',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)

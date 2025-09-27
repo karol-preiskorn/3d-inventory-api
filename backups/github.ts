@@ -46,8 +46,8 @@ export const getGithubIssues: RequestHandler = async (_req, res) => {
         'Content-Type': 'application/json',
         Accept: 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
-        Authorization: `Bearer ${authToken}`
-      }
+        Authorization: `Bearer ${authToken}`,
+      },
     })
 
     if (!response.ok) {
@@ -67,7 +67,7 @@ export const getGithubIssues: RequestHandler = async (_req, res) => {
       module: 'github',
       procedure: 'getGithubIssues',
       status: 'Internal Server Error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     })
   }
 }

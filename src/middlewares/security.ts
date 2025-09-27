@@ -9,18 +9,22 @@ const logger = getLogger('security-middleware')
  * Enhanced security headers middleware using helmet
  */
 export const securityHeaders: RequestHandler = helmet({
-  // Content Security Policy
+  // Enhanced Content Security Policy
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ['\'self\''],
-      scriptSrc: ['\'self\'', '\'unsafe-inline\'', '\'unsafe-eval\''],
-      styleSrc: ['\'self\'', '\'unsafe-inline\''],
+      scriptSrc: ['\'self\'', '\'nonce-*\''], // Remove unsafe-inline and unsafe-eval
+      styleSrc: ['\'self\'', '\'nonce-*\''],
       imgSrc: ['\'self\'', 'data:', 'https:'],
       connectSrc: ['\'self\''],
       fontSrc: ['\'self\''],
       objectSrc: ['\'none\''],
       mediaSrc: ['\'self\''],
-      frameSrc: ['\'none\'']
+      frameSrc: ['\'none\''],
+      baseUri: ['\'self\''],
+      formAction: ['\'self\''],
+      manifestSrc: ['\'self\''],
+      upgradeInsecureRequests: []
     }
   },
   // Cross-Origin Embedder Policy
@@ -48,7 +52,10 @@ export const securityHeaders: RequestHandler = helmet({
   // Referrer Policy
   referrerPolicy: { policy: 'no-referrer' },
   // X-XSS-Protection
-  xssFilter: true
+  xssFilter: true,
+  // Additional security headers
+  crossOriginOpenerPolicy: { policy: 'same-origin' },
+  crossOriginResourcePolicy: { policy: 'same-origin' }
 })
 
 /**
@@ -120,40 +127,122 @@ export const corsOptions = {
 }
 
 /**
- * Request sanitization middleware to prevent injection attacks
+ * Enhanced request sanitization middleware to prevent injection attacks
  */
 export const sanitizeInput: RequestHandler = (req, res, next) => {
-  // Remove any potentially dangerous characters from query parameters
-  if (req.query) {
-    for (const key in req.query) {
-      if (typeof req.query[key] === 'string') {
-        req.query[key] = (req.query[key] as string)
-          .replace(/[<>'"]/g, '') // Remove HTML/JS injection chars
-          .trim()
+  try {
+    // Sanitize query parameters
+    if (req.query) {
+      for (const key in req.query) {
+        if (typeof req.query[key] === 'string') {
+          req.query[key] = sanitizeString(req.query[key] as string)
+        } else if (Array.isArray(req.query[key])) {
+          req.query[key] = (req.query[key] as string[]).map(sanitizeString)
+        }
       }
     }
-  }
 
-  // Sanitize request body (for JSON payloads)
-  if (req.body && typeof req.body === 'object') {
-    sanitizeObject(req.body)
-  }
+    // Sanitize request parameters
+    if (req.params) {
+      for (const key in req.params) {
+        if (typeof req.params[key] === 'string') {
+          req.params[key] = sanitizeString(req.params[key])
+        }
+      }
+    }
 
-  next()
+    // Sanitize request body (for JSON payloads)
+    if (req.body && typeof req.body === 'object') {
+      sanitizeObject(req.body)
+    }
+
+    next()
+  } catch (error) {
+    logger.error(`Input sanitization error: ${error instanceof Error ? error.message : String(error)}`)
+    res.status(400).json({
+      error: 'Bad Request',
+      message: 'Invalid input data detected'
+    })
+  }
 }
 
 /**
- * Recursively sanitize object properties
+ * Enhanced string sanitization function
+ */
+function sanitizeString(input: string): string {
+  if (!input || typeof input !== 'string') return input
+
+  return (
+    input
+      // Remove HTML/XML tags
+      .replace(/<[^>]*>/g, '')
+      // Remove potentially dangerous characters for injection attacks
+      .replace(/[<>'"&]/g, '')
+      // Remove SQL injection patterns (more comprehensive)
+      .replace(/(\b(ALTER|CREATE|DELETE|DROP|EXEC(UTE)?|INSERT|MERGE|SELECT|UPDATE|UNION|USE|BEGIN|COMMIT|ROLLBACK|OR|AND)\b)/gi, '')
+      .replace(/(\b\d+\s*=\s*\d+\b)/gi, '') // Remove patterns like "1=1"
+      .replace(/(--|\/\*|\*\/|;)/gi, '') // Remove SQL comment patterns
+      // Remove JavaScript injection patterns
+      .replace(/(javascript:|vbscript:|onload|onerror|onclick)/gi, '')
+      // Remove NoSQL injection patterns
+      .replace(/(\$where|\$ne|\$in|\$nin|\$gt|\$lt|\$gte|\$lte|\$regex|\$exists)/gi, '')
+      // Normalize whitespace
+      .replace(/\s+/g, ' ')
+      .trim()
+  )
+}
+
+/**
+ * Recursively sanitize object properties with enhanced security
  */
 function sanitizeObject(obj: Record<string, unknown>): void {
-  for (const key in obj) {
-    if (typeof obj[key] === 'string') {
-      obj[key] = (obj[key] as string)
-        .replace(/[<>'"]/g, '') // Remove HTML/JS injection chars
-        .trim()
-    } else if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-      sanitizeObject(obj[key] as Record<string, unknown>)
+  const maxDepth = 10 // Prevent deeply nested objects
+  const seen = new WeakSet() // Track visited objects to prevent circular references
+  const sanitizeRecursive = (current: Record<string, unknown>, depth: number): void => {
+    if (depth > maxDepth) {
+      logger.warn('Object sanitization depth limit exceeded')
+
+      return
     }
+
+    // Check for circular references
+    if (seen.has(current)) {
+      logger.warn('Circular reference detected during sanitization')
+
+      return
+    }
+
+    seen.add(current)
+
+    try {
+      for (const key in current) {
+        if (typeof current[key] === 'string') {
+          current[key] = sanitizeString(current[key] as string)
+        } else if (Array.isArray(current[key])) {
+          const arr = current[key] as unknown[]
+
+          for (let i = 0; i < arr.length; i++) {
+            if (typeof arr[i] === 'string') {
+              arr[i] = sanitizeString(arr[i] as string)
+            } else if (typeof arr[i] === 'object' && arr[i] !== null) {
+              sanitizeRecursive(arr[i] as Record<string, unknown>, depth + 1)
+            }
+          }
+        } else if (typeof current[key] === 'object' && current[key] !== null) {
+          sanitizeRecursive(current[key] as Record<string, unknown>, depth + 1)
+        }
+      }
+    } catch (error) {
+      logger.error(`Error during object sanitization: ${error instanceof Error ? error.message : String(error)}`)
+      throw error
+    }
+  }
+
+  try {
+    sanitizeRecursive(obj, 0)
+  } catch {
+    logger.error('Failed to sanitize object due to circular references or other errors')
+    throw new Error('Invalid object structure detected')
   }
 }
 
@@ -177,6 +266,41 @@ export const requestTimeout = (timeoutMs: number = 30000): RequestHandler => {
     res.on('close', () => clearTimeout(timeout))
 
     next()
+  }
+}
+
+/**
+ * MongoDB injection protection middleware
+ */
+export const mongoSanitize: RequestHandler = (req, res, next) => {
+  try {
+    // Remove MongoDB operators from all inputs
+    const sanitizeMongoObject = (obj: Record<string, unknown>): void => {
+      for (const key in obj) {
+        if (key.startsWith('$') || key.includes('.')) {
+          logger.warn(`Potential MongoDB injection attempt: ${key}`)
+          delete obj[key]
+        } else if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+          sanitizeMongoObject(obj[key] as Record<string, unknown>)
+        }
+      }
+    }
+
+    if (req.body && typeof req.body === 'object') {
+      sanitizeMongoObject(req.body)
+    }
+
+    if (req.query && typeof req.query === 'object') {
+      sanitizeMongoObject(req.query as Record<string, unknown>)
+    }
+
+    next()
+  } catch (error) {
+    logger.error(`MongoDB sanitization error: ${error instanceof Error ? error.message : String(error)}`)
+    res.status(400).json({
+      error: 'Bad Request',
+      message: 'Invalid query detected'
+    })
   }
 }
 

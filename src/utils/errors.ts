@@ -17,13 +17,7 @@ export class ApiError extends Error {
   public readonly details?: Record<string, unknown>
   public readonly isOperational: boolean
 
-  constructor(
-    statusCode: number,
-    message: string,
-    code?: string,
-    details?: Record<string, unknown>,
-    isOperational = true
-  ) {
+  constructor(statusCode: number, message: string, code?: string, details?: Record<string, unknown>, isOperational = true) {
     super(message)
     this.name = 'ApiError'
     this.statusCode = statusCode
@@ -146,12 +140,7 @@ interface ValidationErrorDetail {
 /**
  * Global error handling middleware
  */
-export function errorHandler(
-  error: Error | ApiError,
-  req: Request,
-  res: Response,
-  _next: NextFunction
-): void {
+export function errorHandler(error: Error | ApiError, req: Request, res: Response, _next: NextFunction): void {
   const requestId = (req as Request & { correlationId?: string }).correlationId || 'unknown'
 
   // Log error details (simplified for logger compatibility)
@@ -168,10 +157,7 @@ export function errorHandler(
   const mongoError = error as MongoError
 
   if (mongoError.code === 11000) {
-    const duplicateError = new ConflictError(
-      'Resource already exists',
-      { duplicateFields: Object.keys(mongoError.keyValue || {}) }
-    )
+    const duplicateError = new ConflictError('Resource already exists', { duplicateFields: Object.keys(mongoError.keyValue || {}) })
 
     res.status(duplicateError.statusCode).json(errorResponse(duplicateError, requestId))
 
@@ -180,10 +166,7 @@ export function errorHandler(
 
   // Handle MongoDB CastError (invalid ObjectId)
   if (error.name === 'CastError') {
-    const castError = new ValidationError(
-      'Invalid ID format',
-      { field: mongoError.path, value: mongoError.value }
-    )
+    const castError = new ValidationError('Invalid ID format', { field: mongoError.path, value: mongoError.value })
 
     res.status(castError.statusCode).json(errorResponse(castError, requestId))
 
@@ -191,13 +174,7 @@ export function errorHandler(
   }
 
   // Handle unexpected errors
-  const unexpectedError = new ApiError(
-    500,
-    'Internal server error',
-    'INTERNAL_ERROR',
-    undefined,
-    false
-  )
+  const unexpectedError = new ApiError(500, 'Internal server error', 'INTERNAL_ERROR', undefined, false)
 
   res.status(500).json(errorResponse(unexpectedError, requestId))
 }
@@ -217,9 +194,7 @@ export function notFoundHandler(req: Request, res: Response): void {
 /**
  * Async error wrapper for route handlers
  */
-export function asyncHandler<T extends Request = Request>(
-  fn: (req: T, res: Response, next: NextFunction) => Promise<void>
-) {
+export function asyncHandler<T extends Request = Request>(fn: (req: T, res: Response, next: NextFunction) => Promise<void>) {
   return (req: T, res: Response, next: NextFunction): void => {
     Promise.resolve(fn(req, res, next)).catch(next)
   }
@@ -229,14 +204,11 @@ export function asyncHandler<T extends Request = Request>(
  * Validation error formatter for express-validator
  */
 export function formatValidationErrors(errors: ValidationErrorDetail[]): ValidationError {
-  const details = errors.map(error => ({
+  const details = errors.map((error) => ({
     field: error.field || error.param || error.path,
     message: error.msg,
     value: error.value
   }))
 
-  return new ValidationError(
-    'Validation failed',
-    { errors: details }
-  )
+  return new ValidationError('Validation failed', { errors: details })
 }

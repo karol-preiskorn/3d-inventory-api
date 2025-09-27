@@ -64,14 +64,13 @@ export const validateObjectId: RequestHandler = (req, res, next) => {
  * Express-validator-based ObjectId validation
  */
 export const validateObjectIdParam = (paramName = 'id') => [
-  param(paramName)
-    .custom((value: string) => {
-      if (!ObjectId.isValid(value)) {
-        throw new Error(`Invalid ObjectId format for ${paramName}`)
-      }
+  param(paramName).custom((value: string) => {
+    if (!ObjectId.isValid(value)) {
+      throw new Error(`Invalid ObjectId format for ${paramName}`)
+    }
 
-      return true
-    }),
+    return true
+  }),
   handleValidationErrors
 ]
 
@@ -79,40 +78,20 @@ export const validateObjectIdParam = (paramName = 'id') => [
  * Device validation rules
  */
 export const validateDeviceInput = [
-  body('name')
-    .isString()
-    .isLength({ min: 1, max: 100 })
-    .withMessage('Name must be a string between 1 and 100 characters'),
-  body('modelId')
-    .custom((value: string) => {
-      if (!ObjectId.isValid(value)) {
-        throw new Error('ModelId must be a valid ObjectId')
-      }
+  body('name').isString().isLength({ min: 1, max: 100 }).withMessage('Name must be a string between 1 and 100 characters'),
+  body('modelId').custom((value: string) => {
+    if (!ObjectId.isValid(value)) {
+      throw new Error('ModelId must be a valid ObjectId')
+    }
 
-      return true
-    }),
-  body('position.x')
-    .isNumeric()
-    .withMessage('Position x must be a number'),
-  body('position.y')
-    .isNumeric()
-    .withMessage('Position y must be a number'),
-  body('position.h')
-    .isNumeric()
-    .withMessage('Position h must be a number'),
-  body('attributes')
-    .optional()
-    .isArray()
-    .withMessage('Attributes must be an array'),
-  body('attributes.*.key')
-    .if(body('attributes').exists())
-    .isString()
-    .isLength({ min: 1 })
-    .withMessage('Attribute key must be a non-empty string'),
-  body('attributes.*.value')
-    .if(body('attributes').exists())
-    .isString()
-    .withMessage('Attribute value must be a string'),
+    return true
+  }),
+  body('position.x').isNumeric().withMessage('Position x must be a number'),
+  body('position.y').isNumeric().withMessage('Position y must be a number'),
+  body('position.h').isNumeric().withMessage('Position h must be a number'),
+  body('attributes').optional().isArray().withMessage('Attributes must be an array'),
+  body('attributes.*.key').if(body('attributes').exists()).isString().isLength({ min: 1 }).withMessage('Attribute key must be a non-empty string'),
+  body('attributes.*.value').if(body('attributes').exists()).isString().withMessage('Attribute value must be a string'),
   handleValidationErrors
 ]
 
@@ -120,11 +99,7 @@ export const validateDeviceInput = [
  * Device update validation rules (partial update)
  */
 export const validateDeviceUpdate = [
-  body('name')
-    .optional()
-    .isString()
-    .isLength({ min: 1, max: 100 })
-    .withMessage('Name must be a string between 1 and 100 characters'),
+  body('name').optional().isString().isLength({ min: 1, max: 100 }).withMessage('Name must be a string between 1 and 100 characters'),
   body('modelId')
     .optional()
     .custom((value: string) => {
@@ -134,22 +109,10 @@ export const validateDeviceUpdate = [
 
       return true
     }),
-  body('position.x')
-    .optional()
-    .isNumeric()
-    .withMessage('Position x must be a number'),
-  body('position.y')
-    .optional()
-    .isNumeric()
-    .withMessage('Position y must be a number'),
-  body('position.h')
-    .optional()
-    .isNumeric()
-    .withMessage('Position h must be a number'),
-  body('attributes')
-    .optional()
-    .isArray()
-    .withMessage('Attributes must be an array'),
+  body('position.x').optional().isNumeric().withMessage('Position x must be a number'),
+  body('position.y').optional().isNumeric().withMessage('Position y must be a number'),
+  body('position.h').optional().isNumeric().withMessage('Position h must be a number'),
+  body('attributes').optional().isArray().withMessage('Attributes must be an array'),
   handleValidationErrors
 ]
 
@@ -157,47 +120,16 @@ export const validateDeviceUpdate = [
  * Model validation rules
  */
 export const validateModelInput = [
-  body('name')
-    .isString()
-    .isLength({ min: 1, max: 100 })
-    .withMessage('Name must be a string between 1 and 100 characters'),
-  body('type')
-    .optional()
-    .isString()
-    .isLength({ min: 1, max: 50 })
-    .withMessage('Type must be a string between 1 and 50 characters'),
-  body('dimension.width')
-    .isNumeric()
-    .isFloat({ min: 0 })
-    .withMessage('Dimension width must be a positive number'),
-  body('dimension.height')
-    .isNumeric()
-    .isFloat({ min: 0 })
-    .withMessage('Dimension height must be a positive number'),
-  body('dimension.depth')
-    .isNumeric()
-    .isFloat({ min: 0 })
-    .withMessage('Dimension depth must be a positive number'),
-  body('texture.front')
-    .optional()
-    .isString()
-    .withMessage('Texture front must be a string'),
-  body('texture.back')
-    .optional()
-    .isString()
-    .withMessage('Texture back must be a string'),
-  body('texture.side')
-    .optional()
-    .isString()
-    .withMessage('Texture side must be a string'),
-  body('texture.top')
-    .optional()
-    .isString()
-    .withMessage('Texture top must be a string'),
-  body('texture.bottom')
-    .optional()
-    .isString()
-    .withMessage('Texture bottom must be a string'),
+  body('name').isString().isLength({ min: 1, max: 100 }).withMessage('Name must be a string between 1 and 100 characters'),
+  body('type').optional().isString().isLength({ min: 1, max: 50 }).withMessage('Type must be a string between 1 and 50 characters'),
+  body('dimension.width').isNumeric().isFloat({ min: 0 }).withMessage('Dimension width must be a positive number'),
+  body('dimension.height').isNumeric().isFloat({ min: 0 }).withMessage('Dimension height must be a positive number'),
+  body('dimension.depth').isNumeric().isFloat({ min: 0 }).withMessage('Dimension depth must be a positive number'),
+  body('texture.front').optional().isString().withMessage('Texture front must be a string'),
+  body('texture.back').optional().isString().withMessage('Texture back must be a string'),
+  body('texture.side').optional().isString().withMessage('Texture side must be a string'),
+  body('texture.top').optional().isString().withMessage('Texture top must be a string'),
+  body('texture.bottom').optional().isString().withMessage('Texture bottom must be a string'),
   handleValidationErrors
 ]
 
@@ -205,16 +137,8 @@ export const validateModelInput = [
  * Model update validation rules
  */
 export const validateModelUpdate = [
-  body('name')
-    .optional()
-    .isString()
-    .isLength({ min: 1, max: 100 })
-    .withMessage('Name must be a string between 1 and 100 characters'),
-  body('type')
-    .optional()
-    .isString()
-    .isLength({ min: 1, max: 50 })
-    .withMessage('Type must be a string between 1 and 50 characters'),
+  body('name').optional().isString().isLength({ min: 1, max: 100 }).withMessage('Name must be a string between 1 and 100 characters'),
+  body('type').optional().isString().isLength({ min: 1, max: 50 }).withMessage('Type must be a string between 1 and 50 characters'),
   handleValidationErrors
 ]
 
@@ -222,21 +146,9 @@ export const validateModelUpdate = [
  * Dimension validation rules
  */
 export const validateDimensionUpdate = [
-  body('width')
-    .optional()
-    .isNumeric()
-    .isFloat({ min: 0 })
-    .withMessage('Width must be a positive number'),
-  body('height')
-    .optional()
-    .isNumeric()
-    .isFloat({ min: 0 })
-    .withMessage('Height must be a positive number'),
-  body('depth')
-    .optional()
-    .isNumeric()
-    .isFloat({ min: 0 })
-    .withMessage('Depth must be a positive number'),
+  body('width').optional().isNumeric().isFloat({ min: 0 }).withMessage('Width must be a positive number'),
+  body('height').optional().isNumeric().isFloat({ min: 0 }).withMessage('Height must be a positive number'),
+  body('depth').optional().isNumeric().isFloat({ min: 0 }).withMessage('Depth must be a positive number'),
   handleValidationErrors
 ]
 
@@ -244,26 +156,11 @@ export const validateDimensionUpdate = [
  * Texture validation rules
  */
 export const validateTextureUpdate = [
-  body('front')
-    .optional()
-    .isString()
-    .withMessage('Front texture must be a string'),
-  body('back')
-    .optional()
-    .isString()
-    .withMessage('Back texture must be a string'),
-  body('side')
-    .optional()
-    .isString()
-    .withMessage('Side texture must be a string'),
-  body('top')
-    .optional()
-    .isString()
-    .withMessage('Top texture must be a string'),
-  body('bottom')
-    .optional()
-    .isString()
-    .withMessage('Bottom texture must be a string'),
+  body('front').optional().isString().withMessage('Front texture must be a string'),
+  body('back').optional().isString().withMessage('Back texture must be a string'),
+  body('side').optional().isString().withMessage('Side texture must be a string'),
+  body('top').optional().isString().withMessage('Top texture must be a string'),
+  body('bottom').optional().isString().withMessage('Bottom texture must be a string'),
   handleValidationErrors
 ]
 
@@ -271,15 +168,9 @@ export const validateTextureUpdate = [
  * Position validation rules
  */
 export const validatePositionUpdate = [
-  body('x')
-    .isNumeric()
-    .withMessage('Position x must be a number'),
-  body('y')
-    .isNumeric()
-    .withMessage('Position y must be a number'),
-  body('h')
-    .isNumeric()
-    .withMessage('Position h must be a number'),
+  body('x').isNumeric().withMessage('Position x must be a number'),
+  body('y').isNumeric().withMessage('Position y must be a number'),
+  body('h').isNumeric().withMessage('Position h must be a number'),
   handleValidationErrors
 ]
 
@@ -287,22 +178,10 @@ export const validatePositionUpdate = [
  * Pagination validation rules
  */
 export const validatePagination = [
-  query('page')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Page must be a positive integer'),
-  query('limit')
-    .optional()
-    .isInt({ min: 1, max: 100 })
-    .withMessage('Limit must be an integer between 1 and 100'),
-  query('sortBy')
-    .optional()
-    .isString()
-    .withMessage('SortBy must be a string'),
-  query('sortOrder')
-    .optional()
-    .isIn(['asc', 'desc'])
-    .withMessage('SortOrder must be either "asc" or "desc"'),
+  query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),
+  query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('Limit must be an integer between 1 and 100'),
+  query('sortBy').optional().isString().withMessage('SortBy must be a string'),
+  query('sortOrder').optional().isIn(['asc', 'desc']).withMessage('SortOrder must be either "asc" or "desc"'),
   handleValidationErrors
 ]
 
@@ -310,18 +189,14 @@ export const validatePagination = [
  * Enhanced attribute validation rules using express-validator
  */
 export const validateAttributeInputEnhanced = [
-  body('value')
-    .isString()
-    .isLength({ min: 1 })
-    .withMessage('Value must be a non-empty string'),
-  body('attributeDictionaryId')
-    .custom((value: string) => {
-      if (!ObjectId.isValid(value)) {
-        throw new Error('AttributeDictionaryId must be a valid ObjectId')
-      }
+  body('value').isString().isLength({ min: 1 }).withMessage('Value must be a non-empty string'),
+  body('attributeDictionaryId').custom((value: string) => {
+    if (!ObjectId.isValid(value)) {
+      throw new Error('AttributeDictionaryId must be a valid ObjectId')
+    }
 
-      return true
-    }),
+    return true
+  }),
   body('connectionId')
     .optional()
     .custom((value: string) => {
@@ -350,14 +225,13 @@ export const validateAttributeInputEnhanced = [
       return true
     }),
   // Custom validation to ensure at least one reference ID is provided
-  body()
-    .custom((value: AttributeBody) => {
-      if (!value.connectionId && !value.deviceId && !value.modelId) {
-        throw new Error('At least one of connectionId, deviceId, or modelId must be provided')
-      }
+  body().custom((value: AttributeBody) => {
+    if (!value.connectionId && !value.deviceId && !value.modelId) {
+      throw new Error('At least one of connectionId, deviceId, or modelId must be provided')
+    }
 
-      return true
-    }),
+    return true
+  }),
   handleValidationErrors
 ]
 

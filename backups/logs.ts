@@ -59,7 +59,7 @@ export const getAllLogs: RequestHandler = async (req, res) => {
       module: 'logs',
       procedure: 'getAllLogs',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     if (client) {
@@ -97,7 +97,7 @@ export const getLogsByObjectId: RequestHandler = async (req, res) => {
       module: 'logs',
       procedure: 'getLogsByObjectId',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     if (client) {
@@ -140,7 +140,7 @@ export const getLogsByComponent: RequestHandler = async (req, res) => {
       module: 'logs',
       procedure: 'getLogsByComponent',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     if (client) {
@@ -161,7 +161,7 @@ export const getLogsByModelId: RequestHandler = async (req, res) => {
       logger.warn(`${proc} Invalid ObjectId: ${id}`)
       res.status(400).json({
         error: 'Invalid ID format',
-        message: 'The provided ID is not a valid ObjectId'
+        message: 'The provided ID is not a valid ObjectId',
       })
 
       return
@@ -187,7 +187,7 @@ export const getLogsByModelId: RequestHandler = async (req, res) => {
       module: 'logs',
       procedure: 'getLogsByModelId',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     if (client) {
@@ -222,7 +222,7 @@ export const createLog: RequestHandler = async (req, res) => {
       logger.warn(`${proc} Missing required fields: ${missingFields.join(', ')}`)
       res.status(400).json({
         error: 'Invalid input data',
-        message: `Missing required fields: ${missingFields.join(', ')}`
+        message: `Missing required fields: ${missingFields.join(', ')}`,
       })
 
       return
@@ -233,7 +233,7 @@ export const createLog: RequestHandler = async (req, res) => {
       logger.warn(`${proc} Invalid component: ${sanitizedComponent}`)
       res.status(400).json({
         error: 'Invalid input data',
-        message: `Invalid component: ${sanitizedComponent}. Valid components are: [${VALID_COMPONENTS.join(', ')}]`
+        message: `Invalid component: ${sanitizedComponent}. Valid components are: [${VALID_COMPONENTS.join(', ')}]`,
       })
 
       return
@@ -244,7 +244,7 @@ export const createLog: RequestHandler = async (req, res) => {
       operation: sanitizedOperation,
       component: sanitizedComponent,
       message: sanitizedMessage,
-      date: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+      date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
     }
 
     client = await connectToCluster()
@@ -269,7 +269,7 @@ export const createLog: RequestHandler = async (req, res) => {
       module: 'logs',
       procedure: 'createLog',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     if (client) {
@@ -290,7 +290,7 @@ export const deleteLog: RequestHandler = async (req, res) => {
       logger.warn(`${proc} Invalid ObjectId: ${id}`)
       res.status(400).json({
         error: 'Invalid ID format',
-        message: 'The provided ID is not a valid ObjectId'
+        message: 'The provided ID is not a valid ObjectId',
       })
 
       return
@@ -309,7 +309,7 @@ export const deleteLog: RequestHandler = async (req, res) => {
       logger.info(`${proc} Deleted log ${id}`)
       res.status(200).json({
         message: 'Log deleted successfully',
-        deletedCount: result.deletedCount
+        deletedCount: result.deletedCount,
       })
     }
   } catch (error) {
@@ -318,7 +318,7 @@ export const deleteLog: RequestHandler = async (req, res) => {
       module: 'logs',
       procedure: 'deleteLog',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     if (client) {
@@ -339,7 +339,7 @@ export const deleteAllLogs: RequestHandler = async (req, res) => {
       logger.warn(`${proc} Attempt to delete all logs in production environment`)
       res.status(403).json({
         error: 'Forbidden in production environment',
-        message: 'This operation is not allowed in production'
+        message: 'This operation is not allowed in production',
       })
 
       return
@@ -349,7 +349,7 @@ export const deleteAllLogs: RequestHandler = async (req, res) => {
       logger.warn(`${proc} Missing confirmation for delete all logs`)
       res.status(400).json({
         error: 'Confirmation required',
-        message: 'Add ?confirm=true to proceed with deleting all logs'
+        message: 'Add ?confirm=true to proceed with deleting all logs',
       })
 
       return
@@ -367,7 +367,7 @@ export const deleteAllLogs: RequestHandler = async (req, res) => {
       logger.warn(`${proc} Deleted ${result.deletedCount} logs`)
       res.status(200).json({
         message: 'All logs deleted successfully',
-        deletedCount: result.deletedCount
+        deletedCount: result.deletedCount,
       })
     }
   } catch (error) {
@@ -376,7 +376,7 @@ export const deleteAllLogs: RequestHandler = async (req, res) => {
       module: 'logs',
       procedure: 'deleteAllLogs',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     if (client) {

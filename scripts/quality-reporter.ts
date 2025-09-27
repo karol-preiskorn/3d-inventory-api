@@ -1,0 +1,312 @@
+#!/usr/bin/env node
+
+/**
+ * Code Quality Report Generator
+ * Generates a comprehensive report of code quality metrics
+ */
+
+import { execSync } from 'child_process'
+import * as fs from 'fs'
+import * as path from 'path'
+
+interface QualityMetrics {
+  typescript: {
+    status: 'pass' | 'fail'
+    errors: number
+  }
+  eslint: {
+    status: 'pass' | 'fail'
+    errors: number
+    warnings: number
+    fixableIssues: number
+  }
+  tests: {
+    status: 'pass' | 'fail'
+    coverage: {
+      lines: number
+      functions: number
+      branches: number
+      statements: number
+    }
+    totalTests: number
+    passedTests: number
+    failedTests: number
+  }
+  formatting: {
+    status: 'pass' | 'fail'
+    unformattedFiles: number
+  }
+}
+
+class QualityReporter {
+  private metrics: QualityMetrics = {
+    typescript: { status: 'pass', errors: 0 },
+    eslint: { status: 'pass', errors: 0, warnings: 0, fixableIssues: 0 },
+    tests: {
+      status: 'pass',
+      coverage: { lines: 0, functions: 0, branches: 0, statements: 0 },
+      totalTests: 0,
+      passedTests: 0,
+      failedTests: 0,
+    },
+    formatting: { status: 'pass', unformattedFiles: 0 },
+  }
+
+  private runCommand(command: string): { stdout: string; stderr: string; success: boolean } {
+    try {
+      const stdout = execSync(command, { encoding: 'utf8', stdio: 'pipe' })
+      return { stdout, stderr: '', success: true }
+    } catch (error: unknown) {
+      const execError = error as { stdout?: string; stderr?: string; status?: number }
+      return {
+        stdout: execError.stdout || '',
+        stderr: execError.stderr || '',
+        success: false,
+      }
+    }
+  }
+
+  private checkTypeScript(): void {
+    console.log('🔍 Checking TypeScript compilation...')
+    const result = this.runCommand('npx tsc --noEmit')
+
+    if (result.success) {
+      this.metrics.typescript.status = 'pass'
+      console.log('✅ TypeScript compilation passed')
+    } else {
+      this.metrics.typescript.status = 'fail'
+      const errorCount = (result.stderr.match(/error TS/g) || []).length
+      this.metrics.typescript.errors = errorCount
+      console.log(`❌ TypeScript compilation failed with ${errorCount} errors`)
+    }
+  }
+
+  private checkESLint(): void {
+    console.log('🔍 Checking ESLint...')
+    const result = this.runCommand('npx eslint src --format json')
+
+    try {
+      const eslintResults = JSON.parse(result.stdout)
+      let totalErrors = 0
+      let totalWarnings = 0
+      let fixableIssues = 0
+
+      eslintResults.forEach((fileResult: unknown) => {
+        const file = fileResult as {
+          messages: Array<{ severity: number }>
+          fixableErrorCount: number
+          fixableWarningCount: number
+        }
+        totalErrors += file.messages.filter((m) => m.severity === 2).length
+        totalWarnings += file.messages.filter((m) => m.severity === 1).length
+        fixableIssues += file.fixableErrorCount + file.fixableWarningCount
+      })
+
+      this.metrics.eslint.errors = totalErrors
+      this.metrics.eslint.warnings = totalWarnings
+      this.metrics.eslint.fixableIssues = fixableIssues
+      this.metrics.eslint.status = totalErrors === 0 ? 'pass' : 'fail'
+
+      if (totalErrors === 0) {
+        console.log(`✅ ESLint passed (${totalWarnings} warnings, ${fixableIssues} fixable)`)
+      } else {
+        console.log(`❌ ESLint failed (${totalErrors} errors, ${totalWarnings} warnings)`)
+      }
+    } catch {
+      this.metrics.eslint.status = 'fail'
+      console.log('❌ ESLint check failed')
+    }
+  }
+
+  private checkFormatting(): void {
+    console.log('🔍 Checking code formatting...')
+    const result = this.runCommand('npx prettier --check .')
+
+    if (result.success) {
+      this.metrics.formatting.status = 'pass'
+      console.log('✅ Code formatting is consistent')
+    } else {
+      this.metrics.formatting.status = 'fail'
+      const unformattedFiles = (result.stderr.match(/\n/g) || []).length
+      this.metrics.formatting.unformattedFiles = unformattedFiles
+      console.log(`❌ ${unformattedFiles} files need formatting`)
+    }
+  }
+
+  private checkTests(): void {
+    console.log('🔍 Running tests with coverage...')
+    const result = this.runCommand('npx jest --coverage --passWithNoTests --silent --maxWorkers=1')
+
+    if (result.success) {
+      this.metrics.tests.status = 'pass'
+
+      // Try to read coverage from lcov report
+      try {
+        const coverageFile = path.join(process.cwd(), 'coverage', 'coverage-final.json')
+        if (fs.existsSync(coverageFile)) {
+          const coverageData = JSON.parse(fs.readFileSync(coverageFile, 'utf8'))
+          const totalCoverage = this.calculateTotalCoverage(coverageData)
+          this.metrics.tests.coverage = totalCoverage
+        }
+      } catch (error) {
+        console.log('⚠️ Could not read coverage data')
+      }
+
+      // Parse test results from stdout
+      const testMatch = result.stdout.match(/Tests:\s*(\d+)\s*passed.*?(\d+)\s*total/)
+      if (testMatch) {
+        this.metrics.tests.passedTests = parseInt(testMatch[1])
+        this.metrics.tests.totalTests = parseInt(testMatch[2])
+      }
+
+      console.log('✅ Tests passed')
+    } else {
+      this.metrics.tests.status = 'fail'
+      console.log('❌ Tests failed')
+    }
+  }
+
+  private calculateTotalCoverage(coverageData: Record<string, unknown>): QualityMetrics['tests']['coverage'] {
+    let totalLines = 0,
+      coveredLines = 0
+    let totalFunctions = 0,
+      coveredFunctions = 0
+    let totalBranches = 0,
+      coveredBranches = 0
+    let totalStatements = 0,
+      coveredStatements = 0
+
+    Object.values(coverageData).forEach((fileData: unknown) => {
+      const file = fileData as {
+        s: Record<string, number>
+        f: Record<string, number>
+        b: Record<string, number[]>
+        statementMap: Record<string, unknown>
+        fnMap: Record<string, unknown>
+        branchMap: Record<string, unknown>
+      }
+
+      // Statements
+      totalStatements += Object.keys(file.statementMap).length
+      coveredStatements += Object.values(file.s).filter((count) => count > 0).length
+
+      // Functions
+      totalFunctions += Object.keys(file.fnMap).length
+      coveredFunctions += Object.values(file.f).filter((count) => count > 0).length
+
+      // Branches
+      Object.values(file.branchMap).forEach(() => {
+        totalBranches += 2 // Each branch typically has 2 paths
+      })
+      Object.values(file.b).forEach((branchCounts) => {
+        coveredBranches += branchCounts.filter((count) => count > 0).length
+      })
+
+      // Lines are approximated from statements
+      totalLines += Object.keys(file.statementMap).length
+      coveredLines += Object.values(file.s).filter((count) => count > 0).length
+    })
+
+    return {
+      lines: totalLines > 0 ? Math.round((coveredLines / totalLines) * 100) : 0,
+      functions: totalFunctions > 0 ? Math.round((coveredFunctions / totalFunctions) * 100) : 0,
+      branches: totalBranches > 0 ? Math.round((coveredBranches / totalBranches) * 100) : 0,
+      statements: totalStatements > 0 ? Math.round((coveredStatements / totalStatements) * 100) : 0,
+    }
+  }
+
+  private generateReport(): void {
+    console.log('\n📊 CODE QUALITY REPORT')
+    console.log('======================')
+
+    // Overall score
+    const scores = [
+      this.metrics.typescript.status === 'pass' ? 1 : 0,
+      this.metrics.eslint.status === 'pass' ? 1 : 0,
+      this.metrics.tests.status === 'pass' ? 1 : 0,
+      this.metrics.formatting.status === 'pass' ? 1 : 0,
+    ]
+    const overallScore = Math.round((scores.reduce((a, b) => a + b) / scores.length) * 100)
+
+    console.log(`\n🎯 Overall Score: ${overallScore}%`)
+
+    // TypeScript
+    console.log(`\n📝 TypeScript: ${this.metrics.typescript.status === 'pass' ? '✅' : '❌'}`)
+    if (this.metrics.typescript.errors > 0) {
+      console.log(`   └─ ${this.metrics.typescript.errors} compilation errors`)
+    }
+
+    // ESLint
+    console.log(`\n🔧 ESLint: ${this.metrics.eslint.status === 'pass' ? '✅' : '❌'}`)
+    console.log(`   ├─ Errors: ${this.metrics.eslint.errors}`)
+    console.log(`   ├─ Warnings: ${this.metrics.eslint.warnings}`)
+    console.log(`   └─ Auto-fixable: ${this.metrics.eslint.fixableIssues}`)
+
+    // Tests & Coverage
+    console.log(`\n🧪 Tests: ${this.metrics.tests.status === 'pass' ? '✅' : '❌'}`)
+    console.log(`   ├─ Tests: ${this.metrics.tests.passedTests}/${this.metrics.tests.totalTests}`)
+    console.log(`   └─ Coverage:`)
+    console.log(`      ├─ Lines: ${this.metrics.tests.coverage.lines}%`)
+    console.log(`      ├─ Functions: ${this.metrics.tests.coverage.functions}%`)
+    console.log(`      ├─ Branches: ${this.metrics.tests.coverage.branches}%`)
+    console.log(`      └─ Statements: ${this.metrics.tests.coverage.statements}%`)
+
+    // Formatting
+    console.log(`\n🎨 Formatting: ${this.metrics.formatting.status === 'pass' ? '✅' : '❌'}`)
+    if (this.metrics.formatting.unformattedFiles > 0) {
+      console.log(`   └─ ${this.metrics.formatting.unformattedFiles} files need formatting`)
+    }
+
+    // Recommendations
+    this.generateRecommendations()
+
+    // Save report to file
+    const reportPath = path.join(process.cwd(), 'quality-report.json')
+    fs.writeFileSync(reportPath, JSON.stringify(this.metrics, null, 2))
+    console.log(`\n📄 Detailed report saved to: ${reportPath}`)
+  }
+
+  private generateRecommendations(): void {
+    console.log('\n💡 RECOMMENDATIONS')
+    console.log('==================')
+
+    if (this.metrics.typescript.errors > 0) {
+      console.log('🔧 Fix TypeScript compilation errors: npm run check:type')
+    }
+
+    if (this.metrics.eslint.fixableIssues > 0) {
+      console.log('🔧 Auto-fix ESLint issues: npm run lint')
+    }
+
+    if (this.metrics.formatting.unformattedFiles > 0) {
+      console.log('🎨 Format code: npm run format')
+    }
+
+    if (this.metrics.tests.coverage.branches < 50) {
+      console.log('🧪 Improve test coverage for branches (target: 50%+)')
+    }
+
+    if (this.metrics.tests.coverage.functions < 60) {
+      console.log('🧪 Improve test coverage for functions (target: 60%+)')
+    }
+
+    if (this.metrics.eslint.warnings > 10) {
+      console.log('⚠️ Consider addressing ESLint warnings')
+    }
+  }
+
+  async run(): Promise<void> {
+    console.log('🚀 Starting code quality analysis...\n')
+
+    this.checkTypeScript()
+    this.checkESLint()
+    this.checkFormatting()
+    this.checkTests()
+
+    this.generateReport()
+  }
+}
+
+// Run the quality reporter
+const reporter = new QualityReporter()
+reporter.run().catch(console.error)

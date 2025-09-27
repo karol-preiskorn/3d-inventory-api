@@ -59,7 +59,7 @@ export async function getAllConnections(req: Request, res: Response) {
       module: 'connections',
       procedure: 'getAllConnections',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -92,7 +92,7 @@ export async function getConnectionById(req: Request, res: Response) {
       module: 'connections',
       procedure: 'getConnectionById',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -125,7 +125,7 @@ export async function getConnectionsFrom(req: Request, res: Response) {
       module: 'connections',
       procedure: 'getConnectionsFrom',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -158,7 +158,7 @@ export async function getConnectionsTo(req: Request, res: Response) {
       module: 'connections',
       procedure: 'getConnectionsTo',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -173,7 +173,7 @@ export async function getConnectionBetweenDevices(req: Request, res: Response) {
     logger.warn(`${proc} Invalid ObjectIds: ${idFrom}, ${idTo}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'Both device IDs must be valid ObjectIds'
+      message: 'Both device IDs must be valid ObjectIds',
     })
 
     return
@@ -181,7 +181,7 @@ export async function getConnectionBetweenDevices(req: Request, res: Response) {
 
   const query = {
     deviceIdFrom: new ObjectId(idFrom),
-    deviceIdTo: new ObjectId(idTo)
+    deviceIdTo: new ObjectId(idTo),
   }
   const client = await connectToCluster()
 
@@ -205,7 +205,7 @@ export async function getConnectionBetweenDevices(req: Request, res: Response) {
       module: 'connections',
       procedure: 'getConnectionBetweenDevices',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -229,7 +229,7 @@ export async function createConnection(req: Request, res: Response) {
     logger.warn(`${proc} Invalid connection input data`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: 'name must be a string, deviceIdFrom and deviceIdTo must be valid ObjectId strings'
+      message: 'name must be a string, deviceIdFrom and deviceIdTo must be valid ObjectId strings',
     })
 
     return
@@ -238,7 +238,7 @@ export async function createConnection(req: Request, res: Response) {
   const newConnection: Connection = {
     name: sanitizedName,
     deviceIdFrom: new ObjectId(sanitizedDeviceIdFrom),
-    deviceIdTo: new ObjectId(sanitizedDeviceIdTo)
+    deviceIdTo: new ObjectId(sanitizedDeviceIdTo),
   }
   const client = await connectToCluster()
 
@@ -263,7 +263,7 @@ export async function createConnection(req: Request, res: Response) {
       module: 'connections',
       procedure: 'createConnection',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -288,7 +288,7 @@ export async function updateConnection(req: Request, res: Response) {
     logger.warn(`${proc} Invalid connection input data for update`)
     res.status(400).json({
       error: 'Invalid input data',
-      message: 'name must be a string, deviceIdFrom and deviceIdTo must be valid ObjectId strings'
+      message: 'name must be a string, deviceIdFrom and deviceIdTo must be valid ObjectId strings',
     })
 
     return
@@ -299,8 +299,8 @@ export async function updateConnection(req: Request, res: Response) {
     $set: {
       name: sanitizedName,
       deviceIdFrom: new ObjectId(sanitizedDeviceIdFrom),
-      deviceIdTo: new ObjectId(sanitizedDeviceIdTo)
-    }
+      deviceIdTo: new ObjectId(sanitizedDeviceIdTo),
+    },
   }
   const client = await connectToCluster()
 
@@ -320,7 +320,7 @@ export async function updateConnection(req: Request, res: Response) {
     res.status(200).json({
       message: 'Connection updated successfully',
       matchedCount: result.matchedCount,
-      modifiedCount: result.modifiedCount
+      modifiedCount: result.modifiedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error updating connection ${id}: ${error instanceof Error ? error.message : String(error)}`)
@@ -328,7 +328,7 @@ export async function updateConnection(req: Request, res: Response) {
       module: 'connections',
       procedure: 'updateConnection',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -356,7 +356,7 @@ export async function deleteConnection(req: Request, res: Response) {
     logger.info(`${proc} Deleted connection: ${id}`)
     res.status(200).json({
       message: 'Connection deleted successfully',
-      deletedCount: result.deletedCount
+      deletedCount: result.deletedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error deleting connection ${id}: ${error instanceof Error ? error.message : String(error)}`)
@@ -364,7 +364,7 @@ export async function deleteConnection(req: Request, res: Response) {
       module: 'connections',
       procedure: 'deleteConnection',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -385,7 +385,7 @@ export async function deleteConnectionsFrom(req: Request, res: Response) {
     logger.info(`${proc} Deleted ${result.deletedCount} connections from device: ${id}`)
     res.status(200).json({
       message: `Deleted connections from device: ${id}`,
-      deletedCount: result.deletedCount
+      deletedCount: result.deletedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error deleting connections from device ${id}: ${error instanceof Error ? error.message : String(error)}`)
@@ -393,7 +393,7 @@ export async function deleteConnectionsFrom(req: Request, res: Response) {
       module: 'connections',
       procedure: 'deleteConnectionsFrom',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -414,7 +414,7 @@ export async function deleteConnectionsTo(req: Request, res: Response) {
     logger.info(`${proc} Deleted ${result.deletedCount} connections to device: ${id}`)
     res.status(200).json({
       message: `Deleted connections to device: ${id}`,
-      deletedCount: result.deletedCount
+      deletedCount: result.deletedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error deleting connections to device ${id}: ${error instanceof Error ? error.message : String(error)}`)
@@ -422,7 +422,7 @@ export async function deleteConnectionsTo(req: Request, res: Response) {
       module: 'connections',
       procedure: 'deleteConnectionsTo',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -437,7 +437,7 @@ export async function deleteConnectionsBetweenDevices(req: Request, res: Respons
     logger.warn(`${proc} Invalid ObjectIds for deletion: ${idFrom}, ${idTo}`)
     res.status(400).json({
       error: 'Invalid ID format',
-      message: 'Both device IDs must be valid ObjectIds'
+      message: 'Both device IDs must be valid ObjectIds',
     })
 
     return
@@ -445,7 +445,7 @@ export async function deleteConnectionsBetweenDevices(req: Request, res: Respons
 
   const query = {
     deviceIdFrom: new ObjectId(idFrom),
-    deviceIdTo: new ObjectId(idTo)
+    deviceIdTo: new ObjectId(idTo),
   }
   const client = await connectToCluster()
 
@@ -457,7 +457,7 @@ export async function deleteConnectionsBetweenDevices(req: Request, res: Respons
     logger.info(`${proc} Deleted ${result.deletedCount} connections between devices: ${idFrom} -> ${idTo}`)
     res.status(200).json({
       message: `Deleted connections between devices: ${idFrom} -> ${idTo}`,
-      deletedCount: result.deletedCount
+      deletedCount: result.deletedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error deleting connections between devices ${idFrom} -> ${idTo}: ${error instanceof Error ? error.message : String(error)}`)
@@ -465,7 +465,7 @@ export async function deleteConnectionsBetweenDevices(req: Request, res: Respons
       module: 'connections',
       procedure: 'deleteConnectionsBetweenDevices',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)
@@ -479,7 +479,7 @@ export async function deleteAllConnections(req: Request, res: Response) {
     logger.warn(`${proc} Attempt to delete all connections in production environment`)
     res.status(403).json({
       error: 'Forbidden in production environment',
-      message: 'This operation is not allowed in production'
+      message: 'This operation is not allowed in production',
     })
 
     return
@@ -489,7 +489,7 @@ export async function deleteAllConnections(req: Request, res: Response) {
     logger.warn(`${proc} Missing confirmation for delete all connections`)
     res.status(400).json({
       error: 'Confirmation required',
-      message: 'Add ?confirm=true to proceed with deleting all connections'
+      message: 'Add ?confirm=true to proceed with deleting all connections',
     })
 
     return
@@ -505,7 +505,7 @@ export async function deleteAllConnections(req: Request, res: Response) {
     logger.warn(`${proc} Deleted all ${result.deletedCount} connections`)
     res.status(200).json({
       message: 'All connections deleted successfully',
-      deletedCount: result.deletedCount
+      deletedCount: result.deletedCount,
     })
   } catch (error) {
     logger.error(`${proc} Error deleting all connections: ${error instanceof Error ? error.message : String(error)}`)
@@ -513,7 +513,7 @@ export async function deleteAllConnections(req: Request, res: Response) {
       module: 'connections',
       procedure: 'deleteAllConnections',
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     })
   } finally {
     await closeConnection(client)

@@ -62,11 +62,7 @@ describe('Logs Controller', () => {
 
   describe('getAllLogs', () => {
     it('should return all logs with default limit', async () => {
-      const mockLogs = [
-        testGenerators.logSimple(),
-        testGenerators.logSimple(),
-        testGenerators.logSimple()
-      ]
+      const mockLogs = [testGenerators.logSimple(), testGenerators.logSimple(), testGenerators.logSimple()]
 
       mockCollection.toArray.mockResolvedValue(mockLogs)
 

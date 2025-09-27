@@ -31,7 +31,7 @@ export const getReadme: RequestHandler = async (_req, res) => {
       message: `File ${path}: ${error instanceof Error ? error.message : String(error)}`,
       module: 'readme',
       procedure: 'getReadme',
-      status: 'File not found or read error'
+      status: 'File not found or read error',
     })
   }
 }

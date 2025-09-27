@@ -22,7 +22,7 @@ function resolveRefs(obj, baseDir) {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(item => resolveRefs(item, baseDir))
+    return obj.map((item) => resolveRefs(item, baseDir))
   }
 
   const result = {}
@@ -116,7 +116,7 @@ async function testOpenAPIModularStructure() {
       'components/schemas/base-responses.yaml',
       'components/schemas/device.yaml',
       'components/responses/common.yaml',
-      'components/parameters/common.yaml'
+      'components/parameters/common.yaml',
     ]
 
     let missingFiles = 0
@@ -142,7 +142,7 @@ async function testOpenAPIModularStructure() {
         console.log('✅ OpenAPI specification validation passed')
       } else {
         console.log('❌ OpenAPI specification validation errors:')
-        errors.forEach(error => console.log(`   - ${error}`))
+        errors.forEach((error) => console.log(`   - ${error}`))
       }
     } catch (error) {
       console.log(`❌ Reference resolution failed: ${error.message}`)
@@ -162,7 +162,6 @@ async function testOpenAPIModularStructure() {
       console.log('\n⚠️  OpenAPI modular structure test completed with warnings')
       return false
     }
-
   } catch (error) {
     console.error('❌ OpenAPI test failed:', error.message)
     return false
@@ -171,10 +170,10 @@ async function testOpenAPIModularStructure() {
 
 // Run the test
 testOpenAPIModularStructure()
-  .then(success => {
+  .then((success) => {
     process.exit(success ? 0 : 1)
   })
-  .catch(error => {
+  .catch((error) => {
     console.error('Test execution failed:', error)
     process.exit(1)
   })

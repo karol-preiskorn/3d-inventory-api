@@ -20,7 +20,7 @@ const CONFIG = {
   sourceDir: path.join(__dirname, '..', 'docs', 'openapi'),
   outputDir: path.join(__dirname, '..', 'dist'),
   outputFile: 'openapi-spec.yaml',
-  mainFile: 'api.yaml'
+  mainFile: 'api.yaml',
 }
 
 /**
@@ -35,7 +35,7 @@ function resolveRefs(obj, basePath = CONFIG.sourceDir) {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(item => resolveRefs(item, basePath))
+    return obj.map((item) => resolveRefs(item, basePath))
   }
 
   const result = {}
@@ -109,7 +109,7 @@ function flattenRefs(obj) {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(item => flattenRefs(item))
+    return obj.map((item) => flattenRefs(item))
   }
 
   const result = {}
@@ -168,7 +168,7 @@ function buildSpec() {
     indent: 2,
     lineWidth: 120,
     noRefs: true,
-    skipInvalid: true
+    skipInvalid: true,
   })
 
   fs.writeFileSync(outputPath, yamlOutput)
@@ -182,8 +182,8 @@ function buildSpec() {
       schemas: countFiles(path.join(CONFIG.sourceDir, 'components', 'schemas')),
       responses: countFiles(path.join(CONFIG.sourceDir, 'components', 'responses')),
       parameters: countFiles(path.join(CONFIG.sourceDir, 'components', 'parameters')),
-      paths: countFiles(path.join(CONFIG.sourceDir, 'paths'))
-    }
+      paths: countFiles(path.join(CONFIG.sourceDir, 'paths')),
+    },
   }
 
   console.log('\n📊 Build Statistics:')
@@ -211,7 +211,7 @@ function buildSpec() {
  */
 function countFiles(dir) {
   if (!fs.existsSync(dir)) return 0
-  return fs.readdirSync(dir).filter(file => file.endsWith('.yaml') || file.endsWith('.yml')).length
+  return fs.readdirSync(dir).filter((file) => file.endsWith('.yaml') || file.endsWith('.yml')).length
 }
 
 /**
@@ -233,7 +233,7 @@ function validateSpec() {
       { name: 'OpenAPI version', condition: spec.openapi === '3.0.3' },
       { name: 'Info object', condition: spec.info && spec.info.title && spec.info.version },
       { name: 'Paths object', condition: spec.paths && Object.keys(spec.paths).length > 0 },
-      { name: 'Components object', condition: spec.components && Object.keys(spec.components).length > 0 }
+      { name: 'Components object', condition: spec.components && Object.keys(spec.components).length > 0 },
     ]
 
     console.log('\n🔍 Validating built specification...')
@@ -255,7 +255,6 @@ function validateSpec() {
       console.log('\n❌ Specification validation failed!')
       return false
     }
-
   } catch (error) {
     console.error(`❌ Specification validation failed: ${error.message}`)
     return false

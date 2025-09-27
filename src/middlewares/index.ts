@@ -3,10 +3,24 @@ export { optionalAuth, Permission, requireAdmin, requireAuth, requirePermission,
 
 // Validation middlewares
 export {
-  handleValidationErrors, validateAttributeInput, validateAttributeInputEnhanced, validateConnectionInput, validateDeviceInput,
-  validateDeviceUpdate, validateDimensionUpdate, validateModelInput,
-  validateModelUpdate, validateObjectId, validateObjectIdFields, validateObjectIdParam, validatePagination, validatePositionUpdate, validateRequiredFields,
-  validateStringFields, validateStringParam, validateTextureUpdate
+  handleValidationErrors,
+  validateAttributeInput,
+  validateAttributeInputEnhanced,
+  validateConnectionInput,
+  validateDeviceInput,
+  validateDeviceUpdate,
+  validateDimensionUpdate,
+  validateModelInput,
+  validateModelUpdate,
+  validateObjectId,
+  validateObjectIdFields,
+  validateObjectIdParam,
+  validatePagination,
+  validatePositionUpdate,
+  validateRequiredFields,
+  validateStringFields,
+  validateStringParam,
+  validateTextureUpdate
 } from './validation'
 
 // Logging middlewares
