@@ -78,6 +78,8 @@ const allowedOrigins = [
   'https://localhost:4200',
   'http://localhost:8080',
   'https://localhost:8080',
+  'http://127.0.0.1:4200',
+  'https://127.0.0.1:4200',
   'http://127.0.0.1:8080',
   'https://127.0.0.1:8080',
   'http://0.0.0.0:8080',
@@ -93,11 +95,13 @@ const allowedOrigins = [
   // Ultima Solution domains
   'https://3d-inventory-api.ultimasolution.pl',
   'https://3d-inventory-ui.ultimasolution.pl',
+  'http://3d-inventory-ui.ultimasolution.pl',
   // MongoDB Atlas
   'https://cluster0.htgjako.mongodb.net'
   // Add more allowed origins as needed
 ]
 const LOCALHOST_ORIGIN_REGEX = /^https?:\/\/localhost:\d+$/
+const ULTIMASOLUTION_REGEX = /^https?:\/\/.*\.ultimasolution\.pl$/
 const corsOptions: CorsOptions = {
   origin: (origin: string | undefined, callback) => {
     // Allow requests with no origin (mobile apps, Postman, etc.)
@@ -107,7 +111,9 @@ const corsOptions: CorsOptions = {
       return callback(null, true)
     }
 
-    const isAllowed = allowedOrigins.includes(origin) || LOCALHOST_ORIGIN_REGEX.test(origin)
+    const isAllowed = allowedOrigins.includes(origin) ||
+                     LOCALHOST_ORIGIN_REGEX.test(origin) ||
+                     ULTIMASOLUTION_REGEX.test(origin)
 
     if (isAllowed) {
       logger.info(`[CORS DEBUG] Origin allowed: ${origin}`)
@@ -130,18 +136,65 @@ const corsOptions: CorsOptions = {
   methods: ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
   allowedHeaders: ['Accept', 'Authorization', 'Cache-Control', 'Content-Type', 'Origin', 'X-API-Key', 'X-Requested-With', 'Bearer']
 }
-// Middleware for rate limiting
+
+// Debug middleware to log all requests and origins
+app.use((req: Request, res: Response, next: NextFunction) => {
+  logger.info(`[DEBUG] ${req.method} ${req.url} - Origin: ${req.headers.origin || 'no-origin'} - User-Agent: ${req.headers['user-agent'] || 'no-user-agent'}`)
+  next()
+})
+
+// Apply CORS first, before rate limiting
+app.use(cors(corsOptions))
+
+// Middleware for rate limiting with CORS headers
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS ?? '900000', 10), // 15 minutes default
-  max: parseInt(process.env.RATE_LIMIT_MAX ?? '100', 10), // Limit each IP to 100 requests per windowMs default
+  max: parseInt(process.env.RATE_LIMIT_MAX ?? '1000', 10), // Increased limit to 1000 requests per window
   keyGenerator: (req) => ipKeyGenerator(req.ip ?? ''), // Use the official helper for IPv4/IPv6 safety
-  message: { message: process.env.RATE_LIMIT_MESSAGE }
+  message: { message: process.env.RATE_LIMIT_MESSAGE },
+  // Skip rate limiting for certain origins during development
+  skip: (req) => {
+    const origin = req.headers.origin
+
+    return origin === 'http://localhost:4200' || origin === 'https://localhost:4200'
+  },
+  // Ensure CORS headers are included in rate limit responses
+  handler: (req: Request, res: Response) => {
+    const origin = req.headers.origin
+
+    if (origin && (allowedOrigins.includes(origin) || LOCALHOST_ORIGIN_REGEX.test(origin) || ULTIMASOLUTION_REGEX.test(origin))) {
+      res.header('Access-Control-Allow-Origin', origin)
+      res.header('Access-Control-Allow-Credentials', 'true')
+      res.header('Access-Control-Allow-Methods', 'DELETE, GET, OPTIONS, PATCH, POST, PUT')
+      res.header('Access-Control-Allow-Headers', 'Accept, Authorization, Cache-Control, Content-Type, Origin, X-API-Key, X-Requested-With, Bearer')
+    }
+    res.status(429).json({ message: 'Too many requests, please try again later.' })
+  }
 })
 
 // Apply the rate limiter to all requests
 app.use(limiter)
 
-app.use(cors(corsOptions))
+// Fallback CORS headers in case the cors middleware doesn't work
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const origin = req.headers.origin
+
+  if (origin && (allowedOrigins.includes(origin) || LOCALHOST_ORIGIN_REGEX.test(origin) || ULTIMASOLUTION_REGEX.test(origin))) {
+    res.header('Access-Control-Allow-Origin', origin)
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header('Access-Control-Allow-Methods', 'DELETE, GET, OPTIONS, PATCH, POST, PUT')
+    res.header('Access-Control-Allow-Headers', 'Accept, Authorization, Cache-Control, Content-Type, Origin, X-API-Key, X-Requested-With, Bearer')
+  }
+
+  // Handle preflight OPTIONS requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+
+    return
+  }
+
+  next()
+})
 
 export let db: Awaited<ReturnType<typeof getDb>> | null = null
 ;(async () => {
