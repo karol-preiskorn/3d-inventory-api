@@ -1,57 +1,51 @@
 openapi: 3.0.3
 info:
   title: API for project 3d-inventory
-  description: >-
-    REST API for **3d-inventory**. Project is a simple solution that allows you to build a spatial and database
-    representation of all types of warehouses and server rooms.
+  description: REST API for **3d-inventory**. Project is a simple solution that allows you to build a spatial and database representation of all types of warehouses and server rooms.
   contact:
     name: 3d-inventory-mongo-api
     url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/
   version: 1.0.2
 servers:
-  - url: https://127.0.0.1:8080
-  - url: http://0.0.0.0:8080
-  - url: https://0.0.0.0:8080
-  - url: http://localhost:8080
-  - url: https://localhost:8080
-  - url: http://127.0.0.1:8080
-  - url: http://172.17.0.2:8080
-  - url: http://172.17.0.3:8080
-  - url: http://172.20.0.3:8080
-  - url: https://d-inventory-api-wzwe3odv7q-ew.a.run.app
-  - url: https://d-inventory-api-82629838360.europe-west1.run.app
-  - url: https://3d-inventory-api.ultimasolution.pl
-  - url: https://3d-inventory.ultimasolution.pl
+- url: https://127.0.0.1:8080
+- url: http://0.0.0.0:8080
+- url: https://0.0.0.0:8080
+- url: http://localhost:8080
+- url: https://localhost:8080
+- url: http://127.0.0.1:8080
+- url: http://172.17.0.2:8080
+- url: http://172.17.0.3:8080
+- url: http://172.20.0.3:8080
+- url: https://d-inventory-api-wzwe3odv7q-ew.a.run.app
+- url: https://d-inventory-api-82629838360.europe-west1.run.app
+- url: https://3d-inventory-api.ultimasolution.pl
+- url: https://3d-inventory.ultimasolution.pl
 tags:
-  - name: authentication
-    description: Login to obtain JWT token and access protected routes
-  - name: logs
-    description: Operation on Logs
-  - name: devices
-    description: >-
-      Basic object _3d-inventory_ device and operation on devices API. Represent by position blok x, y, z with
-      devices parameters.
-  - name: models
-    description: >-
-      Models of devices API. Represent by blok dimension x, y, h with block images on every side and model types
-      and parameters.
-  - name: connections
-    description: Connections between devices API
-  - name: attributes
-    description: Device's Attributes API
-  - name: attributesDictionary
-    description: Attributes Dictionary API
-  - name: floors
-    description: Floors manipulation API
-  - name: github
-    description: GitHub API
-  - name: users
-    description: User management API
+- name: authentication
+  description: Login to obtain JWT token and access protected routes
+- name: logs
+  description: Operation on Logs
+- name: devices
+  description: Basic object _3d-inventory_ device and operation on devices API. Represent by position blok x, y, z with devices parameters.
+- name: models
+  description: Models of devices API. Represent by blok dimension x, y, h with block images on every side and model types and parameters.
+- name: connections
+  description: Connections between devices API
+- name: attributes
+  description: Device's Attributes API
+- name: attributesDictionary
+  description: Attributes Dictionary API
+- name: floors
+  description: Floors manipulation API
+- name: github
+  description: GitHub API
+- name: users
+  description: User management API
 paths:
   /login:
     post:
       tags:
-        - authentication
+      - authentication
       summary: User login to obtain JWT token
       requestBody:
         content:
@@ -62,7 +56,7 @@ paths:
                 username:
                   type: string
               required:
-                - username
+              - username
       responses:
         '200':
           description: JWT token issued
@@ -94,10 +88,10 @@ paths:
   /protected:
     get:
       tags:
-        - authentication
+      - authentication
       summary: Protected route, requires Bearer token
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '200':
           description: Success, returns protected data
@@ -119,581 +113,15 @@ paths:
                 properties:
                   message:
                     type: string
-  /github/issues:
-    get:
-      tags:
-        - github
-      summary: Get all issues for GitHub (Admin Only)
-      security:
-        - AdminAuth: []
-      description: List all issues. Requires admin privileges for security reasons.
-      operationId: githubIssuesGet
-      responses:
-        '200':
-          description: List of issues
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (admin role required)
-        '404':
-          description: Issues not found
-        '406':
-          description: Not Acceptable
-        '429':
-          description: Too Many Requests - Rate limit exceeded
-        '500':
-          description: Unexpected server error
-        default:
-          description: Unexpected error
-      x-swagger-router-controller: github
-  /attributes:
-    get:
-      tags:
-        - attributes
-      summary: Get all attributes
-      description: >-
-        Retrieve a list of all attributes. You can apply optional query parameters such as `key` to filter
-        attributes by their key or `type` to filter by their type.
-      operationId: getAllAttributes
-      security:
-        - ViewerAuth: []
-      responses:
-        '200':
-          description: A list of attributes
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Attributes'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (viewer role or higher required)
-        '404':
-          description: Not found.
-        '406':
-          description: Not Acceptable
-        '429':
-          description: Too Many Requests
-        '500':
-          description: Unexpected server error
-        default:
-          description: Unexpected error
-      x-swagger-router-controller: Attributes
-    put:
-      tags:
-        - attributes
-      summary: Update an existing attribute
-      description: Update the details of an existing attribute.
-      operationId: updateAttribute
-      security:
-        - UserAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: ID of the attribute to update
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Attribute'
-        required: true
-      responses:
-        '200':
-          description: Attribute updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Attribute'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (user role or higher required)
-        '404':
-          description: Attribute update data is inconsistent.
-        '406':
-          description: Not Acceptable
-        '429':
-          description: Too Many Requests
-        '500':
-          description: Unexpected server error
-        default:
-          description: Unexpected error
-      x-swagger-router-controller: Attributes
-    post:
-      tags:
-        - attributes
-      summary: Create a new attribute
-      description: Create a new attribute. Provide attribute details in the request body.
-      operationId: createAttribute
-      security:
-        - UserAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Attribute'
-      responses:
-        '200':
-          description: Attribute created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Attribute'
-        '400':
-          description: Bad request.
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (user role or higher required)
-        '500':
-          description: Unexpected server error
-      x-swagger-router-controller: Attributes
-    delete:
-      tags:
-        - attributes
-      summary: Delete all attributes
-      description: Remove all attributes from the inventory.
-      operationId: deleteAllAttributes
-      security:
-        - AdminAuth: []
-      responses:
-        '200':
-          description: All attributes deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Confirmation'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (admin role required)
-        '404':
-          description: No attributes found to delete
-      x-swagger-router-controller: Attributes
-  /attributes/{id}:
-    get:
-      tags:
-        - attributes
-      summary: Get attribute by ID
-      description: Retrieve a single attribute by its ID.
-      operationId: getAttributeById
-      parameters:
-        - name: id
-          in: path
-          description: ID of attribute to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: Attribute found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Attribute'
-        '404':
-          description: Attribute not found
-        '406':
-          description: Not Acceptable
-        '429':
-          description: Too Many Requests
-        default:
-          description: Unexpected error
-      x-swagger-router-controller: Attributes
-    put:
-      tags:
-        - attributes
-      summary: Update attribute by ID
-      description: Update a specific attribute by its ID.
-      operationId: updateAttributeById
-      parameters:
-        - name: id
-          in: path
-          description: ID of attribute to update
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Attribute'
-      responses:
-        '200':
-          description: Attribute updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Attribute'
-        '404':
-          description: Attribute not found
-        '406':
-          description: Not Acceptable
-        '429':
-          description: Too Many Requests
-        default:
-          description: Unexpected error
-      x-swagger-router-controller: Attributes
-    delete:
-      tags:
-        - attributes
-      summary: Delete attribute by ID
-      description: Delete a specific attribute by its ID.
-      operationId: deleteAttributeById
-      parameters:
-        - name: id
-          in: path
-          description: ID of attribute to delete
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: Attribute deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Confirmation'
-        '404':
-          description: Attribute not found
-      x-swagger-router-controller: Attributes
-  /devices:
-    get:
-      tags:
-        - devices
-      summary: Get all devices
-      description: Retrieve a list of all devices.
-      operationId: getAllDevices
-      security:
-        - ViewerAuth: []
-      responses:
-        '200':
-          description: A list of devices
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (viewer role or higher required)
-        '404':
-          description: No devices found.
-        '406':
-          description: Not Acceptable
-        '429':
-          description: Too Many Requests
-        '500':
-          description: Unexpected server error
-        default:
-          description: Unexpected error
-      x-swagger-router-controller: Devices
-    put:
-      tags:
-        - devices
-      summary: Update an existing device
-      description: Update the details of an existing device.
-      operationId: updateDevice
-      security:
-        - UserAuth: []
-      responses:
-        '200':
-          description: Device updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Device'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (user role or higher required)
-        '404':
-          description: Device update data is inconsistent.
-        '406':
-          description: Not Acceptable
-        '429':
-          description: Too Many Requests
-        '500':
-          description: Unexpected server error
-        default:
-          description: Unexpected error
-      x-swagger-router-controller: Devices
-    delete:
-      tags:
-        - devices
-      summary: Delete all devices
-      description: Remove all devices from the inventory.
-      operationId: deleteAllDevices
-      security:
-        - AdminAuth: []
-      responses:
-        '200':
-          description: All devices deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Confirmation'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (admin role required)
-        '404':
-          description: No devices found to delete
-      x-swagger-router-controller: Devices
-  /devices/{id}:
-    get:
-      tags:
-        - devices
-      summary: Get devices
-      description: Get one device.
-      operationId: deviceGetOne
-      security:
-        - ViewerAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: ID of d
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            pattern: ^[0-9A-Fa-f]{24}$
-            example: 6566ed4ace63d42b25fbba19
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: List of devices
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Device'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (viewer role or higher required)
-        '404':
-          description: Devices not found
-        '406':
-          description: Not Acceptable
-        '429':
-          description: Too Many Requests
-        default:
-          description: Unexpected error
-      x-swagger-router-controller: Devices
-    put:
-      tags:
-        - devices
-      summary: Update device
-      description: Modify selected device
-      operationId: devicePutOne
-      security:
-        - UserAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: ID of device to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: Success update device
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Device'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (user role or higher required)
-        '404':
-          description: Devices not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '406':
-          description: Not Acceptable
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '429':
-          description: Too Many Requests
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      x-swagger-router-controller: Devices
-    delete:
-      tags:
-        - devices
-      summary: Delete selected devices
-      description: Delete one device.
-      operationId: deviceDeleteOne
-      security:
-        - AdminAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: ID of device to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Confirmation'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (admin role required)
-        '404':
-          description: Not found device to delete
-      x-swagger-router-controller: Devices
-  /devices/model/{id}:
-    get:
-      tags:
-        - devices
-      summary: Get all devices with model :id
-      description: Get devices with specific model.
-      operationId: deviceGetModel
-      security:
-        - ViewerAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: ID of device to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: List of devices with model
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Devices'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (viewer role or higher required)
-        '404':
-          description: Devices not found with this model :id
-        '406':
-          description: Not Acceptable
-        '429':
-          description: Too Many Requests
-        default:
-          description: Unexpected error
-      x-swagger-router-controller: Devices
-    delete:
-      tags:
-        - devices
-      summary: Delete selected devices by model :id
-      description: Delete devices associated with the specified model ID
-      operationId: deviceDeleteModel
-      security:
-        - AdminAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: ID of device to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Confirmation'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (admin role required)
-        '404':
-          description: Not found device to delete
-      x-swagger-router-controller: Devices
   /logs:
     get:
       tags:
-        - logs
+      - logs
       summary: Get logs from database
       description: Get all logs.
       operationId: logsGET
       security:
-        - ViewerAuth: []
+      - ViewerAuth: []
       responses:
         '200':
           description: OK
@@ -712,12 +140,12 @@ paths:
       x-swagger-router-controller: Logs
     put:
       tags:
-        - logs
+      - logs
       summary: Update all set log
       description: Update entire collection logs.
       operationId: logPUT
       security:
-        - AdminAuth: []
+      - AdminAuth: []
       requestBody:
         required: true
         content:
@@ -767,12 +195,12 @@ paths:
       x-swagger-router-controller: Logs
     post:
       tags:
-        - logs
+      - logs
       summary: Insert new log
       description: Create log.
       operationId: logPOST
       security:
-        - UserAuth: []
+      - UserAuth: []
       requestBody:
         required: true
         content:
@@ -799,12 +227,12 @@ paths:
       x-swagger-router-controller: Logs
     delete:
       tags:
-        - logs
+      - logs
       summary: Delete log
       description: Delete all logs or a specific log by ID.
       operationId: logAllDelete
       security:
-        - AdminAuth: []
+      - AdminAuth: []
       responses:
         '200':
           description: Success log deleted
@@ -815,56 +243,125 @@ paths:
         '404':
           description: Error log not found
       x-swagger-router-controller: Logs
-  /logs/{id}:
+  /logs/attributes/{id}:
     get:
       tags:
-        - logs
-      summary: Get single log id
-      description: Get specific id log.
-      operationId: logGetId
+      - logs
+      summary: Get one attributes logs
+      description: Get specific attribute logs.
+      operationId: logAttributesGet
       parameters:
-        - name: id
-          in: path
-          description: ID of log to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of attribute to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: OK. Indicates that the request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logs'
+        '400':
+          description: Bad request
+      x-swagger-router-controller: Logs
+  /logs/attributesDictionary/{id}:
+    get:
+      tags:
+      - logs
+      summary: Get attributesDictionary logs
+      description: Get specific attributesDictionary logs.
+      operationId: logattributesDictionaryGet
+      parameters:
+      - name: id
+        in: path
+        description: ID of attributesDictionary to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logs'
+        '404':
+          description: Error logs not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+      x-swagger-router-controller: Logs
+    delete:
+      tags:
+      - logs
+      summary: Delete attributesDictionary logs
+      description: Delete specific attributesDictionary logs.
+      operationId: logattributesDictionaryDelete
+      parameters:
+      - name: id
+        in: path
+        description: ID of logs to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK
         '404':
           description: Error log not found
-        '500':
-          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+        '406':
+          description: Not Acceptable
       x-swagger-router-controller: Logs
   /logs/component/{component}:
     get:
       tags:
-        - logs
+      - logs
       summary: Get logs for components
       description: Get all log for requested component.
       operationId: logGetComponent
       parameters:
-        - name: component
-          in: path
-          description: Name of component to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: devices
-            pattern: ^[a-z]{3,20}$
-            minLength: 3
-            maxLength: 20
-            x-42c-format: string
+      - name: component
+        in: path
+        description: Name of component to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: devices
+          pattern: ^[a-z]{3,20}$
+          minLength: 3
+          maxLength: 20
+          x-42c-format: string
       responses:
         '200':
           description: OK
@@ -883,87 +380,24 @@ paths:
       x-swagger-router-controller: Logs
     delete:
       tags:
-        - logs
+      - logs
       summary: Delete all logs for selected component.
       description: Delete specific logs for the component.
       operationId: logDeleteComponent
       parameters:
-        - name: component
-          in: path
-          description: Name of component to delete logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: devices
-            pattern: ^[a-z]{3,20}$
-            minLength: 3
-            maxLength: 20
-            x-42c-format: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Confirmation'
-        '400':
-          description: Bad request
-        '404':
-          description: Error log not found
-      x-swagger-router-controller: Logs
-  /logs/device/{id}:
-    get:
-      tags:
-        - logs
-      summary: Get device log
-      description: Get specific device log.
-      operationId: logDeviceGet
-      parameters:
-        - name: id
-          in: path
-          description: ID of device to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Log'
-        '404':
-          description: Error log not found
-      x-swagger-router-controller: Logs
-    delete:
-      tags:
-        - logs
-      summary: Delete devices log
-      description: Delete specific device log.
-      operationId: logDeviceDelete
-      parameters:
-        - name: id
-          in: path
-          description: ID of device to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: component
+        in: path
+        description: Name of component to delete logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: devices
+          pattern: ^[a-z]{3,20}$
+          minLength: 3
+          maxLength: 20
+          x-42c-format: string
       responses:
         '200':
           description: OK
@@ -979,24 +413,24 @@ paths:
   /logs/connection/{id}:
     get:
       tags:
-        - logs
+      - logs
       summary: Get connection logs
       description: Get specific connection logs.
       operationId: logConnectionGet
       parameters:
-        - name: id
-          in: path
-          description: ID of connection to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of connection to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK
@@ -1011,24 +445,24 @@ paths:
       x-swagger-router-controller: Logs
     delete:
       tags:
-        - logs
+      - logs
       summary: Delete devices logs
       description: Delete specific device logs.
       operationId: logConnectionDelete
       parameters:
-        - name: id
-          in: path
-          description: ID of logs to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of logs to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK
@@ -1041,58 +475,90 @@ paths:
         '404':
           description: Error log not found
       x-swagger-router-controller: Logs
-  /logs/attributes/{id}:
+  /logs/device/{id}:
     get:
       tags:
-        - logs
-      summary: Get one attributes logs
-      description: Get specific attribute logs.
-      operationId: logAttributesGet
+      - logs
+      summary: Get device log
+      description: Get specific device log.
+      operationId: logDeviceGet
       parameters:
-        - name: id
-          in: path
-          description: ID of attribute to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of device to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
-          description: OK. Indicates that the request has succeeded.
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Logs'
+                $ref: '#/components/schemas/Log'
+        '404':
+          description: Error log not found
+      x-swagger-router-controller: Logs
+    delete:
+      tags:
+      - logs
+      summary: Delete devices log
+      description: Delete specific device log.
+      operationId: logDeviceDelete
+      parameters:
+      - name: id
+        in: path
+        description: ID of device to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Confirmation'
         '400':
           description: Bad request
+        '404':
+          description: Error log not found
       x-swagger-router-controller: Logs
   /logs/model/{id}:
     get:
       tags:
-        - logs
+      - logs
       summary: Get attributes logs for model
       description: Get specific attribute logs for model
       operationId: logModelGetId
       parameters:
-        - name: id
-          in: path
-          description: Model ID of attribute to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: Model ID of attribute to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK. Indicates that the request has succeeded.
@@ -1103,31 +569,30 @@ paths:
         '404':
           description: Not found. Indicates that the request has no logs.
         '406':
-          description: >-
-            Not Acceptable. Indicates that the requested content type is not acceptable.
+          description: Not Acceptable. Indicates that the requested content type is not acceptable.
         '500':
           description: Server side error.
       x-swagger-router-controller: Logs
     delete:
       tags:
-        - logs
+      - logs
       summary: Delete attributes logs
       description: Delete specific device logs.
       operationId: logAttributesDelete
       parameters:
-        - name: id
-          in: path
-          description: ID of logs to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of logs to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK
@@ -1138,83 +603,561 @@ paths:
               schema:
                 $ref: '#/components/schemas/Log'
       x-swagger-router-controller: Logs
-  /logs/attributesDictionary/{id}:
+  /logs/{id}:
     get:
       tags:
-        - logs
-      summary: Get attributesDictionary logs
-      description: Get specific attributesDictionary logs.
-      operationId: logattributesDictionaryGet
+      - logs
+      summary: Get single log id
+      description: Get specific id log.
+      operationId: logGetId
       parameters:
-        - name: id
-          in: path
-          description: ID of attributesDictionary to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Logs'
-        '404':
-          description: Error logs not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Log'
-      x-swagger-router-controller: Logs
-    delete:
-      tags:
-        - logs
-      summary: Delete attributesDictionary logs
-      description: Delete specific attributesDictionary logs.
-      operationId: logattributesDictionaryDelete
-      parameters:
-        - name: id
-          in: path
-          description: ID of logs to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of log to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK
         '404':
           description: Error log not found
+        '500':
+          description: Server error
+      x-swagger-router-controller: Logs
+  /devices:
+    get:
+      tags:
+      - devices
+      summary: Get all devices
+      description: Retrieve a list of all devices.
+      operationId: getAllDevices
+      security:
+      - ViewerAuth: []
+      responses:
+        '200':
+          description: A list of devices
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (viewer role or higher required)
+        '404':
+          description: No devices found.
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Unexpected server error
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Devices
+    put:
+      tags:
+      - devices
+      summary: Update an existing device
+      description: Update the details of an existing device.
+      operationId: updateDevice
+      security:
+      - UserAuth: []
+      responses:
+        '200':
+          description: Device updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Log'
+                $ref: '#/components/schemas/Device'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (user role or higher required)
+        '404':
+          description: Device update data is inconsistent.
         '406':
           description: Not Acceptable
-      x-swagger-router-controller: Logs
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Unexpected server error
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Devices
+    delete:
+      tags:
+      - devices
+      summary: Delete all devices
+      description: Remove all devices from the inventory.
+      operationId: deleteAllDevices
+      security:
+      - AdminAuth: []
+      responses:
+        '200':
+          description: All devices deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Confirmation'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (admin role required)
+        '404':
+          description: No devices found to delete
+      x-swagger-router-controller: Devices
+  /devices/model/{id}:
+    get:
+      tags:
+      - devices
+      summary: Get all devices with model :id
+      description: Get devices with specific model.
+      operationId: deviceGetModel
+      security:
+      - ViewerAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: ID of device to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: List of devices with model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Devices'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (viewer role or higher required)
+        '404':
+          description: Devices not found with this model :id
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Devices
+    delete:
+      tags:
+      - devices
+      summary: Delete selected devices by model :id
+      description: Delete devices associated with the specified model ID
+      operationId: deviceDeleteModel
+      security:
+      - AdminAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: ID of device to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Confirmation'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (admin role required)
+        '404':
+          description: Not found device to delete
+      x-swagger-router-controller: Devices
+  /devices/{id}:
+    get:
+      tags:
+      - devices
+      summary: Get devices
+      description: Get one device.
+      operationId: deviceGetOne
+      security:
+      - ViewerAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: ID of d
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          pattern: ^[0-9A-Fa-f]{24}$
+          example: 6566ed4ace63d42b25fbba19
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: List of devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (viewer role or higher required)
+        '404':
+          description: Devices not found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Devices
+    put:
+      tags:
+      - devices
+      summary: Update device
+      description: Modify selected device
+      operationId: devicePutOne
+      security:
+      - UserAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: ID of device to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: Success update device
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (user role or higher required)
+        '404':
+          description: Devices not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Devices
+    delete:
+      tags:
+      - devices
+      summary: Delete selected devices
+      description: Delete one device.
+      operationId: deviceDeleteOne
+      security:
+      - AdminAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: ID of device to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Confirmation'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (admin role required)
+        '404':
+          description: Not found device to delete
+      x-swagger-router-controller: Devices
+  /models:
+    get:
+      tags:
+      - models
+      summary: Get list all devices models
+      description: Dictionary models of device.
+      operationId: modelsGet
+      security:
+      - ViewerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models'
+              example:
+                $ref: '#/components/schemas/Models/example'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (viewer role or higher required)
+        '404':
+          description: Not found
+        '500':
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
+      x-swagger-router-controller: Models
+    put:
+      tags:
+      - models
+      summary: Update model
+      description: Update single model
+      operationId: modelsPut
+      security:
+      - UserAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Model'
+      responses:
+        '200':
+          description: OK. Indicates that the request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (user role or higher required)
+        '404':
+          description: Not found
+        '500':
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
+      x-swagger-router-controller: Models
+    post:
+      tags:
+      - models
+      summary: Create model.
+      description: Create model of device.
+      operationId: modelsPost
+      security:
+      - UserAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Model'
+        required: true
+      responses:
+        '200':
+          description: OK. Indicates that the request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model'
+        '400':
+          description: Bad request.
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (user role or higher required)
+        '500':
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
+      x-swagger-router-controller: Models
+    delete:
+      tags:
+      - models
+      summary: Delete all models
+      description: Delete all models
+      operationId: modelsDelete
+      security:
+      - AdminAuth: []
+      responses:
+        '200':
+          description: OK. Indicates that the request has succeeded.
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (admin role required)
+        '404':
+          description: Not found
+        '500':
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
+      x-swagger-router-controller: Models
+  /models/{id}:
+    get:
+      tags:
+      - models
+      summary: Get selected model :id
+      description: Get one model of device.
+      operationId: modelIdGet
+      security:
+      - ViewerAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: ID of attributesDictionary to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (viewer role or higher required)
+        '404':
+          description: Not found
+        '500':
+          description: Unexpected server error.
+      x-swagger-router-controller: Models
+    put:
+      tags:
+      - models
+      summary: Update selected model :id
+      description: Modify a specific model by ID.
+      operationId: modelIdPut
+      security:
+      - UserAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Id of model
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (user role or higher required)
+        '404':
+          description: Not found model to update
+        '500':
+          description: Unexpected server error.
+      x-swagger-router-controller: Models
+    delete:
+      tags:
+      - models
+      summary: Delete selected model :id
+      description: Delete one model of device.
+      operationId: modelIdDelete
+      security:
+      - AdminAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: ID of the model to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Confirmation'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (admin role required)
+        '404':
+          description: Not found
+        '500':
+          description: Unexpected server error.
+      x-swagger-router-controller: Models
   /connections:
     get:
       tags:
-        - connections
-      summary: >-
-        Server heartbeat operation. Get information about connection between Devices.
+      - connections
+      summary: Server heartbeat operation. Get information about connection between Devices.
       description: Get all connections between devices
       operationId: connectionsGet
       security:
-        - ViewerAuth: []
+      - ViewerAuth: []
       responses:
         '200':
           description: Success get connection between devices
@@ -1229,13 +1172,12 @@ paths:
       x-swagger-router-controller: Connections
     put:
       tags:
-        - connections
+      - connections
       summary: Update new connection between two devices
-      description: >-
-        Create connection between two devices. Two id and attributes from attributes.
+      description: Create connection between two devices. Two id and attributes from attributes.
       operationId: connectionPUT
       security:
-        - UserAuth: []
+      - UserAuth: []
       requestBody:
         required: true
         content:
@@ -1262,13 +1204,12 @@ paths:
       x-swagger-router-controller: Connections
     post:
       tags:
-        - connections
+      - connections
       summary: Create new connection between two devices
-      description: >-
-        Create connection between two devices. Two id and attributes from attributes.
+      description: Create connection between two devices. Two id and attributes from attributes.
       operationId: connectionPOST
       security:
-        - UserAuth: []
+      - UserAuth: []
       requestBody:
         required: true
         content:
@@ -1295,13 +1236,12 @@ paths:
       x-swagger-router-controller: Connections
     delete:
       tags:
-        - connections
+      - connections
       summary: Delete connection
-      description: >-
-        Delete connection between two devices. Two id and attributes from attributes.
+      description: Delete connection between two devices. Two id and attributes from attributes.
       operationId: connectionDELETE
       security:
-        - AdminAuth: []
+      - AdminAuth: []
       responses:
         '200':
           description: Ok
@@ -1321,7 +1261,7 @@ paths:
   /connections/devices:
     get:
       tags:
-        - connections
+      - connections
       summary: Get information about one Connection and its devices.
       description: Get all list Connection with information about devices and their attributes
       operationId: connectionGetAndDevices
@@ -1333,27 +1273,224 @@ paths:
         '500':
           description: Error
       x-swagger-router-controller: Connections
+  /connections/from/{idFrom}/to/{idTo}:
+    get:
+      tags:
+      - connections
+      summary: Get information about Connections between Devices.
+      description: Get connection for device
+      operationId: connectionsFromToGet
+      parameters:
+      - name: idFrom
+        in: path
+        description: ID of attributesDictionary to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      - name: idTo
+        in: path
+        description: ID of attributesDictionary to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: Success get connection between devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Connections'
+      x-swagger-router-controller: Connections
+    delete:
+      tags:
+      - connections
+      summary: Delete information about Connections between Devices.
+      description: Delete connection for device
+      operationId: connectionsFromToDelete
+      parameters:
+      - name: idFrom
+        in: path
+        description: ID of attributesDictionary to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      - name: idTo
+        in: path
+        description: ID of attributesDictionary to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: Success get connection between devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Connections'
+      x-swagger-router-controller: Connections
+  /connections/from/{id}:
+    get:
+      tags:
+      - connections
+      summary: Get information about Connections between Devices.
+      description: Get connection for device
+      operationId: connectionsGetFrom
+      parameters:
+      - name: id
+        in: path
+        description: ID of attributesDictionary to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: Success get connection between devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Connections'
+      x-swagger-router-controller: Connections
+    delete:
+      tags:
+      - connections
+      summary: Delete connections logs from device id
+      description: Delete specific connections.
+      operationId: connectionDeleteFrom
+      parameters:
+      - name: id
+        in: path
+        description: ID of connection to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Connections'
+        '404':
+          description: Error log not found
+      x-swagger-router-controller: Connections
+  /connections/to/{id}:
+    get:
+      tags:
+      - connections
+      summary: Get information about Connections between Devices.
+      description: Get connection for device
+      operationId: connectionsGetTo
+      parameters:
+      - name: id
+        in: path
+        description: ID of attributesDictionary to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: Success get connection between devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Connections'
+      x-swagger-router-controller: Connections
+    delete:
+      tags:
+      - connections
+      summary: Delete connections logs to device id
+      description: Delete specific connections.
+      operationId: connectionDeleteTo
+      parameters:
+      - name: id
+        in: path
+        description: ID of connection to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Error log not found
+      x-swagger-router-controller: Connections
   /connections/{id}:
     get:
       tags:
-        - connections
+      - connections
       summary: Get information about one Connection.
       description: Connection between devices
       operationId: connectionIdGet
       parameters:
-        - name: id
-          in: path
-          description: ID of attributesDictionary to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of attributesDictionary to fetch logs
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: Success get connection between devices
@@ -1364,25 +1501,24 @@ paths:
       x-swagger-router-controller: Connections
     put:
       tags:
-        - connections
+      - connections
       summary: Update new connection between two devices
-      description: >-
-        Create connection between two devices. Two id and attributes from attributes.
+      description: Create connection between two devices. Two id and attributes from attributes.
       operationId: connectionIdPut
       parameters:
-        - name: id
-          in: path
-          description: ID of connection to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of connection to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       requestBody:
         content:
           application/json:
@@ -1405,24 +1541,24 @@ paths:
       x-swagger-router-controller: Connections
     delete:
       tags:
-        - connections
+      - connections
       summary: Delete connections
       description: Delete specific connections logs.
       operationId: connectionIdDelete
       parameters:
-        - name: id
-          in: path
-          description: ID of connection to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of connection to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK
@@ -1433,210 +1569,254 @@ paths:
         '404':
           description: Error log not found
       x-swagger-router-controller: Connections
-  /connections/from/{id}:
+  /attributes:
     get:
       tags:
-        - connections
-      summary: Get information about Connections between Devices.
-      description: Get connection for device
-      operationId: connectionsGetFrom
-      parameters:
-        - name: id
-          in: path
-          description: ID of attributesDictionary to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - attributes
+      summary: Get all attributes
+      description: Retrieve a list of all attributes. You can apply optional query parameters such as `key` to filter attributes by their key or `type` to filter by their type.
+      operationId: getAllAttributes
+      security:
+      - ViewerAuth: []
       responses:
         '200':
-          description: Success get connection between devices
+          description: A list of attributes
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Connections'
-      x-swagger-router-controller: Connections
-    delete:
-      tags:
-        - connections
-      summary: Delete connections logs from device id
-      description: Delete specific connections.
-      operationId: connectionDeleteFrom
-      parameters:
-        - name: id
-          in: path
-          description: ID of connection to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Connections'
+                $ref: '#/components/schemas/Attributes'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (viewer role or higher required)
         '404':
-          description: Error log not found
-      x-swagger-router-controller: Connections
-  /connections/to/{id}:
-    get:
+          description: Not found.
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Unexpected server error
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Attributes
+    put:
       tags:
-        - connections
-      summary: Get information about Connections between Devices.
-      description: Get connection for device
-      operationId: connectionsGetTo
+      - attributes
+      summary: Update an existing attribute
+      description: Update the details of an existing attribute.
+      operationId: updateAttribute
+      security:
+      - UserAuth: []
       parameters:
-        - name: id
-          in: path
-          description: ID of attributesDictionary to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of the attribute to update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Attribute'
+        required: true
       responses:
         '200':
-          description: Success get connection between devices
+          description: Attribute updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Connections'
-      x-swagger-router-controller: Connections
-    delete:
-      tags:
-        - connections
-      summary: Delete connections logs to device id
-      description: Delete specific connections.
-      operationId: connectionDeleteTo
-      parameters:
-        - name: id
-          in: path
-          description: ID of connection to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: OK
+                $ref: '#/components/schemas/Attribute'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (user role or higher required)
         '404':
-          description: Error log not found
-      x-swagger-router-controller: Connections
-  /connections/from/{idFrom}/to/{idTo}:
-    get:
+          description: Attribute update data is inconsistent.
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Unexpected server error
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Attributes
+    post:
       tags:
-        - connections
-      summary: Get information about Connections between Devices.
-      description: Get connection for device
-      operationId: connectionsFromToGet
-      parameters:
-        - name: idFrom
-          in: path
-          description: ID of attributesDictionary to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-        - name: idTo
-          in: path
-          description: ID of attributesDictionary to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - attributes
+      summary: Create a new attribute
+      description: Create a new attribute. Provide attribute details in the request body.
+      operationId: createAttribute
+      security:
+      - UserAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Attribute'
       responses:
         '200':
-          description: Success get connection between devices
+          description: Attribute created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Connections'
-      x-swagger-router-controller: Connections
+                $ref: '#/components/schemas/Attribute'
+        '400':
+          description: Bad request.
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (user role or higher required)
+        '500':
+          description: Unexpected server error
+      x-swagger-router-controller: Attributes
     delete:
       tags:
-        - connections
-      summary: Delete information about Connections between Devices.
-      description: Delete connection for device
-      operationId: connectionsFromToDelete
-      parameters:
-        - name: idFrom
-          in: path
-          description: ID of attributesDictionary to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-        - name: idTo
-          in: path
-          description: ID of attributesDictionary to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - attributes
+      summary: Delete all attributes
+      description: Remove all attributes from the inventory.
+      operationId: deleteAllAttributes
+      security:
+      - AdminAuth: []
       responses:
         '200':
-          description: Success get connection between devices
+          description: All attributes deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Connections'
-      x-swagger-router-controller: Connections
+                $ref: '#/components/schemas/Confirmation'
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (admin role required)
+        '404':
+          description: No attributes found to delete
+      x-swagger-router-controller: Attributes
+  /attributes/{id}:
+    get:
+      tags:
+      - attributes
+      summary: Get attribute by ID
+      description: Retrieve a single attribute by its ID.
+      operationId: getAttributeById
+      parameters:
+      - name: id
+        in: path
+        description: ID of attribute to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: Attribute found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attribute'
+        '404':
+          description: Attribute not found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Attributes
+    put:
+      tags:
+      - attributes
+      summary: Update attribute by ID
+      description: Update a specific attribute by its ID.
+      operationId: updateAttributeById
+      parameters:
+      - name: id
+        in: path
+        description: ID of attribute to update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Attribute'
+      responses:
+        '200':
+          description: Attribute updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attribute'
+        '404':
+          description: Attribute not found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: Attributes
+    delete:
+      tags:
+      - attributes
+      summary: Delete attribute by ID
+      description: Delete a specific attribute by its ID.
+      operationId: deleteAttributeById
+      parameters:
+      - name: id
+        in: path
+        description: ID of attribute to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+      responses:
+        '200':
+          description: Attribute deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Confirmation'
+        '404':
+          description: Attribute not found
+      x-swagger-router-controller: Attributes
   /attributesDictionary:
     get:
       tags:
-        - attributesDictionary
+      - attributesDictionary
       summary: Information about configuration attributes types.
-      description: >-
-        Store information about what parameters can apply to what type of type objects.
+      description: Store information about what parameters can apply to what type of type objects.
       operationId: attributesDictionaryGet
       responses:
         '200':
@@ -1654,7 +1834,7 @@ paths:
       x-swagger-router-controller: attributesDictionary
     put:
       tags:
-        - attributesDictionary
+      - attributesDictionary
       summary: Update attributesDictionary
       operationId: attributesDictionaryPut
       requestBody:
@@ -1671,13 +1851,11 @@ paths:
         '404':
           description: Not found.
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
     post:
       tags:
-        - attributesDictionary
+      - attributesDictionary
       summary: Create devices attributes types.
       description: 3d-inventory attributes from dictionary attributes
       operationId: attributesDictionaryPost
@@ -1698,47 +1876,104 @@ paths:
         '400':
           description: Bad request.
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
     delete:
       tags:
-        - attributesDictionary
+      - attributesDictionary
       summary: Delete all attributesDictionary
-      description: |-
-        Delete a specific attribute in the attributes dictionary by ID. '200':
-          description: OK. Indicates that the request has succeeded.
+      description: "Delete a specific attribute in the attributes dictionary by ID. '200':\n  description: OK. Indicates that the request has succeeded."
       responses:
         '200':
           description: OK. Indicates that the request has succeeded.
         '404':
           description: Not found
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
+      x-swagger-router-controller: attributesDictionary
+  /attributesDictionary/connections:
+    get:
+      tags:
+      - attributesDictionary
+      summary: Get information about devices attributes for connections.
+      description: Dictionary attributes dictionary for connections.
+      operationId: attributesDictionaryConnectionsGet
+      responses:
+        '200':
+          description: OK. Indicates that the request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributesDictionaries'
+              example:
+                $ref: '#/components/schemas/AttributesDictionaries'
+        '400':
+          description: Bad request.
+        '500':
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from  fulfilling the request.
+      x-swagger-router-controller: attributesDictionary
+  /attributesDictionary/devices:
+    get:
+      tags:
+      - attributesDictionary
+      summary: Get information about devices attributes for models.
+      description: Dictionary attributes dictionary for models.
+      operationId: attributesDictionaryDevicesGet
+      responses:
+        '200':
+          description: OK. Indicates that the request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributesDictionaries'
+              example:
+                $ref: '#/components/schemas/AttributesDictionaries'
+        '400':
+          description: Bad request.
+        '500':
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from  fulfilling the request.
+      x-swagger-router-controller: attributesDictionary
+  /attributesDictionary/models:
+    get:
+      tags:
+      - attributesDictionary
+      summary: Get information about devices attributes for models.
+      description: Dictionary attributes dictionary for models.
+      operationId: attributesDictionaryModelsGet
+      responses:
+        '200':
+          description: OK. Indicates that the request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributesDictionaries'
+              example:
+                $ref: '#/components/schemas/AttributesDictionaries'
+        '400':
+          description: Bad request.
+        '500':
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: attributesDictionary
   /attributesDictionary/{id}:
     get:
       tags:
-        - attributesDictionary
+      - attributesDictionary
       summary: Get information attribute type.
       operationId: attributesDictionaryGetId
       parameters:
-        - name: id
-          in: path
-          description: ID of attributesDictionary to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 65c2bbf4e6e6d4ea3d398765
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of attributesDictionary to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 65c2bbf4e6e6d4ea3d398765
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK
@@ -1755,23 +1990,23 @@ paths:
       x-swagger-router-controller: attributesDictionary
     put:
       tags:
-        - attributesDictionary
+      - attributesDictionary
       summary: Update attributesDictionary
       operationId: attributesDictionaryPutId
       parameters:
-        - name: id
-          in: path
-          description: ID of attributesDictionary to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 65c2bbf4e6e6d4ea3d398765
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of attributesDictionary to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 65c2bbf4e6e6d4ea3d398765
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       requestBody:
         content:
           application/json:
@@ -1789,25 +2024,24 @@ paths:
       x-swagger-router-controller: attributesDictionary
     delete:
       tags:
-        - attributesDictionary
+      - attributesDictionary
       summary: Delete all attributesDictionary
-      description: >-
-        Create Attributes between two devices. Two id and attributes from attributes.
+      description: Create Attributes between two devices. Two id and attributes from attributes.
       operationId: attributesDictionaryDeleteId
       parameters:
-        - name: id
-          in: path
-          description: ID of attributesDictionary to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of attributesDictionary to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK.
@@ -1820,309 +2054,10 @@ paths:
         '500':
           description: Unexpected server error.
         x-swagger-router-controller: attributesDictionary
-  /attributesDictionary/models:
-    get:
-      tags:
-        - attributesDictionary
-      summary: Get information about devices attributes for models.
-      description: Dictionary attributes dictionary for models.
-      operationId: attributesDictionaryModelsGet
-      responses:
-        '200':
-          description: OK. Indicates that the request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AttributesDictionaries'
-              example:
-                $ref: '#/components/schemas/AttributesDictionaries'
-        '400':
-          description: Bad request.
-        '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
-      x-swagger-router-controller: attributesDictionary
-  /attributesDictionary/devices:
-    get:
-      tags:
-        - attributesDictionary
-      summary: Get information about devices attributes for models.
-      description: Dictionary attributes dictionary for models.
-      operationId: attributesDictionaryDevicesGet
-      responses:
-        '200':
-          description: OK. Indicates that the request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AttributesDictionaries'
-              example:
-                $ref: '#/components/schemas/AttributesDictionaries'
-        '400':
-          description: Bad request.
-        '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            from  fulfilling the request.
-      x-swagger-router-controller: attributesDictionary
-  /attributesDictionary/connections:
-    get:
-      tags:
-        - attributesDictionary
-      summary: Get information about devices attributes for connections.
-      description: Dictionary attributes dictionary for connections.
-      operationId: attributesDictionaryConnectionsGet
-      responses:
-        '200':
-          description: OK. Indicates that the request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AttributesDictionaries'
-              example:
-                $ref: '#/components/schemas/AttributesDictionaries'
-        '400':
-          description: Bad request.
-        '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            from  fulfilling the request.
-      x-swagger-router-controller: attributesDictionary
-  /models:
-    get:
-      tags:
-        - models
-      summary: Get list all devices models
-      description: Dictionary models of device.
-      operationId: modelsGet
-      security:
-        - ViewerAuth: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Models'
-              example:
-                $ref: '#/components/schemas/Models/example'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (viewer role or higher required)
-        '404':
-          description: Not found
-        '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-      x-swagger-router-controller: Models
-    put:
-      tags:
-        - models
-      summary: Update model
-      description: Update single model
-      operationId: modelsPut
-      security:
-        - UserAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Model'
-      responses:
-        '200':
-          description: OK. Indicates that the request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Model'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (user role or higher required)
-        '404':
-          description: Not found
-        '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-      x-swagger-router-controller: Models
-    post:
-      tags:
-        - models
-      summary: Create model.
-      description: Create model of device.
-      operationId: modelsPost
-      security:
-        - UserAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Model'
-        required: true
-      responses:
-        '200':
-          description: OK. Indicates that the request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Model'
-        '400':
-          description: Bad request.
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (user role or higher required)
-        '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-      x-swagger-router-controller: Models
-    delete:
-      tags:
-        - models
-      summary: Delete all models
-      description: Delete all models
-      operationId: modelsDelete
-      security:
-        - AdminAuth: []
-      responses:
-        '200':
-          description: OK. Indicates that the request has succeeded.
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (admin role required)
-        '404':
-          description: Not found
-        '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
-      x-swagger-router-controller: Models
-  /models/{id}:
-    get:
-      tags:
-        - models
-      summary: Get selected model :id
-      description: Get one model of device.
-      operationId: modelIdGet
-      security:
-        - ViewerAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: ID of attributesDictionary to fetch logs
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Model'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (viewer role or higher required)
-        '404':
-          description: Not found
-        '500':
-          description: Unexpected server error.
-      x-swagger-router-controller: Models
-    put:
-      tags:
-        - models
-      summary: Update selected model :id
-      description: Modify a specific model by ID.
-      operationId: modelIdPut
-      security:
-        - UserAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: Id of model
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Model'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (user role or higher required)
-        '404':
-          description: Not found model to update
-        '500':
-          description: Unexpected server error.
-      x-swagger-router-controller: Models
-    delete:
-      tags:
-        - models
-      summary: Delete selected model :id
-      description: Delete one model of device.
-      operationId: modelIdDelete
-      security:
-        - AdminAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: ID of the model to delete
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Confirmation'
-        '401':
-          description: Unauthorized - Missing or invalid authentication
-        '403':
-          description: Forbidden - Insufficient privileges (admin role required)
-        '404':
-          description: Not found
-        '500':
-          description: Unexpected server error.
-      x-swagger-router-controller: Models
   /floors:
     get:
       tags:
-        - floors
+      - floors
       summary: Get all floors data
       description: Get all floors data
       operationId: floorsGet
@@ -2134,7 +2069,7 @@ paths:
       x-swagger-router-controller: Floors
     put:
       tags:
-        - floors
+      - floors
       summary: Update floor
       description: Create floor
       operationId: floorPut
@@ -2150,13 +2085,11 @@ paths:
         '404':
           description: Not found
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: Floors
     post:
       tags:
-        - floors
+      - floors
       summary: Create new floor.
       description: Create new object floor
       operationId: floorPost
@@ -2172,13 +2105,11 @@ paths:
         '400':
           description: Bad request.
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Floors
     delete:
       tags:
-        - floors
+      - floors
       summary: Delete all floors
       description: Create floor
       operationId: floorDelete
@@ -2188,31 +2119,29 @@ paths:
         '404':
           description: Not found
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Floors
   /floors/{id}:
     get:
       tags:
-        - floors
+      - floors
       summary: Get the single floor :id
       description: Get single floor
       operationId: floorIdGet
       parameters:
-        - name: id
-          in: path
-          description: ID of floor to fetch
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of floor to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK
@@ -2223,30 +2152,28 @@ paths:
         '404':
           description: Not found
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Floors
     delete:
       tags:
-        - floors
+      - floors
       summary: Delete the single floor :id
       description: Delete single floor
       operationId: floorIdDelete
       parameters:
-        - name: id
-          in: path
-          description: ID of floor to delete
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of floor to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK
@@ -2257,30 +2184,28 @@ paths:
         '404':
           description: Not found
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Floors
     put:
       tags:
-        - floors
+      - floors
       summary: Update the single floor :id
       description: Update single floor
       operationId: floorIdPut
       parameters:
-        - name: id
-          in: path
-          description: ID of floor to update
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            pattern: ^[0-9A-Fa-f]{24}$
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
+      - name: id
+        in: path
+        description: ID of floor to update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          pattern: ^[0-9A-Fa-f]{24}$
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
       responses:
         '200':
           description: OK
@@ -2291,19 +2216,44 @@ paths:
         '404':
           description: Not found
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it from
-            fulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
       x-swagger-router-controller: Floors
+  /github/issues:
+    get:
+      tags:
+      - github
+      summary: Get all issues for GitHub (Admin Only)
+      security:
+      - AdminAuth: []
+      description: List all issues. Requires admin privileges for security reasons.
+      operationId: githubIssuesGet
+      responses:
+        '200':
+          description: List of issues
+        '401':
+          description: Unauthorized - Missing or invalid authentication
+        '403':
+          description: Forbidden - Insufficient privileges (admin role required)
+        '404':
+          description: Issues not found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests - Rate limit exceeded
+        '500':
+          description: Unexpected server error
+        default:
+          description: Unexpected error
+      x-swagger-router-controller: github
   /users:
     get:
       tags:
-        - users
+      - users
       summary: Get all user data
       description: Get all user data
       operationId: usersGet
       security:
-        - AdminAuth: []
+      - AdminAuth: []
       responses:
         '200':
           description: OK
@@ -2320,12 +2270,12 @@ paths:
       x-swagger-router-controller: Users
     put:
       tags:
-        - users
+      - users
       summary: Update user
       description: Create user
       operationId: usersPut
       security:
-        - AdminAuth: []
+      - AdminAuth: []
       requestBody:
         required: true
         content:
@@ -2346,18 +2296,16 @@ paths:
         '404':
           description: Not found
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: Users
     post:
       tags:
-        - users
+      - users
       summary: Create new user
       description: Create new user
       operationId: userPost
       security:
-        - AdminAuth: []
+      - AdminAuth: []
       requestBody:
         required: true
         content:
@@ -2378,18 +2326,16 @@ paths:
         '403':
           description: Forbidden - Insufficient privileges (admin role required)
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: Users
     delete:
       tags:
-        - users
+      - users
       summary: Delete all users
       description: Delete all users
       operationId: usersDelete
       security:
-        - AdminAuth: []
+      - AdminAuth: []
       responses:
         '200':
           description: OK. Indicates that the request has succeeded.
@@ -2404,31 +2350,29 @@ paths:
         '404':
           description: Not found
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: Users
   /users/{id}:
     get:
       tags:
-        - users
+      - users
       summary: Get the single user :id
       description: Get single user
       operationId: userGetId
       parameters:
-        - name: id
-          in: path
-          description: ID of user
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-            pattern: ^[0-9A-Fa-f]{24}$
+      - name: id
+        in: path
+        description: ID of user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+          pattern: ^[0-9A-Fa-f]{24}$
       responses:
         '200':
           description: OK
@@ -2441,24 +2385,24 @@ paths:
       x-swagger-router-controller: Users
     post:
       tags:
-        - users
+      - users
       summary: Create a new user
       description: Create a new user
       operationId: userCreate
       parameters:
-        - name: id
-          required: true
-          in: path
-          description: ID of user
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 6566ed4ace63d42b25fbba19
-            minLength: 24
-            maxLength: 24
-            x-42c-format: o:uuid
-            pattern: ^[0-9A-Fa-f]{24}$
+      - name: id
+        required: true
+        in: path
+        description: ID of user
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 6566ed4ace63d42b25fbba19
+          minLength: 24
+          maxLength: 24
+          x-42c-format: o:uuid
+          pattern: ^[0-9A-Fa-f]{24}$
       requestBody:
         required: true
         content:
@@ -2475,9 +2419,7 @@ paths:
         '400':
           description: Bad request.
         '500':
-          description: >-
-            Unexpected server error. The server encountered an unexpected condition that prevented it
-            fromfulfilling the request.
+          description: Unexpected server error. The server encountered an unexpected condition that prevented it fromfulfilling the request.
       x-swagger-router-controller: Users
   /health:
     get:
@@ -2507,7 +2449,6 @@ paths:
                     type: string
         '503':
           description: Service unavailable
-
 components:
   securitySchemes:
     BearerAuth:
@@ -2530,7 +2471,6 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: JWT Bearer token with viewer role or higher required (read-only access)
-
   schemas:
     User:
       type: object
@@ -2671,10 +2611,10 @@ components:
         bottom: /assets/r710-2.5-nobezel__29341.png
     Model:
       required:
-        - _id
-        - category
-        - name
-        - type
+      - _id
+      - category
+      - name
+      - type
       type: object
       properties:
         _id:
@@ -2720,11 +2660,11 @@ components:
         $ref: '#/components/schemas/Model'
     AttributesDictionary:
       required:
-        - _id
-        - name
-        - componentName
-        - type
-        - unit
+      - _id
+      - name
+      - componentName
+      - type
+      - unit
       type: object
       properties:
         _id:
@@ -2737,10 +2677,10 @@ components:
         componentName:
           type: string
           enum:
-            - Devices
-            - Models
-            - Connections
-            - Floors
+          - Devices
+          - Models
+          - Connections
+          - Floors
         name:
           type: string
           pattern: ^[a-zA-Z0-9_\-]{1,64}$
@@ -2750,10 +2690,10 @@ components:
           type: string
           description: Data type of attribute
           enum:
-            - String
-            - Number
-            - Integer
-            - Object
+          - String
+          - Number
+          - Integer
+          - Object
         unit:
           type: string
           description: Units of attribute
@@ -2771,13 +2711,12 @@ components:
       items:
         $ref: '#/components/schemas/AttributesDictionary'
     Attribute:
-      description: >-
-        Attribute is a key-value pair that can be associated with a device, model, or connection.
+      description: Attribute is a key-value pair that can be associated with a device, model, or connection.
       x-42c-format: o:attribute
       required:
-        - _id
-        - attributeDictionaryId
-        - value
+      - _id
+      - attributeDictionaryId
+      - value
       type: object
       properties:
         _id:
@@ -2809,40 +2748,40 @@ components:
       description: List of attributes
       maxItems: 1000
       example:
-        - _id: 653e10ecd6025afb66017c65
-          attributeDictionaryId: 653e10ecd6025afb66017c65
-          connectionId: 653e10ecd6025afb66017c70
-          deviceId: 653e10ecd6025afb66017c71
-          modelId: 653e10ecd6025afb66017c72
-          name: power
-          value: 3W
-        - _id: 653e10ecd6025afb66017c66
-          attributeDictionaryId: 653e10ecd6025afb66017c66
-          connectionId: 653e10ecd6025afb66017c73
-          deviceId: 653e10ecd6025afb66017c74
-          modelId: 653e10ecd6025afb66017c75
-          name: color
-          value: black
-        - _id: 653e10ecd6025afb66017c67
-          attributeDictionaryId: 653e10ecd6025afb66017c67
-          connectionId: 653e10ecd6025afb66017c76
-          deviceId: 653e10ecd6025afb66017c77
-          modelId: 653e10ecd6025afb66017c78
-          name: year
-          value: '1999'
+      - _id: 653e10ecd6025afb66017c65
+        attributeDictionaryId: 653e10ecd6025afb66017c65
+        connectionId: 653e10ecd6025afb66017c70
+        deviceId: 653e10ecd6025afb66017c71
+        modelId: 653e10ecd6025afb66017c72
+        name: power
+        value: 3W
+      - _id: 653e10ecd6025afb66017c66
+        attributeDictionaryId: 653e10ecd6025afb66017c66
+        connectionId: 653e10ecd6025afb66017c73
+        deviceId: 653e10ecd6025afb66017c74
+        modelId: 653e10ecd6025afb66017c75
+        name: color
+        value: black
+      - _id: 653e10ecd6025afb66017c67
+        attributeDictionaryId: 653e10ecd6025afb66017c67
+        connectionId: 653e10ecd6025afb66017c76
+        deviceId: 653e10ecd6025afb66017c77
+        modelId: 653e10ecd6025afb66017c78
+        name: year
+        value: '1999'
       items:
         $ref: '#/components/schemas/Attribute'
     Position:
       required:
-        - x
-        - 'y'
-        - h
+      - x
+      - y
+      - h
       type: object
       properties:
         x:
           type: number
           description: Width
-        'y':
+        y:
           type: number
           description: Depth
         h:
@@ -2852,9 +2791,9 @@ components:
       description: Position device on the floor
     Device:
       required:
-        - _id
-        - modelId
-        - name
+      - _id
+      - modelId
+      - name
       type: object
       properties:
         _id:
@@ -2883,13 +2822,13 @@ components:
         modelId: 6566ed4ace63d42b25fbba19
         position:
           x: 4
-          'y': 3
+          y: 3
           h: 0
         attributes:
-          - _id: 653e10ecd6025afb66017c65
-            key: power
-            value: 3W
-          - _id: 653e10ecd6025afb66017c66
+        - _id: 653e10ecd6025afb66017c65
+          key: power
+          value: 3W
+        - _id: 653e10ecd6025afb66017c66
     Devices:
       type: array
       maxItems: 1000
@@ -2897,10 +2836,10 @@ components:
         $ref: '#/components/schemas/Device'
     Connection:
       required:
-        - _id
-        - deviceIdFrom
-        - deviceIdTo
-        - name
+      - _id
+      - deviceIdFrom
+      - deviceIdTo
+      - name
       type: object
       properties:
         _id:
@@ -2941,20 +2880,20 @@ components:
       items:
         $ref: '#/components/schemas/Connection'
       example:
-        - _id: 6566ed4ace63d42b25fbba19
-          name: Connection 1
-          deviceIdFrom: 6566ed4ace63d42b25fbba19
-          deviceIdTo: 6566ed4ace63d42b25fbba20
-        - _id: 6566ed4ace63d42b25fbba21
-          name: Connection 2
-          deviceIdFrom: 6566ed4ace63d42b25fbba22
-          deviceIdTo: 6566ed4ace63d42b25fbba23
+      - _id: 6566ed4ace63d42b25fbba19
+        name: Connection 1
+        deviceIdFrom: 6566ed4ace63d42b25fbba19
+        deviceIdTo: 6566ed4ace63d42b25fbba20
+      - _id: 6566ed4ace63d42b25fbba21
+        name: Connection 2
+        deviceIdFrom: 6566ed4ace63d42b25fbba22
+        deviceIdTo: 6566ed4ace63d42b25fbba23
     Component:
       required:
-        - _id
-        - component
-        - collection
-        - attributes
+      - _id
+      - component
+      - collection
+      - attributes
       type: object
       properties:
         _id:
@@ -3004,12 +2943,12 @@ components:
         message: Succeed
     Log:
       required:
-        - _id
-        - component
-        - date
-        - message
-        - object
-        - operation
+      - _id
+      - component
+      - date
+      - message
+      - object
+      - operation
       type: object
       properties:
         _id:
@@ -3056,24 +2995,24 @@ components:
         $ref: '#/components/schemas/Log'
       additionalProperties: false
       example:
-        - _id: 666f1f958237b346e54f2cd0
-          date: 2023/06/17 15:37:58.44
-          object: 666f1f958237b346e54f2cd0
-          operation: Update
-          component: Device
-          message: Message in log
-        - _id: 666f1f958237b346e54f2cd0
-          date: 2023/02/27 10:37:58.44
-          object: 6566ed4ace63d42b25fbba19
-          operation: Update
-          component: Device
-          message: Message in log
-        - _id: 666f1f958237b346e54f2cd0
-          date: 2022/01/17 11:37:58.44
-          object: 6566ed4ace63d42b25fbba19
-          operation: Update
-          component: Device
-          message: Message in log
+      - _id: 666f1f958237b346e54f2cd0
+        date: 2023/06/17 15:37:58.44
+        object: 666f1f958237b346e54f2cd0
+        operation: Update
+        component: Device
+        message: Message in log
+      - _id: 666f1f958237b346e54f2cd0
+        date: 2023/02/27 10:37:58.44
+        object: 6566ed4ace63d42b25fbba19
+        operation: Update
+        component: Device
+        message: Message in log
+      - _id: 666f1f958237b346e54f2cd0
+        date: 2022/01/17 11:37:58.44
+        object: 6566ed4ace63d42b25fbba19
+        operation: Update
+        component: Device
+        message: Message in log
     FloorAddress:
       type: object
       properties:
@@ -3092,7 +3031,7 @@ components:
           type: string
         x:
           type: number
-        'y':
+        y:
           type: number
         h:
           type: number
@@ -3112,22 +3051,14 @@ components:
     '404':
       description: Not found
     '405':
-      description: >-
-        Method Not Allowed. The request HTTPS method is known by the server but has been disabled and cannot be
-        used for that resource.
+      description: Method Not Allowed. The request HTTPS method is known by the server but has been disabled and cannot be used for that resource.
     '500':
-      description: >-
-        Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling
-        the request.
+      description: Unexpected server error. The server encountered an unexpected condition that prevented it from fulfilling the request.
     '501':
-      description: >-
-        Not Implemented. The HTTPS method is not supported by the server and cannot be handled.
+      description: Not Implemented. The HTTPS method is not supported by the server and cannot be handled.
     '502':
-      description: >-
-        Bad getaway. The server got an invalid response while working as a gateway to get the response needed to
-        handle the request.
+      description: Bad getaway. The server got an invalid response while working as a gateway to get the response needed to handle the request.
     '503':
       description: Service Unavailable. The server is not ready to handle the request.
     '504':
-      description: >-
-        Gateway Timeout. The server is acting as a gateway and cannot get a response in time for a request.
+      description: Gateway Timeout. The server is acting as a gateway and cannot get a response in time for a request.

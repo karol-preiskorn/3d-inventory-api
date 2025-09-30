@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { RequestHandler } from 'express'
 import mongoSanitize from 'mongo-sanitize'
-import { Collection, Db, Document, Filter, InsertOneResult, DeleteResult, ObjectId } from 'mongodb'
+import { Collection, Db, DeleteResult, Document, Filter, InsertOneResult, ObjectId } from 'mongodb'
 import { getDatabase } from '../utils/db'
 import getLogger from '../utils/logger'
 
@@ -108,6 +108,10 @@ export const getLogsByObjectId: RequestHandler = async (req, res) => {
 export const getLogsByComponent: RequestHandler = async (req, res) => {
   const component = req.params.component
   let client
+
+  // add validate component
+
+  // 
 
   try {
     const db: Db = await getDatabase()
