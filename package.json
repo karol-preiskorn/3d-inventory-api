@@ -163,7 +163,7 @@
     "typedoc-plugin-mdn-links": "^5.0.9",
     "typedoc-plugin-merge-modules": "^7.0.0",
     "typedoc-plugin-missing-exports": "^4.1.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=22.0.0"
