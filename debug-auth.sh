@@ -48,9 +48,9 @@ echo ""
 
 for cred in "${TEST_CREDENTIALS[@]}"; do
     IFS=':' read -r username password <<< "$cred"
-    
+
     echo -e "${YELLOW}Testing: $username${NC}"
-    
+
     # Create JSON payload
     JSON_PAYLOAD=$(cat <<EOF
 {
@@ -59,7 +59,7 @@ for cred in "${TEST_CREDENTIALS[@]}"; do
 }
 EOF
 )
-    
+
     # Make login request and capture response
     RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}\nRESPONSE_TIME:%{time_total}" \
         -X POST \
@@ -67,15 +67,15 @@ EOF
         -H "Accept: application/json" \
         -d "$JSON_PAYLOAD" \
         "$LOGIN_ENDPOINT" 2>/dev/null)
-    
+
     # Extract HTTP code and response time
     HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP_CODE:" | cut -d: -f2)
     RESPONSE_TIME=$(echo "$RESPONSE" | grep "RESPONSE_TIME:" | cut -d: -f2)
     RESPONSE_BODY=$(echo "$RESPONSE" | sed '/HTTP_CODE:/d; /RESPONSE_TIME:/d')
-    
+
     echo "   HTTP Status: $HTTP_CODE"
     echo "   Response Time: ${RESPONSE_TIME}s"
-    
+
     if [ "$HTTP_CODE" = "200" ]; then
         echo -e "   ${GREEN}✅ Login successful${NC}"
         echo "   Response: $RESPONSE_BODY" | jq '.' 2>/dev/null || echo "   Response: $RESPONSE_BODY"
