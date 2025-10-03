@@ -12,10 +12,10 @@ import('./src/services/InitializationService.js').then(async ({ InitializationSe
 
   try {
     const initService = InitializationService.getInstance()
-    
+
     console.log('🔍 Checking if initialization is needed...')
     const needsInit = await initService.isInitializationNeeded()
-    
+
     if (needsInit) {
       console.log('✅ Initialization needed. Starting initialization...\n')
       await initService.initializeApplication()
@@ -23,7 +23,7 @@ import('./src/services/InitializationService.js').then(async ({ InitializationSe
     } else {
       console.log('ℹ️  Application already initialized. No action needed.')
     }
-    
+
     console.log('\n📋 Summary:')
     console.log('===========')
     console.log('✅ User initialization process completed')
@@ -37,7 +37,7 @@ import('./src/services/InitializationService.js').then(async ({ InitializationSe
     console.log('   • Wait 15 minutes for rate limiting to reset')
     console.log('   • Test login with: npm run test:auth')
     console.log('   • Use the UI or API to authenticate')
-    
+
   } catch (error) {
     console.error('\n❌ Initialization failed:', error.message)
     console.error('Error details:', error.stack)

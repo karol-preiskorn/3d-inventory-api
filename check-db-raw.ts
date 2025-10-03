@@ -3,7 +3,7 @@
  * This script queries the database directly to see the raw user documents
  */
 
-import { connectToCluster, connectToDb, closeConnection } from './src/utils/db'
+import { closeConnection, connectToCluster, connectToDb } from './src/utils/db'
 import getLogger from './src/utils/logger'
 
 const logger = getLogger('db-raw-query')
@@ -20,26 +20,26 @@ async function main() {
     console.log('🔌 Connecting to MongoDB Atlas...')
     client = await connectToCluster()
     const db = connectToDb(client)
-    
     // Get the users collection
     const usersCollection = db.collection('users')
-    
     // Count total documents
     const totalCount = await usersCollection.countDocuments()
+
     console.log(`📊 Total documents in users collection: ${totalCount}`)
-    
+
     if (totalCount === 0) {
       console.log('ℹ️  No users found in database.')
       console.log('   Run: npm run init:users')
+
       return
     }
-    
+
     // Get all users with raw data
     console.log('\n📋 Raw user documents:')
     console.log('='.repeat(50))
-    
+
     const users = await usersCollection.find({}).toArray()
-    
+
     users.forEach((user, index) => {
       console.log(`\n👤 User ${index + 1}:`)
       console.log(`   _id: ${user._id}`)
@@ -55,15 +55,16 @@ async function main() {
       console.log(`   permissions: ${user.permissions ? JSON.stringify(user.permissions) : 'undefined'}`)
       console.log(`   password hash length: ${user.password ? user.password.length : 'undefined'}`)
     })
-    
+
     // Look for specific usernames
     console.log('\n🔍 Searching for specific usernames:')
     console.log('='.repeat(40))
-    
+
     const targetUsernames = ['admin', 'user', 'carlo', 'viewer']
-    
+
     for (const username of targetUsernames) {
       const user = await usersCollection.findOne({ username: username })
+
       if (user) {
         console.log(`✅ Found user: ${username}`)
         console.log(`   _id: ${user._id}`)
@@ -73,22 +74,23 @@ async function main() {
         console.log(`❌ User not found: ${username}`)
       }
     }
-    
+
     // Check for users with similar usernames (case-insensitive)
     console.log('\n🔍 Case-insensitive username search:')
     console.log('='.repeat(40))
-    
+
     for (const username of targetUsernames) {
-      const user = await usersCollection.findOne({ 
-        username: { $regex: new RegExp(`^${username}$`, 'i') } 
+      const user = await usersCollection.findOne({
+        username: { $regex: new RegExp(`^${username}$`, 'i') }
       })
+
       if (user) {
         console.log(`✅ Found user (case-insensitive): ${user.username} (looking for: ${username})`)
       } else {
         console.log(`❌ User not found (case-insensitive): ${username}`)
       }
     }
-    
+
     console.log('\n📊 Analysis:')
     console.log('='.repeat(20))
     console.log('1. If you see users but with undefined values:')
@@ -103,7 +105,7 @@ async function main() {
     console.log('3. If users exist but with different usernames:')
     console.log('   • Check for typos or extra characters')
     console.log('   • Check case sensitivity issues')
-    
+
   } catch (error) {
     logger.error('Database query failed:', error instanceof Error ? error.message : String(error))
     console.error('\n❌ Database query failed:', error instanceof Error ? error.message : String(error))
