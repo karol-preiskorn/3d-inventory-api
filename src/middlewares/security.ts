@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
+import config from '../utils/config'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('security-middleware')
@@ -28,7 +29,7 @@ export const securityHeaders: RequestHandler = helmet({
     }
   },
   // Cross-Origin Embedder Policy
-  crossOriginEmbedderPolicy: false,
+  crossOriginEmbedderPolicy: true,
   // DNS Prefetch Control
   dnsPrefetchControl: { allow: false },
   // Frame Options
@@ -48,11 +49,9 @@ export const securityHeaders: RequestHandler = helmet({
   // Origin Agent Cluster
   originAgentCluster: true,
   // Permitted Cross Domain Policies
-  permittedCrossDomainPolicies: false,
+  permittedCrossDomainPolicies: { permittedPolicies: 'none' },
   // Referrer Policy
   referrerPolicy: { policy: 'no-referrer' },
-  // X-XSS-Protection
-  xssFilter: true,
   // Additional security headers
   crossOriginOpenerPolicy: { policy: 'same-origin' },
   crossOriginResourcePolicy: { policy: 'same-origin' }
@@ -63,7 +62,7 @@ export const securityHeaders: RequestHandler = helmet({
  */
 export const apiRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: 250, // Limit each IP to 250 requests per windowMs
   message: {
     error: 'Too Many Requests',
     message: 'Too many requests from this IP, please try again later.',
@@ -113,7 +112,7 @@ export const corsOptions = {
     if (!origin) return callback(null, true)
 
     // List of allowed origins (customize as needed)
-    const allowedOrigins = ['http://localhost:3000', 'http://localhost:8080', 'https://your-frontend-domain.com']
+    const allowedOrigins = config.CORS_ORIGIN
 
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true)
@@ -166,8 +165,14 @@ export const sanitizeInput: RequestHandler = (req, res, next) => {
   }
 }
 
+
 /**
- * Enhanced string sanitization function
+ * Sanitizes a string by removing potentially dangerous content such as HTML/XML tags,
+ * special characters, SQL/NoSQL injection patterns, and JavaScript injection patterns.
+ * Also normalizes whitespace.
+ *
+ * @param input - The string to sanitize.
+ * @returns The sanitized string with harmful patterns removed and whitespace normalized.
  */
 function sanitizeString(input: string): string {
   if (!input || typeof input !== 'string') return input
@@ -192,8 +197,18 @@ function sanitizeString(input: string): string {
   )
 }
 
+
 /**
- * Recursively sanitize object properties with enhanced security
+ * Recursively sanitizes all string properties within an object, including nested objects and arrays.
+ *
+ * - Applies `sanitizeString` to every string value found.
+ * - Traverses arrays and nested objects up to a maximum depth to prevent stack overflows.
+ * - Detects and warns about circular references, skipping their sanitization.
+ * - Logs warnings if the maximum depth is exceeded or circular references are found.
+ * - Throws an error if sanitization fails due to circular references or other issues.
+ *
+ * @param obj - The object to be sanitized. All string properties will be sanitized in-place.
+ * @throws {Error} If the object structure is invalid or sanitization fails.
  */
 function sanitizeObject(obj: Record<string, unknown>): void {
   const maxDepth = 10 // Prevent deeply nested objects
@@ -269,8 +284,8 @@ export const requestTimeout = (timeoutMs: number = 30000): RequestHandler => {
   }
 }
 
-/**
- * MongoDB injection protection middleware
+/** MongoDB injection sanitization middleware
+ * Removes any keys starting with '$' or containing '.' from req.body and req.query
  */
 export const mongoSanitize: RequestHandler = (req, res, next) => {
   try {
@@ -306,13 +321,28 @@ export const mongoSanitize: RequestHandler = (req, res, next) => {
 
 /**
  * IP whitelist middleware (for admin endpoints)
+ * @param allowedIPs - Array of allowed IP addresses
+ * @returns Express RequestHandler that allows only requests from whitelisted IPs
+ *
+ * Usage:
+ *   app.use('/admin', ipWhitelist(['127.0.0.1', '::1']))
+ *
+ * @param req - Express Request object
+ * @param res - Express Response object
+ * @param next - Express NextFunction callback
  */
 export const ipWhitelist = (allowedIPs: string[]): RequestHandler => {
   return (req, res, next) => {
-    const clientIP = req.ip || req.connection.remoteAddress || req.socket.remoteAddress
+    const xForwardedFor = req.headers['x-forwarded-for']
+    const clientIP =
+      typeof xForwardedFor === 'string'
+        ? xForwardedFor.split(',')[0].trim()
+        : req.ip || req.socket.remoteAddress
+    // Fallback to req.ip or socket/connection remote address
+    const resolvedIP = clientIP || req.ip || req.connection.remoteAddress || req.socket.remoteAddress
 
-    if (!clientIP || !allowedIPs.includes(clientIP)) {
-      logger.warn(`IP ${clientIP} denied access to ${req.method} ${req.originalUrl}`)
+    if (!resolvedIP || !allowedIPs.includes(resolvedIP)) {
+      logger.warn(`IP ${resolvedIP} denied access to ${req.method} ${req.originalUrl}`)
       res.status(403).json({
         error: 'Forbidden',
         message: 'Access denied from this IP address'
@@ -321,7 +351,7 @@ export const ipWhitelist = (allowedIPs: string[]): RequestHandler => {
       return
     }
 
-    logger.info(`IP ${clientIP} granted access to ${req.method} ${req.originalUrl}`)
+    logger.info(`IP ${resolvedIP} granted access to ${req.method} ${req.originalUrl}`)
     next()
   }
 }
