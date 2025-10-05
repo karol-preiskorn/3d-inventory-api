@@ -1,13 +1,21 @@
 /**
- * @description API 3d-inventory. Project is a simple solution that allows you to build a spatial and database representation of all types of warehouses and server rooms.
+ * @description API 3d-inventory. Project is const _httpsOptions = {
+  secureOptions: cryptoConstants.SSL_OP_NO_SSLv2 | cryptoConstants.SSL_OP_NO_SSLv3,
+  honorCipherOrder: true,
+  minVersion: 'TLSv1.2',
+  maxVersion: 'TLSv1.3',
+  requestCert: true,
+  rejectUnauthorized: false
+} solution that allows you to build a spatial and database representation of all types of warehouses and server rooms.
  *
  * @public
  */
 
 import { constants as cryptoConstants } from 'crypto'
-import fs from 'fs'
+// import fs from 'fs' // Only used for HTTPS certificates in production
 import type { Server as HttpServer } from 'http'
-import https, { type Server as HttpsServer } from 'https'
+// HTTPS imports only used in production mode
+// import https, { type Server as HttpsServer } from 'https'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors, { type CorsOptions } from 'cors'
@@ -47,7 +55,7 @@ const proc = '[main]'
 const PORT = config.PORT
 const HOST = config.HOST
 // Cloud Run configuration - use HTTP instead of HTTPS
-let httpsOptions: https.ServerOptions = {
+const _httpsOptions = {
   secureOptions: cryptoConstants.SSL_OP_NO_SSLv3 | cryptoConstants.SSL_OP_NO_TLSv1 | cryptoConstants.SSL_OP_NO_TLSv1_1,
   honorCipherOrder: true,
   minVersion: 'TLSv1.2',
@@ -56,15 +64,13 @@ let httpsOptions: https.ServerOptions = {
   rejectUnauthorized: false
 }
 
-if (process.env.NODE_ENV !== 'production') {
+// HTTPS options only used in production (currently unused in development)
+if (process.env.NODE_ENV === 'production') {
   try {
-    httpsOptions = {
-      ...httpsOptions,
-      key: fs.readFileSync('./cert/server.key'),
-      cert: fs.readFileSync('./cert/server.crt')
-    }
+    // This would be used for HTTPS server in production
+    // _httpsOptions = {..._httpsOptions, key: fs.readFileSync('./cert/server.key'), cert: fs.readFileSync('./cert/server.crt')}
   } catch (error) {
-    logger.error(`${proc}SSL certificates not found, using HTTP only: ${error}`)
+    logger.error(`${proc}SSL certificates not found: ${error}`)
   }
 }
 
@@ -353,7 +359,7 @@ async function initializeDatabase() {
   }
 }
 
-let server: HttpServer | HttpsServer
+let server: HttpServer
 
 if (process.env.NODE_ENV === 'production') {
   server = app.listen(Number(PORT), '0.0.0.0', async () => {
@@ -415,8 +421,8 @@ if (process.env.NODE_ENV === 'production') {
     })
   })
 } else {
-  // Development server with HTTPS
-  server = https.createServer(httpsOptions, app).listen(Number(PORT), HOST, async () => {
+  // Development server with HTTP (avoiding certificate issues)
+  server = app.listen(Number(PORT), HOST, async () => {
     logger.info(
       '\n\n' +
         figlet.textSync('3d-inventory-api', {
@@ -428,9 +434,9 @@ if (process.env.NODE_ENV === 'production') {
         })
     )
     logger.info(`✅ Development ver. ${kleur.green(process.env.npm_package_version ?? 'unknown')} `)
-    logger.info(`✅ Server on ${kleur.green(`https://${HOST}:${PORT}`)}`)
-    logger.info(`✅ ${kleur.green(`https://${HOST}:${PORT}/doc  - Swagger UI`)}`)
-    logger.info(`✅ ${kleur.green(`https://${HOST}:${PORT}/health  - Status`)}`)
+    logger.info(`✅ Server on ${kleur.green(`http://${HOST}:${PORT}`)}`)
+    logger.info(`✅ ${kleur.green(`http://${HOST}:${PORT}/doc  - Swagger UI`)}`)
+    logger.info(`✅ ${kleur.green(`http://${HOST}:${PORT}/health  - Status`)}`)
 
     // Initialize database connection pool
     try {
