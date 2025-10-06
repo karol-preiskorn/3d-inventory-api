@@ -1,0 +1,462 @@
+
+> d-inventory-api@0.96.155 test
+> jest
+
+  console.log
+    [dotenv@17.2.3] injecting env (22) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+PASS ts-jest src/tests/github.test.ts (15.552 s)
+  GitHub API
+    ✓ should get GitHub issues (13 ms)
+    ✓ should handle GitHub API errors (2 ms)
+    ✓ should handle network errors (4 ms)
+
+PASS ts-jest src/tests/attributes.api.test.ts (15.559 s)
+  Attributes API Controller Tests
+    getAllAttributes
+      ✓ should return all attributes successfully (26 ms)
+      ✓ should return 404 when no attributes found (8 ms)
+      ✓ should handle database errors (8 ms)
+    getAttributeById
+      ✓ should return attribute by valid ID (6 ms)
+      ✓ should return 404 when attribute not found (8 ms)
+      ✓ should return 400 for invalid attribute ID (8 ms)
+    createAttribute
+      ✓ should create attribute successfully (23 ms)
+      ✓ should require value field (12 ms)
+      ✓ should validate attributeDictionaryId is valid ObjectId (13 ms)
+    updateAttribute
+      ✓ should update attribute successfully (13 ms)
+      ✓ should return 404 when attribute not found for update (11 ms)
+      ✓ should return 400 for invalid attribute ID in update (6 ms)
+    deleteAttribute
+      ✓ should delete attribute successfully (7 ms)
+      ✓ should return 404 when attribute not found for deletion (4 ms)
+      ✓ should return 400 for invalid attribute ID in deletion (12 ms)
+    deleteAllAttributes
+      ✓ should delete all attributes successfully (4 ms)
+      ✓ should return 404 when no attributes found to delete (2 ms)
+    deleteAttributesByModelId
+      ✓ should delete attributes by model ID successfully (2 ms)
+      ✓ should return 404 when no attributes found for model deletion (1 ms)
+      ✓ should return 400 for invalid model ID in deleteAttributesByModelId (1 ms)
+
+PASS ts-jest src/tests/connection.db.test.ts (15.7 s)
+  ConnectToDatabase Mongo Atlas
+    ✓ connect to database and verify collection access (12 ms)
+
+PASS ts-jest src/tests/floors.test.ts (15.836 s)
+  create 10 floors
+    ✓ should insert a 10 floors (15 ms)
+
+[2025-10-05 08:42:59] [32mINFO[39m: [36m[github] Fetching issues from GitHub API[39m [90m{"module":"github"}[39m
+[2025-10-05 08:42:59] [32mINFO[39m: [36m[github] Successfully fetched 1 issues from GitHub[39m [90m{"module":"github"}[39m
+[2025-10-05 08:42:59] [32mINFO[39m: [36m[github] Fetching issues from GitHub API[39m [90m{"module":"github"}[39m
+[2025-10-05 08:42:59] [31mERROR[39m: [36m[github] GitHub API error: 404 Not Found[39m [90m{"module":"github"}[39m
+[2025-10-05 08:42:59] [32mINFO[39m: [36m[github] Fetching issues from GitHub API[39m [90m{"module":"github"}[39m
+[2025-10-05 08:42:59] [31mERROR[39m: [36m[github] Error fetching GitHub issues: Network error[39m [90m{"module":"github"}[39m
+PASS ts-jest src/tests/prepare-data.test.ts (15.919 s)
+  prepare test data
+    delete all data
+      ✓ should delete all devices (16 ms)
+      ✓ should delete all models (1 ms)
+      ✓ should delete all logs (2 ms)
+    create 3 models with 5 devices each
+      ✓ should insert a model and logs doc into collection models (27 ms)
+
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[readme] Reading README file from: ./src/assets/README.md[39m [90m{"module":"readme"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[readme] Successfully rendered README file (2473 characters)[39m [90m{"module":"readme"}[39m
+PASS ts-jest src/tests/users.test.ts (16.058 s)
+  Test Mongo Atlas DB users
+    ✓ should insert a one User doc into collection (17 ms)
+    ✓ should delete all users (2 ms)
+    ✓ should insert a ten User doc into collection (6 ms)
+
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[test-6] Slow request: GET /api/test - 2000.00ms[39m [90m{"module":"metrics"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[error-1] Error response: GET /api/test - 500[39m [90m{"module":"metrics"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[slow-test] Slow request: GET /api/slow - 2500.00ms[39m [90m{"module":"metrics"}[39m
+  console.log
+    [dotenv@17.2.3] injecting env (22) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+PASS ts-jest src/tests/attributesDictionary.gen.test.ts (16.189 s)
+  test create attributesDictionary
+    create attributesDictionary documents
+      ✓ should insert a attributesDictionary x10 (34 ms)
+
+PASS ts-jest src/tests/devices.api.test.ts (16.243 s)
+  Devices Controller
+    getAllDevices
+      ✓ should return all devices successfully (16 ms)
+      ✓ should return empty array when no devices found (2 ms)
+    getDeviceById
+      ✓ should return device when found (3 ms)
+      ✓ should call next with NotFoundError when device not found (2 ms)
+    createDevice
+      ✓ should create device successfully (4 ms)
+      ✓ should return 400 for empty body (2 ms)
+    deleteDevice
+      ✓ should delete device successfully (2 ms)
+    deleteAllDevices
+      ✓ should delete all devices successfully (1 ms)
+
+  console.log
+    [dotenv@17.2.3] injecting env (22) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+[2025-10-05 08:43:00] [32mINFO[39m: [36mGET /devices - returning 2 devices[39m [90m{"module":"devices"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36mGET /devices - no devices found[39m [90m{"module":"devices"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36mGET /devices/68d14f8ebbb778f8dd556130 - device found[39m [90m{"module":"devices"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36mGET /devices/68d14f8ebbb778f8dd556130 - device not found[39m [90m{"module":"devices"}[39m
+[2025-10-05 08:43:00] [31mERROR[39m: [36mPOST /devices - body: {"name":"Test Device","modelId":"model123"}[39m [90m{"module":"devices"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36mPOST /devices - device created successfully with id: 68e22f94cc75f567d450efc3, {"name":"Test Device","modelId":"model123","date":"2025-10-05T08:43:00.408Z"}[39m [90m{"module":"devices"}[39m
+[2025-10-05 08:43:00] [31mERROR[39m: [36mPOST /devices - body: {}[39m [90m{"module":"devices"}[39m
+[2025-10-05 08:43:00] [31mERROR[39m: [36mPOST /devices - No data provided[39m [90m{"module":"devices"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36mDELETE /devices/68d14f8ebbb778f8dd556132 - device deleted successfully.[39m [90m{"module":"devices"}[39m
+  console.log
+    [dotenv@17.2.3] injecting env (22) from .env -- tip: ⚙️  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+PASS ts-jest src/tests/connections.test.ts (16.446 s)
+  create 10 connections
+    ✓ should insert a 10 connections (20 ms)
+
+PASS ts-jest src/tests/devices.test.ts (16.413 s)
+  Devices Router
+    GET /devices
+      ✓ should call getAllDevices controller and return device list (93 ms)
+      ✓ should handle getAllDevices errors (17 ms)
+      ✓ should return empty array when no devices exist (16 ms)
+    GET /devices/:id
+      ✓ should call getDeviceById controller and return device details (19 ms)
+      ✓ should handle device not found (27 ms)
+      ✓ should handle database errors for single device lookup (16 ms)
+    PUT /devices/:id
+      ✓ should call updateDevice controller with valid data (44 ms)
+      ✓ should handle validation errors for invalid update data (18 ms)
+      ✓ should handle device not found for update (18 ms)
+    POST /devices
+      ✓ should call createDevice controller with valid device data (14 ms)
+      ✓ should handle missing required fields (11 ms)
+      ✓ should handle duplicate device creation (12 ms)
+    DELETE /devices/:id
+      ✓ should call deleteDevice controller (15 ms)
+      ✓ should handle device not found for deletion (22 ms)
+    GET /devices/model/:modelId
+      ✓ should call getDevicesByModel controller (20 ms)
+      ✓ should handle no devices found for model (16 ms)
+    PATCH /devices/position/:id
+      ✓ should call updateDevicePosition controller (16 ms)
+      ✓ should validate position data (14 ms)
+    DELETE /devices
+      ✓ should call deleteAllDevices controller (114 ms)
+      ✓ should handle authorization for bulk delete (13 ms)
+    DELETE /devices/model/:modelId
+      ✓ should call deleteDevicesByModel controller (17 ms)
+    Error Handling & Edge Cases
+      ✓ should handle malformed JSON in POST requests (29 ms)
+      ✓ should handle missing request body in PUT requests (11 ms)
+      ✓ should handle invalid ObjectId format (15 ms)
+      ✓ should handle server errors gracefully (14 ms)
+    Middleware Integration
+      ✓ should parse JSON request bodies correctly (11 ms)
+      ✓ should handle authentication middleware pass-through (11 ms)
+
+PASS ts-jest src/tests/readme.test.ts (16.468 s)
+  GET /
+    ✓ should return the rendered README.md (129 ms)
+    ✓ should return 404 if README.md file is not found (19 ms)
+
+PASS ts-jest src/tests/model.test.ts (16.667 s)
+  create 3 models
+    ✓ should insert a 10 models (21 ms)
+
+PASS ts-jest src/tests/models.api.test.ts (16.717 s)
+  Models Controller
+    getAllModels
+      ✓ should return all models successfully (19 ms)
+      ✓ should return empty array when no models found (3 ms)
+      ✓ should respect limit query parameter (2 ms)
+      ✓ should handle invalid limit parameter (1 ms)
+    getModelById
+      ✓ should return model when found (3 ms)
+      ✓ should return 404 when model not found (4 ms)
+      ✓ should return 400 for invalid ObjectId (5 ms)
+    createModel
+      ✓ should create model successfully (6 ms)
+      ✓ should validate required name field (3 ms)
+      ✓ should validate dimension object (2 ms)
+      ✓ should validate texture object (2 ms)
+    updateModel
+      ✓ should update model successfully (4 ms)
+      ✓ should return 404 for non-existent model (3 ms)
+    updateModelDimension
+      ✓ should update model dimension successfully (4 ms)
+      ✓ should validate dimension data (5 ms)
+    updateModelTexture
+      ✓ should update model texture successfully (6 ms)
+    deleteModel
+      ✓ should delete model successfully (5 ms)
+      ✓ should return 404 when model not found for deletion (6 ms)
+    deleteAllModels
+      ✓ should delete all models successfully (5 ms)
+      ✓ should handle no models to delete (3 ms)
+      ✓ should require confirmation parameter (3 ms)
+
+PASS ts-jest src/tests/models.test.ts (16.703 s)
+  Models Router
+    GET /models
+      ✓ should call getAllModels controller and return model list (58 ms)
+      ✓ should handle getAllModels errors (15 ms)
+      ✓ should return empty array when no models exist (13 ms)
+    GET /models/:id
+      ✓ should call getModelById controller and return model details (14 ms)
+      ✓ should handle model not found (13 ms)
+      ✓ should handle database errors for single model lookup (11 ms)
+    POST /models
+      ✓ should call createModel controller with valid model data (40 ms)
+      ✓ should validate required name field (18 ms)
+      ✓ should validate name field type (12 ms)
+      ✓ should handle duplicate model creation (10 ms)
+    PUT /models/:id
+      ✓ should call updateModel controller with valid data (9 ms)
+      ✓ should validate name field for updates (12 ms)
+      ✓ should handle model not found for update (12 ms)
+    PATCH /models/dimension/:id
+      ✓ should call updateModelDimension controller (16 ms)
+      ✓ should handle invalid dimension data (15 ms)
+    PATCH /models/texture/:id
+      ✓ should call updateModelTexture controller (18 ms)
+      ✓ should handle partial texture updates (13 ms)
+    DELETE /models/:id
+      ✓ should call deleteModel controller (11 ms)
+      ✓ should handle model not found for deletion (12 ms)
+    DELETE /models
+      ✓ should call deleteAllModels controller (11 ms)
+      ✓ should handle authorization for bulk delete (12 ms)
+    Error Handling & Edge Cases
+      ✓ should handle malformed JSON in POST requests (25 ms)
+      ✓ should handle invalid ObjectId format (16 ms)
+      ✓ should handle server errors gracefully (13 ms)
+    Middleware Integration
+      ✓ should parse JSON request bodies correctly (15 ms)
+      ✓ should validate ObjectId middleware for parameterized routes (17 ms)
+
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[models] Retrieved 2 models[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[models] No models found[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[models] Retrieved 1 models[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[models] No models found[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[models] Retrieved model: 68d14f8ebbb778f8dd556130[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] Model not found: 68d14f8ebbb778f8dd556130[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] Invalid ObjectId: invalid-id[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[models] Created model: 68e22f94e32eaac340095e91[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] name must be a non-empty string[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] dimension must be an object with width, height, and depth as positive numbers[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] texture must be an object with front, back, side, top, and bottom as non-empty strings[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[models] Updated model: 68d14f8ebbb778f8dd556131[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] Model not found for update: 68d14f8ebbb778f8dd556131[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[models] Updated model dimension: 68d14f8ebbb778f8dd556133[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] Invalid dimension data for update[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[models] Updated model texture: 68d14f8ebbb778f8dd556134[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[models] Deleted model: 68d14f8ebbb778f8dd556135[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] Model not found for deletion: 68d14f8ebbb778f8dd556135[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] Deleted all 5 models[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] Deleted all 0 models[39m [90m{"module":"models"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[models] Missing confirmation for delete all models[39m [90m{"module":"models"}[39m
+  console.log
+    [dotenv@17.2.3] injecting env (22) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+PASS ts-jest src/tests/health.test.ts (16.856 s)
+  Health Controller
+    ✓ should return healthy status with connected database (12 ms)
+    ✓ should return degraded status when database is null (3 ms)
+    ✓ should return degraded status when database ping fails (2 ms)
+    ✓ should include all required health status properties (3 ms)
+    ✓ should have valid timestamp format (1 ms)
+    ✓ should have valid uptime information (1 ms)
+    ✓ should have correct port configuration (1 ms)
+
+PASS ts-jest src/tests/logs.api.test.ts (16.858 s)
+  Logs Controller
+    getAllLogs
+      ✓ should return all logs with default limit (18 ms)
+      ✓ should apply custom limit when provided (6 ms)
+      ✓ should enforce maximum limit (4 ms)
+      ✓ should handle invalid limit gracefully (4 ms)
+      ✓ should return 404 when no logs found (2 ms)
+      ✓ should handle database errors (1 ms)
+    getLogsByObjectId
+      ✓ should return logs for valid object ID (3 ms)
+      ✓ should return 404 when no logs found for object ID (10 ms)
+    getLogsByComponent
+      ✓ should return logs for valid component (16 ms)
+    createLog
+      ✓ should create a new log entry (16 ms)
+      ✓ should validate required fields (1 ms)
+      ✓ should validate component against allowed values (3 ms)
+      ✓ should sanitize input data (7 ms)
+    deleteLog
+      ✓ should delete log by valid ObjectId (5 ms)
+      ✓ should return 404 when log not found (2 ms)
+      ✓ should validate ObjectId format (1 ms)
+    deleteAllLogs
+      ✓ should delete all logs successfully (1 ms)
+      ✓ should handle case when no logs to delete (1 ms)
+    VALID_COMPONENTS
+      ✓ should contain expected components (1 ms)
+      ✓ should be a const assertion array (1 ms)
+    Log data structure validation
+      ✓ should validate log interface properties (5 ms)
+      ✓ should have valid timestamp format (2 ms)
+      ✓ should have valid action from allowed list (1 ms)
+      ✓ should have valid entity from allowed list
+
+FAIL ts-jest src/tests/login.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: Cannot access 'mockUserService' before initialization
+
+      11 | jest.mock('../services/UserService', () => ({
+      12 |   UserService: {
+    > 13 |     getInstance: jest.fn(() => mockUserService)
+         |                                ^
+      14 |   }
+      15 | }))
+      16 |
+
+      at Object.<anonymous> (src/tests/login.test.ts:13:32)
+      at Object.<anonymous> (src/controllers/login.ts:9:33)
+      at Object.<anonymous> (src/tests/login.test.ts:3:1)
+
+[2025-10-05 08:43:01] [33mWARN[39m: [36m[health] Database connection is not initialized.[39m [90m{"module":"health"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36m[health] Database ping failed: Connection failed[39m [90m{"module":"health"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Retrieved 3 logs[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Retrieved 1 logs[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Retrieved 1 logs[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Retrieved 1 logs[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] No logs found[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [31mERROR[39m: [36m[logs] Error fetching logs: Database error[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Query: {"objectId":"test-object-123"}[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Retrieved 1 logs for objectId: test-object-123[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Query: {"objectId":"non-existent-id"}[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] No logs found for objectId: non-existent-id[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Query: {"component":"devices"}[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Retrieved 1 logs for component: devices[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Log created with ID: 68e22f94150143b691bb6b2a[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[logs] Missing required fields: operation, component, message[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[logs] Invalid component: invalid-component[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Log created with ID: 68e22f94150143b691bb6b2b[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] Deleted log 68e22f94150143b691bb6b2c[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[logs] Log 68e22f94150143b691bb6b2d not found for deletion[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[logs] Invalid ObjectId: invalid-objectid[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [33mWARN[39m: [36m[logs] Deleted 100 logs[39m [90m{"module":"logs"}[39m
+[2025-10-05 08:43:00] [32mINFO[39m: [36m[logs] No logs found to delete[39m [90m{"module":"logs"}[39m
+PASS ts-jest src/tests/security.test.ts (16.934 s)
+  Security Middleware Tests
+    Input Sanitization
+      ✓ should sanitize dangerous HTML/JS characters (15 ms)
+      ✓ should sanitize SQL injection attempts (3 ms)
+      ✓ should handle deeply nested objects safely (2 ms)
+    MongoDB Injection Protection
+      ✓ should remove MongoDB operators from queries (5 ms)
+      ✓ should handle MongoDB injection in nested objects (2 ms)
+    Error Handling
+      ✓ should handle circular references without crashing (1 ms)
+      ✓ should handle deeply nested circular references (1 ms)
+  Secure Test Data Generation
+    ✓ should not contain hardcoded passwords (6 ms)
+    ✓ should generate unique passwords for each test (1 ms)
+
+PASS ts-jest src/tests/device.get.api.test.ts (17.05 s)
+  GET /devices
+    ✓ GET /devices => array of devices (11 ms)
+
+[2025-10-05 08:43:01] [32mINFO[39m: [36mGET /devices - returning 2 devices[39m [90m{"module":"devices"}[39m
+[2025-10-05 08:43:01] [32mINFO[39m: [36mGET /devices/68e22f9541a79be587bde76d - device found[39m [90m{"module":"devices"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36m[slow-test-id] Slow database query detected: slowFind on testCollection - 1100.70ms[39m [90m{"module":"db-monitor"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36mPotential MongoDB injection attempt: $or[39m [90m{"module":"security-middleware"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36mPotential MongoDB injection attempt: $regex[39m [90m{"module":"security-middleware"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36mPotential MongoDB injection attempt: $where[39m [90m{"module":"security-middleware"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36mPotential MongoDB injection attempt: $ne[39m [90m{"module":"security-middleware"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36mPotential MongoDB injection attempt: user.name[39m [90m{"module":"security-middleware"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36mPotential MongoDB injection attempt: $where[39m [90m{"module":"security-middleware"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36mPotential MongoDB injection attempt: $ne[39m [90m{"module":"security-middleware"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36mPotential MongoDB injection attempt: $in[39m [90m{"module":"security-middleware"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36mCircular reference detected during sanitization[39m [90m{"module":"security-middleware"}[39m
+[2025-10-05 08:43:01] [33mWARN[39m: [36mCircular reference detected during sanitization[39m [90m{"module":"security-middleware"}[39m
+PASS ts-jest src/tests/monitoring.test.ts (17.481 s)
+  Monitoring & Observability System
+    Correlation ID Middleware
+      ✓ should generate correlation ID for requests (10 ms)
+      ✓ should use provided correlation ID from headers (2 ms)
+    Metrics Collection
+      ✓ should track request counts (3 ms)
+      ✓ should calculate response time percentiles (6 ms)
+      ✓ should track error rates (3 ms)
+      ✓ should generate Prometheus metrics format (2 ms)
+      ✓ should identify slow requests (2 ms)
+    Database Monitor
+      ✓ should track query execution times (6 ms)
+      ✓ should detect slow queries (1102 ms)
+      ✓ should track query statistics by operation (202 ms)
+      ✓ should handle database errors (22 ms)
+      ✓ should assess connection health
+    Health Check System
+      ✓ should perform comprehensive health check (3 ms)
+      ✓ should check database health (1 ms)
+      ✓ should check system resources (1 ms)
+      ✓ should check memory usage
+      ✓ should determine overall health status (1 ms)
+      ✓ should generate alerts for critical conditions
+      ✓ should track alert history
+    Integration Tests
+      ✓ should provide consistent correlation IDs across services (1 ms)
+      ✓ should provide comprehensive monitoring data
+    Performance Impact
+      ✓ should have minimal overhead on request processing (2 ms)
+      ✓ should handle high-frequency operations efficiently (14 ms)
+
+----------------------|---------|----------|---------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+File                  | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                                                                                                                                                                                                                       
+----------------------|---------|----------|---------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+All files             |   69.29 |    66.51 |   42.42 |   69.29 |                                                                                                                                                                                                                                         
+ controllers          |   70.01 |    67.94 |   80.48 |   70.01 |                                                                                                                                                                                                                                         
+  attributes.ts       |   63.93 |    71.87 |   72.72 |   63.93 | 49,81-87,90,98-134,140-176,182-218,268-270,272-278,281,309-310,333-341,344,377-383,386,410-416,419,452-458,461                                                                                                                          
+  devices.ts          |   55.55 |    61.11 |   55.55 |   55.55 | 53-57,80-84,89-126,149-151,159-161,166-177,181-209,221-222,228-230,242-244,249-261                                                                                                                                                      
+  github.ts           |   95.89 |       50 |     100 |   95.89 | 33-35                                                                                                                                                                                                                                   
+  health.ts           |     100 |       90 |     100 |     100 | 56                                                                                                                                                                                                                                      
+  logs.ts             |   71.73 |    58.82 |   85.71 |   71.73 | 65,92-98,101,123-124,130-131,137-143,146,154-193,250-254,261-267,270,308-314,317,330-337,340-347,364-370,373                                                                                                                            
+  models.ts           |   73.34 |    71.08 |     100 |   73.34 | 118-125,159-166,213-220,225-228,235-242,251-258,264-271,312-326,337-344,353-360,399-403,412-419,428-435,452-459,480-484,493-500,508-515,537-544,551-558,581-588                                                                         
+  readme.ts           |   75.67 |       50 |     100 |   75.67 | 28-36                                                                                                                                                                                                                                   
+ middleware           |   67.44 |    59.79 |   43.47 |   67.44 |                                                                                                                                                                                                                                         
+  correlation.ts      |   40.24 |      100 |       0 |   40.24 | 20-22,29-68,73-75,80-82                                                                                                                                                                                                                 
+  database-monitor.ts |    69.4 |    83.33 |   27.77 |    69.4 | 132-146,153-186,261-263,269-270,278-281,287-293,299-305,311-317,323-329,335-341,347-353,359-365,371-377,383-387                                                                                                                         
+  health-alerting.ts  |   64.19 |     41.3 |   57.14 |   64.19 | 106-111,119-124,132-137,145-150,163,165,169-170,183-184,217-218,220-221,241-243,261-262,264-265,267-268,288-290,313-318,334-336,356-357,359-360,380-382,393-400,406-417,423-433,439-446,453-482,488-497,503-504,517-528,538-575,581-604 
+  metrics.ts          |   79.18 |    70.37 |      70 |   79.18 | 71-72,183,224-248,254-276,282-291                                                                                                                                                                                                       
+ middlewares          |    70.3 |    71.87 |   54.54 |    70.3 |                                                                                                                                                                                                                                         
+  security.ts         |    70.3 |    71.87 |   54.54 |    70.3 | 74-80,97-103,111-122,139-140,146-151,160-165,218-221,237-245,251-253,259-261,268-285,314-319,335-357                                                                                                                                    
+ services             |   71.42 |      100 |       0 |   71.42 |                                                                                                                                                                                                                                         
+  logs.ts             |   71.42 |      100 |       0 |   71.42 | 41-56                                                                                                                                                                                                                                   
+ tests                |   75.28 |       92 |   24.13 |   75.28 |                                                                                                                                                                                                                                         
+  testGenerators.ts   |   75.28 |       92 |   24.13 |   75.28 | 50-54,63-65,68-80,114-117,138-141,169-171,175-177,184-190,234-245,265-269,274-282,287-292,297-301,306-311,331,354-355                                                                                                                   
+ utils                |   64.97 |    43.75 |   18.91 |   64.97 |                                                                                                                                                                                                                                         
+  config.ts           |   96.03 |     42.1 |     100 |   96.03 | 48-49,72-73                                                                                                                                                                                                                             
+  db.ts               |   40.34 |       40 |    9.52 |   40.34 | 107-133,139-187,193-222,228-235,241-269,275-285,291-310,316-325,331-348,354-357,367-368,374-375,380-386,392-393,403-425,432-446,454-462,473-506,510-518                                                                                 
+  errors.ts           |   60.74 |       60 |   23.07 |   60.74 | 37-38,51-52,57-58,63-64,69-70,108-121,143-180,185-192,197-201,206-214                                                                                                                                                                   
+  logger.ts           |   90.47 |    33.33 |      50 |   90.47 | 15-18                                                                                                                                                                                                                                   
+----------------------|---------|----------|---------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Jest: "global" coverage threshold for statements (70%) not met: 69.29%
+Jest: "global" coverage threshold for lines (70%) not met: 69.29%
+Jest: "global" coverage threshold for functions (60%) not met: 42.42%
+Test Suites: 1 failed, 19 passed, 20 total
+Tests:       183 passed, 183 total
+Snapshots:   0 total
+Time:        19.127 s
+Ran all test suites.

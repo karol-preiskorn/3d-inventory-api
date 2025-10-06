@@ -10,7 +10,6 @@ import { RoleService } from '../services/RoleService'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('RoleController')
-const roleService = RoleService.getInstance()
 
 export class RoleController {
   /**
@@ -18,6 +17,7 @@ export class RoleController {
    */
   static async getAllRoles(req: Request, res: Response): Promise<void> {
     try {
+      const roleService = RoleService.getInstance()
       const roles = await roleService.getAllRoles()
 
       res.status(200).json({
@@ -51,6 +51,7 @@ export class RoleController {
         return
       }
 
+      const roleService = RoleService.getInstance()
       const role = await roleService.getRoleByName(name as UserRole)
 
       if (!role) {
@@ -115,6 +116,7 @@ export class RoleController {
         return
       }
 
+      const roleService = RoleService.getInstance()
       const newRole = await roleService.createRole({ name, permissions })
 
       logger.info(`Role created by ${req.user?.username}: ${name}`)
@@ -181,6 +183,7 @@ export class RoleController {
         return
       }
 
+      const roleService = RoleService.getInstance()
       const updatedRole = await roleService.updateRole(name as UserRole, { permissions })
 
       logger.info(`Role updated by ${req.user?.username}: ${name}`)
@@ -224,6 +227,7 @@ export class RoleController {
         return
       }
 
+      const roleService = RoleService.getInstance()
       const deleted = await roleService.deleteRole(name as UserRole)
 
       if (!deleted) {
@@ -275,6 +279,7 @@ export class RoleController {
         return
       }
 
+      const roleService = RoleService.getInstance()
       const permissions = await roleService.getRolePermissions(name as UserRole)
 
       res.status(200).json({
@@ -318,6 +323,7 @@ export class RoleController {
         return
       }
 
+      const roleService = RoleService.getInstance()
       const hasPermission = await roleService.hasPermission(name as UserRole, permission as Permission)
 
       res.status(200).json({

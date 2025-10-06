@@ -1,4 +1,4 @@
-import { Request, RequestHandler, Response, NextFunction } from 'express'
+import { NextFunction, Request, RequestHandler, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { JwtPayload } from '../middlewares/auth'
 import { UserService } from '../services/UserService'
@@ -6,7 +6,6 @@ import config from '../utils/config'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('login')
-const userService = UserService.getInstance()
 const JWT_SECRET = config.JWT_SECRET
 
 // Extend Express Request interface to include 'user' property using module augmentation
@@ -34,7 +33,7 @@ export const loginUser: RequestHandler = async (req: Request, res: Response): Pr
     }
 
     // Authenticate user with MongoDB
-    const user = await userService.authenticateUser(username, password)
+    const user = await UserService.getInstance().authenticateUser(username, password)
 
     if (!user) {
       logger.warn(`Invalid login attempt for user: ${username}`)

@@ -4,7 +4,7 @@
  */
 
 import { Request } from 'express'
-import { Collection, Db, MongoClient } from 'mongodb'
+import { Collection, CreateIndexesOptions, Db, Document, Filter, FindOptions, MongoClient } from 'mongodb'
 import { getCorrelationId } from '../middleware/correlation'
 import getLogger from '../utils/logger'
 
@@ -283,7 +283,7 @@ export class MonitoredCollection {
   /**
    * Find documents with monitoring
    */
-  async find(filter: any, options?: any): Promise<any[]> {
+  async find(filter: Filter<Document>, options?: FindOptions): Promise<Document[]> {
     return databaseMonitor.monitorOperation(
       async () => this.collection.find(filter, options).toArray(),
       'find',
@@ -295,7 +295,7 @@ export class MonitoredCollection {
   /**
    * Find one document with monitoring
    */
-  async findOne(filter: any, options?: any): Promise<any> {
+  async findOne(filter: Filter<Document>, options?: FindOptions): Promise<Document | null> {
     return databaseMonitor.monitorOperation(
       async () => this.collection.findOne(filter, options),
       'findOne',
@@ -307,7 +307,7 @@ export class MonitoredCollection {
   /**
    * Insert one document with monitoring
    */
-  async insertOne(doc: any, options?: any): Promise<any> {
+  async insertOne(doc: Document, options?: FindOptions): Promise<Document> {
     return databaseMonitor.monitorOperation(
       async () => this.collection.insertOne(doc, options),
       'insertOne',
@@ -319,7 +319,7 @@ export class MonitoredCollection {
   /**
    * Update one document with monitoring
    */
-  async updateOne(filter: any, update: any, options?: any): Promise<any> {
+  async updateOne(filter: Filter<Document>, update: Document, options?: FindOptions): Promise<Document> {
     return databaseMonitor.monitorOperation(
       async () => this.collection.updateOne(filter, update, options),
       'updateOne',
@@ -331,7 +331,7 @@ export class MonitoredCollection {
   /**
    * Delete one document with monitoring
    */
-  async deleteOne(filter: any, options?: any): Promise<any> {
+  async deleteOne(filter: Filter<Document>, options?: FindOptions): Promise<Document> {
     return databaseMonitor.monitorOperation(
       async () => this.collection.deleteOne(filter, options),
       'deleteOne',
@@ -343,7 +343,7 @@ export class MonitoredCollection {
   /**
    * Count documents with monitoring
    */
-  async countDocuments(filter: any, options?: any): Promise<number> {
+  async countDocuments(filter: Filter<Document>, options?: FindOptions): Promise<number> {
     return databaseMonitor.monitorOperation(
       async () => this.collection.countDocuments(filter, options),
       'countDocuments',
@@ -355,7 +355,7 @@ export class MonitoredCollection {
   /**
    * Create index with monitoring
    */
-  async createIndex(indexSpec: any, options?: any): Promise<any> {
+  async createIndex(indexSpec: Document, options?: CreateIndexesOptions): Promise<string> {
     return databaseMonitor.monitorOperation(
       async () => this.collection.createIndex(indexSpec, options),
       'createIndex',
@@ -367,7 +367,7 @@ export class MonitoredCollection {
   /**
    * Get collection information with monitoring
    */
-  async collectionInfo(): Promise<any> {
+  async collectionInfo(): Promise<Document> {
     return databaseMonitor.monitorOperation(
       async () => this.collection.options(),
       'collectionInfo',

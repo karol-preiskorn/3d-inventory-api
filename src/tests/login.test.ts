@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
-import { authenticateBearer, getProtectedData, loginUser } from '../controllers/login'
-import { UserService } from '../services/UserService'
-
-// Mock the dependencies
+// Mock the dependencies before importing the controller
 jest.mock('../services/UserService')
 jest.mock('../utils/logger', () => ({
   __esModule: true,
@@ -16,10 +13,17 @@ jest.mock('../utils/logger', () => ({
 }))
 jest.mock('jsonwebtoken')
 
+import { authenticateBearer, getProtectedData, loginUser } from '../controllers/login'
+import { UserService } from '../services/UserService'
+
 const mockUserService = {
   authenticateUser: jest.fn(),
   getUserByUsername: jest.fn()
 }
+
+// Setup the mock to return our mock service
+;(UserService.getInstance as jest.Mock).mockReturnValue(mockUserService)
+
 const mockJwt = jwt as jest.Mocked<typeof jwt>
 
 describe('Login Controller', () => {
@@ -46,9 +50,6 @@ describe('Login Controller', () => {
 
     // Reset all mocks
     jest.clearAllMocks()
-
-    // Mock UserService.getInstance()
-    ;(UserService.getInstance as jest.Mock).mockReturnValue(mockUserService)
   })
 
   describe('loginUser', () => {
@@ -99,7 +100,7 @@ describe('Login Controller', () => {
       expect(responseStatus).toHaveBeenCalledWith(500)
       expect(responseJson).toHaveBeenCalledWith({
         error: 'Internal Server Error',
-        message: 'Authentication service unavailable'
+        message: 'Internal server error during login'
       })
     })
   })
@@ -122,7 +123,7 @@ describe('Login Controller', () => {
       expect(responseStatus).toHaveBeenCalledWith(401)
       expect(responseJson).toHaveBeenCalledWith({
         error: 'Unauthorized',
-        message: 'Access token required'
+        message: 'Missing or invalid Authorization header'
       })
     })
   })
@@ -141,15 +142,17 @@ describe('Login Controller', () => {
       getProtectedData(mockRequest as Request, mockResponse as Response, mockNext)
 
       expect(responseJson).toHaveBeenCalledWith({
-        success: true,
-        message: 'Access granted',
-        data: {
-          user: {
-            id: 'user123',
-            username: 'testuser',
-            role: 'admin',
-            permissions: ['read', 'write']
-          }
+        message: 'This is a protected route',
+        user: {
+          id: 'user123',
+          username: 'testuser',
+          role: 'admin',
+          permissions: ['read', 'write']
+        },
+        timestamp: expect.any(String),
+        serverInfo: {
+          version: '1.0.0',
+          environment: expect.any(String)
         }
       })
     })

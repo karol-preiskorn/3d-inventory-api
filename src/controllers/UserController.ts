@@ -12,9 +12,6 @@ import { UserService } from '../services/UserService'
 import getLogger from '../utils/logger'
 
 const logger = getLogger('UserController')
-const userService = UserService.getInstance()
-
-//const roleService = RoleService.getInstance();
 
 export class UserController {
   /**
@@ -44,6 +41,7 @@ export class UserController {
         return
       }
 
+      const userService = UserService.getInstance()
       const newUser = await userService.createUser(userData)
 
       logger.info(`User created by ${req.user?.username}: ${userData.username}`)
@@ -76,6 +74,7 @@ export class UserController {
    */
   static async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
+      const userService = UserService.getInstance()
       const users = await userService.getAllUsers()
 
       res.status(200).json({
@@ -120,6 +119,7 @@ export class UserController {
         return
       }
 
+      const userService = UserService.getInstance()
       const user = await userService.getUserById(id)
 
       if (!user) {
@@ -150,6 +150,7 @@ export class UserController {
    */
   static async updateUser(req: Request, res: Response): Promise<void> {
     try {
+      const userService = UserService.getInstance()
       const { id } = req.params
       const updateData: UpdateUserRequest = req.body
       const requestingUser = req.user
@@ -228,6 +229,7 @@ export class UserController {
    */
   static async deleteUser(req: Request, res: Response): Promise<void> {
     try {
+      const userService = UserService.getInstance()
       const { id } = req.params
 
       if (!id) {
@@ -280,6 +282,7 @@ export class UserController {
    */
   static async getCurrentUser(req: Request, res: Response): Promise<void> {
     try {
+      const userService = UserService.getInstance()
       const userId = req.user?.id
 
       if (!userId) {
@@ -321,6 +324,7 @@ export class UserController {
    */
   static async updateCurrentUser(req: Request, res: Response): Promise<void> {
     try {
+      const userService = UserService.getInstance()
       const userId = req.user?.id
       const updateData: UpdateUserRequest = req.body
 

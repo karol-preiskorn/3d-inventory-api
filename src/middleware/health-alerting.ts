@@ -36,7 +36,7 @@ interface HealthCheckResult {
   service: string
   status: HealthStatus
   message: string
-  details?: Record<string, any>
+  details?: Record<string, number | string | boolean>
   responseTime?: number
 }
 
@@ -67,7 +67,7 @@ interface Alert {
   type: AlertType
   severity: 'low' | 'medium' | 'high' | 'critical'
   message: string
-  details: Record<string, any>
+  details: Record<string, number | string | boolean | object>
   timestamp: Date
   correlationId?: string
   resolved: boolean
@@ -324,7 +324,7 @@ class HealthMonitor {
         responseTime,
         details: {
           uptime,
-          loadAvg: loadAvgArray,
+          loadAvg: loadAvgArray.join(', '),
           platform: process.platform,
           nodeVersion: process.version,
           pid: process.pid
@@ -402,8 +402,9 @@ class HealthMonitor {
     // Check database alerts
     const dbCheck = health.checks.find(c => c.service === 'database')
 
-    if (dbCheck?.details?.errors && dbCheck.details.errors > 0) {
-      const errorRate = (dbCheck.details.errors / (dbCheck.details.queryCount || 1)) * 100
+    if (dbCheck?.details?.errors && typeof dbCheck.details.errors === 'number' && dbCheck.details.errors > 0) {
+      const queryCount = typeof dbCheck.details.queryCount === 'number' ? dbCheck.details.queryCount : 1
+      const errorRate = (dbCheck.details.errors / queryCount) * 100
 
       if (errorRate > 10) {
         this.triggerAlert({
@@ -419,7 +420,7 @@ class HealthMonitor {
     // Check response time alerts
     const metricsCheck = health.checks.find(c => c.service === 'metrics')
 
-    if (metricsCheck?.details?.responseTimeP95 && metricsCheck.details.responseTimeP95 > 2000) {
+    if (metricsCheck?.details?.responseTimeP95 && typeof metricsCheck.details.responseTimeP95 === 'number' && metricsCheck.details.responseTimeP95 > 2000) {
       this.triggerAlert({
         type: AlertType.HIGH_RESPONSE_TIME,
         severity: 'medium',
@@ -435,7 +436,7 @@ class HealthMonitor {
     // Check memory alerts
     const memoryCheck = health.checks.find(c => c.service === 'memory')
 
-    if (memoryCheck?.details?.usagePercent && memoryCheck.details.usagePercent > 85) {
+    if (memoryCheck?.details?.usagePercent && typeof memoryCheck.details.usagePercent === 'number' && memoryCheck.details.usagePercent > 85) {
       this.triggerAlert({
         type: AlertType.MEMORY_USAGE,
         severity: memoryCheck.details.usagePercent > 95 ? 'critical' : 'high',

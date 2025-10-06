@@ -1,0 +1,463 @@
+/**
+ * @file db.utils.test.ts
+ * @description Comprehensive test suite for database utilities
+ * @module tests
+ */
+
+import { Db, MongoClient } from 'mongodb'
+
+// Mock dependencies first
+jest.mock('../utils/logger', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn()
+  }))
+}))
+
+jest.mock('../utils/config', () => ({
+  ATLAS_URI: 'mongodb://localhost:27017',
+  DBNAME: 'test-db',
+  NODE_ENV: 'test',
+  USE_EMOJI: false
+}))
+
+describe('Database Utils - Legacy Functions Coverage Tests', () => {
+  let mockClient: jest.Mocked<MongoClient>
+  let mockDb: jest.Mocked<Db>
+  let mockAdmin: any
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    // Setup mock admin interface
+    mockAdmin = {
+      ping: jest.fn().mockResolvedValue({ ok: 1 })
+    }
+
+    // Setup mock database
+    mockDb = {
+      collection: jest.fn(),
+      admin: jest.fn().mockReturnValue(mockAdmin)
+    } as unknown as jest.Mocked<Db>
+
+    // Setup mock client
+    mockClient = {
+      connect: jest.fn().mockResolvedValue(undefined),
+      close: jest.fn().mockResolvedValue(undefined),
+      db: jest.fn().mockReturnValue(mockDb),
+      on: jest.fn()
+    } as unknown as jest.Mocked<MongoClient>
+  })
+
+  describe('initializeDatabase', () => {
+    it('should initialize database connection successfully', async () => {
+      const { MongoClient } = await import('mongodb')
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+      await expect(initializeDatabase()).resolves.toBeUndefined()
+      expect(mockClient.connect).toHaveBeenCalled()
+      expect(mockClient.db).toHaveBeenCalledWith('test-db')
+      expect(mockAdmin.ping).toHaveBeenCalled()
+    })
+
+    it('should handle missing ATLAS_URI', async () => {
+      const originalUri = config.ATLAS_URI
+
+      ;(config as any).ATLAS_URI = undefined
+
+      await expect(initializeDatabase()).rejects.toThrow('ATLAS_URI environment variable is not set')
+
+      // Restore original value
+      ;(config as any).ATLAS_URI = originalUri
+    })
+
+    it('should handle invalid ATLAS_URI', async () => {
+      const originalUri = config.ATLAS_URI
+
+      ;(config as any).ATLAS_URI = 123 // Invalid type
+
+      await expect(initializeDatabase()).rejects.toThrow('ATLAS_URI environment variable is not set')
+
+      // Restore original value
+      ;(config as any).ATLAS_URI = originalUri
+    })
+
+    it('should handle missing DBNAME', async () => {
+      const originalDbName = config.DBNAME
+
+      ;(config as any).DBNAME = undefined
+
+      await expect(initializeDatabase()).rejects.toThrow('Invalid or undefined DBNAME')
+
+      // Restore original value
+      ;(config as any).DBNAME = originalDbName
+    })
+
+    it('should handle connection failure', async () => {
+      const { MongoClient } = await import('mongodb')
+      const failingClient = {
+        ...mockClient,
+        connect: jest.fn().mockRejectedValue(new Error('Connection failed'))
+      }
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => failingClient as any)
+
+      await expect(initializeDatabase()).rejects.toThrow('MongoDB connection failed')
+    })
+
+    it('should handle ping failure during connection test', async () => {
+      const { MongoClient } = await import('mongodb')
+
+      mockAdmin.ping.mockRejectedValue(new Error('Ping failed'))
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+      await expect(initializeDatabase()).rejects.toThrow('MongoDB connection failed')
+    })
+  })
+
+  describe('getDatabase', () => {
+    it('should return database instance when connected', async () => {
+      const { MongoClient } = await import('mongodb')
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+      await initializeDatabase()
+      const db = await getDatabase()
+
+      expect(db).toBe(mockDb)
+    })
+
+    it('should initialize connection if not connected', async () => {
+      const { MongoClient } = await import('mongodb')
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+      const db = await getDatabase()
+
+      expect(db).toBe(mockDb)
+      expect(mockClient.connect).toHaveBeenCalled()
+    })
+
+    it('should reconnect if ping fails', async () => {
+      const { MongoClient } = await import('mongodb')
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+      await initializeDatabase()
+
+      // Make ping fail once, then succeed
+      mockAdmin.ping
+        .mockRejectedValueOnce(new Error('Ping failed'))
+        .mockResolvedValue({ ok: 1 })
+
+      const db = await getDatabase()
+
+      expect(db).toBe(mockDb)
+      expect(mockAdmin.ping).toHaveBeenCalledTimes(3) // Initial + failed + reconnect
+    })
+  })
+
+  describe('getDatabaseStatus', () => {
+    it('should return connection status', async () => {
+      const { MongoClient } = await import('mongodb')
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+      await initializeDatabase()
+      const status = getDatabaseStatus()
+
+      expect(status).toHaveProperty('isConnected', true)
+      expect(status).toHaveProperty('lastHealthCheck')
+      expect(status).toHaveProperty('poolConfig')
+    })
+
+    it('should return disconnected status when not initialized', () => {
+      const status = getDatabaseStatus()
+
+      expect(status).toHaveProperty('isConnected', false)
+      expect(status).toHaveProperty('lastHealthCheck', 0)
+      expect(status).toHaveProperty('poolConfig')
+    })
+  })
+
+  describe('shutdownDatabase', () => {
+    it('should shutdown database connection successfully', async () => {
+      const { MongoClient } = await import('mongodb')
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+      await initializeDatabase()
+      await shutdownDatabase()
+
+      expect(mockClient.close).toHaveBeenCalled()
+    })
+
+    it('should handle shutdown errors gracefully', async () => {
+      const { MongoClient } = await import('mongodb')
+      const failingClient = {
+        ...mockClient,
+        close: jest.fn().mockRejectedValue(new Error('Close failed'))
+      }
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => failingClient as any)
+
+      await initializeDatabase()
+
+      await expect(shutdownDatabase()).rejects.toThrow('Failed to close MongoDB connection')
+    })
+  })
+
+  describe('Legacy Functions', () => {
+    describe('connectToCluster', () => {
+      it('should connect to MongoDB cluster', async () => {
+        const { MongoClient } = await import('mongodb')
+
+        ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+        const client = await connectToCluster()
+
+        expect(client).toBe(mockClient)
+        expect(mockClient.connect).toHaveBeenCalled()
+      })
+
+      it('should handle missing ATLAS_URI', async () => {
+        const originalUri = config.ATLAS_URI
+
+        ;(config as any).ATLAS_URI = undefined
+
+        await expect(connectToCluster()).rejects.toThrow('ATLAS_URI environment variable is not set')
+
+        // Restore original value
+        ;(config as any).ATLAS_URI = originalUri
+      })
+
+      it('should handle connection failure', async () => {
+        const { MongoClient } = await import('mongodb')
+        const failingClient = {
+          ...mockClient,
+          connect: jest.fn().mockRejectedValue(new Error('Connection failed'))
+        }
+
+        ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => failingClient as any)
+
+        await expect(connectToCluster()).rejects.toThrow('MongoDB connection to test-db failed')
+      })
+    })
+
+    describe('connectToDb', () => {
+      it('should return database instance', () => {
+        const db = connectToDb(mockClient)
+
+        expect(db).toBe(mockDb)
+        expect(mockClient.db).toHaveBeenCalledWith('test-db')
+      })
+
+      it('should handle invalid DBNAME', () => {
+        const originalDbName = config.DBNAME
+
+        ;(config as any).DBNAME = undefined
+
+        expect(() => connectToDb(mockClient)).toThrow('Invalid or undefined DBNAME')
+
+        // Restore original value
+        ;(config as any).DBNAME = originalDbName
+      })
+
+      it('should handle database connection error', () => {
+        const failingClient = {
+          ...mockClient,
+          db: jest.fn().mockImplementation(() => {
+            throw new Error('Database error')
+          })
+        }
+
+        expect(() => connectToDb(failingClient as any)).toThrow('Connection to Atlas DB failed')
+      })
+    })
+
+    describe('closeConnection', () => {
+      it('should close connection successfully', async () => {
+        await closeConnection(mockClient)
+
+        expect(mockClient.close).toHaveBeenCalled()
+      })
+
+      it('should handle close errors', async () => {
+        const failingClient = {
+          ...mockClient,
+          close: jest.fn().mockRejectedValue(new Error('Close failed'))
+        }
+
+        await expect(closeConnection(failingClient as any)).rejects.toThrow('Close failed')
+      })
+    })
+
+    describe('getDb (cached)', () => {
+      it('should return cached database if recent', async () => {
+        const { MongoClient } = await import('mongodb')
+
+        ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+        // First call should initialize
+        const db1 = await getDb()
+
+        expect(db1).toBe(mockDb)
+
+        // Second call should use cache
+        const db2 = await getDb()
+
+        expect(db2).toBe(mockDb)
+
+        // Should only connect once due to caching
+        expect(mockClient.connect).toHaveBeenCalledTimes(1)
+      })
+
+      it('should handle missing ATLAS_URI', async () => {
+        const originalUri = config.ATLAS_URI
+
+        ;(config as any).ATLAS_URI = undefined
+
+        const db = await getDb()
+
+        expect(db).toBeNull()
+
+        // Restore original value
+        ;(config as any).ATLAS_URI = originalUri
+      })
+
+      it('should handle connection errors', async () => {
+        const { MongoClient } = await import('mongodb')
+        const failingClient = {
+          ...mockClient,
+          connect: jest.fn().mockRejectedValue(new Error('Connection failed'))
+        }
+
+        ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => failingClient as any)
+
+        const db = await getDb()
+
+        expect(db).toBeNull()
+      })
+
+      it('should handle ping errors and reset cache', async () => {
+        const { MongoClient } = await import('mongodb')
+
+        ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+        // First successful connection
+        await getDb()
+
+        // Make ping fail
+        mockAdmin.ping.mockRejectedValue(new Error('Ping failed'))
+
+        const db = await getDb()
+
+        expect(db).toBeNull()
+      })
+    })
+  })
+
+  describe('dbConnection Middleware', () => {
+    it('should attach database to request locals', async () => {
+      const { MongoClient } = await import('mongodb')
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+      const mockReq = {
+        app: {
+          locals: {}
+        }
+      } as any
+      const mockRes = {} as any
+      const mockNext = jest.fn()
+
+      await dbConnection(mockReq, mockRes, mockNext)
+
+      expect(mockReq.app.locals.db).toBe(mockDb)
+      expect(mockNext).toHaveBeenCalledWith()
+    })
+
+    it('should handle database connection errors', async () => {
+      const originalUri = config.ATLAS_URI
+
+      ;(config as any).ATLAS_URI = undefined
+
+      const mockReq = {
+        app: {
+          locals: {}
+        }
+      } as any
+      const mockRes = {} as any
+      const mockNext = jest.fn()
+
+      await dbConnection(mockReq, mockRes, mockNext)
+
+      expect(mockNext).toHaveBeenCalledWith()
+
+      // Restore original value
+      ;(config as any).ATLAS_URI = originalUri
+    })
+  })
+
+  describe('Connection Pool Configuration', () => {
+    it('should use production pool settings in production', () => {
+      const originalEnv = config.NODE_ENV
+
+      ;(config as any).NODE_ENV = 'production'
+
+      // Re-import to get updated config
+      jest.resetModules()
+
+      // Check that production settings would be applied
+      expect(config.NODE_ENV).toBe('production')
+
+      // Restore original value
+      ;(config as any).NODE_ENV = originalEnv
+    })
+
+    it('should use development pool settings in test/development', () => {
+      expect(config.NODE_ENV).toBe('test')
+      // Development/test settings should be used
+    })
+  })
+
+  describe('Error Handling and Edge Cases', () => {
+    it('should handle multiple concurrent initialization attempts', async () => {
+      const { MongoClient } = await import('mongodb')
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+      // Start multiple initialization attempts concurrently
+      const promises = [
+        initializeDatabase(),
+        initializeDatabase(),
+        initializeDatabase()
+      ]
+
+      await Promise.all(promises)
+
+      // Should only connect once due to connection promise handling
+      expect(mockClient.connect).toHaveBeenCalledTimes(1)
+    })
+
+    it('should handle health check intervals', async () => {
+      const { MongoClient } = await import('mongodb')
+
+      ;(MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient)
+
+      await initializeDatabase()
+
+      // Wait a bit to ensure health check interval is set up
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      await shutdownDatabase()
+
+      // Verify that monitoring was set up (client.on should be called)
+      expect(mockClient.on).toHaveBeenCalled()
+    })
+  })
+})

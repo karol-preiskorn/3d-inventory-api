@@ -39,7 +39,7 @@ export interface UpdateUserRequest {
 }
 
 export interface UserResponse {
-  _id: ObjectId
+  _id: string
   username: string
   email: string
   role: UserRole
@@ -79,7 +79,7 @@ export function toUserResponse(user: User): UserResponse {
   }
 
   return {
-    _id: user._id,
+    _id: user._id.toString(),
     username: user.username,
     email: user.email,
     role: user.role,
