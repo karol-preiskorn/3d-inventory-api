@@ -1,0 +1,35 @@
+[
+  {
+    "_id": "674209f981bfc47a07217dfd",
+    "type": "Bridge",
+    "unit": "km",
+    "name": "Power",
+    "componentName": "model",
+    "component": null,
+    "units": null
+  },
+  {
+    "_id": "6836018d17369e771e5b4856",
+    "name": "Memory",
+    "componentName": "device",
+    "unit": "GB",
+    "type": "Bridge",
+    "description": "Memory"
+  },
+  {
+    "_id": "6836037917369e771e5b4858",
+    "name": "Disk Space",
+    "componentName": "device",
+    "unit": "TB",
+    "type": "Load Balancer",
+    "description": "test"
+  },
+  {
+    "_id": "683603b917369e771e5b485a",
+    "name": "CPU in core",
+    "componentName": "model",
+    "unit": "m",
+    "type": "Workstations",
+    "description": "test"
+  }
+]
