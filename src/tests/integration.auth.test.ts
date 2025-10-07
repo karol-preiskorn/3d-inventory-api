@@ -6,7 +6,7 @@
 
 import jwt from 'jsonwebtoken'
 import { MongoClient } from 'mongodb'
-// import { MongoMemoryServer } from 'mongodb-memory-server' // Not available
+import { MongoMemoryServer } from 'mongodb-memory-server'
 import request from 'supertest'
 import app from '../main'
 import { Permission, UserRole } from '../middlewares/auth'
@@ -14,7 +14,7 @@ import config from '../utils/config'
 
 describe.skip('Authentication Integration Tests - Disabled (missing mongodb-memory-server)', () => {
   let mongoServer: any // MongoMemoryServer
-  const mongoClient: MongoClient | null = null
+  let mongoClient: MongoClient | null = null
 
   beforeAll(async () => {
     // Setup in-memory MongoDB for integration testing
@@ -24,6 +24,9 @@ describe.skip('Authentication Integration Tests - Disabled (missing mongodb-memo
     // Override DB connection for testing
     process.env.MONGODB_URI = uri
     process.env.DB_NAME = 'test-3d-inventory'
+
+    mongoClient = new MongoClient(uri)
+    await mongoClient.connect()
   })
 
   afterAll(async () => {

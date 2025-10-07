@@ -305,11 +305,6 @@ describe('UserService - Service Layer Coverage Tests', () => {
         role: UserRole.ADMIN
       }
       const mockExistingUser = createMockUser()
-      const mockUpdateResult = {
-        matchedCount: 1,
-        modifiedCount: 1,
-        acknowledged: true
-      }
       const mockUpdatedUser = {
         ...mockExistingUser,
         email: 'newemail@example.com',
@@ -402,6 +397,7 @@ describe('UserService - Service Layer Coverage Tests', () => {
         await userService.getUserByUsername('testuser')
       } catch (error) {
         // Expected error
+        expect(error).toBeInstanceOf(Error)
       }
 
       expect(mockCloseConnection).toHaveBeenCalledWith(mockClient)

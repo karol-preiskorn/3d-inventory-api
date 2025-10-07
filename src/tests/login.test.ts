@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
+import { authenticateBearer, getProtectedData, loginUser } from '../controllers/login'
+import { UserService } from '../services/UserService'
+
 // Mock the dependencies before importing the controller
 jest.mock('../services/UserService')
 jest.mock('../utils/logger', () => ({
@@ -13,8 +16,6 @@ jest.mock('../utils/logger', () => ({
 }))
 jest.mock('jsonwebtoken')
 
-import { authenticateBearer, getProtectedData, loginUser } from '../controllers/login'
-import { UserService } from '../services/UserService'
 
 const mockUserService = {
   authenticateUser: jest.fn(),

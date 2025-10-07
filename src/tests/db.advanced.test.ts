@@ -86,7 +86,7 @@ describe('Database Utils - Advanced Error Handling', () => {
     })
 
     it('should test connection event handlers', async () => {
-      const eventHandlers: { [key: string]: Function } = {}
+      const eventHandlers: { [key: string]: (error?: Error) => void } = {}
       const mockClient = {
         connect: jest.fn().mockResolvedValue(undefined),
         db: jest.fn().mockReturnValue({
