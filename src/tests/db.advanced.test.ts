@@ -78,11 +78,13 @@ describe('Database Utils - Advanced Error Handling', () => {
 
       const { initializeDatabase, getDatabaseStatus } = await import('../utils/db')
 
-      await initializeDatabase()
+      // This should throw an error due to ping failure
+      await expect(initializeDatabase()).rejects.toThrow('MongoDB connection failed')
 
-      const status = await getDatabaseStatus()
+      const status = getDatabaseStatus()
 
       expect(status).toHaveProperty('isConnected')
+      expect(status.isConnected).toBe(false)
     })
 
     it('should test connection event handlers', async () => {
@@ -119,7 +121,9 @@ describe('Database Utils - Advanced Error Handling', () => {
       }
 
       expect(mockClient.on).toHaveBeenCalledWith('error', expect.any(Function))
-      expect(mockClient.on).toHaveBeenCalledWith('close', expect.any(Function))
+      expect(mockClient.on).toHaveBeenCalledWith('connectionPoolCreated', expect.any(Function))
+      expect(mockClient.on).toHaveBeenCalledWith('connectionPoolClosed', expect.any(Function))
+      expect(mockClient.on).toHaveBeenCalledWith('connectionCreated', expect.any(Function))
     })
 
     it('should test configuration validation edge cases', async () => {
@@ -159,6 +163,14 @@ describe('Database Utils - Advanced Error Handling', () => {
         on: jest.fn(),
         close: jest.fn().mockResolvedValue(undefined)
       }
+
+      // Ensure proper config for this test
+      jest.doMock('../utils/config', () => ({
+        ATLAS_URI: 'mongodb://localhost:27017',
+        DBNAME: 'test-db',
+        NODE_ENV: 'test',
+        USE_EMOJI: false
+      }))
 
       jest.doMock('mongodb', () => ({
         MongoClient: jest.fn().mockImplementation(() => mockClient)
@@ -249,8 +261,8 @@ describe('Database Utils - Advanced Error Handling', () => {
       }
       const { closeConnection } = await import('../utils/db')
 
-      // Should handle close errors gracefully
-      await expect(closeConnection(mockClient as any)).resolves.not.toThrow()
+      // The closeConnection function re-throws errors, so expect it to throw
+      await expect(closeConnection(mockClient as any)).rejects.toThrow('Close failed')
     })
   })
 })

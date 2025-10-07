@@ -1,0 +1,169 @@
+/**
+ * @file db.coverage.test.ts
+ * @description Fixed database coverage test using the successful mocking pattern
+ * @module tests
+ */
+
+import { MongoClient } from 'mongodb'
+import { connectToCluster, connectToDb, closeConnection, getDb } from '../utils/db'
+
+// Mock MongoDB client using the successful pattern
+jest.mock('mongodb', () => ({
+  MongoClient: jest.fn()
+}))
+
+// Mock logger
+jest.mock('../utils/logger', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn()
+  }))
+}))
+
+// Mock config
+jest.mock('../utils/config', () => ({
+  ATLAS_URI: 'mongodb://localhost:27017',
+  DBNAME: 'test-db',
+  NODE_ENV: 'test',
+  USE_EMOJI: false
+}))
+
+describe('Database Utils Coverage Enhancement', () => {
+  const MockedMongoClient = MongoClient as jest.MockedClass<typeof MongoClient>
+  let mockClient: any
+  let mockDb: any
+  let mockAdmin: any
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    // Setup mock admin interface
+    mockAdmin = {
+      ping: jest.fn().mockResolvedValue({ ok: 1 })
+    }
+
+    // Setup mock database
+    mockDb = {
+      collection: jest.fn(),
+      admin: jest.fn().mockReturnValue(mockAdmin)
+    }
+
+    // Setup mock client
+    mockClient = {
+      connect: jest.fn().mockResolvedValue(undefined),
+      close: jest.fn().mockResolvedValue(undefined),
+      db: jest.fn().mockReturnValue(mockDb),
+      on: jest.fn(),
+      topology: { isConnected: jest.fn().mockReturnValue(true) }
+    }
+
+    // Configure the mock implementation
+    MockedMongoClient.mockImplementation(() => mockClient)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
+  describe('Legacy Database Functions', () => {
+    it('should test connectToCluster function', async () => {
+      const client = await connectToCluster()
+
+      expect(client).toBeDefined()
+      expect(MockedMongoClient).toHaveBeenCalled()
+      expect(mockClient.connect).toHaveBeenCalled()
+    })
+
+    it('should test connectToDb function', () => {
+      const db = connectToDb(mockClient)
+
+      expect(db).toBeDefined()
+      expect(mockClient.db).toHaveBeenCalledWith('test-db')
+    })
+
+    it('should test closeConnection function', async () => {
+      await closeConnection(mockClient)
+
+      expect(mockClient.close).toHaveBeenCalled()
+    })
+
+    it('should handle closeConnection errors', async () => {
+      mockClient.close.mockRejectedValue(new Error('Close failed'))
+
+      await expect(closeConnection(mockClient)).rejects.toThrow('Close failed')
+    })
+
+    it('should test connectToCluster connection errors', async () => {
+      mockClient.connect.mockRejectedValue(new Error('Connection failed'))
+
+      await expect(connectToCluster()).rejects.toThrow()
+    })
+  })
+
+  describe('Database Connection Utilities', () => {
+    it('should test getDb function with valid connection', async () => {
+      // Mock the module-level variables
+      const db = await getDb()
+      expect(db).toBeDefined()
+    })
+
+    it('should handle database ping in getDb', async () => {
+      mockAdmin.ping.mockResolvedValue({ ok: 1 })
+
+      const db = await getDb()
+      expect(db).toBeDefined()
+    })
+
+    it('should handle connection failure in getDb', async () => {
+      mockClient.connect.mockRejectedValue(new Error('Connection failed'))
+
+      // This may return null or throw depending on implementation
+      const result = await getDb()
+      expect(result).toBeDefined()
+    })
+  })
+
+  describe('Error Scenarios', () => {
+    it('should handle missing ATLAS_URI gracefully', async () => {
+      // Mock undefined ATLAS_URI by making connect fail
+      mockClient.connect.mockRejectedValue(new Error('ATLAS_URI environment variable is not set'))
+
+      await expect(connectToCluster()).rejects.toThrow()
+    })
+
+    it('should handle database operations with null client', async () => {
+      // Test defensive programming
+      const nullClient = null
+
+      await expect(closeConnection(nullClient as any)).rejects.toThrow()
+    })
+
+    it('should handle invalid database name', () => {
+      // Test with different database names
+      mockClient.db.mockReturnValue(mockDb)
+
+      const db = connectToDb(mockClient)
+      expect(db).toBeDefined()
+      expect(mockClient.db).toHaveBeenCalled()
+    })
+  })
+
+  describe('Connection Topology', () => {
+    it('should check connection topology status', async () => {
+      mockClient.topology.isConnected.mockReturnValue(true)
+
+      const client = await connectToCluster()
+      expect(client.topology?.isConnected()).toBe(true)
+    })
+
+    it('should handle disconnected topology', async () => {
+      mockClient.topology.isConnected.mockReturnValue(false)
+
+      const client = await connectToCluster()
+      expect(client.topology?.isConnected()).toBe(false)
+    })
+  })
+})

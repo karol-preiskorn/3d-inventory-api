@@ -41,6 +41,16 @@ beforeAll(() => {
 })
 
 // Global test teardown
-afterAll(() => {
-  // Clean up any global resources
+afterAll(async () => {
+  try {
+    // Import and shutdown database service to clear health check intervals
+    const { shutdownDatabase } = await import('../utils/db')
+
+    await shutdownDatabase()
+  } catch (error) {
+    console.warn('Warning: Failed to shutdown database service:', error)
+  }
+
+  // Small delay to ensure all async operations complete
+  await new Promise(resolve => setTimeout(resolve, 100))
 })
