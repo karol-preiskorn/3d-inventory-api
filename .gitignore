@@ -22,3 +22,4 @@ node_modules
 settings.json
 scripts/*.json
 scripts/*.rest
+.jest-cache/
