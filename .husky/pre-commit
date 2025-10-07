@@ -85,6 +85,32 @@ fi
 
 echo -e "${GREEN}✅ No ESLint errors found in the project${NC}"
 
+# Check for problematic test patterns
+echo -e "${BLUE}🧪 Checking for problematic test patterns...${NC}"
+STAGED_TEST_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.test\.ts$' | tr '\n' ' ')
+
+if [ -n "$STAGED_TEST_FILES" ]; then
+  # Check for jest.doMock pattern
+  if grep -r "jest\.doMock" $STAGED_TEST_FILES 2>/dev/null; then
+    echo -e "${RED}❌ Found jest.doMock() in test files!${NC}"
+    echo -e "${RED}   This pattern causes test hanging issues.${NC}"
+    echo -e "${BLUE}💡 Use jest.mock() at the top level instead${NC}"
+    echo -e "${BLUE}💡 See docs/JEST-MONGODB-TESTING-GUIDE.md for proper patterns${NC}"
+    exit 1
+  fi
+
+  # Check for dynamic imports without proper setup
+  if grep -r "await import(" $STAGED_TEST_FILES 2>/dev/null | grep -v "\/\/" | grep -v "\/\*"; then
+    echo -e "${YELLOW}⚠️  Found dynamic imports in test files${NC}"
+    echo -e "${YELLOW}   This may cause performance issues or test hanging${NC}"
+    echo -e "${BLUE}💡 Consider using static imports instead${NC}"
+  fi
+
+  echo -e "${GREEN}✅ Test pattern check passed${NC}"
+else
+  echo -e "${YELLOW}⏭️  No test files staged, skipping test pattern check${NC}"
+fi
+
 # Security audit check
 echo -e "${BLUE}🔒 Running security audit...${NC}"
 npm audit --audit-level=moderate

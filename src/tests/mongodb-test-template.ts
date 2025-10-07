@@ -31,9 +31,9 @@ jest.mock('../utils/config', () => ({
 
 describe('Your Test Suite', () => {
   const MockedMongoClient = MongoClient as jest.MockedClass<typeof MongoClient>
-  let mockClient: any
-  let mockDb: any
-  let mockAdmin: any
+  let mockClient: Partial<MongoClient>
+  let mockDb: Partial<{ collection: jest.Mock; admin: jest.Mock }>
+  let mockAdmin: Partial<{ ping: jest.Mock }>
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -55,8 +55,8 @@ describe('Your Test Suite', () => {
       on: jest.fn()
     }
 
-    // ✅ CORRECT: Configure the mock implementation
-    MockedMongoClient.mockImplementation(() => mockClient)
+    // ✅ CORRECT: Configure the mock implementation with type assertion
+    MockedMongoClient.mockImplementation(() => mockClient as MongoClient)
   })
 
   afterEach(() => {
@@ -66,23 +66,23 @@ describe('Your Test Suite', () => {
   describe('Your Test Cases', () => {
     it('should work with proper mocking', async () => {
       // Your test code here
-      // Import functions normally - no need for dynamic imports
-      const { yourFunction } = require('../your-module')
-      const result = await yourFunction()
+      // NOTE: Replace '../your-module' with actual module path
+      // Example: import { yourFunction } from '../your-module'
+      // const result = await yourFunction()
 
       // Assertions
       expect(MockedMongoClient).toHaveBeenCalled()
-      expect(mockClient.connect).toHaveBeenCalled()
-      expect(result).toBeDefined()
+      expect((mockClient as { connect: jest.Mock }).connect).toHaveBeenCalled()
+      // expect(result).toBeDefined()
     })
 
     it('should handle errors properly', async () => {
       // ✅ CORRECT: Mock errors for specific tests
-      mockClient.connect.mockRejectedValue(new Error('Connection failed'))
+      ;(mockClient as { connect: jest.Mock }).connect.mockRejectedValue(new Error('Connection failed'))
 
-      const { yourFunction } = require('../your-module')
-
-      await expect(yourFunction()).rejects.toThrow('Connection failed')
+      // NOTE: Replace '../your-module' with actual module path
+      // Example: import { yourFunction } from '../your-module'
+      // await expect(yourFunction()).rejects.toThrow('Connection failed')
     })
   })
 })
