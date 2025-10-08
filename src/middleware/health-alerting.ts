@@ -454,6 +454,7 @@ class HealthMonitor {
     type: AlertType
     severity: 'low' | 'medium' | 'high' | 'critical'
     message: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     details: Record<string, any>
     correlationId?: string
   }): void {

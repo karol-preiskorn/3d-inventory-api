@@ -76,6 +76,7 @@
   "yaml.format.enable": true,
   "markdown.preview.breaks": true,
   "debug.onTaskErrors": "showErrors",
-  "jest.autoRun": "off",
-  "jest.showCoverageOnLoad": true
+  "jest.runMode": "on-demand",
+  "snyk.advanced.cliPath": "/home/karol/.nvm/versions/node/v24.7.0/bin/snyk",
+  "snyk.advanced.autoUpdate": false
 }
