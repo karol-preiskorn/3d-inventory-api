@@ -99,9 +99,11 @@ const allowedOrigins = [
   'https://d-inventory-ui-wzwe3odv7q-ew.a.run.app',
   'https://d-inventory-api-wzwe3odv7q-ew.a.run.app',
   // Ultima Solution domains
+  'https://3d-inventory.ultimasolution.pl',
   'https://3d-inventory-api.ultimasolution.pl',
   'https://3d-inventory-ui.ultimasolution.pl',
   'http://3d-inventory-ui.ultimasolution.pl',
+  'http://3d-inventory.ultimasolution.pl',
   // MongoDB Atlas
   'https://cluster0.htgjako.mongodb.net'
   // Add more allowed origins as needed
