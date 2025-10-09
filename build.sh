@@ -103,18 +103,19 @@ docker push gcr.io/$PROJECT_ID/3d-inventory-api:latest
 # Test container locally first
 echo -e "${GREEN}✅ Testing container locally...${NC}"
 docker run --rm -d --name test-3d-inventory-api -p 8080:8080 -e PORT=8080 3d-inventory-api
+
 # Wait until the test-3d-inventory-api container is healthy or times out
-MAX_WAIT=5
+MAX_WAIT=$((10*1))
 WAITED=0
-echo -e "${YELLOW}❌ Waiting up to $MAX_WAIT seconds for test-3d-inventory-api to become healthy...${NC}"
-until curl -fskSL https://localhost:8080/health > /dev/null 2>&1; do
+echo -e "${YELLOW}⏳ Waiting up to $MAX_WAIT seconds for test-3d-inventory-api to become healthy...${NC}"
+until curl -fsSL http://localhost:8080/health > /dev/null 2>&1; do
   if (( WAITED >= MAX_WAIT )); then
     echo -e "${RED}❌ Container did not become healthy within $MAX_WAIT seconds. Exiting.${NC}"
     docker logs test-3d-inventory-api
     docker stop test-3d-inventory-api
     exit 1
   fi
-  sleep 2
+  sleep 1
   ((WAITED++))
 done
 
