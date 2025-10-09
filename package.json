@@ -64,6 +64,8 @@
     "init:users": "npx tsx init-users.ts",
     "test:auth": "node test-auth.cjs",
     "test:db-auth": "npx tsx test-db-auth.ts",
+    "unlock:admin": "npx tsx unlock-admin.ts",
+    "reset:admin-password": "npx tsx reset-admin-password.ts",
     "check:db-raw": "npx tsx check-db-raw.ts",
     "cleanup:users": "npx tsx cleanup-and-reinit.ts",
     "prestart": "fuser -n tcp -k 8080 || true && npm run version:patch",
