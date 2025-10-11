@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import sanitize from 'mongo-sanitize'
-import { Collection, Db, InsertOneResult, UpdateResult, DeleteResult, ObjectId } from 'mongodb'
+import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, UpdateResult } from 'mongodb'
+import { CreateLog } from '../services/logs'
 import { getDatabase } from '../utils/db'
 import getLogger from '../utils/logger'
 
@@ -238,7 +239,20 @@ export async function createConnection(req: Request, res: Response) {
 
     const insertedConnection = { _id: result.insertedId, ...newConnection }
 
-    logger.info(`${proc} Created connection: ${result.insertedId}`)
+    logger.info(`${proc} Created connection with id ${result.insertedId}`)
+
+    // Create log entry (fire and forget - don't block response)
+    CreateLog(
+      result.insertedId.toString(),
+      newConnection,
+      'Create',
+      'Connection',
+      req.user?.id,
+      req.user?.username
+    ).catch((error: Error) => {
+      logger.error(`Failed to create log for connection ${result.insertedId}: ${String(error)}`)
+    })
+
     res.status(201).json(insertedConnection)
   } catch (error) {
     logger.error(`${proc} Error creating connection: ${error instanceof Error ? error.message : String(error)}`)

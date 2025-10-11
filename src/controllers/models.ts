@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import sanitize from 'mongo-sanitize'
-import { Collection, Db, InsertOneResult, UpdateResult, DeleteResult, ObjectId } from 'mongodb'
+import { Collection, Db, DeleteResult, InsertOneResult, ObjectId, UpdateResult } from 'mongodb'
+import { CreateLog } from '../services/logs'
 import { getDatabase } from '../utils/db'
 import getLogger from '../utils/logger'
 
@@ -229,7 +230,20 @@ export async function createModel(req: Request, res: Response) {
 
     const insertedModel = { _id: result.insertedId, ...newModel }
 
-    logger.info(`${proc} Created model: ${result.insertedId}`)
+    logger.info(`${proc} Created model with id ${result.insertedId}`)
+
+    // Create log entry (fire and forget - don't block response)
+    CreateLog(
+      result.insertedId.toString(),
+      newModel,
+      'Create',
+      'Model',
+      req.user?.id,
+      req.user?.username
+    ).catch((error: Error) => {
+      logger.error(`Failed to create log for model ${result.insertedId}: ${String(error)}`)
+    })
+
     res.status(201).json(insertedModel)
   } catch (error) {
     logger.error(`${proc} Error creating model: ${error instanceof Error ? error.message : String(error)}`)

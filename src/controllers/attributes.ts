@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import mongoSanitize from 'mongo-sanitize'
 import { Collection, Db, ObjectId } from 'mongodb'
+import { CreateLog } from '../services/logs'
 import { getDatabase } from '../utils/db'
 import getLogger from '../utils/logger'
 
@@ -263,6 +264,19 @@ export const createAttribute: RequestHandler = async (req, res) => {
 
     if (result.acknowledged) {
       logger.info(`${proc} Created attribute with id ${result.insertedId}`)
+
+      // Create log entry (fire and forget - don't block response)
+      CreateLog(
+        result.insertedId.toString(),
+        newAttribute,
+        'Create',
+        'Attribute',
+        req.user?.id,
+        req.user?.username
+      ).catch((error: Error) => {
+        logger.error(`Failed to create log for attribute ${result.insertedId}: ${String(error)}`)
+      })
+
       res.status(201).json(createdAttribute)
     } else {
       logger.error(`${proc} Failed to create attribute - not acknowledged`)

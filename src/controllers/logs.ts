@@ -15,6 +15,8 @@ export interface Logs {
   operation: string
   component: string
   message: string
+  userId?: string
+  username?: string
 }
 
 const collectionName = 'logs'
@@ -111,7 +113,7 @@ export const getLogsByComponent: RequestHandler = async (req, res) => {
 
   // add validate component
 
-  // 
+  //
 
   try {
     const db: Db = await getDatabase()
@@ -199,12 +201,14 @@ export const createLog: RequestHandler = async (req, res) => {
   let client
 
   try {
-    const { objectId, operation, component, message } = req.body
+    const { objectId, operation, component, message, userId, username } = req.body
     // Sanitize input
     const sanitizedObjectId = mongoSanitize(objectId)?.toString().trim()
     const sanitizedOperation = mongoSanitize(operation)?.toString().trim()
     const sanitizedComponent = mongoSanitize(component)?.toString().trim()
     const sanitizedMessage = mongoSanitize(message)?.toString().trim()
+    const sanitizedUserId = userId ? mongoSanitize(userId)?.toString().trim() : undefined
+    const sanitizedUsername = username ? mongoSanitize(username)?.toString().trim() : undefined
 
     // Validate required fields
     if (!sanitizedObjectId || !sanitizedOperation || !sanitizedComponent || !sanitizedMessage) {
@@ -240,7 +244,9 @@ export const createLog: RequestHandler = async (req, res) => {
       operation: sanitizedOperation,
       component: sanitizedComponent,
       message: sanitizedMessage,
-      date: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+      date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+      userId: sanitizedUserId,
+      username: sanitizedUsername
     }
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
@@ -255,7 +261,7 @@ export const createLog: RequestHandler = async (req, res) => {
 
     const insertedLog = { _id: result.insertedId, ...newDocument }
 
-    logger.info(`${proc} Log created with ID: ${result.insertedId}`)
+    logger.info(`${proc} Log created with ID: ${result.insertedId} by user: ${sanitizedUsername || 'unknown'}`)
     res.status(201).json(insertedLog)
   } catch (error) {
     logger.error(`${proc} Error creating log: ${error instanceof Error ? error.message : String(error)}`)

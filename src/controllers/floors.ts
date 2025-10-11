@@ -1,7 +1,8 @@
 import { RequestHandler } from 'express'
 import mongoSanitize from 'mongo-sanitize'
-import { Collection, Db, ObjectId, UpdateFilter, Document } from 'mongodb'
+import { Collection, Db, Document, ObjectId, UpdateFilter } from 'mongodb'
 import sanitize from 'sanitize-html'
+import { CreateLog } from '../services/logs'
 import { getDatabase } from '../utils/db'
 import getLogger from '../utils/logger'
 
@@ -199,6 +200,19 @@ export const createFloor: RequestHandler = async (req, res) => {
     const insertedDocument = { _id: result.insertedId, ...sanitizedDocument }
 
     logger.info(`${proc} Inserted floor document with ID: ${result.insertedId}`)
+
+    // Create log entry (fire and forget - don't block response)
+    CreateLog(
+      result.insertedId.toString(),
+      sanitizedDocument,
+      'Create',
+      'Floor',
+      req.user?.id,
+      req.user?.username
+    ).catch((error: Error) => {
+      logger.error(`Failed to create log for floor ${result.insertedId}: ${String(error)}`)
+    })
+
     res.status(201).json(insertedDocument)
   } catch (error) {
     logger.error(`${proc} Error creating floor: ${error instanceof Error ? error.message : String(error)}`)

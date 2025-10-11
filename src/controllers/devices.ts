@@ -149,11 +149,36 @@ export async function createDevice(req: Request, res: Response) {
       logger.error(`POST /devices - Device not created with id: ${JSON.stringify(newDocument)}`)
       await CreateLog('', newDocument, 'Create', 'Device')
       res.status(500).send('POST /devices - Device not created')
+
+      return
     } else {
       logger.info(`POST /devices - device created successfully with id: ${result.insertedId.toString()}, ${JSON.stringify(newDocument)}`)
-      const resultLog = await CreateLog(result.insertedId.toString(), newDocument, 'Create', 'Device')
 
-      res.status(200).json(resultLog)
+      // Create log entry (fire and forget - don't block response)
+      CreateLog(
+        result.insertedId.toString(),
+        newDocument,
+        'Create',
+        'Device',
+        req.user?.id,
+        req.user?.username
+      ).catch((error: Error) => {
+        logger.error(`Failed to create log for device ${result.insertedId}: ${String(error)}`)
+      })
+
+      // Return consistent response structure matching GET endpoints
+      res.status(200).json({
+        success: true,
+        data: {
+          insertedId: result.insertedId.toString(),
+          _id: result.insertedId.toString(),
+          ...newDocument
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+          version: 'v1'
+        }
+      })
     }
   } catch (error) {
     logger.error(`Error creating device: ${String(error)}`)
