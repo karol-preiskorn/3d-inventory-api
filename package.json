@@ -1,6 +1,6 @@
 {
   "name": "d-inventory-api",
-  "version": "0.96.155",
+  "version": "0.96.156",
   "description": "Mongo REST API for 3d-inventory project.",
   "keywords": [
     "3d-inventory",
@@ -40,7 +40,6 @@
     "cp": "cpy README.md src/assets --flat",
     "doc": "npx typedoc",
     "doc:fix": "tsx scripts/documentation-fixer.ts",
-    "docker:build": "npm run version:patch && ./build.sh",
     "docker:run": "docker rm -f 3d-inventory-api && docker build -t 3d-inventory-api . && docker run -p 8080:8080 -e PORT=8080 -e HOST=172.17.0.2 3d-inventory-api",
     "docker:test": "docker run --rm -p 8080:8080 -e PORT=8080 3d-inventory-api",
     "format": "prettier --write .",
@@ -62,6 +61,8 @@
     "quality:report:old": "node scripts/quality-report.mjs",
     "sort-package": "sort-package-json",
     "init:users": "npx tsx init-users.ts",
+    "add:admin-role": "npx tsx add-admin-role.ts",
+    "verify:admin": "npx tsx verify-admin-access.ts",
     "test:auth": "node test-auth.cjs",
     "test:db-auth": "npx tsx test-db-auth.ts",
     "unlock:admin": "npx tsx unlock-admin.ts",
