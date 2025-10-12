@@ -5,7 +5,7 @@
  */
 
 import { ObjectId } from 'mongodb'
-import { UserRole, Permission } from '../middlewares/auth'
+import { Permission, UserRole } from '../middlewares/auth'
 
 export interface Role {
   _id?: ObjectId
@@ -51,18 +51,34 @@ export const DEFAULT_ROLES: Omit<Role, '_id' | 'createdAt' | 'updatedAt'>[] = [
     displayName: 'Administrator',
     description: 'Full system access with all permissions',
     permissions: [
-      Permission.READ_DEVICES,
-      Permission.WRITE_DEVICES,
-      Permission.DELETE_DEVICES,
-      Permission.READ_MODELS,
-      Permission.WRITE_MODELS,
-      Permission.DELETE_MODELS,
-      Permission.READ_CONNECTIONS,
-      Permission.WRITE_CONNECTIONS,
-      Permission.DELETE_CONNECTIONS,
-      Permission.READ_LOGS,
-      Permission.DELETE_LOGS,
-      Permission.ADMIN_ACCESS
+      Permission.DEVICE_READ,
+      Permission.DEVICE_CREATE,
+      Permission.DEVICE_UPDATE,
+      Permission.DEVICE_DELETE,
+      Permission.MODEL_READ,
+      Permission.MODEL_CREATE,
+      Permission.MODEL_UPDATE,
+      Permission.MODEL_DELETE,
+      Permission.CONNECTION_READ,
+      Permission.CONNECTION_CREATE,
+      Permission.CONNECTION_UPDATE,
+      Permission.CONNECTION_DELETE,
+      Permission.ATTRIBUTE_READ,
+      Permission.ATTRIBUTE_CREATE,
+      Permission.ATTRIBUTE_UPDATE,
+      Permission.ATTRIBUTE_DELETE,
+      Permission.FLOOR_READ,
+      Permission.FLOOR_CREATE,
+      Permission.FLOOR_UPDATE,
+      Permission.FLOOR_DELETE,
+      Permission.USER_READ,
+      Permission.USER_CREATE,
+      Permission.USER_UPDATE,
+      Permission.USER_DELETE,
+      Permission.LOG_READ,
+      Permission.LOG_CREATE,
+      Permission.LOG_DELETE,
+      Permission.ADMIN_FULL
     ],
     isActive: true
   },
@@ -71,13 +87,18 @@ export const DEFAULT_ROLES: Omit<Role, '_id' | 'createdAt' | 'updatedAt'>[] = [
     displayName: 'User',
     description: 'Standard user with read/write access to most resources',
     permissions: [
-      Permission.READ_DEVICES,
-      Permission.WRITE_DEVICES,
-      Permission.READ_MODELS,
-      Permission.WRITE_MODELS,
-      Permission.READ_CONNECTIONS,
-      Permission.WRITE_CONNECTIONS,
-      Permission.READ_LOGS
+      Permission.DEVICE_READ,
+      Permission.DEVICE_CREATE,
+      Permission.DEVICE_UPDATE,
+      Permission.MODEL_READ,
+      Permission.MODEL_CREATE,
+      Permission.MODEL_UPDATE,
+      Permission.CONNECTION_READ,
+      Permission.CONNECTION_CREATE,
+      Permission.CONNECTION_UPDATE,
+      Permission.ATTRIBUTE_READ,
+      Permission.FLOOR_READ,
+      Permission.LOG_READ
     ],
     isActive: true
   },
@@ -85,7 +106,14 @@ export const DEFAULT_ROLES: Omit<Role, '_id' | 'createdAt' | 'updatedAt'>[] = [
     name: UserRole.VIEWER,
     displayName: 'Viewer',
     description: 'Read-only access to system resources',
-    permissions: [Permission.READ_DEVICES, Permission.READ_MODELS, Permission.READ_CONNECTIONS, Permission.READ_LOGS],
+    permissions: [
+      Permission.DEVICE_READ,
+      Permission.MODEL_READ,
+      Permission.CONNECTION_READ,
+      Permission.ATTRIBUTE_READ,
+      Permission.FLOOR_READ,
+      Permission.LOG_READ
+    ],
     isActive: true
   }
 ]

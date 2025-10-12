@@ -1,6 +1,6 @@
 import express from 'express'
 import { getGithubIssues } from '../controllers/github'
-import { requireAuth, requirePermission, Permission } from '../middlewares'
+import { Permission, requireAuth, requirePermission } from '../middlewares'
 
 // Create github router with enhanced security
 export default function createGithubRouter() {
@@ -10,7 +10,7 @@ export default function createGithubRouter() {
   router.use(requireAuth)
 
   // GET GitHub issues - Requires admin permission for sensitive operations
-  router.get('/issues', requirePermission(Permission.ADMIN_ACCESS), getGithubIssues)
+  router.get('/issues', requirePermission(Permission.ADMIN_FULL), getGithubIssues)
 
   return router
 }

@@ -22,46 +22,106 @@ export enum UserRole {
 }
 
 export enum Permission {
-  READ_DEVICES = 'read:devices',
-  WRITE_DEVICES = 'write:devices',
-  DELETE_DEVICES = 'delete:devices',
-  READ_MODELS = 'read:models',
-  WRITE_MODELS = 'write:models',
-  DELETE_MODELS = 'delete:models',
-  READ_CONNECTIONS = 'read:connections',
-  WRITE_CONNECTIONS = 'write:connections',
-  DELETE_CONNECTIONS = 'delete:connections',
-  READ_LOGS = 'read:logs',
-  DELETE_LOGS = 'delete:logs',
-  ADMIN_ACCESS = 'admin:access',
+  // Device permissions
+  DEVICE_READ = 'device:read',
+  DEVICE_CREATE = 'device:create',
+  DEVICE_UPDATE = 'device:update',
+  DEVICE_DELETE = 'device:delete',
+
+  // Model permissions
+  MODEL_READ = 'model:read',
+  MODEL_CREATE = 'model:create',
+  MODEL_UPDATE = 'model:update',
+  MODEL_DELETE = 'model:delete',
+
+  // Connection permissions
+  CONNECTION_READ = 'connection:read',
+  CONNECTION_CREATE = 'connection:create',
+  CONNECTION_UPDATE = 'connection:update',
+  CONNECTION_DELETE = 'connection:delete',
+
+  // Attribute permissions
+  ATTRIBUTE_READ = 'attribute:read',
+  ATTRIBUTE_CREATE = 'attribute:create',
+  ATTRIBUTE_UPDATE = 'attribute:update',
+  ATTRIBUTE_DELETE = 'attribute:delete',
+
+  // Floor permissions
+  FLOOR_READ = 'floor:read',
+  FLOOR_CREATE = 'floor:create',
+  FLOOR_UPDATE = 'floor:update',
+  FLOOR_DELETE = 'floor:delete',
+
+  // User permissions
+  USER_READ = 'user:read',
+  USER_CREATE = 'user:create',
+  USER_UPDATE = 'user:update',
+  USER_DELETE = 'user:delete',
+
+  // Log permissions
+  LOG_READ = 'log:read',
+  LOG_CREATE = 'log:create',
+  LOG_DELETE = 'log:delete',
+
+  // Admin permissions
+  ADMIN_FULL = 'admin:full',
+  SYSTEM_ADMIN = 'system:admin',
 }
 
 // Role-based permissions mapping
 export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   [UserRole.ADMIN]: [
-    Permission.READ_DEVICES,
-    Permission.WRITE_DEVICES,
-    Permission.DELETE_DEVICES,
-    Permission.READ_MODELS,
-    Permission.WRITE_MODELS,
-    Permission.DELETE_MODELS,
-    Permission.READ_CONNECTIONS,
-    Permission.WRITE_CONNECTIONS,
-    Permission.DELETE_CONNECTIONS,
-    Permission.READ_LOGS,
-    Permission.DELETE_LOGS,
-    Permission.ADMIN_ACCESS
+    Permission.DEVICE_READ,
+    Permission.DEVICE_CREATE,
+    Permission.DEVICE_UPDATE,
+    Permission.DEVICE_DELETE,
+    Permission.MODEL_READ,
+    Permission.MODEL_CREATE,
+    Permission.MODEL_UPDATE,
+    Permission.MODEL_DELETE,
+    Permission.CONNECTION_READ,
+    Permission.CONNECTION_CREATE,
+    Permission.CONNECTION_UPDATE,
+    Permission.CONNECTION_DELETE,
+    Permission.ATTRIBUTE_READ,
+    Permission.ATTRIBUTE_CREATE,
+    Permission.ATTRIBUTE_UPDATE,
+    Permission.ATTRIBUTE_DELETE,
+    Permission.FLOOR_READ,
+    Permission.FLOOR_CREATE,
+    Permission.FLOOR_UPDATE,
+    Permission.FLOOR_DELETE,
+    Permission.USER_READ,
+    Permission.USER_CREATE,
+    Permission.USER_UPDATE,
+    Permission.USER_DELETE,
+    Permission.LOG_READ,
+    Permission.LOG_CREATE,
+    Permission.LOG_DELETE,
+    Permission.ADMIN_FULL
   ],
   [UserRole.USER]: [
-    Permission.READ_DEVICES,
-    Permission.WRITE_DEVICES,
-    Permission.READ_MODELS,
-    Permission.WRITE_MODELS,
-    Permission.READ_CONNECTIONS,
-    Permission.WRITE_CONNECTIONS,
-    Permission.READ_LOGS
+    Permission.DEVICE_READ,
+    Permission.DEVICE_CREATE,
+    Permission.DEVICE_UPDATE,
+    Permission.MODEL_READ,
+    Permission.MODEL_CREATE,
+    Permission.MODEL_UPDATE,
+    Permission.CONNECTION_READ,
+    Permission.CONNECTION_CREATE,
+    Permission.CONNECTION_UPDATE,
+    Permission.ATTRIBUTE_READ,
+    Permission.FLOOR_READ,
+    Permission.LOG_READ
   ],
-  [UserRole.VIEWER]: [Permission.READ_DEVICES, Permission.READ_MODELS, Permission.READ_CONNECTIONS, Permission.READ_LOGS]
+  [UserRole.VIEWER]: [
+    Permission.DEVICE_READ,
+    Permission.MODEL_READ,
+    Permission.CONNECTION_READ,
+    Permission.ATTRIBUTE_READ,
+    Permission.FLOOR_READ,
+    Permission.LOG_READ
+  ]
 }
 
 // Extend Express Request interface to include 'user' property
