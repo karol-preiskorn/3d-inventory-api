@@ -1,4 +1,34 @@
 {
+  // ============================================================================
+  // GitHub Copilot Configuration
+  // ============================================================================
+  // This workspace uses the following instruction files:
+  // 1. AGENTS.md - AI agents and development automation documentation
+  // 2. .github/copilot-instructions.md - Comprehensive project-specific instructions
+  // 3. .github/instructions/*.instructions.md - Fine-grained instruction files
+  //
+  // Copilot will automatically reference these when providing assistance.
+  // Use hashtags to reference instruction files (e.g., #code_quality_standards)
+  // ============================================================================
+  "github.copilot.advanced": {
+    "inlineSuggestCount": 3
+  },
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "typescript": true,
+    "javascript": true
+  },
+  "files.associations": {
+    "AGENTS.md": "markdown",
+    ".github/copilot-instructions.md": "markdown",
+    "*.instructions.md": "markdown"
+  },
+  // ============================================================================
+  // Spell Check Configuration
+  // ============================================================================
   "cSpell.words": [
     "CKFU",
     "fuser",

@@ -8,9 +8,7 @@
    3. [Features](#features)
       1. [🔐 \*\*Authentication \&
 
-      Authorization**](#-authentication--authorization) 2. [📦 **Inventory Management\*\*](#-inventory-management)
-      3. [🛡️ **Security Features**](#️-security-features)
-
+      Authorization**](#-authentication--authorization) 2. [📦 **Inventory Management\*\*](#-inventory-management) 3. [🛡️ **Security Features**](#️-security-features)
       4. [📊 **Monitoring \& Logging**](#-monitoring--logging)
 
    4. [Data Model](#data-model)
@@ -172,6 +170,14 @@ persistence:
 
 - **Request Tracking**: Detailed request/response logging for debugging
 
+- **Activity Audit Logs**: Complete audit trail for all CRUD operations with user context
+
+- **Login Event Tracking**: Detailed login audit logs including IP addresses, timestamps, and authentication outcomes
+
+- **Change Tracking**: Before/after value tracking for device updates showing exactly what changed
+
+- **User Activity Monitoring**: Track user actions across all system components with detailed metadata
+
 ## Data Model
 
 The application uses MongoDB with the following key collections:
@@ -234,6 +240,49 @@ The application uses MongoDB with the following key collections:
   updatedAt: Date
 }
 ```
+
+### **Logs Collection**
+
+```javascript
+
+{
+  _id: ObjectId,
+  date: String,
+  objectId: String (optional - ID of affected object),
+  operation: String (create|update|delete|clone|authentication),
+  component: String (device|model|floor|user|connection|etc),
+  message: {
+    // For device updates with change tracking:
+    deviceId: String,
+    deviceName: String,
+    changes: {
+      [fieldName]: {
+        before: Any,
+        after: Any
+      }
+    },
+    updatedFields: [String],
+    changeCount: Number,
+    // For login events:
+    ip: String,
+    userAgent: String,
+    success: Boolean,
+    username: String
+  },
+  userId: String (optional - user who performed action),
+  username: String (optional - username who performed action),
+  level: String (info|warn|error)
+}
+```
+
+**Change Tracking Features:**
+
+- **Before/After Values**: Captures original and new values for all modified fields
+- **Field-Level Tracking**: Identifies exactly which fields changed (name, modelId, position, attributes)
+- **Position Tracking**: Records coordinate changes with full x, y, h values
+- **Attribute Comparison**: Deep comparison of attribute arrays
+- **User Context**: Tracks who made the change with userId and username
+- **Login Auditing**: Complete audit trail of authentication events with IP addresses
 
 ## API documentation
 
@@ -342,6 +391,10 @@ The API provides comprehensive documentation through [Swagger/OpenAPI](https://s
 | `/logs/{id}` | GET | Get log by ID | Viewer+ |
 
 | `/logs/{id}` | DELETE | Delete log by ID | Admin |
+
+| `/logs/login/username/:username` | GET | Get login logs by username | User+ |
+
+| `/logs/login/user/:userId` | GET | Get login logs by user ID | User+ |
 
 | `/attributes` | GET | Get all attributes | Viewer+ |
 

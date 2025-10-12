@@ -1,10 +1,35 @@
 # GitHub Copilot Instructions - 3D Inventory API
 
+> **📚 For comprehensive AI agents and development automation documentation, see [AGENTS.md](../AGENTS.md)**
+
 This document provides comprehensive instructions for GitHub Copilot when working on the **3D Inventory API** project - a Node.js/Express backend with TypeScript, MongoDB, and comprehensive security features.
+
+## 🔗 Essential Documentation
+
+**IMPORTANT**: Before implementing features, consult:
+
+- **[AGENTS.md](../AGENTS.md)** - AI-assisted development workflows, testing automation, and deployment strategies
+- **[.github/instructions/](./instructions/)** - Fine-grained instruction files:
+  - `code_quality_standards.instructions.md` - Code Quality Standards for 3D Inventory API
+  - `snyk_rules.instructions.md` - Security scanning requirements
+  - `test_coverage_standards.instructions.md` - Comprehensive test coverage standards
+  - `typescript_strict_mode.instructions.md` - TypeScript strict mode configuration
+
+**Quick Reference Guide**:
+
+| Topic                          | Reference                                                |
+| ------------------------------ | -------------------------------------------------------- |
+| 🤖 **AI Development Patterns** | [AGENTS.md](../AGENTS.md) - GitHub Copilot Integration   |
+| 🧪 **Testing Framework**       | [AGENTS.md](../AGENTS.md) - Testing Automation           |
+| 📊 **Code Quality**            | [AGENTS.md](../AGENTS.md) - Code Analysis & Optimization |
+| 🚀 **Deployment**              | [AGENTS.md](../AGENTS.md) - Deployment Automation        |
+| 📚 **Documentation**           | [AGENTS.md](../AGENTS.md) - Documentation Generation     |
+| 🔍 **Monitoring**              | [AGENTS.md](../AGENTS.md) - Monitoring & Alerting        |
 
 ## Project Overview
 
 ### Architecture
+
 - **Backend**: Node.js with Express.js framework
 - **Language**: TypeScript (strict mode, CommonJS for Node.js)
 - **Database**: MongoDB Atlas with connection pooling
@@ -14,6 +39,7 @@ This document provides comprehensive instructions for GitHub Copilot when workin
 - **Security**: Rate limiting, CORS, security headers, input validation
 
 ### Key Dependencies
+
 ```json
 {
   "express": "Express.js web framework",
@@ -91,15 +117,15 @@ export const getEntities = async (req: Request, res: Response, next: NextFunctio
   try {
     const db = getDatabase()
     const collection: Collection = db.collection(collectionName)
-    
+
     const entities = await collection.find({}).toArray()
-    
+
     await CreateLog({
       level: 'info',
       message: `Retrieved ${entities.length} entities`,
-      meta: { userId: req.user?.id, count: entities.length }
+      meta: { userId: req.user?.id, count: entities.length },
     })
-    
+
     res.json(successResponse(entities))
   } catch (error) {
     logger.error('Error retrieving entities:', error)
@@ -151,7 +177,7 @@ export class EntityService {
 
       // Business logic here
       const result = await collection.insertOne(entityData)
-      
+
       return this.toEntityResponse(result)
     } catch (error) {
       logger.error('Error creating entity:', error)
@@ -197,7 +223,7 @@ export interface JwtPayload {
 export enum UserRole {
   ADMIN = 'admin',
   USER = 'user',
-  VIEWER = 'viewer'
+  VIEWER = 'viewer',
 }
 
 export enum Permission {
@@ -208,9 +234,15 @@ export enum Permission {
 }
 
 export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
-  [UserRole.ADMIN]: [/* all permissions */],
-  [UserRole.USER]: [/* user permissions */],
-  [UserRole.VIEWER]: [/* read-only permissions */]
+  [UserRole.ADMIN]: [
+    /* all permissions */
+  ],
+  [UserRole.USER]: [
+    /* user permissions */
+  ],
+  [UserRole.VIEWER]: [
+    /* read-only permissions */
+  ],
 }
 
 export const authenticateToken: RequestHandler = (req, res, next) => {
@@ -249,16 +281,16 @@ export async function connectToCluster(): Promise<MongoClient> {
     maxIdleTimeMS: config.DB_MAX_IDLE_TIME_MS || 30000,
     serverSelectionTimeoutMS: 5000,
     connectTimeoutMS: 10000,
-    socketTimeoutMS: 45000
+    socketTimeoutMS: 45000,
   }
 
   try {
     const client = new MongoClient(config.MONGODB_URI, options)
     await client.connect()
-    
+
     cachedClient = client
     logger.info('✅ Connected to MongoDB Atlas')
-    
+
     return client
   } catch (error) {
     logger.error('❌ Failed to connect to MongoDB:', error)
@@ -296,7 +328,7 @@ export class APIError extends Error {
     super(message)
     this.statusCode = statusCode
     this.isOperational = isOperational
-    
+
     Error.captureStackTrace(this, this.constructor)
   }
 }
@@ -328,13 +360,13 @@ export class UnauthorizedError extends APIError {
 export const successResponse = (data: any, message = 'Success') => ({
   success: true,
   message,
-  data
+  data,
 })
 
 export const errorResponse = (message: string, error?: any) => ({
   success: false,
   message,
-  error: process.env.NODE_ENV === 'development' ? error : undefined
+  error: process.env.NODE_ENV === 'development' ? error : undefined,
 })
 ```
 
@@ -346,29 +378,21 @@ Use structured logging with Winston:
 import winston from 'winston'
 import config from './config'
 
-const logFormat = winston.format.combine(
-  winston.format.timestamp(),
-  winston.format.errors({ stack: true }),
-  winston.format.json()
-)
+const logFormat = winston.format.combine(winston.format.timestamp(), winston.format.errors({ stack: true }), winston.format.json())
 
 const logger = winston.createLogger({
   level: config.LOG_LEVEL || 'info',
   format: logFormat,
   defaultMeta: { service: '3d-inventory-api' },
-  transports: [
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log' })
-  ]
+  transports: [new winston.transports.File({ filename: 'logs/error.log', level: 'error' }), new winston.transports.File({ filename: 'logs/combined.log' })],
 })
 
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    )
-  }))
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+    }),
+  )
 }
 
 export default function getLogger(module: string) {
@@ -400,7 +424,7 @@ describe('Authentication Controller', () => {
     const uri = mongoServer.getUri()
     mongoClient = new MongoClient(uri)
     await mongoClient.connect()
-    
+
     userService = UserService.getInstance()
   })
 
@@ -422,14 +446,14 @@ describe('Authentication Controller', () => {
         username: 'testuser',
         email: 'test@example.com',
         password: 'password123!',
-        role: 'user'
+        role: 'user',
       })
 
       const response = await request(app)
         .post('/login')
         .send({
           username: 'testuser',
-          password: 'password123!'
+          password: 'password123!',
         })
         .expect(200)
 
@@ -438,8 +462,8 @@ describe('Authentication Controller', () => {
         token: expect.any(String),
         user: {
           username: 'testuser',
-          role: 'user'
-        }
+          role: 'user',
+        },
       })
     })
 
@@ -448,13 +472,13 @@ describe('Authentication Controller', () => {
         .post('/login')
         .send({
           username: 'nonexistent',
-          password: 'wrongpassword'
+          password: 'wrongpassword',
         })
         .expect(401)
 
       expect(response.body).toMatchObject({
         success: false,
-        message: expect.stringContaining('Invalid credentials')
+        message: expect.stringContaining('Invalid credentials'),
       })
     })
   })
@@ -478,7 +502,7 @@ describe('UserService', () => {
     const uri = mongoServer.getUri()
     mongoClient = new MongoClient(uri)
     await mongoClient.connect()
-    
+
     userService = UserService.getInstance()
   })
 
@@ -493,7 +517,7 @@ describe('UserService', () => {
         username: 'testuser',
         email: 'test@example.com',
         password: 'password123!',
-        role: 'user' as const
+        role: 'user' as const,
       }
 
       const result = await userService.createUser(userData)
@@ -502,7 +526,7 @@ describe('UserService', () => {
         username: 'testuser',
         email: 'test@example.com',
         role: 'user',
-        isActive: true
+        isActive: true,
       })
       expect(result.password).toBeUndefined() // Password should not be returned
     })
@@ -512,11 +536,10 @@ describe('UserService', () => {
         username: '',
         email: 'invalid-email',
         password: '123', // Too short
-        role: 'user' as const
+        role: 'user' as const,
       }
 
-      await expect(userService.createUser(invalidData))
-        .rejects.toThrow('Validation failed')
+      await expect(userService.createUser(invalidData)).rejects.toThrow('Validation failed')
     })
   })
 })
@@ -608,8 +631,8 @@ const successResponse = (data: any, message = 'Success', meta?: any) => ({
   data,
   meta: {
     timestamp: new Date().toISOString(),
-    ...meta
-  }
+    ...meta,
+  },
 })
 
 // Error responses
@@ -619,8 +642,8 @@ const errorResponse = (message: string, errors?: any[], meta?: any) => ({
   errors,
   meta: {
     timestamp: new Date().toISOString(),
-    ...meta
-  }
+    ...meta,
+  },
 })
 
 // Paginated responses
@@ -633,8 +656,8 @@ const paginatedResponse = (data: any[], page: number, limit: number, total: numb
     total,
     totalPages: Math.ceil(total / limit),
     hasNext: page * limit < total,
-    hasPrev: page > 1
-  }
+    hasPrev: page > 1,
+  },
 })
 ```
 
@@ -683,14 +706,14 @@ export const generateToken = (payload: JwtPayload): string => {
   return jwt.sign(payload, config.JWT_SECRET, {
     expiresIn: config.JWT_EXPIRES_IN || '24h',
     issuer: '3d-inventory-api',
-    audience: '3d-inventory-ui'
+    audience: '3d-inventory-ui',
   })
 }
 
 export const verifyToken = (token: string): JwtPayload => {
   return jwt.verify(token, config.JWT_SECRET, {
     issuer: '3d-inventory-api',
-    audience: '3d-inventory-ui'
+    audience: '3d-inventory-ui',
   }) as JwtPayload
 }
 
@@ -713,10 +736,10 @@ export const authLimiter = rateLimit({
   max: 5, // 5 attempts per window
   message: {
     success: false,
-    message: 'Too many authentication attempts, try again later'
+    message: 'Too many authentication attempts, try again later',
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 })
 
 export const apiLimiter = rateLimit({
@@ -724,8 +747,8 @@ export const apiLimiter = rateLimit({
   max: 100, // 100 requests per window
   message: {
     success: false,
-    message: 'Too many requests, try again later'
-  }
+    message: 'Too many requests, try again later',
+  },
 })
 ```
 
@@ -765,7 +788,7 @@ const config: Config = {
   CORS_ORIGIN: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:4200'],
   USE_EMOJI: process.env.USE_EMOJI === 'true',
   DB_MAX_POOL_SIZE: parseInt(process.env.DB_MAX_POOL_SIZE || '10', 10),
-  DB_MIN_POOL_SIZE: parseInt(process.env.DB_MIN_POOL_SIZE || '2', 10)
+  DB_MIN_POOL_SIZE: parseInt(process.env.DB_MIN_POOL_SIZE || '2', 10),
 }
 
 export default config
@@ -796,9 +819,7 @@ export class BaseRepository<T> {
   }
 
   async findMany(filter: Filter<T> = {}, options: any = {}): Promise<T[]> {
-    return await this.collection
-      .find(filter, options)
-      .toArray()
+    return await this.collection.find(filter, options).toArray()
   }
 
   async create(data: Omit<T, '_id'>): Promise<T> {
@@ -811,11 +832,7 @@ export class BaseRepository<T> {
       throw new ValidationError('Invalid ID format')
     }
 
-    const result = await this.collection.findOneAndUpdate(
-      { _id: new ObjectId(id) } as Filter<T>,
-      update,
-      { returnDocument: 'after' }
-    )
+    const result = await this.collection.findOneAndUpdate({ _id: new ObjectId(id) } as Filter<T>, update, { returnDocument: 'after' })
 
     return result.value
   }
@@ -838,36 +855,38 @@ Use MongoDB aggregation for complex queries:
 ```typescript
 export const getDevicesWithModels = async (db: Db): Promise<any[]> => {
   const devicesCollection = db.collection('devices')
-  
-  return await devicesCollection.aggregate([
-    {
-      $lookup: {
-        from: 'models',
-        localField: 'modelId',
-        foreignField: '_id',
-        as: 'model'
-      }
-    },
-    {
-      $unwind: '$model'
-    },
-    {
-      $project: {
-        _id: 1,
-        name: 1,
-        position: 1,
-        attributes: 1,
-        model: {
-          name: '$model.name',
-          brand: '$model.brand',
-          category: '$model.category'
-        }
-      }
-    },
-    {
-      $sort: { name: 1 }
-    }
-  ]).toArray()
+
+  return await devicesCollection
+    .aggregate([
+      {
+        $lookup: {
+          from: 'models',
+          localField: 'modelId',
+          foreignField: '_id',
+          as: 'model',
+        },
+      },
+      {
+        $unwind: '$model',
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          position: 1,
+          attributes: 1,
+          model: {
+            name: '$model.name',
+            brand: '$model.brand',
+            category: '$model.category',
+          },
+        },
+      },
+      {
+        $sort: { name: 1 },
+      },
+    ])
+    .toArray()
 }
 ```
 
@@ -1045,6 +1064,7 @@ CMD ["npm", "start"]
 ## Quick Reference
 
 ### Common Commands
+
 ```bash
 npm run dev          # Start development server with nodemon
 npm run build        # Build TypeScript to JavaScript
@@ -1056,6 +1076,7 @@ npm start            # Start production server
 ```
 
 ### Key Files to Reference
+
 - `src/main.ts` - Application entry point
 - `src/utils/db.ts` - Database connection
 - `src/middlewares/auth.ts` - Authentication logic
@@ -1064,12 +1085,13 @@ npm start            # Start production server
 - `jest.config.ts` - Testing configuration
 
 ### Testing Credentials
+
 ```javascript
 const testCredentials = [
   { username: 'admin', password: 'admin123!', role: 'admin' },
   { username: 'user', password: 'user123!', role: 'user' },
   { username: 'carlo', password: 'carlo123!', role: 'user' },
-  { username: 'viewer', password: 'viewer123!', role: 'viewer' }
+  { username: 'viewer', password: 'viewer123!', role: 'viewer' },
 ]
 ```
 
