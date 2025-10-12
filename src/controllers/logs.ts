@@ -195,6 +195,111 @@ export const getLogsByModelId: RequestHandler = async (req, res) => {
 }
 
 /**
+ * Get login logs by username
+ * Returns authentication logs (successful and failed logins) for a specific user
+ */
+export const getLoginLogsByUsername: RequestHandler = async (req, res) => {
+  const { username } = req.params
+  const limit = req.query.limit ? Math.min(parseInt(req.query.limit as string, 10), MAX_LIMIT) : 50
+  let client
+
+  try {
+    const db: Db = await getDatabase()
+    const collection: Collection = db.collection(collectionName)
+    // Query for authentication logs with the username
+    const query: Filter<Document> = {
+      component: 'auth',
+      operation: 'authentication',
+      $or: [
+        { username: username },
+        { 'message.username': username }
+      ]
+    }
+
+    logger.info(`${proc} Query for login logs: ${JSON.stringify(query)}`)
+    const result = await collection.find(query).sort({ date: -1 }).limit(limit).toArray()
+
+    if (!result || result.length === 0) {
+      logger.info(`${proc} No login logs found for user: ${username}`)
+      res.status(200).json({
+        message: `No login logs found for user: ${username}`,
+        data: [],
+        count: 0
+      })
+    } else {
+      logger.info(`${proc} Retrieved ${result.length} login logs for user: ${username}`)
+      res.status(200).json({
+        data: result,
+        count: result.length,
+        username: username
+      })
+    }
+  } catch (error) {
+    logger.error(`${proc} Error fetching login logs for user ${username}: ${error instanceof Error ? error.message : String(error)}`)
+    res.status(500).json({
+      module: 'logs',
+      procedure: 'getLoginLogsByUsername',
+      error: 'Internal server error',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
+  } finally {
+    if (client) {
+    }
+  }
+}
+
+/**
+ * Get login logs by user ID
+ * Returns authentication logs for a specific user by their ID
+ */
+export const getLoginLogsByUserId: RequestHandler = async (req, res) => {
+  const { userId } = req.params
+  const limit = req.query.limit ? Math.min(parseInt(req.query.limit as string, 10), MAX_LIMIT) : 50
+  let client
+
+  try {
+    const db: Db = await getDatabase()
+    const collection: Collection = db.collection(collectionName)
+    // Query for authentication logs with the userId
+    const query: Filter<Document> = {
+      component: 'auth',
+      operation: 'authentication',
+      userId: userId
+    }
+
+    logger.info(`${proc} Query for login logs by userId: ${JSON.stringify(query)}`)
+    const result = await collection.find(query).sort({ date: -1 }).limit(limit).toArray()
+
+    if (!result || result.length === 0) {
+      logger.info(`${proc} No login logs found for userId: ${userId}`)
+      res.status(200).json({
+        message: `No login logs found for userId: ${userId}`,
+        data: [],
+        count: 0
+      })
+    } else {
+      logger.info(`${proc} Retrieved ${result.length} login logs for userId: ${userId}`)
+      res.status(200).json({
+        data: result,
+        count: result.length,
+        userId: userId
+      })
+    }
+  } catch (error) {
+    logger.error(`${proc} Error fetching login logs for userId ${userId}: ${error instanceof Error ? error.message : String(error)}`)
+    res.status(500).json({
+      module: 'logs',
+      procedure: 'getLoginLogsByUserId',
+      error: 'Internal server error',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    })
+  } finally {
+    if (client) {
+    }
+  }
+}
+
+/**
  * Create new log entry
  */
 export const createLog: RequestHandler = async (req, res) => {

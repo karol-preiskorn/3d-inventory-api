@@ -1,5 +1,5 @@
-import { Router, RequestHandler } from 'express'
-import { getAllLogs, getLogsByObjectId, getLogsByComponent, getLogsByModelId, createLog, deleteLog, deleteAllLogs, VALID_COMPONENTS } from '../controllers/logs'
+import { RequestHandler, Router } from 'express'
+import { createLog, deleteAllLogs, deleteLog, getAllLogs, getLoginLogsByUserId, getLoginLogsByUsername, getLogsByComponent, getLogsByModelId, getLogsByObjectId, VALID_COMPONENTS } from '../controllers/logs'
 import { validateObjectId } from '../middlewares'
 import getLogger from '../utils/logger'
 
@@ -99,14 +99,18 @@ export function createLogsRouter(): Router {
 
   // Basic CRUD routes
   router.get('/', getAllLogs)
-  router.get('/:id', validateObjectIdParam, getLogsByObjectId)
   router.post('/', validateLogInput, createLog)
-  router.delete('/:id', validateObjectId, deleteLog)
   router.delete('/', deleteAllLogs)
 
-  // Specialized query routes
+  // Specialized query routes - MUST come before generic :id route
   router.get('/component/:component', validateComponent, getLogsByComponent)
   router.get('/model/:id', validateObjectId, getLogsByModelId)
+  router.get('/login/username/:username', getLoginLogsByUsername)
+  router.get('/login/user/:userId', getLoginLogsByUserId)
+
+  // Generic ID-based routes - MUST come last to avoid conflicts
+  router.get('/:id', validateObjectIdParam, getLogsByObjectId)
+  router.delete('/:id', validateObjectId, deleteLog)
 
   return router
 }

@@ -101,6 +101,15 @@ export async function updateDevice(req: Request, res: Response) {
   try {
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
+    const deviceBefore = await collection.findOne(query)
+
+    if (!deviceBefore) {
+      logger.error(`PUT /devices/${req.params.id} - device not found`)
+      res.status(404).send('Device not found')
+
+      return
+    }
+
     const result = await collection.updateOne(query, updates)
 
     if (result.modifiedCount === 0) {
@@ -108,8 +117,82 @@ export async function updateDevice(req: Request, res: Response) {
       res.status(404).send('Not found devices to update')
     } else {
       const updatedDevice = await collection.findOne(query)
+      const changes: Record<string, { before: unknown; after: unknown }> = {}
+      const requestBody = req.body as {
+        name: string
+        modelId: string
+        position: Position
+        attributes: Attribute[]
+      }
 
-      logger.info(`PUT /devices/${req.params.id} - oki updated ${result.modifiedCount} devices`)
+      // Track name changes
+      if (deviceBefore.name !== requestBody.name) {
+        changes.name = {
+          before: deviceBefore.name,
+          after: requestBody.name
+        }
+      }
+
+      // Track modelId changes
+      if (deviceBefore.modelId !== requestBody.modelId) {
+        changes.modelId = {
+          before: deviceBefore.modelId,
+          after: requestBody.modelId
+        }
+      }
+
+      // Track position changes
+      if (
+        deviceBefore.position.x !== requestBody.position.x ||
+        deviceBefore.position.y !== requestBody.position.y ||
+        deviceBefore.position.h !== requestBody.position.h
+      ) {
+        changes.position = {
+          before: {
+            x: deviceBefore.position.x,
+            y: deviceBefore.position.y,
+            h: deviceBefore.position.h
+          },
+          after: {
+            x: requestBody.position.x,
+            y: requestBody.position.y,
+            h: requestBody.position.h
+          }
+        }
+      }
+
+      // Track attribute changes
+      const attributesBefore = JSON.stringify(deviceBefore.attributes || [])
+      const attributesAfter = JSON.stringify(requestBody.attributes || [])
+
+      if (attributesBefore !== attributesAfter) {
+        changes.attributes = {
+          before: deviceBefore.attributes || [],
+          after: requestBody.attributes || []
+        }
+      }
+
+      // Create log with detailed change information
+      const logMessage = {
+        deviceId: req.params.id,
+        deviceName: requestBody.name,
+        changes: changes,
+        updatedFields: Object.keys(changes),
+        changeCount: Object.keys(changes).length
+      }
+      const userId = (req as { user?: { id: string } }).user?.id
+      const username = (req as { user?: { username: string } }).user?.username
+
+      CreateLog(
+        req.params.id,
+        logMessage,
+        'update',
+        'device',
+        userId,
+        username
+      )
+
+      logger.info(`PUT /devices/${req.params.id} - updated ${result.modifiedCount} devices with ${Object.keys(changes).length} field changes`)
       res.status(200).json(updatedDevice)
     }
   } catch (error: unknown) {
@@ -204,21 +287,63 @@ export async function getDevicesByModel(req: Request, res: Response) {
 // Update device position
 export async function updateDevicePosition(req: Request, res: Response) {
   const query = { _id: new MongoObjectId(req.params.id) }
+  const newPosition = req.body as Position
   const updates: UpdateFilter<Document>[] = [
     {
-      $set: { position: req.body as Position }
+      $set: { position: newPosition }
     }
   ]
 
   try {
     const db: Db = await getDatabase()
     const collection: Collection = db.collection(collectionName)
+    const deviceBefore = await collection.findOne(query)
+
+    if (!deviceBefore) {
+      logger.error(`PATCH /devices/position/${req.params.id} - device not found`)
+      res.status(404).send('Device not found')
+
+      return
+    }
+
     const result = await collection.updateOne(query, updates)
 
     if (!result || result.modifiedCount === 0) {
       logger.error(`PATCH /devices/position/${req.params.id} - no position updated`)
       res.status(404).send('No position updated')
     } else {
+      const logMessage = {
+        deviceId: req.params.id,
+        deviceName: deviceBefore.name,
+        changes: {
+          position: {
+            before: {
+              x: deviceBefore.position.x,
+              y: deviceBefore.position.y,
+              h: deviceBefore.position.h
+            },
+            after: {
+              x: newPosition.x,
+              y: newPosition.y,
+              h: newPosition.h
+            }
+          }
+        },
+        updatedFields: ['position'],
+        changeCount: 1
+      }
+      const userId = (req as { user?: { id: string } }).user?.id
+      const username = (req as { user?: { username: string } }).user?.username
+
+      CreateLog(
+        req.params.id,
+        logMessage,
+        'update',
+        'device',
+        userId,
+        username
+      )
+
       logger.info(`PATCH /devices/position/${req.params.id} - position updated successfully`)
       res.status(200).json(result)
     }
