@@ -83,7 +83,7 @@ describe('RoleService - Service Layer Coverage Tests', () => {
     it('should create a new role successfully', async () => {
       const roleData = {
         name: UserRole.USER,
-        permissions: [Permission.READ_DEVICES]
+        permissions: [Permission.DEVICE_READ]
       }
       const mockInsertResult = {
         acknowledged: true,
@@ -92,7 +92,7 @@ describe('RoleService - Service Layer Coverage Tests', () => {
       const mockCreatedRole = {
         _id: mockInsertResult.insertedId,
         name: UserRole.USER,
-        permissions: [Permission.READ_DEVICES],
+        permissions: [Permission.DEVICE_READ],
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -111,7 +111,7 @@ describe('RoleService - Service Layer Coverage Tests', () => {
       expect(mockCollection.insertOne).toHaveBeenCalled()
       expect(mockCloseConnection).toHaveBeenCalledWith(mockClient)
       expect(result.name).toBe(UserRole.USER)
-      expect(result.permissions).toEqual([Permission.READ_DEVICES])
+      expect(result.permissions).toEqual([Permission.DEVICE_READ])
     })
 
     it('should throw error for invalid role data', async () => {
@@ -139,12 +139,12 @@ describe('RoleService - Service Layer Coverage Tests', () => {
     it('should handle role already exists error', async () => {
       const roleData = {
         name: UserRole.ADMIN,
-        permissions: [Permission.READ_DEVICES]
+        permissions: [Permission.DEVICE_READ]
       }
       const existingRole = {
         _id: new ObjectId(),
         name: UserRole.ADMIN,
-        permissions: [Permission.READ_DEVICES]
+        permissions: [Permission.DEVICE_READ]
       }
 
       mockCollection.findOne.mockResolvedValue(existingRole)
@@ -161,7 +161,7 @@ describe('RoleService - Service Layer Coverage Tests', () => {
       const mockRole = {
         _id: new ObjectId(),
         name: UserRole.USER,
-        permissions: [Permission.READ_DEVICES],
+        permissions: [Permission.DEVICE_READ],
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -194,12 +194,12 @@ describe('RoleService - Service Layer Coverage Tests', () => {
         {
           _id: new ObjectId(),
           name: UserRole.ADMIN,
-          permissions: [Permission.READ_DEVICES, Permission.WRITE_DEVICES]
+          permissions: [Permission.DEVICE_READ, Permission.DEVICE_CREATE]
         },
         {
           _id: new ObjectId(),
           name: UserRole.USER,
-          permissions: [Permission.READ_DEVICES]
+          permissions: [Permission.DEVICE_READ]
         }
       ]
 
@@ -227,7 +227,7 @@ describe('RoleService - Service Layer Coverage Tests', () => {
   describe('updateRole', () => {
     it('should update role successfully', async () => {
       const updateData = {
-        permissions: [Permission.READ_DEVICES, Permission.WRITE_DEVICES]
+        permissions: [Permission.DEVICE_READ, Permission.DEVICE_CREATE]
       }
       const mockUpdatedRole = {
         _id: new ObjectId(),

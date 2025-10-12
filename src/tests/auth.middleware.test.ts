@@ -69,7 +69,7 @@ describe('Auth Middleware - Authentication and Authorization Tests', () => {
         id: '507f1f77bcf86cd799439011',
         username: 'testuser',
         role: UserRole.USER,
-        permissions: [Permission.READ_DEVICES]
+        permissions: [Permission.DEVICE_READ]
       }
 
       mockRequest.headers = {
@@ -162,7 +162,7 @@ describe('Auth Middleware - Authentication and Authorization Tests', () => {
         id: '507f1f77bcf86cd799439011',
         username: 'testuser',
         role: UserRole.USER,
-        permissions: [Permission.READ_DEVICES]
+        permissions: [Permission.DEVICE_READ]
       }
 
       mockRequest.headers = {
@@ -270,12 +270,12 @@ describe('Auth Middleware - Authentication and Authorization Tests', () => {
         id: '507f1f77bcf86cd799439011',
         username: 'testuser',
         role: UserRole.USER,
-        permissions: [Permission.READ_DEVICES, Permission.WRITE_DEVICES]
+        permissions: [Permission.DEVICE_READ, Permission.DEVICE_CREATE]
       }
 
       mockRequest.user = mockUser
 
-      const middleware = requirePermission(Permission.READ_DEVICES)
+      const middleware = requirePermission(Permission.DEVICE_READ)
 
       middleware(mockRequest as Request, mockResponse as Response, mockNext)
 
@@ -288,19 +288,19 @@ describe('Auth Middleware - Authentication and Authorization Tests', () => {
         id: '507f1f77bcf86cd799439011',
         username: 'testuser',
         role: UserRole.VIEWER,
-        permissions: [Permission.READ_DEVICES]
+        permissions: [Permission.DEVICE_READ]
       }
 
       mockRequest.user = mockUser
 
-      const middleware = requirePermission(Permission.WRITE_DEVICES)
+      const middleware = requirePermission(Permission.DEVICE_CREATE)
 
       middleware(mockRequest as Request, mockResponse as Response, mockNext)
 
       expect(responseStatus).toHaveBeenCalledWith(403)
       expect(responseJson).toHaveBeenCalledWith({
         error: 'Forbidden',
-        message: 'Access denied. Required permission: write:devices'
+        message: 'Access denied. Required permission: device:create'
       })
       expect(mockNext).not.toHaveBeenCalled()
     })
@@ -308,7 +308,7 @@ describe('Auth Middleware - Authentication and Authorization Tests', () => {
     it('should reject request without authenticated user', () => {
       mockRequest.user = undefined
 
-      const middleware = requirePermission(Permission.READ_DEVICES)
+      const middleware = requirePermission(Permission.DEVICE_READ)
 
       middleware(mockRequest as Request, mockResponse as Response, mockNext)
 
@@ -330,7 +330,7 @@ describe('Auth Middleware - Authentication and Authorization Tests', () => {
 
       mockRequest.user = mockUser
 
-      const middleware = requirePermission(Permission.DELETE_DEVICES)
+      const middleware = requirePermission(Permission.DEVICE_DELETE)
 
       middleware(mockRequest as Request, mockResponse as Response, mockNext)
 
@@ -348,7 +348,7 @@ describe('Auth Middleware - Authentication and Authorization Tests', () => {
 
       mockRequest.user = mockUser
 
-      const middleware = requirePermission(Permission.READ_DEVICES)
+      const middleware = requirePermission(Permission.DEVICE_READ)
 
       middleware(mockRequest as Request, mockResponse as Response, mockNext)
 
@@ -359,34 +359,61 @@ describe('Auth Middleware - Authentication and Authorization Tests', () => {
   })
 
   describe('Role Permissions Integration', () => {
-    it('should validate ADMIN role has all permissions', () => {
+    it('should validate ADMIN role has all expected permissions', () => {
       const adminPermissions = ROLE_PERMISSIONS[UserRole.ADMIN]
-      const allPermissions = Object.values(Permission)
 
-      // Admin should have all available permissions
-      allPermissions.forEach(permission => {
-        expect(adminPermissions).toContain(permission)
-      })
+      // Admin should have all resource permissions (excluding SYSTEM_ADMIN which is reserved)
+      expect(adminPermissions).toContain(Permission.DEVICE_READ)
+      expect(adminPermissions).toContain(Permission.DEVICE_CREATE)
+      expect(adminPermissions).toContain(Permission.DEVICE_UPDATE)
+      expect(adminPermissions).toContain(Permission.DEVICE_DELETE)
+      expect(adminPermissions).toContain(Permission.MODEL_READ)
+      expect(adminPermissions).toContain(Permission.MODEL_CREATE)
+      expect(adminPermissions).toContain(Permission.MODEL_UPDATE)
+      expect(adminPermissions).toContain(Permission.MODEL_DELETE)
+      expect(adminPermissions).toContain(Permission.CONNECTION_READ)
+      expect(adminPermissions).toContain(Permission.CONNECTION_CREATE)
+      expect(adminPermissions).toContain(Permission.CONNECTION_UPDATE)
+      expect(adminPermissions).toContain(Permission.CONNECTION_DELETE)
+      expect(adminPermissions).toContain(Permission.ATTRIBUTE_READ)
+      expect(adminPermissions).toContain(Permission.ATTRIBUTE_CREATE)
+      expect(adminPermissions).toContain(Permission.ATTRIBUTE_UPDATE)
+      expect(adminPermissions).toContain(Permission.ATTRIBUTE_DELETE)
+      expect(adminPermissions).toContain(Permission.FLOOR_READ)
+      expect(adminPermissions).toContain(Permission.FLOOR_CREATE)
+      expect(adminPermissions).toContain(Permission.FLOOR_UPDATE)
+      expect(adminPermissions).toContain(Permission.FLOOR_DELETE)
+      expect(adminPermissions).toContain(Permission.USER_READ)
+      expect(adminPermissions).toContain(Permission.USER_CREATE)
+      expect(adminPermissions).toContain(Permission.USER_UPDATE)
+      expect(adminPermissions).toContain(Permission.USER_DELETE)
+      expect(adminPermissions).toContain(Permission.LOG_READ)
+      expect(adminPermissions).toContain(Permission.LOG_CREATE)
+      expect(adminPermissions).toContain(Permission.LOG_DELETE)
+      expect(adminPermissions).toContain(Permission.ADMIN_FULL)
+
+      // Total permissions: 28
+      expect(adminPermissions.length).toBe(28)
     })
 
     it('should validate USER role has appropriate permissions', () => {
       const userPermissions = ROLE_PERMISSIONS[UserRole.USER]
 
       // User should have read and write permissions but not delete
-      expect(userPermissions).toContain(Permission.READ_DEVICES)
-      expect(userPermissions).toContain(Permission.WRITE_DEVICES)
-      expect(userPermissions).toContain(Permission.READ_MODELS)
-      expect(userPermissions).toContain(Permission.WRITE_MODELS)
+      expect(userPermissions).toContain(Permission.DEVICE_READ)
+      expect(userPermissions).toContain(Permission.DEVICE_CREATE)
+      expect(userPermissions).toContain(Permission.MODEL_READ)
+      expect(userPermissions).toContain(Permission.MODEL_CREATE)
     })
 
     it('should validate VIEWER role has only read permissions', () => {
       const viewerPermissions = ROLE_PERMISSIONS[UserRole.VIEWER]
 
       // Viewer should only have read permissions
-      expect(viewerPermissions).toContain(Permission.READ_DEVICES)
-      expect(viewerPermissions).toContain(Permission.READ_MODELS)
-      expect(viewerPermissions).not.toContain(Permission.WRITE_DEVICES)
-      expect(viewerPermissions).not.toContain(Permission.DELETE_DEVICES)
+      expect(viewerPermissions).toContain(Permission.DEVICE_READ)
+      expect(viewerPermissions).toContain(Permission.MODEL_READ)
+      expect(viewerPermissions).not.toContain(Permission.DEVICE_CREATE)
+      expect(viewerPermissions).not.toContain(Permission.DEVICE_DELETE)
     })
   })
 
@@ -436,7 +463,7 @@ describe('Auth Middleware - Authentication and Authorization Tests', () => {
 
       mockRequest.user = mockUser
 
-      const middleware = requirePermission(Permission.READ_DEVICES)
+      const middleware = requirePermission(Permission.DEVICE_READ)
 
       middleware(mockRequest as Request, mockResponse as Response, mockNext)
 

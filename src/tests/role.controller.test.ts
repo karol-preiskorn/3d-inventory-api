@@ -62,9 +62,9 @@ describe('RoleController', () => {
   describe('getAllRoles', () => {
     it('should return all roles successfully', async () => {
       const mockRoles = [
-        { name: UserRole.ADMIN, permissions: [Permission.ADMIN_ACCESS] },
-        { name: UserRole.USER, permissions: [Permission.READ_DEVICES] },
-        { name: UserRole.VIEWER, permissions: [Permission.READ_DEVICES] }
+        { name: UserRole.ADMIN, permissions: [Permission.ADMIN_FULL] },
+        { name: UserRole.USER, permissions: [Permission.DEVICE_READ] },
+        { name: UserRole.VIEWER, permissions: [Permission.DEVICE_READ] }
       ]
 
       mockRoleService.getAllRoles.mockResolvedValue(mockRoles)
@@ -97,7 +97,7 @@ describe('RoleController', () => {
     it('should return role by valid name', async () => {
       const mockRole = {
         name: UserRole.USER,
-        permissions: [Permission.READ_DEVICES]
+        permissions: [Permission.DEVICE_READ]
       }
 
       mockRequest.params = { name: UserRole.USER }
@@ -156,12 +156,12 @@ describe('RoleController', () => {
     it('should create role with valid data', async () => {
       const roleData = {
         name: UserRole.USER,
-        permissions: [Permission.READ_DEVICES, Permission.WRITE_DEVICES]
+        permissions: [Permission.DEVICE_READ, Permission.DEVICE_CREATE]
       }
       const createdRole = {
         _id: 'role-id',
         name: UserRole.USER,
-        permissions: [Permission.READ_DEVICES, Permission.WRITE_DEVICES],
+        permissions: [Permission.DEVICE_READ, Permission.DEVICE_CREATE],
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -194,7 +194,7 @@ describe('RoleController', () => {
     it('should return 400 for invalid role name', async () => {
       mockRequest.body = {
         name: 'INVALID_ROLE',
-        permissions: [Permission.READ_DEVICES]
+        permissions: [Permission.DEVICE_READ]
       }
 
       await RoleController.createRole(mockRequest as Request, mockResponse as Response)
@@ -209,7 +209,7 @@ describe('RoleController', () => {
     it('should handle role already exists error', async () => {
       const roleData = {
         name: UserRole.USER,
-        permissions: [Permission.READ_DEVICES]
+        permissions: [Permission.DEVICE_READ]
       }
 
       mockRequest.body = roleData
@@ -228,7 +228,7 @@ describe('RoleController', () => {
   describe('updateRole', () => {
     it('should update role permissions successfully', async () => {
       const updateData = {
-        permissions: [Permission.READ_DEVICES, Permission.WRITE_DEVICES, Permission.DELETE_DEVICES]
+        permissions: [Permission.DEVICE_READ, Permission.DEVICE_CREATE, Permission.DEVICE_DELETE]
       }
       const updatedRole = {
         _id: 'role-id',
@@ -253,7 +253,7 @@ describe('RoleController', () => {
 
     it('should return 400 for invalid role name', async () => {
       mockRequest.params = { name: 'INVALID_ROLE' }
-      mockRequest.body = { permissions: [Permission.READ_DEVICES] }
+      mockRequest.body = { permissions: [Permission.DEVICE_READ] }
 
       await RoleController.updateRole(mockRequest as Request, mockResponse as Response)
 
@@ -266,7 +266,7 @@ describe('RoleController', () => {
 
     it('should return 404 when role not found', async () => {
       mockRequest.params = { name: UserRole.USER }
-      mockRequest.body = { permissions: [Permission.ADMIN_ACCESS] }
+      mockRequest.body = { permissions: [Permission.ADMIN_FULL] }
       mockRoleService.updateRole.mockRejectedValue(new Error('Role not found'))
 
       await RoleController.updateRole(mockRequest as Request, mockResponse as Response)
@@ -334,7 +334,7 @@ describe('RoleController', () => {
 
   describe('getRolePermissions', () => {
     it('should get role permissions successfully', async () => {
-      const mockPermissions = [Permission.READ_DEVICES, Permission.WRITE_DEVICES]
+      const mockPermissions = [Permission.DEVICE_READ, Permission.DEVICE_CREATE]
 
       mockRequest.params = { name: UserRole.USER }
       mockRoleService.getRolePermissions.mockResolvedValue(mockPermissions)

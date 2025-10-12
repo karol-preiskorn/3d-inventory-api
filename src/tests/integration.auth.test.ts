@@ -112,7 +112,7 @@ describe.skip('Authentication Integration Tests - Disabled (missing mongodb-memo
         id: 'test-user-id',
         username: 'testuser',
         role: UserRole.USER,
-        permissions: [Permission.READ_DEVICES]
+        permissions: [Permission.DEVICE_READ]
       }
       const token = jwt.sign(payload, config.JWT_SECRET, { expiresIn: '1h' })
       // Test accessing a protected route with valid token
@@ -159,7 +159,7 @@ describe.skip('Authentication Integration Tests - Disabled (missing mongodb-memo
         id: 'admin-user-id',
         username: 'admin',
         role: UserRole.ADMIN,
-        permissions: [Permission.ADMIN_ACCESS, Permission.DELETE_DEVICES]
+        permissions: [Permission.ADMIN_FULL, Permission.DEVICE_DELETE]
       }
       const token = jwt.sign(adminPayload, config.JWT_SECRET, { expiresIn: '1h' })
       // Test admin route access
@@ -182,7 +182,7 @@ describe.skip('Authentication Integration Tests - Disabled (missing mongodb-memo
         id: 'user-id',
         username: 'user',
         role: UserRole.USER,
-        permissions: [Permission.READ_DEVICES, Permission.WRITE_DEVICES]
+        permissions: [Permission.DEVICE_READ, Permission.DEVICE_CREATE]
       }
       const token = jwt.sign(userPayload, config.JWT_SECRET, { expiresIn: '1h' })
       // Test admin route access with user token
@@ -206,7 +206,7 @@ describe.skip('Authentication Integration Tests - Disabled (missing mongodb-memo
         id: 'viewer-id',
         username: 'viewer',
         role: UserRole.VIEWER,
-        permissions: [Permission.READ_DEVICES, Permission.READ_MODELS]
+        permissions: [Permission.DEVICE_READ, Permission.MODEL_READ]
       }
       const token = jwt.sign(viewerPayload, config.JWT_SECRET, { expiresIn: '1h' })
       // Test read access
