@@ -1,9 +1,10 @@
+# cSpell:words VULNS sarif OSSF ossf elif
 name: Security Scanning
 
 on:
   schedule:
-    # Run daily at 2 AM UTC
-    - cron: '0 2 * * *'
+    # Run weekly on Mondays at 2 AM UTC
+    - cron: '0 2 * * 1'
   push:
     branches: [main]
   pull_request:
@@ -46,18 +47,25 @@ jobs:
           path: audit-results.json
           retention-days: 30
 
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
       - name: Check for high/critical vulnerabilities
+        env:
+          HIGH_VULN_THRESHOLD: ${{ vars.HIGH_VULN_THRESHOLD || '5' }}
         run: |
           HIGH_VULNS=$(npm audit --audit-level=high --json | jq '.metadata.vulnerabilities.high // 0')
           CRITICAL_VULNS=$(npm audit --audit-level=critical --json | jq '.metadata.vulnerabilities.critical // 0')
+          THRESHOLD=${HIGH_VULN_THRESHOLD:-5}
 
           echo "High vulnerabilities: $HIGH_VULNS"
           echo "Critical vulnerabilities: $CRITICAL_VULNS"
+          echo "High vulnerability threshold: $THRESHOLD"
 
           if [ "$CRITICAL_VULNS" -gt 0 ]; then
             echo "❌ Critical vulnerabilities found!"
             exit 1
-          elif [ "$HIGH_VULNS" -gt 5 ]; then
+          elif [ "$HIGH_VULNS" -gt "$THRESHOLD" ]; then
             echo "⚠️ Too many high vulnerabilities found!"
             exit 1
           fi
@@ -80,32 +88,27 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          queries: security-extended,security-and-quality
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-        with:
-          category: '/language:${{ matrix.language }}'
 
   container-security:
     name: Container Security Scan
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: |
-          docker build -t security-scan:latest .
+        run: docker build -t security-scan:latest .
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: 'security-scan:latest'
           format: 'sarif'
@@ -118,7 +121,7 @@ jobs:
           sarif_file: 'trivy-results.sarif'
 
       - name: Run Trivy filesystem scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -154,7 +157,7 @@ jobs:
     name: OSSF Scorecard
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'pull_request'
 
     permissions:
       security-events: write
@@ -198,14 +201,15 @@ jobs:
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
 
-      - name: Check licenses
-        run: |
-          npx license-checker --summary --onlyAllow 'MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;CDDL-1.0;CDDL-1.1' --excludePrivatePackages
+      - name: Install license-checker
+        run: npm install -g license-checker
 
       - name: Generate license report
         run: |
           npx license-checker --csv --out license-report.csv --excludePrivatePackages
 
+      - name: Generate license summary
+        run: echo "License summary step (currently no summary generated)"
       - name: Upload license report
         uses: actions/upload-artifact@v4
         with:

@@ -545,6 +545,122 @@ describe('UserService', () => {
 })
 ```
 
+## 📝 Testing Best Practices & Examples
+
+### Comprehensive Test Patterns Available
+
+For production-ready testing examples, refer to the **Angular UI project**:
+
+- **[authentication.service.spec.ts](../../3d-inventory-ui/src/app/services/authentication.service.spec.ts)** - Comprehensive service testing
+  - 50+ test cases across 10 categories
+  - Covers initialization, login, logout, token validation, permissions, edge cases
+  - RBAC (Role-Based Access Control) testing
+  - Security scenario testing
+  - See **[AUTHENTICATION-SERVICE-TESTS-SUMMARY.md](../../3d-inventory-ui/AUTHENTICATION-SERVICE-TESTS-SUMMARY.md)** for detailed documentation
+
+### When Generating API Tests
+
+1. **Follow Test Categories**:
+   - Service Initialization & Singleton Pattern
+   - Happy Path Scenarios (successful operations)
+   - Error Handling (401, 403, 500, network errors)
+   - Input Validation (required fields, format validation)
+   - Edge Cases (corrupted data, rapid requests, concurrent operations)
+   - Security Scenarios (authentication, authorization, sensitive data)
+
+2. **Use Helper Functions**: Create reusable test utilities
+
+   ```typescript
+   // Example: Test data generators
+   const createMockUser = (overrides = {}) => ({
+     username: 'testuser',
+     email: 'test@example.com',
+     password: 'password123!',
+     role: 'user',
+     ...overrides,
+   })
+
+   const createValidToken = (payload = {}) => {
+     // JWT token generation logic
+   }
+   ```
+
+3. **Apply Standards**: Always reference #test_coverage_standards
+   - Minimum 80% coverage for all code
+   - Minimum 90% coverage for services
+   - 100% coverage for authentication/authorization logic
+
+4. **Mock External Dependencies**:
+   - Use MongoDB Memory Server for database tests
+   - Mock HTTP clients and external APIs
+   - Mock file system operations
+   - Isolate each test from external state
+
+### Example Test Generation Prompts
+
+```typescript
+// API Service Testing
+"Following the patterns from the UI authentication.service.spec.ts,
+generate comprehensive tests for the UserService with:
+- Service initialization and singleton pattern
+- User creation with password hashing
+- User authentication with JWT tokens
+- Error handling for invalid credentials, duplicate users, database errors
+- Edge cases like rapid login attempts, corrupted data
+- Security scenarios ensuring no sensitive data in responses
+Apply #test_coverage_standards"
+
+// API Controller Testing
+"Generate comprehensive tests for the devices controller following
+AGENTS.md testing automation patterns:
+- GET /api/devices - list all devices with pagination
+- GET /api/devices/:id - get specific device with 404 handling
+- POST /api/devices - create device with validation
+- PUT /api/devices/:id - update device with authorization
+- DELETE /api/devices/:id - delete with cascade checks
+Include authentication, authorization, and error scenarios.
+Apply #test_coverage_standards"
+
+// Integration Testing
+"Create integration tests for the complete authentication workflow:
+- User registration → login → token validation → protected routes
+- Include database setup/teardown
+- Test token refresh and expiration
+- Verify RBAC permissions across different user roles
+Apply #test_coverage_standards"
+```
+
+### Test Documentation References
+
+For comprehensive testing patterns and standards:
+
+- **[AGENTS.md](../AGENTS.md)** - Testing automation and AI-assisted development
+- **[JEST-TESTING.md](../JEST-TESTING.md)** - Complete Jest testing guide
+- **[MODERN-JEST-SETUP.md](../MODERN-JEST-SETUP.md)** - Modern Jest configuration
+- **[test_coverage_standards.instructions.md](./instructions/test_coverage_standards.instructions.md)** - Coverage requirements
+- **[UI Authentication Tests](../../3d-inventory-ui/AUTHENTICATION-SERVICE-TESTS-SUMMARY.md)** - 50+ test case examples
+
+### API-Specific Testing Utilities
+
+```typescript
+// Example: Database authentication testing
+// See: test-db-auth.ts for complete implementation
+const TEST_CREDENTIALS = [
+  { username: 'admin', password: 'admin123!' },
+  { username: 'user', password: 'user123!' },
+  { username: 'carlo', password: 'carlo123!' },
+  { username: 'viewer', password: 'viewer123!' },
+]
+
+// Test user existence and authentication
+for (const cred of TEST_CREDENTIALS) {
+  const user = await UserService.getInstance().getUserByUsername(cred.username)
+  expect(user).toBeTruthy()
+  const isValid = await UserService.getInstance().validatePassword(cred.password, user.password)
+  expect(isValid).toBe(true)
+}
+```
+
 ## API Design Patterns
 
 ### 1. RESTful Endpoints
