@@ -70,7 +70,7 @@ cd /home/karol/GitHub/3d-inventory-api
 ## 📚 Documentation
 
 - **Full Details**: [USER-TRACKING-ENHANCEMENT.md](USER-TRACKING-ENHANCEMENT.md)
-- **Logging Guide**: [LOGGING-ENHANCEMENT.md](LOGGING-ENHANCEMENT.md)
+- **Logging Guide**: [LOGGING-ENHANCEMENT.md](docs/troubleshooting/archive/LOGGING-ENHANCEMENT.md)
 
 ## ✅ Build Status
 

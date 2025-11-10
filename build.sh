@@ -19,10 +19,10 @@ if ! npm run lint; then
   exit 1
 fi
 
-# Configuration
-PROJECT_ID="${GOOGLE_CLOUD_PROJECT:-d-inventory-406007}"
-SERVICE_NAME="d-inventory-api"
-REGION="${GOOGLE_CLOUD_REGION:-europe-west1}"
+# Configuration move to environment variables
+# PROJECT_ID="${GOOGLE_CLOUD_PROJECT:-d-inventory-406007}"
+# SERVICE_NAME="${SERVICE_NAME}"
+# REGION="${GOOGLE_CLOUD_REGION:-europe-west1}"
 
 echo -e "${GREEN}✅ Deploying 3D Inventory API to Google Cloud Run${NC}"
 
@@ -63,11 +63,10 @@ gcloud services enable cloudbuild.googleapis.com --project=$PROJECT_ID
 # Deploy to Cloud Run
 echo -e "${YELLOW}✅ Deploying to Cloud Run...${NC}"
 
-
 # Ensure cleanup of any running or stopped containers with relevant names
-trap 'docker rm -f 3d-inventory-api test-3d-inventory-api 2>/dev/null' EXIT
+trap 'docker rm -f $PROJECT_NAME test-$PROJECT_NAME 2>/dev/null' EXIT
 
-for cname in 3d-inventory-api test-3d-inventory-api; do
+for cname in $PROJECT_NAME test-$PROJECT_NAME; do
   docker ps -q --filter "name=^/${cname}$" | xargs -r docker stop
   docker ps -aq --filter "name=^/${cname}$" | xargs -r docker rm
 done
@@ -84,47 +83,47 @@ fi
 
 # echo $GHCR_PAT | docker login ghcr.io -u $GH_USERNAME --password-stdin
 
-gcloud auth configure-docker gcr.io
+gcloud auth configure-docker ${REGISTRY}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VERSION=$(node -p "require('$SCRIPT_DIR/package.json').version")
 
-docker build -t 3d-inventory-api .
+docker build -t ${PROJECT_NAME} .
 
-# docker tag 3d-inventory-api ghcr.io/$GH_USERNAME/3d-inventory-api:${VERSION}
-# docker push ghcr.io/$GH_USERNAME/3d-inventory-api:${VERSION}
+# docker tag $PROJECT_NAME ghcr.io/$GH_USERNAME/$PROJECT_NAME:${VERSION}
+# docker push ghcr.io/$GH_USERNAME/$PROJECT_NAME:${VERSION}
 
-# docker tag 3d-inventory-api ghcr.io/$GH_USERNAME/3d-inventory-api:latest
-# docker push ghcr.io/$GH_USERNAME/3d-inventory-api:latest
+# docker tag ${PROJECT_NAME} ghcr.io/$GH_USERNAME/${PROJECT_NAME}:latest
+# docker push ghcr.io/$GH_USERNAME/${PROJECT_NAME}:latest
 
-docker tag 3d-inventory-api gcr.io/$PROJECT_ID/3d-inventory-api:latest
-docker push gcr.io/$PROJECT_ID/3d-inventory-api:latest
+docker tag ${PROJECT_NAME} ${REGISTRY}/$PROJECT_ID/${PROJECT_NAME}:latest
+docker push ${REGISTRY}/$PROJECT_ID/${PROJECT_NAME}:latest
 
 # Test container locally first
 echo -e "${GREEN}✅ Testing container locally...${NC}"
-docker run --rm -d --name test-3d-inventory-api -p 8080:8080 -e PORT=8080 3d-inventory-api
+docker run --rm -d --name test-${PROJECT_NAME} -p 8080:8080 -e PORT=8080 ${PROJECT_NAME}
 
-# Wait until the test-3d-inventory-api container is healthy or times out
+# Wait until the test-${PROJECT_NAME} container is healthy or times out
 MAX_WAIT=$((10*1))
 WAITED=0
-echo -e "${YELLOW}⏳ Waiting up to $MAX_WAIT seconds for test-3d-inventory-api to become healthy...${NC}"
+echo -e "${YELLOW}⏳ Waiting up to $MAX_WAIT seconds for test-${PROJECT_NAME} to become healthy...${NC}"
 until curl -fsSL http://localhost:8080/health > /dev/null 2>&1; do
   if (( WAITED >= MAX_WAIT )); then
     echo -e "${RED}❌ Container did not become healthy within $MAX_WAIT seconds. Exiting.${NC}"
-    docker logs test-3d-inventory-api
-    docker stop test-3d-inventory-api
+    docker logs test-${PROJECT_NAME}
+    docker stop test-${PROJECT_NAME}
     exit 1
   fi
   sleep 1
   ((WAITED++))
 done
 
-echo -e "${GREEN}✅ test-3d-inventory-api container is healthy.${NC}"
+echo -e "${GREEN}✅ test-${PROJECT_NAME} container is healthy.${NC}"
 
-# docker run --rm -d --name 3d-inventory-api --network 3d-inventory-network --ip 172.20.0.3 -p ${EXPOSED_PORT}:${EXPOSED_PORT}/tcp 3d-inventory-api:latest
+# docker run --rm -d --name ${PROJECT_NAME} --network 3d-inventory-network --ip 172.20.0.3 -p ${EXPOSED_PORT}:${EXPOSED_PORT}/tcp ${PROJECT_NAME}:latest
 
 gcloud run deploy $SERVICE_NAME \
-  --image gcr.io/$PROJECT_ID/3d-inventory-api:latest \
+  --image ${REGISTRY}/$PROJECT_ID/${PROJECT_NAME}:latest \
   --platform managed \
   --region $REGION \
   --allow-unauthenticated \

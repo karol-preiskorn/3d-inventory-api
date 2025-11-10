@@ -23,3 +23,6 @@ settings.json
 scripts/*.json
 scripts/*.rest
 .jest-cache/
+.env.gcp*-FIX*.md
+*-ISSUE*.md
+*-SUMMARY*.md

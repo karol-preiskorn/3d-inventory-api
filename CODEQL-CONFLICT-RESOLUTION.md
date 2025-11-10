@@ -178,7 +178,7 @@ See `CODEQL-SETUP.md` for detailed advanced configuration examples.
 
 - **[AGENTS.md](AGENTS.md)** - AI-assisted development automation
 - **[SECURITY.md](SECURITY.md)** - Security policies and guidelines
-- **[CODEQL-SETUP.md](CODEQL-SETUP.md)** - CodeQL configuration guide
+- **[CODEQL-SETUP.md](docs/troubleshooting/active/CODEQL-SETUP.md)** - CodeQL configuration guide
 - **[.github/workflows/security.yml](.github/workflows/security.yml)** - Security workflow
 
 ## Next Steps

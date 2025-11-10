@@ -52,7 +52,7 @@ jobs:
 
       - name: Check for high/critical vulnerabilities
         env:
-          HIGH_VULN_THRESHOLD: ${{ vars.HIGH_VULN_THRESHOLD || '5' }}
+          HIGH_VULN_THRESHOLD: ${{ vars.HIGH_VULN_THRESHOLD || 5 }}
         run: |
           HIGH_VULNS=$(npm audit --audit-level=high --json | jq '.metadata.vulnerabilities.high // 0')
           CRITICAL_VULNS=$(npm audit --audit-level=critical --json | jq '.metadata.vulnerabilities.critical // 0')

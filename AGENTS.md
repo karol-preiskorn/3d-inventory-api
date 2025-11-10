@@ -716,7 +716,7 @@ AUTOMATED_DEPLOYMENT=true
 
 #### **Cross-Project Integration**
 
-- **[AI Testing Integration Summary](AI-TESTING-INTEGRATION.md)**: Comprehensive testing strategy across both projects
+- **[AI Testing Integration Summary](docs/troubleshooting/archive/AI-TESTING-INTEGRATION.md)**: Comprehensive testing strategy across both projects
 - **[3D Inventory UI](../3d-inventory-ui/)**: Angular frontend application
 - **[UI Agents Guide](../3d-inventory-ui/AGENTS.md)**: Frontend AI automation
 - **[UI Testing](../3d-inventory-ui/src/app/testing/)**: Frontend testing utilities

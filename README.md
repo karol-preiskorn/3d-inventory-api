@@ -2,49 +2,33 @@
 
 1. [3d-inventory-mongo-api](#3d-inventory-mongo-api)
    1. [Purposes](#purposes)
-
    2. [Architecture](#architecture)
-
    3. [Features](#features)
-      1. [🔐 \*\*Authentication \&
-
-      Authorization**](#-authentication--authorization) 2. [📦 **Inventory Management\*\*](#-inventory-management) 3. [🛡️ **Security Features**](#️-security-features)
+      1. [🔐 **Authentication \& Authorization**](#-authentication--authorization)
+      2. [📦 **Inventory Management**](#-inventory-management)
+      3. [🛡️ **Security Features**](#️-security-features)
       4. [📊 **Monitoring \& Logging**](#-monitoring--logging)
-
    4. [Data Model](#data-model)
       1. [**Users Collection**](#users-collection)
-
       2. [**Roles Collection**](#roles-collection)
-
       3. [**Devices Collection**](#devices-collection)
-
+      4. [**Logs Collection**](#logs-collection)
    5. [API documentation](#api-documentation)
       1. [🔐 **Authentication Endpoints**](#-authentication-endpoints)
-
-      2. [👥 **User Management Endpoints** (Admin/User
-
-      Access)](#-user-management-endpoints-adminuser-access) 3. [🔑 **Role Management Endpoints** (Admin
-
-      Only)](#-role-management-endpoints-admin-only) 4. [📦 \*\*Inventory Management
-
-      Endpoints**](#-inventory-management-endpoints) 5. [🔧 **System Endpoints\*\*](#-system-endpoints)
-
+      2. [👥 **User Management Endpoints** (Admin/User Access)](#-user-management-endpoints-adminuser-access)
+      3. [🔑 **Role Management Endpoints** (Admin Only)](#-role-management-endpoints-admin-only)
+      4. [📦 **Inventory Management Endpoints**](#-inventory-management-endpoints)
+      5. [🔧 **System Endpoints**](#-system-endpoints)
    6. [Getting Started](#getting-started)
       1. [📋 **Prerequisites**](#-prerequisites)
-
       2. [🚀 **Installation**](#-installation)
-
       3. [🔧 **Development Setup**](#-development-setup)
-
       4. [🐳 **Docker Deployment**](#-docker-deployment)
-
       5. [🔑 **Default Users**](#-default-users)
-
       6. [📊 **Technology Stack**](#-technology-stack)
-
       7. [🔄 **Development Workflow**](#-development-workflow)
-
-   7. [License](#license)
+   7. [📚 Documentation](#-documentation)
+   8. [License](#license)
 
 [![Development time tracker](https://wakatime.com/badge/user/3bbeedbe-0c6a-4a01-b3cd-a85d319a03bf/project/018c29b5-69aa-44a9-823a-51170ee4eafb.svg 'Time spent on development')](https://wakatime.com/badge/user/3bbeedbe-0c6a-4a01-b3cd-a85d319a03bf/project/018c29b5-69aa-44a9-823a-51170ee4eafb)
 [![Latest commit](https://badgen.net/github/last-commit/karol-preiskorn/3d-inventory-mongo-api 'Latest commit date')](https://GitHub.com/karol-preiskorn/3d-inventory-mongo-api/commit/)
@@ -608,6 +592,14 @@ npm run clean      # Clean build artifacts
 - Pre-commit: Automatic linting, formatting, and version bump
 
 - Husky integration for code quality enforcement
+
+## 📚 Documentation
+
+- **[Development Guide](DEVELOPMENT.md)** - Setup and development workflow
+- **[AI Agents Guide](AGENTS.md)** - AI-assisted development patterns
+- **[Testing Guide](JEST-TESTING.md)** - Comprehensive testing documentation
+- **[Troubleshooting Index](docs/TROUBLESHOOTING-INDEX.md)** - Problem fixes and solutions
+- **[Security Policies](SECURITY.md)** - Security guidelines
 
 ## License
 
