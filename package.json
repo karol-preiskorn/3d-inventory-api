@@ -172,7 +172,7 @@
     "mongodb-memory-server": "^10.2.3",
     "nodemon": "^3.1.10",
     "npm-check-updates": "^19.1.1",
-    "rimraf": "^6.0.1",
+    "rimraf": "^6.1.0",
     "sort-package-json": "^3.4.0",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.5",
