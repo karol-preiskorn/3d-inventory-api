@@ -2,7 +2,7 @@
 alwaysApply: true
 always_on: true
 trigger: always_on
-applyTo: "**/*"
+applyTo: '**/*'
 description: Copilot File Organization Maintenance Rules - Enforces Consistent Project Structure
 ---
 
@@ -24,6 +24,7 @@ one of the 4 essential documentation files.
 ### 1. Root Directory is Sacred (4 Files Maximum)
 
 **ONLY these files belong in root**:
+
 - ✅ `README.md` - Project overview and setup
 - ✅ `DEVELOPMENT.md` - Development workflow
 - ✅ `AGENTS.md` - AI automation and patterns
@@ -33,14 +34,14 @@ one of the 4 essential documentation files.
 
 ### 2. File Type Determines Location
 
-| File Type | Location | Example |
-|-----------|----------|---------|
-| Shell scripts (.sh) | `/scripts/` | `scripts/build.sh` |
-| Database scripts (.ts/.js) | `/scripts/database/` | `scripts/database/init-users.ts` |
-| Test/automation scripts (.ts/.js) | `/scripts/testing/` | `scripts/testing/test-db-auth.ts` |
-| Configuration files | `/config/` | `config/jest.config.ts` |
-| Documentation | `/docs/` subfolders | `docs/guides/SETUP.md` |
-| Application code | `/src/` | `src/controllers/auth.ts` |
+| File Type                         | Location             | Example                           |
+| --------------------------------- | -------------------- | --------------------------------- |
+| Shell scripts (.sh)               | `/scripts/`          | `scripts/build.sh`                |
+| Database scripts (.ts/.js)        | `/scripts/database/` | `scripts/database/init-users.ts`  |
+| Test/automation scripts (.ts/.js) | `/scripts/testing/`  | `scripts/testing/test-db-auth.ts` |
+| Configuration files               | `/config/`           | `config/jest.config.ts`           |
+| Documentation                     | `/docs/` subfolders  | `docs/guides/SETUP.md`            |
+| Application code                  | `/src/`              | `src/controllers/auth.ts`         |
 
 ### 3. Consistent Naming Conventions
 
@@ -132,6 +133,7 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 **When to use**: General development scripts, build tools, deployment helpers
 
 **File patterns**:
+
 - `build.sh` - Build automation
 - `deploy.sh` - Deployment scripts
 - `docker-compose.sh` - Container management
@@ -139,7 +141,8 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 - `verify-*.sh` - Verification utilities
 - `cleanup-*.sh` - Cleanup operations
 
-**Copilot instruction**: 
+**Copilot instruction**:
+
 > "Create a shell script in `/scripts/` directory, not in root"
 
 ---
@@ -149,6 +152,7 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 **When to use**: Database initialization, migrations, user management, admin operations
 
 **File patterns**:
+
 - `init-*.ts` - Initialization scripts
 - `add-*.ts` - Add operations (add-admin-role, add-user)
 - `update-*.ts` - Update operations
@@ -160,6 +164,7 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 - `check-*.ts` - Check/inspect operations
 
 **Examples**:
+
 - `scripts/database/init-users.ts`
 - `scripts/database/add-admin-role.ts`
 - `scripts/database/reset-admin-password.ts`
@@ -170,6 +175,7 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 - `scripts/database/migrate-permissions.ts`
 
 **Copilot instruction**:
+
 > "Create database script in `/scripts/database/` with appropriate runner (npx tsx for .ts)"
 
 ---
@@ -179,6 +185,7 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 **When to use**: Test automation, test data generation, test setup/cleanup
 
 **File patterns**:
+
 - `test-*.ts` - TypeScript tests
 - `test-*.cjs` - CommonJS tests
 - `test-*.js` - JavaScript tests
@@ -187,6 +194,7 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 - `generator-*.ts` - Test data generators
 
 **Examples**:
+
 - `scripts/testing/test-db-auth.ts`
 - `scripts/testing/test-auth.cjs`
 - `scripts/testing/test-jest-cleanup.js`
@@ -194,6 +202,7 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 - `scripts/testing/test-generator.ts`
 
 **Copilot instruction**:
+
 > "Create test utility in `/scripts/testing/` with appropriate runner (npx tsx or node)"
 
 ---
@@ -203,6 +212,7 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 **When to use**: Build tools, testing, linting configurations
 
 **File patterns**:
+
 - `jest.config.ts` - Jest configuration
 - `eslint.config.ts` - ESLint configuration
 - `babel.config.js` - Babel configuration
@@ -210,6 +220,7 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 - `*.config.ts` - Any tool configuration
 
 **Copilot instruction**:
+
 > "Create configuration file in `/config/` directory"
 
 ---
@@ -217,6 +228,7 @@ File: docs/archive/IMPLEMENTATION-NOTES.md
 ### `/docs/` - Documentation
 
 **Structure**:
+
 ```
 docs/
 ├── guides/          # Setup, tutorial, how-to guides
@@ -226,7 +238,9 @@ docs/
 ```
 
 **Copilot instruction**:
+
 > "Create documentation in appropriate `/docs/` subfolder:
+>
 > - Setup/tutorial → /docs/guides/
 > - Feature info → /docs/features/
 > - Problem solving → /docs/troubleshooting/
@@ -237,6 +251,7 @@ docs/
 ### `/src/` - Application Code
 
 **Structure**:
+
 ```
 src/
 ├── controllers/ # Request handlers
@@ -248,6 +263,7 @@ src/
 ```
 
 **Copilot instruction**:
+
 > "Create application code in appropriate `/src/` subfolder based on responsibility"
 
 ---
@@ -430,6 +446,7 @@ Before creating a new file, verify:
 **Request**: "Create a script to initialize default users"
 
 **Copilot Action**:
+
 ```
 ✅ Location: scripts/database/init-users.ts
 ✅ Runner: npx tsx scripts/database/init-users.ts
@@ -442,6 +459,7 @@ Before creating a new file, verify:
 **Request**: "Create a build script"
 
 **Copilot Action**:
+
 ```
 ✅ Location: scripts/build.sh
 ✅ Runner: bash ./scripts/build.sh
@@ -454,6 +472,7 @@ Before creating a new file, verify:
 **Request**: "Create authentication test automation"
 
 **Copilot Action**:
+
 ```
 ✅ Location: scripts/testing/test-db-auth.ts
 ✅ Runner: npx tsx scripts/testing/test-db-auth.ts
@@ -466,6 +485,7 @@ Before creating a new file, verify:
 **Request**: "Create Jest configuration"
 
 **Copilot Action**:
+
 ```
 ✅ Location: config/jest.config.ts
 ✅ Pattern: Type=TypeScript, Category=config
@@ -477,6 +497,7 @@ Before creating a new file, verify:
 **Request**: "Write setup guide for the project"
 
 **Copilot Action**:
+
 ```
 ✅ Location: docs/guides/SETUP.md
 ✅ Pattern: Type=Markdown, Category=guides

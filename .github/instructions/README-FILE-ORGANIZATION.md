@@ -17,6 +17,7 @@ This directory contains **comprehensive Copilot instructions** for maintaining t
 ### Core Documentation
 
 #### 1. **file-organization.instructions.md**
+
 **Original foundational file organization rules**
 
 - **Size**: 419 lines
@@ -28,6 +29,7 @@ This directory contains **comprehensive Copilot instructions** for maintaining t
 ---
 
 #### 2. **COPILOT-FILE-ORGANIZATION-MAINTENANCE.md**
+
 **Comprehensive enforcement rules for Copilot** ⭐ PRIMARY DOCUMENT
 
 - **Size**: 2000+ lines
@@ -50,9 +52,10 @@ This directory contains **comprehensive Copilot instructions** for maintaining t
 ---
 
 #### 3. **COPILOT-FILE-ORGANIZATION-QUICK-REF.md**
+
 **Quick reference for common file organization tasks**
 
-- **Size**: ~400 lines  
+- **Size**: ~400 lines
 - **Purpose**: Fast lookup for common situations
 - **Content**:
   - 30-second summary
@@ -69,6 +72,7 @@ This directory contains **comprehensive Copilot instructions** for maintaining t
 ---
 
 #### 4. **COPILOT-FILE-ORGANIZATION-CHECKLIST.md**
+
 **Operational checklists for file creation and verification**
 
 - **Size**: ~400 lines
@@ -92,6 +96,7 @@ This directory contains **comprehensive Copilot instructions** for maintaining t
 ### Summary Documentation
 
 #### 5. **PROJECT-SUMMARY.md** (root folder)
+
 **Complete project history and outcomes**
 
 - **Location**: `/home/karol/GitHub/3d-inventory-api/FILE-ORGANIZATION-PROJECT-SUMMARY.md`
@@ -116,6 +121,7 @@ This directory contains **comprehensive Copilot instructions** for maintaining t
 ### Scenario 1: Creating a New File (Most Common)
 
 **Step 1**: Start with **QUICK REFERENCE**
+
 ```
 Read: COPILOT-FILE-ORGANIZATION-QUICK-REF.md
 Time: 2-3 minutes
@@ -123,13 +129,15 @@ Action: Check table for file type → find location
 ```
 
 **Step 2**: Use **CHECKLIST** if unsure
+
 ```
 Read: COPILOT-FILE-ORGANIZATION-CHECKLIST.md
-Time: 2-3 minutes  
+Time: 2-3 minutes
 Action: Run through pre-creation checklist (7 items)
 ```
 
 **Step 3**: Consult **FULL RULES** if needed
+
 ```
 Read: COPILOT-FILE-ORGANIZATION-MAINTENANCE.md
 Time: 5-10 minutes
@@ -141,6 +149,7 @@ Action: Find decision tree → find specific scenario
 ### Scenario 2: Understanding the Organization (First Time)
 
 **Step 1**: Read **PROJECT SUMMARY**
+
 ```
 Location: FILE-ORGANIZATION-PROJECT-SUMMARY.md (root)
 Time: 10-15 minutes
@@ -148,6 +157,7 @@ Content: Get complete context and history
 ```
 
 **Step 2**: Review **QUICK REFERENCE**
+
 ```
 Location: COPILOT-FILE-ORGANIZATION-QUICK-REF.md
 Time: 5 minutes
@@ -155,6 +165,7 @@ Content: Understand basic rules and patterns
 ```
 
 **Step 3**: Deep Dive **FULL RULES** (Optional)
+
 ```
 Location: COPILOT-FILE-ORGANIZATION-MAINTENANCE.md
 Time: 20-30 minutes
@@ -166,18 +177,21 @@ Content: Comprehensive understanding of all scenarios
 ### Scenario 3: Reviewing Code for Organization Compliance
 
 **Step 1**: Use **CHECKLIST** - Post-Creation Verification
+
 ```
 Location: COPILOT-FILE-ORGANIZATION-CHECKLIST.md
 Action: Run through 7-item post-creation check
 ```
 
 **Step 2**: Check **ANTI-PATTERNS** section
+
 ```
 Location: COPILOT-FILE-ORGANIZATION-CHECKLIST.md
 Action: Verify none of the 4 anti-patterns are present
 ```
 
 **Step 3**: Verify with **DECISION TREE**
+
 ```
 Location: COPILOT-FILE-ORGANIZATION-MAINTENANCE.md
 Action: Trace file through decision tree to verify correct placement
@@ -188,6 +202,7 @@ Action: Trace file through decision tree to verify correct placement
 ### Scenario 4: Copilot is Creating a File
 
 **What Copilot Does**:
+
 1. Reads these instruction files
 2. Identifies file type
 3. Consults decision tree
@@ -197,6 +212,7 @@ Action: Trace file through decision tree to verify correct placement
 7. Updates integration points (package.json, workflows)
 
 **Your Role**:
+
 1. Provide clear file type and purpose
 2. Let Copilot handle placement
 3. Verify result against checklist
@@ -209,6 +225,7 @@ Action: Trace file through decision tree to verify correct placement
 ### The Sacred Four
 
 Only 4 files belong in root:
+
 - `README.md` - Project overview
 - `DEVELOPMENT.md` - Development workflow
 - `AGENTS.md` - AI automation patterns
@@ -218,17 +235,17 @@ Only 4 files belong in root:
 
 ### File Type → Location Mapping
 
-| File Type | Location | Runner | Example |
-|-----------|----------|--------|---------|
-| Shell scripts | `/scripts/` | `bash` | `bash ./scripts/build.sh` |
-| Database scripts | `/scripts/database/` | `npx tsx` | `npx tsx scripts/database/init-users.ts` |
-| Test scripts | `/scripts/testing/` | `npx tsx` | `npx tsx scripts/testing/test-db-auth.ts` |
-| Config files | `/config/` | N/A | `config/jest.config.ts` |
-| Guides | `/docs/guides/` | N/A | `docs/guides/SETUP.md` |
-| Features | `/docs/features/` | N/A | `docs/features/AUTH.md` |
-| Troubleshooting | `/docs/troubleshooting/` | N/A | `docs/troubleshooting/ERRORS.md` |
-| Archive | `/docs/archive/` | N/A | `docs/archive/OLD.md` |
-| Application code | `/src/` | N/A | `src/controllers/auth.ts` |
+| File Type        | Location                 | Runner    | Example                                   |
+| ---------------- | ------------------------ | --------- | ----------------------------------------- |
+| Shell scripts    | `/scripts/`              | `bash`    | `bash ./scripts/build.sh`                 |
+| Database scripts | `/scripts/database/`     | `npx tsx` | `npx tsx scripts/database/init-users.ts`  |
+| Test scripts     | `/scripts/testing/`      | `npx tsx` | `npx tsx scripts/testing/test-db-auth.ts` |
+| Config files     | `/config/`               | N/A       | `config/jest.config.ts`                   |
+| Guides           | `/docs/guides/`          | N/A       | `docs/guides/SETUP.md`                    |
+| Features         | `/docs/features/`        | N/A       | `docs/features/AUTH.md`                   |
+| Troubleshooting  | `/docs/troubleshooting/` | N/A       | `docs/troubleshooting/ERRORS.md`          |
+| Archive          | `/docs/archive/`         | N/A       | `docs/archive/OLD.md`                     |
+| Application code | `/src/`                  | N/A       | `src/controllers/auth.ts`                 |
 
 ### Core Principles
 
@@ -301,12 +318,14 @@ Creating a file?
 ### Tell Copilot What to Create
 
 **Good Prompt**:
+
 ```
-"Create scripts/database/init-users.ts that initializes test users 
+"Create scripts/database/init-users.ts that initializes test users
 with proper MongoDB connection and admin role setup"
 ```
 
 **Why It Works**:
+
 - Full path specified
 - Clear file type (TypeScript)
 - Clear purpose (database initialization)
@@ -315,12 +334,14 @@ with proper MongoDB connection and admin role setup"
 ### Let Copilot Handle Placement
 
 **Don't Worry About**:
+
 - ❌ Where to put it (Copilot knows)
 - ❌ What runner to use (Copilot knows)
 - ❌ npm script format (Copilot handles)
 - ❌ Integration points (Copilot updates)
 
 **Just Tell Copilot**:
+
 - ✅ What file type
 - ✅ What purpose
 - ✅ What it should do
@@ -330,15 +351,18 @@ with proper MongoDB connection and admin role setup"
 ## 🔗 Related Documentation
 
 ### In This Project
+
 - **Root**: `FILE-ORGANIZATION-PROJECT-SUMMARY.md` - Complete project history
 - **This folder**: All 4 instruction files (foundational + comprehensive + quick + checklist)
 
 ### Related Instruction Files
+
 - `code_quality_standards.instructions.md` - Code quality rules
 - `test_coverage_standards.instructions.md` - Testing standards
 - `typescript_strict_mode.instructions.md` - TypeScript rules
 
 ### Project Documentation
+
 - `README.md` - Project overview
 - `DEVELOPMENT.md` - Development workflow
 - `AGENTS.md` - AI automation patterns
@@ -403,20 +427,21 @@ Result:
 
 ## 🚫 Common Mistakes - Avoid These
 
-| Mistake | Wrong | Correct |
-|---------|-------|---------|
-| Scripts in root | `./init-users.ts` | `./scripts/database/init-users.ts` |
-| Wrong folder | `scripts/init-users.ts` | `scripts/database/init-users.ts` |
-| Wrong runner | `node init-users.ts` | `npx tsx scripts/database/init-users.ts` |
-| Missing path | `npx tsx init-users.ts` | `npx tsx scripts/database/init-users.ts` |
-| Config in root | `./jest.config.ts` | `./config/jest.config.ts` |
-| Docs in root | `./SETUP.md` | `./docs/guides/SETUP.md` |
+| Mistake         | Wrong                   | Correct                                  |
+| --------------- | ----------------------- | ---------------------------------------- |
+| Scripts in root | `./init-users.ts`       | `./scripts/database/init-users.ts`       |
+| Wrong folder    | `scripts/init-users.ts` | `scripts/database/init-users.ts`         |
+| Wrong runner    | `node init-users.ts`    | `npx tsx scripts/database/init-users.ts` |
+| Missing path    | `npx tsx init-users.ts` | `npx tsx scripts/database/init-users.ts` |
+| Config in root  | `./jest.config.ts`      | `./config/jest.config.ts`                |
+| Docs in root    | `./SETUP.md`            | `./docs/guides/SETUP.md`                 |
 
 ---
 
 ## 📊 Project Status
 
 ### Phases Completed ✅
+
 - Phase 1: Analysis & Planning ✓
 - Phase 2: Structure Definition ✓
 - Phase 3: File Migration (110+ files) ✓
@@ -424,6 +449,7 @@ Result:
 - Phase 5: npm Script Fixes ✓
 
 ### Deliverables ✅
+
 - 4 comprehensive instruction files (this directory)
 - 1 project summary document
 - 100% of files properly organized
@@ -432,6 +458,7 @@ Result:
 - Copilot automation fully implemented
 
 ### Current State ✅
+
 - ✅ Clean, organized project structure
 - ✅ Comprehensive documentation
 - ✅ Automated Copilot enforcement
@@ -479,18 +506,23 @@ Result:
 ## 📞 Support
 
 ### Quick Questions?
+
 → Check **COPILOT-FILE-ORGANIZATION-QUICK-REF.md** (2-3 min)
 
 ### Need to Create a File?
+
 → Use **COPILOT-FILE-ORGANIZATION-CHECKLIST.md** (2-3 min)
 
 ### Want Full Understanding?
+
 → Read **COPILOT-FILE-ORGANIZATION-MAINTENANCE.md** (20-30 min)
 
 ### Want Project History?
+
 → See **FILE-ORGANIZATION-PROJECT-SUMMARY.md** (root folder)
 
 ### Still Unsure?
+
 → Ask Copilot with full path: "Create scripts/database/my-file.ts..."
 
 ---
@@ -510,8 +542,8 @@ Result:
 
 ---
 
-**Version**: 1.0  
-**Type**: README & Navigation Guide  
-**Status**: Complete & Active  
-**Last Updated**: November 2024  
+**Version**: 1.0
+**Type**: README & Navigation Guide
+**Status**: Complete & Active
+**Last Updated**: November 2024
 **Scope**: 3D Inventory API File Organization

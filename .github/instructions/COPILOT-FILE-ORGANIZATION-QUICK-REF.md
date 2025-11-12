@@ -2,7 +2,7 @@
 alwaysApply: true
 always_on: true
 trigger: always_on
-applyTo: "**/*"
+applyTo: '**/*'
 description: Quick Reference - File Organization Rules for Copilot
 ---
 
@@ -14,14 +14,14 @@ description: Quick Reference - File Organization Rules for Copilot
 
 **Everything Else**: Goes in subdirectories
 
-| File Type | Location | Example |
-|-----------|----------|---------|
-| Scripts (.sh) | `/scripts/` | `scripts/build.sh` |
-| Database scripts | `/scripts/database/` | `scripts/database/init-users.ts` |
-| Test scripts | `/scripts/testing/` | `scripts/testing/test-db-auth.ts` |
-| Config files | `/config/` | `config/jest.config.ts` |
-| Documentation | `/docs/` | `docs/guides/SETUP.md` |
-| App code | `/src/` | `src/controllers/auth.ts` |
+| File Type        | Location             | Example                           |
+| ---------------- | -------------------- | --------------------------------- |
+| Scripts (.sh)    | `/scripts/`          | `scripts/build.sh`                |
+| Database scripts | `/scripts/database/` | `scripts/database/init-users.ts`  |
+| Test scripts     | `/scripts/testing/`  | `scripts/testing/test-db-auth.ts` |
+| Config files     | `/config/`           | `config/jest.config.ts`           |
+| Documentation    | `/docs/`             | `docs/guides/SETUP.md`            |
+| App code         | `/src/`              | `src/controllers/auth.ts`         |
 
 ---
 
@@ -46,6 +46,7 @@ description: Quick Reference - File Organization Rules for Copilot
 ## 🔍 Rule #2: File Type Determines Location
 
 ### Shell Scripts → `/scripts/`
+
 ```bash
 scripts/build.sh
 scripts/deploy.sh
@@ -54,6 +55,7 @@ scripts/verify-cors.sh
 ```
 
 ### Database/Admin TypeScript → `/scripts/database/`
+
 ```bash
 scripts/database/init-users.ts
 scripts/database/add-admin-role.ts
@@ -64,6 +66,7 @@ scripts/database/cleanup-and-reinit.ts
 ```
 
 ### Testing/Automation TypeScript → `/scripts/testing/`
+
 ```bash
 scripts/testing/test-db-auth.ts
 scripts/testing/test-auth.cjs
@@ -71,6 +74,7 @@ scripts/testing/setup-test-db.ts
 ```
 
 ### Config Files → `/config/`
+
 ```bash
 config/jest.config.ts
 config/eslint.config.ts
@@ -79,6 +83,7 @@ config/tsconfig.*.json
 ```
 
 ### Documentation → `/docs/`
+
 ```bash
 docs/guides/SETUP.md
 docs/guides/DEPLOYMENT.md
@@ -88,6 +93,7 @@ docs/archive/OLD-DOCS.md
 ```
 
 ### Application Code → `/src/`
+
 ```bash
 src/controllers/auth.ts
 src/services/UserService.ts
@@ -148,6 +154,7 @@ Creating a new file?
 ## 🔗 File Creation Templates
 
 ### Create Database Script
+
 ```
 Create scripts/database/<name>.ts with:
 - Purpose: [what it does]
@@ -155,6 +162,7 @@ Create scripts/database/<name>.ts with:
 ```
 
 ### Create Test Script
+
 ```
 Create scripts/testing/<name>.ts with:
 - Purpose: [what it does]
@@ -162,6 +170,7 @@ Create scripts/testing/<name>.ts with:
 ```
 
 ### Create Shell Script
+
 ```
 Create scripts/<name>.sh with:
 - Purpose: [what it does]
@@ -169,12 +178,14 @@ Create scripts/<name>.sh with:
 ```
 
 ### Create Config File
+
 ```
 Create config/<tool>.config.ts with:
 - Purpose: [what it configures]
 ```
 
 ### Create Documentation
+
 ```
 Create docs/<category>/<title>.md with:
 - Category: guides|features|troubleshooting|archive
@@ -185,13 +196,13 @@ Create docs/<category>/<title>.md with:
 
 ## ❌ Common Mistakes
 
-| Mistake | Wrong | Correct |
-|---------|-------|---------|
-| Scripts in root | `./build.sh` | `./scripts/build.sh` |
-| Configs in root | `./jest.config.ts` | `./config/jest.config.ts` |
-| Docs in root | `./SETUP.md` | `./docs/guides/SETUP.md` |
-| DB scripts wrong folder | `scripts/testing/init-users.ts` | `scripts/database/init-users.ts` |
-| Wrong runner | `node init-users.ts` | `npx tsx scripts/database/init-users.ts` |
+| Mistake                 | Wrong                           | Correct                                  |
+| ----------------------- | ------------------------------- | ---------------------------------------- |
+| Scripts in root         | `./build.sh`                    | `./scripts/build.sh`                     |
+| Configs in root         | `./jest.config.ts`              | `./config/jest.config.ts`                |
+| Docs in root            | `./SETUP.md`                    | `./docs/guides/SETUP.md`                 |
+| DB scripts wrong folder | `scripts/testing/init-users.ts` | `scripts/database/init-users.ts`         |
+| Wrong runner            | `node init-users.ts`            | `npx tsx scripts/database/init-users.ts` |
 
 ---
 
@@ -205,6 +216,7 @@ Create docs/<category>/<title>.md with:
 ## ✅ Examples - Get It Right
 
 ### ✅ Correct Example 1: Database Initialization
+
 ```
 File: scripts/database/init-users.ts
 Runner: npx tsx scripts/database/init-users.ts
@@ -212,6 +224,7 @@ npm script: "init:users": "npx tsx scripts/database/init-users.ts"
 ```
 
 ### ✅ Correct Example 2: Build Script
+
 ```
 File: scripts/build.sh
 Runner: bash ./scripts/build.sh
@@ -219,6 +232,7 @@ npm script: "gcp:build": "bash ./scripts/build.sh"
 ```
 
 ### ✅ Correct Example 3: Test Automation
+
 ```
 File: scripts/testing/test-db-auth.ts
 Runner: npx tsx scripts/testing/test-db-auth.ts
@@ -226,6 +240,7 @@ npm script: "test:db-auth": "npx tsx scripts/testing/test-db-auth.ts"
 ```
 
 ### ✅ Correct Example 4: Configuration
+
 ```
 File: config/jest.config.ts
 Usage: Import from jest.config.ts in root
@@ -233,6 +248,7 @@ Reference: jest expects this at root level
 ```
 
 ### ✅ Correct Example 5: Documentation
+
 ```
 File: docs/guides/DEPLOYMENT.md
 Purpose: Deployment workflow guide
@@ -254,7 +270,7 @@ Location: Guides subfolder for how-to documentation
 
 ---
 
-**Version**: 1.0  
-**Type**: Quick Reference  
-**Applies To**: All Copilot file creation  
+**Version**: 1.0
+**Type**: Quick Reference
+**Applies To**: All Copilot file creation
 **Status**: Active

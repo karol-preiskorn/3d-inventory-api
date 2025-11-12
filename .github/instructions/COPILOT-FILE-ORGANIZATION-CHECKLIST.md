@@ -2,7 +2,7 @@
 alwaysApply: true
 always_on: true
 trigger: always_on
-applyTo: "**/*"
+applyTo: '**/*'
 description: File Organization Maintenance Checklist for Copilot
 ---
 
@@ -26,39 +26,39 @@ description: File Organization Maintenance Checklist for Copilot
 
 ### Is this a Script (.sh, .ts, .js)?
 
-| Script Type | Location | Runner | Example | npm Script |
-|------------|----------|--------|---------|-----------|
-| Build/Deploy | `/scripts/` | `bash` or `node` | `build.sh` | `"gcp:build": "bash ./scripts/build.sh"` |
-| Database Ops | `/scripts/database/` | `npx tsx` | `init-users.ts` | `"init:users": "npx tsx scripts/database/init-users.ts"` |
-| Testing | `/scripts/testing/` | `npx tsx` or `node` | `test-db-auth.ts` | `"test:db": "npx tsx scripts/testing/test-db-auth.ts"` |
+| Script Type  | Location             | Runner              | Example           | npm Script                                               |
+| ------------ | -------------------- | ------------------- | ----------------- | -------------------------------------------------------- |
+| Build/Deploy | `/scripts/`          | `bash` or `node`    | `build.sh`        | `"gcp:build": "bash ./scripts/build.sh"`                 |
+| Database Ops | `/scripts/database/` | `npx tsx`           | `init-users.ts`   | `"init:users": "npx tsx scripts/database/init-users.ts"` |
+| Testing      | `/scripts/testing/`  | `npx tsx` or `node` | `test-db-auth.ts` | `"test:db": "npx tsx scripts/testing/test-db-auth.ts"`   |
 
 ### Is this a Config File?
 
-| Config Type | Location | Example |
-|------------|----------|---------|
-| Jest Config | `/config/` | `jest.config.ts` |
+| Config Type   | Location   | Example            |
+| ------------- | ---------- | ------------------ |
+| Jest Config   | `/config/` | `jest.config.ts`   |
 | ESLint Config | `/config/` | `eslint.config.ts` |
-| Babel Config | `/config/` | `babel.config.js` |
-| Any Config | `/config/` | `<tool>.config.ts` |
+| Babel Config  | `/config/` | `babel.config.js`  |
+| Any Config    | `/config/` | `<tool>.config.ts` |
 
 ### Is this Documentation?
 
-| Doc Type | Location | Example |
-|----------|----------|---------|
-| Setup/How-To | `/docs/guides/` | `SETUP.md` |
-| Feature Info | `/docs/features/` | `AUTHENTICATION.md` |
-| Problem Solving | `/docs/troubleshooting/` | `COMMON-ERRORS.md` |
-| Old/Deprecated | `/docs/archive/` | `OLD-DOCS.md` |
+| Doc Type        | Location                 | Example             |
+| --------------- | ------------------------ | ------------------- |
+| Setup/How-To    | `/docs/guides/`          | `SETUP.md`          |
+| Feature Info    | `/docs/features/`        | `AUTHENTICATION.md` |
+| Problem Solving | `/docs/troubleshooting/` | `COMMON-ERRORS.md`  |
+| Old/Deprecated  | `/docs/archive/`         | `OLD-DOCS.md`       |
 
 ### Is this Application Code?
 
-| Code Type | Location | Example |
-|-----------|----------|---------|
-| Controller | `/src/controllers/` | `auth.ts` |
-| Service | `/src/services/` | `UserService.ts` |
-| Model | `/src/models/` | `User.ts` |
-| Middleware | `/src/middlewares/` | `auth.ts` |
-| Utility | `/src/utils/` | `helpers.ts` |
+| Code Type  | Location            | Example          |
+| ---------- | ------------------- | ---------------- |
+| Controller | `/src/controllers/` | `auth.ts`        |
+| Service    | `/src/services/`    | `UserService.ts` |
+| Model      | `/src/models/`      | `User.ts`        |
+| Middleware | `/src/middlewares/` | `auth.ts`        |
+| Utility    | `/src/utils/`       | `helpers.ts`     |
 
 ---
 
@@ -170,6 +170,7 @@ node scripts/cleanup.js                   // JavaScript runner
 ### Scenario: New Database Initialization Script
 
 Required Checks:
+
 - [ ] **File Type**: TypeScript (.ts) ✓
 - [ ] **Location**: `/scripts/database/` ✓
 - [ ] **Name**: `init-<function>.ts` (e.g., `init-users.ts`) ✓
@@ -179,6 +180,7 @@ Required Checks:
 - [ ] **Root**: NOT in root directory ✓
 
 **Correct Example**:
+
 ```
 File: scripts/database/init-users.ts
 npm: "init:users": "npx tsx scripts/database/init-users.ts"
@@ -189,6 +191,7 @@ npm: "init:users": "npx tsx scripts/database/init-users.ts"
 ### Scenario: New Build Deployment Script
 
 Required Checks:
+
 - [ ] **File Type**: Shell (.sh) ✓
 - [ ] **Location**: `/scripts/` ✓
 - [ ] **Name**: `<action>.sh` (e.g., `build.sh`, `deploy.sh`) ✓
@@ -198,6 +201,7 @@ Required Checks:
 - [ ] **Root**: NOT in root directory ✓
 
 **Correct Example**:
+
 ```
 File: scripts/build.sh
 npm: "build": "bash ./scripts/build.sh"
@@ -208,6 +212,7 @@ npm: "build": "bash ./scripts/build.sh"
 ### Scenario: New Test Automation Script
 
 Required Checks:
+
 - [ ] **File Type**: TypeScript (.ts) ✓
 - [ ] **Location**: `/scripts/testing/` ✓
 - [ ] **Name**: `test-<function>.ts` (e.g., `test-db-auth.ts`) ✓
@@ -217,6 +222,7 @@ Required Checks:
 - [ ] **Root**: NOT in root directory ✓
 
 **Correct Example**:
+
 ```
 File: scripts/testing/test-db-auth.ts
 npm: "test:db": "npx tsx scripts/testing/test-db-auth.ts"
@@ -227,6 +233,7 @@ npm: "test:db": "npx tsx scripts/testing/test-db-auth.ts"
 ### Scenario: New Configuration File
 
 Required Checks:
+
 - [ ] **File Type**: TypeScript or JavaScript config (.ts, .js) ✓
 - [ ] **Location**: `/config/` ✓
 - [ ] **Name**: `<tool>.config.ts` (e.g., `jest.config.ts`) ✓
@@ -234,6 +241,7 @@ Required Checks:
 - [ ] **Used by**: Root-level tool/config system ✓
 
 **Correct Example**:
+
 ```
 File: config/jest.config.ts
 Used: jest.config.ts imports from config/jest.config.ts
@@ -244,6 +252,7 @@ Used: jest.config.ts imports from config/jest.config.ts
 ### Scenario: New Documentation
 
 Required Checks:
+
 - [ ] **File Type**: Markdown (.md) ✓
 - [ ] **Category**: Determined (guides, features, troubleshooting, archive) ✓
 - [ ] **Location**: `/docs/<category>/` ✓
@@ -251,6 +260,7 @@ Required Checks:
 - [ ] **Root**: NOT in root directory ✓
 
 **Correct Example**:
+
 ```
 File: docs/guides/DEPLOYMENT.md
 File: docs/features/AUTHENTICATION.md
@@ -376,18 +386,18 @@ grep -A 20 '"scripts"' package.json
 
 ## 📞 Quick Reference
 
-| Question | Answer | Reference |
-|----------|--------|-----------|
-| Where do shell scripts go? | `/scripts/` | Rule 1 |
-| Where do database scripts go? | `/scripts/database/` | Rule 2 |
-| Where do test scripts go? | `/scripts/testing/` | Rule 3 |
-| Where do configs go? | `/config/` | Rule 4 |
-| Where do docs go? | `/docs/<category>/` | Rule 5 |
-| Where does app code go? | `/src/<folder>/` | Rule 6 |
-| Can I put files in root? | Only 4 essential files | Rule 0 |
-| What's the runner for TypeScript? | `npx tsx` | Pattern 1 |
-| What's the runner for shell? | `bash` | Pattern 2 |
-| What's the runner for JavaScript? | `node` | Pattern 3 |
+| Question                          | Answer                 | Reference |
+| --------------------------------- | ---------------------- | --------- |
+| Where do shell scripts go?        | `/scripts/`            | Rule 1    |
+| Where do database scripts go?     | `/scripts/database/`   | Rule 2    |
+| Where do test scripts go?         | `/scripts/testing/`    | Rule 3    |
+| Where do configs go?              | `/config/`             | Rule 4    |
+| Where do docs go?                 | `/docs/<category>/`    | Rule 5    |
+| Where does app code go?           | `/src/<folder>/`       | Rule 6    |
+| Can I put files in root?          | Only 4 essential files | Rule 0    |
+| What's the runner for TypeScript? | `npx tsx`              | Pattern 1 |
+| What's the runner for shell?      | `bash`                 | Pattern 2 |
+| What's the runner for JavaScript? | `node`                 | Pattern 3 |
 
 ---
 
