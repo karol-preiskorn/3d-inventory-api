@@ -121,7 +121,7 @@ export const corsOptions = {
       callback(new Error('Not allowed by CORS'))
     }
   },
-  credentials: true, // Allow cookies
+  credentials: false, // Disabled - using JWT Bearer tokens, not cookies
   optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
@@ -354,4 +354,67 @@ export const ipWhitelist = (allowedIPs: string[]): RequestHandler => {
     logger.info(`IP ${resolvedIP} granted access to ${req.method} ${req.originalUrl}`)
     next()
   }
+}
+
+/**
+ * CORS Error Recovery Middleware
+ * Ensures CORS headers are added to error responses from various handlers
+ * This is critical for endpoints that return errors (4xx, 5xx) to ensure
+ * the browser doesn't block the response due to missing CORS headers
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const corsErrorRecovery = (req: any, res: any, next: any): void => {
+  const allowedOrigins = [
+    // Local development
+    'http://localhost:4200',
+    'https://localhost:4200',
+    'http://localhost:8080',
+    'https://localhost:8080',
+    'http://127.0.0.1:4200',
+    'https://127.0.0.1:4200',
+    'http://127.0.0.1:8080',
+    'https://127.0.0.1:8080',
+    'http://0.0.0.0:8080',
+    'https://0.0.0.0:8080',
+    // Local Docker development
+    'http://172.17.0.2:8080',
+    'http://172.17.0.3:8080',
+    'http://172.17.20.2:8080',
+    'http://172.17.20.3:8080',
+    // Cloud Run services
+    'https://d-inventory-ui-wzwe3odv7q-ew.a.run.app',
+    'https://d-inventory-api-wzwe3odv7q-ew.a.run.app',
+    // Ultima Solution domains
+    'https://3d-inventory.ultimasolution.pl',
+    'https://3d-inventory-api.ultimasolution.pl',
+    'https://3d-inventory-ui.ultimasolution.pl',
+    'http://3d-inventory-ui.ultimasolution.pl',
+    'http://3d-inventory.ultimasolution.pl',
+    // MongoDB Atlas
+    'https://cluster0.htgjako.mongodb.net'
+  ]
+  const localhostRegex = /^https?:\/\/localhost:\d+$/
+  const ultimasolutionRegex = /^https?:\/\/.*\.ultimasolution\.pl$/
+  const origin = req.headers.origin
+
+  // Ensure CORS headers are present for all responses
+  if (origin) {
+    const isAllowed =
+      allowedOrigins.includes(origin) ||
+      localhostRegex.test(origin) ||
+      ultimasolutionRegex.test(origin)
+
+    if (isAllowed) {
+      res.header('Access-Control-Allow-Origin', origin)
+      res.header('Access-Control-Allow-Credentials', 'true')
+      res.header('Access-Control-Allow-Methods', 'DELETE, GET, OPTIONS, PATCH, POST, PUT')
+      res.header(
+        'Access-Control-Allow-Headers',
+        'Accept, Authorization, Cache-Control, Content-Type, Origin, X-API-Key, X-Requested-With, Bearer'
+      )
+      res.header('Access-Control-Max-Age', '86400')
+    }
+  }
+
+  next()
 }

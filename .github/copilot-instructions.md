@@ -25,6 +25,27 @@ This document provides comprehensive instructions for GitHub Copilot when workin
 | 🚀 **Deployment**              | [AGENTS.md](../AGENTS.md) - Deployment Automation        |
 | 📚 **Documentation**           | [AGENTS.md](../AGENTS.md) - Documentation Generation     |
 | 🔍 **Monitoring**              | [AGENTS.md](../AGENTS.md) - Monitoring & Alerting        |
+| 📁 **File Organization**       | [file-organization.instructions.md](./instructions/file-organization.instructions.md) |
+
+## 📁 File Organization Standards
+
+**CRITICAL**: Always create new files in proper subfolders, NOT in root directory.
+
+Only 4 files belong in root:
+- `README.md` - Main project documentation
+- `DEVELOPMENT.md` - Development workflow
+- `AGENTS.md` - AI automation
+- `SECURITY.md` - Security policies
+
+**Where to create new files**:
+- **Shell scripts** (*.sh) → `scripts/`
+- **Database/admin scripts** → `scripts/database/`
+- **Testing utilities** → `scripts/testing/`
+- **Configuration files** → `config/`
+- **Documentation** → `docs/features/`, `docs/guides/`, or `docs/troubleshooting/`
+- **Application code** → `src/controllers/`, `src/services/`, `src/models/`, etc.
+
+See **[file-organization.instructions.md](./instructions/file-organization.instructions.md)** for complete details and examples.
 
 ## Project Overview
 

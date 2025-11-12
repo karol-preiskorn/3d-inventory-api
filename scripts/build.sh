@@ -133,7 +133,7 @@ gcloud run deploy $SERVICE_NAME \
   --max-instances 10 \
   --cpu-throttling \
   --execution-environment gen2 \
-  --set-env-vars="NODE_ENV=production,UV_THREADPOOL_SIZE=8" \
+  --set-env-vars="NODE_ENV=production,UV_THREADPOOL_SIZE=8,ATLAS_URI=${ATLAS_URI},JWT_SECRET=${JWT_SECRET},DBNAME=${DBNAME},CORS_ORIGIN=${CORS_ORIGIN},GH_AUTH_TOKEN=${GH_AUTH_TOKEN},HOST=${HOST},PORT=8080" \
   --concurrency=80 \
   --min-instances=1
 

@@ -27,7 +27,7 @@ export {
 export { errorLogger, performanceMonitor, requestLogger } from './logging'
 
 // Security middlewares
-export { apiRateLimit, authRateLimit, corsOptions, ipWhitelist, requestTimeout, sanitizeInput, securityHeaders } from './security'
+export { apiRateLimit, authRateLimit, corsErrorRecovery, corsOptions, ipWhitelist, requestTimeout, sanitizeInput, securityHeaders } from './security'
 
 // Monitoring and observability middlewares
 export { correlationMiddleware, generateCorrelationId, getCorrelationId } from '../middleware/correlation'

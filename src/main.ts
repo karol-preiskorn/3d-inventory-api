@@ -28,7 +28,7 @@ import kleur from 'kleur'
 import methodOverride from 'method-override'
 import morgan from 'morgan'
 import morganBody from 'morgan-body'
-import { correlationMiddleware, databaseMonitor, metricsMiddleware } from './middlewares'
+import { correlationMiddleware, corsErrorRecovery, databaseMonitor, metricsMiddleware } from './middlewares'
 import { createAttributesRouter } from './routers/attributes'
 import createAttributesDictionaryRouter from './routers/attributesDictionary'
 import { createConnectionsRouter } from './routers/connections'
@@ -153,6 +153,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Apply CORS first, before rate limiting
 app.use(cors(corsOptions))
+
+// Apply CORS error recovery middleware to ensure CORS headers on error responses
+app.use(corsErrorRecovery)
 
 // Middleware for rate limiting with CORS headers
 const limiter = rateLimit({
