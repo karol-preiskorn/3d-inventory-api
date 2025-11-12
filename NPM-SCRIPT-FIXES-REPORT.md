@@ -14,6 +14,7 @@ failures with exit code 127 (command not found). All 5 identified issues resolve
 **Status:** ✅ FIXED
 
 **Problem:**
+
 - Command: `npm run gcp:build` failed with exit code 127
 - Root cause: Script path "./build.sh" does not exist in root
 - Actual location: scripts/build.sh
@@ -26,6 +27,7 @@ AFTER:  "gcp:build": "bash ./scripts/build.sh"
 ```
 
 **Verification:**
+
 - Command now executes: ✅
 - Script found: ✅
 - Exit code 0: ✅
@@ -35,6 +37,7 @@ AFTER:  "gcp:build": "bash ./scripts/build.sh"
 **Status:** ✅ FIXED
 
 **Problem:**
+
 - Command: `npm run version:major` was incrementing minor version instead of major
 - Typo in package.json: uses "minor" for major version command
 
@@ -46,6 +49,7 @@ AFTER:  "version:major": "npm version major --no-git-tag-version"
 ```
 
 **Verification:**
+
 - version:major now bumps: 0.96.156 → 1.0.0 ✅
 - version:minor bumps: 0.96.156 → 0.97.0 ✅
 - version:patch bumps: 0.96.156 → 0.96.157 ✅
@@ -55,6 +59,7 @@ AFTER:  "version:major": "npm version major --no-git-tag-version"
 **Status:** ✅ FIXED
 
 **Problem:**
+
 - Passing "build-and-validate" argument to build script
 - Argument not recognized by openapi-spec builder
 
@@ -70,6 +75,7 @@ AFTER:  "openapi:build": "node scripts/build-openapi-spec.js"
 **Status:** ✅ FIXED
 
 **Problem:**
+
 - Looking for files in api/openapi.yaml (does not exist)
 - Actual file is at root: ./api.yaml
 
@@ -85,6 +91,7 @@ AFTER:  "npx openapi-format ./api.yaml --output ./api.yaml"
 **Status:** ✅ FIXED
 
 **Problem:**
+
 - Querying us-central1 region
 - Deployment is in europe-west1
 
@@ -152,7 +159,7 @@ Path: ✅ Proper directory references
 -    "openapi:build": "node scripts/build-openapi-spec.js build-and-validate",
 +    "openapi:build": "node scripts/build-openapi-spec.js",
 
--    "openapi:format": "npx openapi-format api/openapi.yaml --output 
+-    "openapi:format": "npx openapi-format api/openapi.yaml --output
 api/openapi-formatted.yaml",
 +    "openapi:format": "npx openapi-format ./api.yaml --output ./api.yaml",
 
@@ -182,7 +189,7 @@ Message:
   - Fix openapi:format: update paths to correct API spec location
   - Update gcp:status: correct GCP region to europe-west1
 
-  All script paths now properly reference scripts/ subdirectory with 
+  All script paths now properly reference scripts/ subdirectory with
   correct command runners.
 ```
 
@@ -252,12 +259,14 @@ v1.0.1 ✓ CORRECT (patch incremented)
 ## Impact Summary
 
 ### Before Fixes
+
 - ❌ npm run gcp:build fails with exit code 127
 - ❌ npm run version:major increments minor version
 - ❌ openapi scripts reference non-existent files
 - ❌ GCP commands target wrong region
 
 ### After Fixes
+
 - ✅ All npm scripts execute successfully
 - ✅ Version commands increment correct version numbers
 - ✅ OpenAPI scripts reference correct files
