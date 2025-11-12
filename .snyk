@@ -1,0 +1,51 @@
+# Snyk Policy File
+
+# Purpose: Configure security scanning for 3d-inventory-api
+
+# Generated: November 2024
+
+version: v1.25.0
+
+# Exclude paths from all scans
+
+exclude:
+global: # Documentation - doesn't need security scanning - docs/** - /docs/** - '\*_/_.md'
+
+    # Build outputs
+    - dist/**
+    - build/**
+    - coverage/**
+
+    # Dependencies (handled by package.json)
+    - node_modules/**
+
+    # Test files and test-related folders
+    - '**/*.spec.ts'
+    - '**/*.test.ts'
+    - src/tests/**
+    - scripts/testing/**
+
+    # Archive and backup folders
+    - backups/**
+    - '**/*backup*'
+    - '**/*archive*'
+
+    # Temporary and cache folders
+    - .cache/**
+    - '**/.DS_Store'
+
+# Ignore specific vulnerabilities (optional - add as needed)
+
+# Format: 'SNYK-VULN-ID': ['path/to/file']
+
+# Example:
+
+# ignore:
+
+# SNYK-JS-LODASH-1018-1234567:
+
+# - '\*\*/node_modules/lodash'
+
+# - reason: 'False positive - not using vulnerable function'
+
+# - expires: '2025-12-31'

@@ -3,10 +3,10 @@
  * WARNING: This will delete all existing users and create fresh default users
  */
 
-import { InitializationService } from './src/services/InitializationService'
-import { UserService } from './src/services/UserService'
-import { closeConnection, connectToCluster, connectToDb } from './src/utils/db'
-import getLogger from './src/utils/logger'
+import { InitializationService } from '../../src/services/InitializationService'
+import { UserService } from '../../src/services/UserService'
+import { closeConnection, connectToCluster, connectToDb } from '../../src/utils/db'
+import getLogger from '../../src/utils/logger'
 
 const logger = getLogger('db-cleanup-script')
 
@@ -65,17 +65,18 @@ async function main() {
     const newUsers = await userService.getAllUsers()
 
     console.log(`📊 Created ${newUsers.length} new users:`)
-    newUsers.forEach(user => {
+    newUsers.forEach((user: any) => {
       console.log(`   ✅ ${user.username} (${user.role}) - Active: ${user.isActive}`)
     })
 
     // Test authentication for each default user
     console.log('\n🔐 Testing authentication for default users...')
+    // Using default passwords from environment or initialization service
     const defaultCredentials = [
-      { username: 'admin', password: 'admin123!' },
-      { username: 'user', password: 'user123!' },
-      { username: 'carlo', password: 'carlo123!' },
-      { username: 'viewer', password: 'viewer123!' }
+      { username: 'admin', password: process.env.DEFAULT_ADMIN_PASSWORD || 'admin123!' },
+      { username: 'user', password: process.env.DEFAULT_USER_PASSWORD || 'user123!' },
+      { username: 'carlo', password: process.env.DEFAULT_CARLO_PASSWORD || 'carlo123!' },
+      { username: 'viewer', password: process.env.DEFAULT_VIEWER_PASSWORD || 'viewer123!' }
     ]
 
     for (const cred of defaultCredentials) {
@@ -111,8 +112,9 @@ async function main() {
     console.log('     - viewer / viewer123!')
 
   } catch (error) {
-    logger.error('Cleanup failed:', error instanceof Error ? error.message : String(error))
-    console.error('\n❌ Cleanup failed:', error instanceof Error ? error.message : String(error))
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    logger.error(`Cleanup failed: ${errorMessage}`)
+    console.error('\n❌ Cleanup failed:', errorMessage)
     if (error instanceof Error) {
       console.error('Error details:', error.stack)
     }

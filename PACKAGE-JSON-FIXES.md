@@ -2,7 +2,9 @@
 
 ## Issue Overview
 
-The 3d-inventory-api project had broken npm script references in `package.json` causing execution failures with exit code 127 (command not found).
+The 3d-inventory-api project had broken npm script references in
+`package.json` causing execution failures with exit code 127
+(command not found).
 
 ### Primary Issue
 
@@ -227,7 +229,8 @@ v1.0.0 ✓ (correctly increments major version)
 ## Files Modified
 
 - **File**: `/home/karol/GitHub/3d-inventory-api/package.json`
-- **Changes**: 6 lines modified (gcp:build, version:major, openapi:build, openapi:format, gcp:status)
+- **Changes**: 6 lines modified (gcp:build, version:major,
+  openapi:build, openapi:format, gcp:status)
 - **Commits**: 1 commit with descriptive message
 
 ### Git Commit Details
@@ -287,12 +290,14 @@ npm run | grep "available"
 
 ## Status: ✅ COMPLETE
 
-All script paths have been corrected and verified. The `npm run gcp:build` command that was failing with exit code 127 now executes successfully.
+All script paths have been corrected and verified. The `npm run gcp:build`
+command that was failing with exit code 127 now executes successfully.
 
 **Related Standards**:
 
 - Follow [file-organization.instructions.md](.github/instructions/file-organization.instructions.md)
-- Scripts organized in `/scripts/` and `/scripts/database/` and `/scripts/testing/` per standards
+- Scripts organized in `/scripts/`, `/scripts/database/`,
+  and `/scripts/testing/` per standards
 - All npm commands reference correct paths with appropriate runners
 
 ---

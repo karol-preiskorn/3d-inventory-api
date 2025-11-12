@@ -108,5 +108,8 @@
   "debug.onTaskErrors": "showErrors",
   "jest.runMode": "on-demand",
   "snyk.advanced.cliPath": "/home/karol/.nvm/versions/node/v24.7.0/bin/snyk",
-  "snyk.advanced.autoUpdate": false
+  "snyk.advanced.autoUpdate": false,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
