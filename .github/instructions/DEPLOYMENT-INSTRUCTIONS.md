@@ -1,3 +1,11 @@
+---
+alwaysApply: false
+always_on: false
+trigger: manual
+applyTo: 'deployment'
+description: Backend Deployment Instructions - Device Fix
+---
+
 # Backend Deployment Instructions - Device Fix
 
 ## Current Situation

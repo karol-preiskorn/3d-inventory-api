@@ -10,9 +10,9 @@ description: File Organization Standards - Creating Files in Proper Locations
 
 This document ensures GitHub Copilot creates new files in the appropriate subdirectories rather than cluttering the root folder.
 
-## 🎯 Root Directory Policy
+## 🎯 Root Directory Policy (CRITICAL RULE)
 
-**Only these 4 files belong in root**:
+**ONLY these 4 files belong in root**:
 
 - `README.md` - Main project documentation
 - `DEVELOPMENT.md` - Development workflow and setup
@@ -20,6 +20,17 @@ This document ensures GitHub Copilot creates new files in the appropriate subdir
 - `SECURITY.md` - Security policies and guidelines
 
 **ALL other files must be created in appropriate subfolders**.
+
+### 📋 Pre-Creation Checklist
+
+Before creating ANY file, verify:
+
+- [ ] **File Type Identified**: What kind of file? (script, config, doc, code)
+- [ ] **Location Determined**: Where should it go? (scripts/, config/, docs/, src/)
+- [ ] **Essential File Check**: Is this one of the 4 essential root files?
+- [ ] **Path Specified**: Full relative path provided?
+- [ ] **Naming Convention**: Follows pattern? (lowercase, hyphens, descriptive)
+- [ ] **Integration Points**: Does package.json need updating?
 
 ---
 

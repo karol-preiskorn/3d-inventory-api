@@ -7,17 +7,28 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 if [[ -r .env ]]; then
-  source .env
+  source ./.env
 else
   echo -e "${RED}❌ Exiting: .env file is missing or not readable.${NC}"
   exit 1
 fi
 
-# Simple check eslint no errors
-if ! npm run lint; then
-  echo -e "${RED}❌ Error: ESLint found issues.${NC}"
+# Validate code quality with ESLint
+echo -e "${YELLOW}⏳ Running ESLint validation...${NC}"
+
+# Get the project root directory (parent of scripts/)
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# Run npm from project root
+if ! (cd "$PROJECT_ROOT" && npm run lint:check 2>&1) | tee /tmp/eslint-output.log; then
+  echo -e "${RED}❌ Error: ESLint found issues. Please fix the following:${NC}"
+  cat /tmp/eslint-output.log
+  echo -e "${YELLOW}💡 Tip: Run 'npm run lint:fix' to auto-fix formatting issues${NC}"
+  rm -f /tmp/eslint-output.log
   exit 1
 fi
+echo -e "${GREEN}✅ ESLint validation passed${NC}"
+rm -f /tmp/eslint-output.log
 
 # Configuration move to environment variables
 # PROJECT_ID="${GOOGLE_CLOUD_PROJECT:-d-inventory-406007}"
@@ -122,6 +133,54 @@ echo -e "${GREEN}✅ test-${PROJECT_NAME} container is healthy.${NC}"
 
 # docker run --rm -d --name ${PROJECT_NAME} --network 3d-inventory-network --ip 172.20.0.3 -p ${EXPOSED_PORT}:${EXPOSED_PORT}/tcp ${PROJECT_NAME}:latest
 
+# Create a temporary YAML env-vars file for gcloud
+# gcloud run deploy's --env-vars-file expects YAML format
+ENV_VARS_FILE=$(mktemp)
+
+# Validate required environment variables
+# Note: PORT is excluded because Cloud Run automatically sets it (reserved env var)
+REQUIRED_VARS=("ATLAS_URI" "JWT_SECRET" "DBNAME" "CORS_ORIGINS" "GH_AUTH_TOKEN" "HOST")
+for VAR in "${REQUIRED_VARS[@]}"; do
+  if [ -z "${!VAR}" ]; then
+    echo -e "${RED}❌ Error: Required environment variable '$VAR' is not set in .env${NC}"
+    exit 1
+  fi
+done
+
+# Note: PORT is NOT included - Cloud Run automatically sets it to 8080
+cat > "$ENV_VARS_FILE" << 'ENVEOF'
+NODE_ENV: production
+UV_THREADPOOL_SIZE: "8"
+ATLAS_URI: PLACEHOLDER_ATLAS_URI
+JWT_SECRET: PLACEHOLDER_JWT_SECRET
+DBNAME: PLACEHOLDER_DBNAME
+CORS_ORIGINS: PLACEHOLDER_CORS_ORIGINS
+GH_AUTH_TOKEN: PLACEHOLDER_GH_AUTH_TOKEN
+HOST: PLACEHOLDER_HOST
+ENVEOF
+
+# Replace placeholders with actual values (escape & for sed replacement)
+sed -i "s|PLACEHOLDER_ATLAS_URI|$(echo "$ATLAS_URI" | sed 's/[&/\]/\\&/g')|g" "$ENV_VARS_FILE"
+sed -i "s|PLACEHOLDER_JWT_SECRET|$(echo "$JWT_SECRET" | sed 's/[&/\]/\\&/g')|g" "$ENV_VARS_FILE"
+sed -i "s|PLACEHOLDER_DBNAME|$(echo "$DBNAME" | sed 's/[&/\]/\\&/g')|g" "$ENV_VARS_FILE"
+sed -i "s|PLACEHOLDER_CORS_ORIGINS|$(echo "$CORS_ORIGINS" | sed 's/[&/\]/\\&/g')|g" "$ENV_VARS_FILE"
+sed -i "s|PLACEHOLDER_GH_AUTH_TOKEN|$(echo "$GH_AUTH_TOKEN" | sed 's/[&/\]/\\&/g')|g" "$ENV_VARS_FILE"
+sed -i "s|PLACEHOLDER_HOST|$(echo "$HOST" | sed 's/[&/\]/\\&/g')|g" "$ENV_VARS_FILE"
+
+trap 'rm -f "$ENV_VARS_FILE"' EXIT
+
+# Step 1: Clear any existing conflicting environment variables or secrets
+# This prevents "Cannot update environment variable [X] to string literal because it has already been set with a different type" errors
+# NOTE: --clear-env-vars and --env-vars-file cannot be used in the same command, so we do this in two steps
+echo -e "${YELLOW}🔄 Step 1: Clearing any conflicting environment variables and secrets...${NC}"
+gcloud run services update $SERVICE_NAME \
+  --platform managed \
+  --region $REGION \
+  --clear-env-vars \
+  --clear-secrets
+
+# Step 2: Deploy with new environment variables from YAML file
+echo -e "${YELLOW}🔄 Step 2: Deploying with new environment variables...${NC}"
 gcloud run deploy $SERVICE_NAME \
   --image ${REGISTRY}/$PROJECT_ID/${PROJECT_NAME}:latest \
   --platform managed \
@@ -133,7 +192,7 @@ gcloud run deploy $SERVICE_NAME \
   --max-instances 10 \
   --cpu-throttling \
   --execution-environment gen2 \
-  --set-env-vars="NODE_ENV=production,UV_THREADPOOL_SIZE=8,ATLAS_URI=${ATLAS_URI},JWT_SECRET=${JWT_SECRET},DBNAME=${DBNAME},CORS_ORIGIN=${CORS_ORIGIN},GH_AUTH_TOKEN=${GH_AUTH_TOKEN},HOST=${HOST},PORT=8080" \
+  --env-vars-file="$ENV_VARS_FILE" \
   --concurrency=80 \
   --min-instances=1
 

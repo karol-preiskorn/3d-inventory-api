@@ -57,7 +57,7 @@
     "@yields",
     "@remarks"
   ],
-  "cleanOutputDir": true,
+  "cleanOutputDir": false,
   "commentStyle": "jsdoc",
   "customFooterHtml": "<span>Copyright <a href='https://ultimasolution.pl/>ultimasolution.pl</a> <a href='https://ultimasolution.pl/3d-inventory-mongo-api'>3d-inventory</a> 2024</span>",
   "customFooterHtmlDisableWrapper": false,

@@ -9,7 +9,7 @@ version: v1.25.0
 # Exclude paths from all scans
 
 exclude:
-global: # Documentation - doesn't need security scanning - docs/** - /docs/** - '\*_/_.md'
+global: # Documentation - doesn't need security scanning - docs/**- /docs/** - '\*_/_.md'
 
     # Build outputs
     - dist/**
@@ -38,11 +38,11 @@ global: # Documentation - doesn't need security scanning - docs/** - /docs/** - 
 
 # Format: 'SNYK-VULN-ID': ['path/to/file']
 
-# Example:
+# Example
 
-# ignore:
+# ignore
 
-# SNYK-JS-LODASH-1018-1234567:
+# SNYK-JS-LODASH-1018-1234567
 
 # - '\*\*/node_modules/lodash'
 
