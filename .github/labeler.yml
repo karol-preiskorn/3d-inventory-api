@@ -1,0 +1,132 @@
+# Labeler Configuration
+# Automatically adds labels to pull requests based on changed files
+# Documentation: https://github.com/actions/labeler
+
+# Backend / API Changes
+backend:
+  - changed-files:
+      - any-glob-to-any-file: "src/**/*"
+
+api:
+  - changed-files:
+      - any-glob-to-any-file: "src/controllers/**/*"
+
+service-layer:
+  - changed-files:
+      - any-glob-to-any-file: "src/services/**/*"
+
+middleware:
+  - changed-files:
+      - any-glob-to-any-file: "src/middlewares/**/*"
+
+models:
+  - changed-files:
+      - any-glob-to-any-file: "src/models/**/*"
+
+utils:
+  - changed-files:
+      - any-glob-to-any-file: "src/utils/**/*"
+
+# Authentication & Security
+security:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/middlewares/auth.ts"
+          - "src/middlewares/security.ts"
+          - "src/services/UserService.ts"
+          - "src/controllers/auth.ts"
+          - "**/auth*"
+          - "**/security*"
+          - "**/login*"
+
+authentication:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/middlewares/auth.ts"
+          - "src/controllers/auth.ts"
+          - "**/login*"
+
+# Database
+database:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/utils/db.ts"
+          - "**/database*"
+          - "**/mongo*"
+          - "**/repository*"
+
+# Documentation
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**/*"
+          - "api.yaml"
+          - "**/jsdoc*"
+          - "**/typedoc*"
+
+# Configuration
+configuration:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "*.config.*"
+          - "tsconfig*.json"
+          - "package.json"
+          - "package-lock.json"
+          - ".github/**/*"
+
+# Testing
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.test.ts"
+          - "**/*.spec.ts"
+          - "jest.config.ts"
+          - "config/jest*"
+
+# Dependencies
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "package-lock.json"
+          - "npm-shrinkwrap.json"
+
+# CI/CD
+ci-cd:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**/*"
+          - "cloudbuild.yaml"
+          - ".github/actions/**/*"
+
+# Docker
+docker:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "Dockerfile"
+          - "docker-compose*.yaml"
+          - ".dockerignore"
+
+# Infrastructure
+infrastructure:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "app.yaml"
+          - "cloudbuild.yaml"
+          - "terraform/**/*"
+
+# Scripts
+scripts:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "scripts/**/*"
+          - "**/*.sh"
+
+# GitHub Configuration
+github-config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**/*"
+          - ".github/instructions/**/*"
+          - ".github/ISSUE_TEMPLATE/**/*"

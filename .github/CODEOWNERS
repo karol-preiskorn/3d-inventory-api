@@ -1,1 +1,64 @@
-* @karol-preiskorn
+# CODEOWNERS - Define code ownership for automatic reviewer assignment
+
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+
+- @karol-preiskorn
+
+# Source Code - API Backend
+
+/src/ @karol-preiskorn
+/src/controllers/ @karol-preiskorn
+/src/services/ @karol-preiskorn
+/src/models/ @karol-preiskorn
+/src/utils/ @karol-preiskorn
+
+# Authentication & Security - Critical Components
+
+/src/middlewares/auth.ts @karol-preiskorn
+/src/middlewares/security.ts @karol-preiskorn
+/src/services/UserService.ts @karol-preiskorn
+/src/controllers/auth.ts @karol-preiskorn
+
+# Configuration Files
+
+/config/ @karol-preiskorn
+_.config.ts @karol-preiskorn
+_.config.js @karol-preiskorn
+tsconfig.json @karol-preiskorn
+package.json @karol-preiskorn
+package-lock.json @karol-preiskorn
+
+# Infrastructure & Deployment
+
+Dockerfile @karol-preiskorn
+docker-compose\*.yaml @karol-preiskorn
+app.yaml @karol-preiskorn
+cloudbuild.yaml @karol-preiskorn
+/terraform/ @karol-preiskorn
+
+# CI/CD & GitHub Configuration
+
+/.github/ @karol-preiskorn
+/.github/workflows/ @karol-preiskorn
+/.github/instructions/ @karol-preiskorn
+
+# Documentation
+
+\*.md @karol-preiskorn
+/docs/ @karol-preiskorn
+/docs/guides/ @karol-preiskorn
+README.md @karol-preiskorn
+DEVELOPMENT.md @karol-preiskorn
+AGENTS.md @karol-preiskorn
+SECURITY.md @karol-preiskorn
+
+# API Specifications
+
+api.yaml @karol-preiskorn
+
+# Scripts
+
+/scripts/ @karol-preiskorn
+\*.sh @karol-preiskorn

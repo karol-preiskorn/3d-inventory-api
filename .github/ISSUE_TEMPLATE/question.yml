@@ -1,0 +1,90 @@
+name: ❓ Question
+description: Ask a question about the 3D Inventory API
+title: "[Question]: "
+labels: ["question", "needs-triage"]
+assignees:
+  - karol-preiskorn
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question? Ask here! For bugs or feature requests, please use the appropriate template.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      description: What is your question about?
+      options:
+        - API Usage / How-To
+        - Authentication & Authorization
+        - Database / MongoDB
+        - Deployment / Infrastructure
+        - Development Setup
+        - Testing
+        - Best Practices
+        - Architecture / Design
+        - Performance / Optimization
+        - Troubleshooting
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: How do I...? / Why does...? / What is the best way to...?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide any relevant context (what you've tried, related code, etc.)
+      placeholder: |
+        I'm trying to...
+        I've looked at...
+        I've tried...
+    validations:
+      required: false
+
+  - type: textarea
+    id: code-example
+    attributes:
+      label: Code Example (if applicable)
+      description: Show relevant code if applicable
+      placeholder: |
+        ```typescript
+        // Your code here
+        ```
+      render: typescript
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment (if relevant)
+      description: Your development environment
+      placeholder: |
+        - Node.js version: 18.x
+        - MongoDB version: 6.x
+        - OS: Ubuntu 22.04
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues/discussions for similar questions
+          required: true
+        - label: I have checked the documentation
+          required: false
+        - label: This is a question, not a bug report or feature request
+          required: true

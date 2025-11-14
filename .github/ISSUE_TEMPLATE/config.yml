@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔒 Report Critical Security Vulnerability (Private)
+    url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/security/advisories/new
+    about: Report critical security vulnerabilities privately via GitHub Security Advisories
+
+  - name: 💬 GitHub Discussions
+    url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/discussions
+    about: Ask questions and discuss ideas with the community
+
+  - name: 📖 Documentation
+    url: https://github.com/karol-preiskorn/3d-inventory-mongo-api/blob/main/README.md
+    about: Read the project documentation and guides
+
+  - name: 🐛 API Documentation (Swagger)
+    url: http://localhost:8080/api-docs
+    about: Explore the API documentation (when running locally)

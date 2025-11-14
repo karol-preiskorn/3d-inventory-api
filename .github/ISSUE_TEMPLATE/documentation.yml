@@ -1,0 +1,108 @@
+name: 📚 Documentation
+description: Report missing, unclear, or incorrect documentation
+title: "[Docs]: "
+labels: ["documentation", "needs-triage"]
+assignees:
+  - karol-preiskorn
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us improve the documentation! Report missing, unclear, or incorrect documentation.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation is this about?
+      options:
+        - API Documentation (OpenAPI/Swagger)
+        - README / Getting Started
+        - Code Comments / JSDoc
+        - Development Guides
+        - Deployment Documentation
+        - Architecture Documentation
+        - Testing Documentation
+        - Troubleshooting Guides
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Issue Type
+      description: What's wrong with the documentation?
+      options:
+        - Missing documentation
+        - Incorrect/outdated information
+        - Unclear explanation
+        - Missing examples
+        - Broken links
+        - Typos/Grammar
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Documentation Location
+      description: Where is the documentation issue located?
+      placeholder: |
+        - File: docs/guides/AUTHENTICATION.md
+        - Section: JWT Token Validation
+        - Line: 42
+        OR
+        - API endpoint: GET /api/devices
+        - Swagger path: /docs
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's Wrong?
+      description: Describe the documentation issue
+      placeholder: The documentation states X, but actually Y happens...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Improvement
+      description: How should the documentation be improved?
+      placeholder: The documentation should explain...
+    validations:
+      required: false
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example (if applicable)
+      description: Provide an example of what the documentation should include
+      placeholder: |
+        Example code:
+        ```typescript
+        // Example here
+        ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other information that might help
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to submit a PR to fix this documentation issue
+          required: false

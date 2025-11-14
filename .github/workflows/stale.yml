@@ -1,0 +1,88 @@
+name: 'Close Stale Issues and PRs'
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight UTC
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stale Issue and PR Management
+        uses: actions/stale@v9
+        with:
+          # Stale issue configuration
+          stale-issue-message: |
+            👋 This issue has been automatically marked as stale because it has not had recent activity.
+
+            It will be closed in 14 days if no further activity occurs.
+
+            If you believe this is still relevant, please:
+            - Add a comment to keep it open
+            - Remove the `stale` label
+            - Provide additional context or updates
+
+            Thank you for your contributions! 🙏
+
+          close-issue-message: |
+            🔒 This issue was automatically closed due to inactivity.
+
+            If you believe this should be reopened, please:
+            - Reopen the issue
+            - Provide updated information
+            - Reference any related changes or developments
+
+            Thank you! 🙏
+
+          # Stale PR configuration
+          stale-pr-message: |
+            👋 This pull request has been automatically marked as stale because it has not had recent activity.
+
+            It will be closed in 7 days if no further activity occurs.
+
+            If you're still working on this, please:
+            - Add a comment to keep it open
+            - Push new commits
+            - Request a review
+            - Remove the `stale` label
+
+            Thank you for your contribution! 🙏
+
+          close-pr-message: |
+            🔒 This pull request was automatically closed due to inactivity.
+
+            If you'd like to continue this work:
+            - Reopen this PR
+            - Create a new PR with updated changes
+            - Reference this PR in the new one
+
+            Thank you for your contribution! 🙏
+
+          # Timing configuration
+          days-before-stale: 60 # Mark issues stale after 60 days of inactivity
+          days-before-pr-stale: 30 # Mark PRs stale after 30 days of inactivity
+          days-before-close: 14 # Close stale issues after 14 days
+          days-before-pr-close: 7 # Close stale PRs after 7 days
+
+          # Label configuration
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          exempt-issue-labels: 'pinned,security,critical,in-progress,blocked'
+          exempt-pr-labels: 'pinned,security,work-in-progress,blocked'
+
+          # Additional exemptions
+          exempt-milestones: true # Don't mark issues/PRs with milestones as stale
+          exempt-all-assignees: false # Don't exempt just because someone is assigned
+          exempt-all-pr-assignees: true # Exempt PRs if they have assignees
+
+          # Operations
+          operations-per-run: 50 # Limit to prevent rate limiting
+          remove-stale-when-updated: true # Remove stale label when updated
+
+          # Debugging
+          debug-only: false # Set to true to test without taking actions
