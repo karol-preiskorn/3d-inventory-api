@@ -23,9 +23,9 @@ on:
         type: boolean
 
 env:
-  REGION: us-central1
-  SERVICE_NAME: 3d-inventory-api
-  REGISTRY: us-central1-docker.pkg.dev
+  REGION: europe-west1
+  SERVICE_NAME: d-inventory-api
+  REGISTRY: gcr.io
 
 permissions:
   contents: read

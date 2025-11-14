@@ -46,21 +46,16 @@ class DatabaseMonitor {
     connectionPoolSize: 0,
     activeConnections: 0,
     errors: 0,
-    queryStats: new Map()
+    queryStats: new Map(),
   }
 
-  private readonly SLOW_QUERY_THRESHOLD = 1000 // 1 second
+  private readonly SLOW_QUERY_THRESHOLD = 15000 // 15 seconds
   private readonly MAX_QUERY_STATS = 100 // Keep stats for top 100 operations
 
   /**
    * Monitor a database operation
    */
-  async monitorOperation<T>(
-    operation: () => Promise<T>,
-    operationType: string,
-    collectionName?: string,
-    correlationId?: string
-  ): Promise<T> {
+  async monitorOperation<T>(operation: () => Promise<T>, operationType: string, collectionName?: string, correlationId?: string): Promise<T> {
     const startTime = process.hrtime.bigint()
 
     try {
@@ -81,17 +76,11 @@ class DatabaseMonitor {
   /**
    * Record query statistics
    */
-  private recordQuery(
-    operationType: string,
-    duration: number,
-    collectionName?: string,
-    correlationId?: string
-  ): void {
+  private recordQuery(operationType: string, duration: number, collectionName?: string, correlationId?: string): void {
     this.metrics.queryCount++
 
     // Update average query time
-    this.metrics.avgQueryTime =
-      (this.metrics.avgQueryTime * (this.metrics.queryCount - 1) + duration) / this.metrics.queryCount
+    this.metrics.avgQueryTime = (this.metrics.avgQueryTime * (this.metrics.queryCount - 1) + duration) / this.metrics.queryCount
 
     // Check for slow queries
     if (duration > this.SLOW_QUERY_THRESHOLD) {
@@ -101,7 +90,7 @@ class DatabaseMonitor {
         collection: collectionName || 'unknown',
         duration,
         timestamp: new Date(),
-        correlationId
+        correlationId,
       }
 
       logger.warn(`[${correlationId}] Slow database query detected: ${operationType} on ${collectionName} - ${duration.toFixed(2)}ms`)
@@ -123,7 +112,7 @@ class DatabaseMonitor {
         totalTime: duration,
         avgTime: duration,
         maxTime: duration,
-        minTime: duration
+        minTime: duration,
       })
     }
 
@@ -179,7 +168,6 @@ class DatabaseMonitor {
       client.on('serverHeartbeatFailed', (event) => {
         logger.error(`Database heartbeat failed: ${event.connectionId} - ${event.failure}`)
       })
-
     } catch (error) {
       logger.error(`Error setting up connection pool monitoring: ${error instanceof Error ? error.message : String(error)}`)
     }
@@ -194,14 +182,14 @@ class DatabaseMonitor {
       status: 'healthy' | 'warning' | 'critical'
       message: string
     }
-    } {
+  } {
     // Get top slow queries
     const topSlowQueries = Array.from(this.metrics.queryStats.entries())
       .map(([operation, stats]) => ({
         operation,
         avgTime: stats.avgTime,
         count: stats.count,
-        maxTime: stats.maxTime
+        maxTime: stats.maxTime,
       }))
       .sort((a, b) => b.avgTime - a.avgTime)
       .slice(0, 10)
@@ -213,24 +201,24 @@ class DatabaseMonitor {
     if (errorRate > 10 || slowQueryRate > 20) {
       connectionHealth = {
         status: 'critical',
-        message: `High error rate (${errorRate.toFixed(1)}%) or slow query rate (${slowQueryRate.toFixed(1)}%)`
+        message: `High error rate (${errorRate.toFixed(1)}%) or slow query rate (${slowQueryRate.toFixed(1)}%)`,
       }
     } else if (errorRate > 5 || slowQueryRate > 10) {
       connectionHealth = {
         status: 'warning',
-        message: `Moderate error rate (${errorRate.toFixed(1)}%) or slow query rate (${slowQueryRate.toFixed(1)}%)`
+        message: `Moderate error rate (${errorRate.toFixed(1)}%) or slow query rate (${slowQueryRate.toFixed(1)}%)`,
       }
     } else {
       connectionHealth = {
         status: 'healthy',
-        message: 'Database performance is within normal parameters'
+        message: 'Database performance is within normal parameters',
       }
     }
 
     return {
       ...this.metrics,
       topSlowQueries,
-      connectionHealth
+      connectionHealth,
     }
   }
 
@@ -245,7 +233,7 @@ class DatabaseMonitor {
       connectionPoolSize: 0,
       activeConnections: 0,
       errors: 0,
-      queryStats: new Map()
+      queryStats: new Map(),
     }
   }
 }
@@ -259,7 +247,7 @@ export const databaseMonitor = new DatabaseMonitor()
 export class MonitoredDatabase {
   constructor(
     private db: Db,
-    private correlationId?: string
+    private correlationId?: string,
   ) {}
 
   /**
@@ -277,43 +265,28 @@ export class MonitoredCollection {
   constructor(
     private collection: Collection,
     private collectionName: string,
-    private correlationId?: string
+    private correlationId?: string,
   ) {}
 
   /**
    * Find documents with monitoring
    */
   async find(filter: Filter<Document>, options?: FindOptions): Promise<Document[]> {
-    return databaseMonitor.monitorOperation(
-      async () => this.collection.find(filter, options).toArray(),
-      'find',
-      this.collectionName,
-      this.correlationId
-    )
+    return databaseMonitor.monitorOperation(async () => this.collection.find(filter, options).toArray(), 'find', this.collectionName, this.correlationId)
   }
 
   /**
    * Find one document with monitoring
    */
   async findOne(filter: Filter<Document>, options?: FindOptions): Promise<Document | null> {
-    return databaseMonitor.monitorOperation(
-      async () => this.collection.findOne(filter, options),
-      'findOne',
-      this.collectionName,
-      this.correlationId
-    )
+    return databaseMonitor.monitorOperation(async () => this.collection.findOne(filter, options), 'findOne', this.collectionName, this.correlationId)
   }
 
   /**
    * Insert one document with monitoring
    */
   async insertOne(doc: Document, options?: FindOptions): Promise<Document> {
-    return databaseMonitor.monitorOperation(
-      async () => this.collection.insertOne(doc, options),
-      'insertOne',
-      this.collectionName,
-      this.correlationId
-    )
+    return databaseMonitor.monitorOperation(async () => this.collection.insertOne(doc, options), 'insertOne', this.collectionName, this.correlationId)
   }
 
   /**
@@ -324,7 +297,7 @@ export class MonitoredCollection {
       async () => this.collection.updateOne(filter, update, options),
       'updateOne',
       this.collectionName,
-      this.correlationId
+      this.correlationId,
     )
   }
 
@@ -332,12 +305,7 @@ export class MonitoredCollection {
    * Delete one document with monitoring
    */
   async deleteOne(filter: Filter<Document>, options?: FindOptions): Promise<Document> {
-    return databaseMonitor.monitorOperation(
-      async () => this.collection.deleteOne(filter, options),
-      'deleteOne',
-      this.collectionName,
-      this.correlationId
-    )
+    return databaseMonitor.monitorOperation(async () => this.collection.deleteOne(filter, options), 'deleteOne', this.collectionName, this.correlationId)
   }
 
   /**
@@ -348,7 +316,7 @@ export class MonitoredCollection {
       async () => this.collection.countDocuments(filter, options),
       'countDocuments',
       this.collectionName,
-      this.correlationId
+      this.correlationId,
     )
   }
 
@@ -356,24 +324,14 @@ export class MonitoredCollection {
    * Create index with monitoring
    */
   async createIndex(indexSpec: Document, options?: CreateIndexesOptions): Promise<string> {
-    return databaseMonitor.monitorOperation(
-      async () => this.collection.createIndex(indexSpec, options),
-      'createIndex',
-      this.collectionName,
-      this.correlationId
-    )
+    return databaseMonitor.monitorOperation(async () => this.collection.createIndex(indexSpec, options), 'createIndex', this.collectionName, this.correlationId)
   }
 
   /**
    * Get collection information with monitoring
    */
   async collectionInfo(): Promise<Document> {
-    return databaseMonitor.monitorOperation(
-      async () => this.collection.options(),
-      'collectionInfo',
-      this.collectionName,
-      this.correlationId
-    )
+    return databaseMonitor.monitorOperation(async () => this.collection.options(), 'collectionInfo', this.collectionName, this.correlationId)
   }
 }
 
