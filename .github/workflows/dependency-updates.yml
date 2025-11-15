@@ -273,7 +273,7 @@ jobs:
 
       - name: Create issue for manual security fixes
         if: steps.audit.outputs.has_vulnerabilities == 'true' && steps.fix.outputs.has_fixes == 'false'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             github.rest.issues.create({
