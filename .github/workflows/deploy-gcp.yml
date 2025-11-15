@@ -48,9 +48,8 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
-          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
-          project_id: ${{ secrets.PROJECT_ID }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -72,22 +71,22 @@ jobs:
       - name: Check if image exists
         id: check_image
         run: |
-          IMAGE_URI="${{ env.REGISTRY }}/${{ secrets.PROJECT_ID }}/3d-inventory/3d-inventory-api:${{ steps.image_tag.outputs.tag }}"
+          IMAGE_URI="${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/3d-inventory/3d-inventory-api:${{ steps.image_tag.outputs.tag }}"
           if gcloud artifacts docker images describe $IMAGE_URI --quiet; then
             echo "exists=true" >> $GITHUB_OUTPUT
             echo "image_uri=$IMAGE_URI" >> $GITHUB_OUTPUT
           else
             echo "exists=false" >> $GITHUB_OUTPUT
             # Fallback to latest if specific tag doesn't exist
-            IMAGE_URI="${{ env.REGISTRY }}/${{ secrets.PROJECT_ID }}/3d-inventory/3d-inventory-api:latest"
+            IMAGE_URI="${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/3d-inventory/3d-inventory-api:latest"
             echo "image_uri=$IMAGE_URI" >> $GITHUB_OUTPUT
           fi
 
       - name: Build and push image (if not exists)
         if: steps.check_image.outputs.exists == 'false'
         run: |
-          IMAGE_TAG="${{ env.REGISTRY }}/${{ secrets.PROJECT_ID }}/3d-inventory/3d-inventory-api:${{ steps.image_tag.outputs.tag }}"
-          IMAGE_LATEST="${{ env.REGISTRY }}/${{ secrets.PROJECT_ID }}/3d-inventory/3d-inventory-api:latest"
+          IMAGE_TAG="${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/3d-inventory/3d-inventory-api:${{ steps.image_tag.outputs.tag }}"
+          IMAGE_LATEST="${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/3d-inventory/3d-inventory-api:latest"
 
           docker build \
             --build-arg NODE_ENV=production \
@@ -218,9 +217,8 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
-          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
-          project_id: ${{ secrets.PROJECT_ID }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
