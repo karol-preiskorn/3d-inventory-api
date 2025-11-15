@@ -117,7 +117,7 @@
     "markdown-it": "^14.1.0",
     "method-override": "^3.0.0",
     "mongo-sanitize": "^1.1.0",
-    "mongodb": "^6.20.0",
+    "mongodb": "^7.0.0",
     "morgan": "^1.10.1",
     "morgan-body": "^2.6.9",
     "node-fetch": "^3.3.2",
